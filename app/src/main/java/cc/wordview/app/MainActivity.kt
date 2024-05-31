@@ -4,11 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.ui.screens.Login
 import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.theme.WordViewTheme
 
@@ -30,18 +30,11 @@ fun AppNavigationHost() {
 
     NavHost(navController = navController, startDestination = "welcome") {
         composable("welcome") {
-            Welcome(navController = navController)
+            Welcome(navController)
         }
 
-        composable("register") {
-            Register()
+        composable("login") {
+            Login(navController)
         }
     }
-}
-
-@Composable
-fun Register() {
-    Text(
-        text = "Register screen"
-    )
 }

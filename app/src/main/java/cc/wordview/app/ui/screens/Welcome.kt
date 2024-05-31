@@ -20,9 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
-import cc.wordview.app.ui.components.WordViewButton
+import cc.wordview.app.ui.components.WVButton
 import cc.wordview.app.ui.theme.Typography
-import cc.wordview.app.ui.theme.poppinsFamily
+import cc.wordview.app.ui.theme.redhatFamily
 
 @Composable
 fun Welcome(navController: NavHostController) {
@@ -48,7 +48,7 @@ fun Welcome(navController: NavHostController) {
                     textAlign = TextAlign.Center,
                     style = Typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    fontFamily = poppinsFamily,
+                    fontFamily = redhatFamily,
                     fontSize = 42.sp
                 )
                 Text(
@@ -58,13 +58,13 @@ fun Welcome(navController: NavHostController) {
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(Modifier.size(120.dp))
-                WordViewButton(
+                WVButton(
                     "Start learning",
-                    onClick = { navController.navigate("register") })
+                    onClick = { })
                 Spacer(Modifier.size(10.dp))
-                WordViewButton(
+                WVButton(
                     "I already have an account",
-                    onClick = { print("hello") },
+                    onClick = { navController.navigate("login") },
                 )
             }
         }
