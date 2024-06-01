@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.ui.screens.LanguagePicker
 import cc.wordview.app.ui.screens.Login
 import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.theme.WordViewTheme
@@ -35,6 +36,10 @@ fun AppNavigationHost() {
 
         composable("login") {
             Login(navController)
+        }
+        
+        composable("language-picker") {
+            LanguagePicker(navController)
         }
     }
 }

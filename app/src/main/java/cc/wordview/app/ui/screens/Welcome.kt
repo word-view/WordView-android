@@ -60,7 +60,7 @@ fun Welcome(navController: NavHostController) {
                 Spacer(Modifier.size(120.dp))
                 WVButton(
                     "Start learning",
-                    onClick = { })
+                    onClick = { navController.navigate("language-picker") })
                 Spacer(Modifier.size(10.dp))
                 WVButton(
                     "I already have an account",

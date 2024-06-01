@@ -44,6 +44,8 @@ import cc.wordview.app.ui.theme.poppinsFamily
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(navController: NavHostController) {
+    val onBack = { navController.navigate("welcome") }
+
     Scaffold(topBar = {
         TopAppBar(
             colors = topAppBarColors(
@@ -52,7 +54,7 @@ fun Login(navController: NavHostController) {
             ),
             title = {},
             navigationIcon = {
-                IconButton(onClick = { navController.navigate("welcome") }) {
+                IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Go back"
