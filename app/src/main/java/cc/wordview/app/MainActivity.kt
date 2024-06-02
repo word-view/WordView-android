@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.screens.LanguagePicker
 import cc.wordview.app.ui.screens.Login
 import cc.wordview.app.ui.screens.Welcome
+import cc.wordview.app.ui.screens.home.Home
 import cc.wordview.app.ui.theme.WordViewTheme
 
 class MainActivity : ComponentActivity() {
@@ -57,6 +58,10 @@ fun AppNavigationHost() {
         
         composable("language-picker") {
             LanguagePicker(navController)
+        }
+
+        composable("home") {
+            Home(navController)
         }
     }
 }
