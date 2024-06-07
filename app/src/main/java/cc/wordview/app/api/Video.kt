@@ -17,27 +17,6 @@
 
 package cc.wordview.app.api
 
-import android.content.Context
-import android.util.Log
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-
-private const val TAG = "History"
-
-interface APICallback {
-    fun onSuccessResponse(response: String?)
-    fun onErrorResponse(response: String?)
-}
-fun getHistory(callback: APICallback, context: Context) {
-    val queue = Volley.newRequestQueue(context)
-    val url = "$apiURL/music/history"
-
-    val stringRequest =
-        StringRequest(Request.Method.GET, url, { response ->
-            callback.onSuccessResponse(response)
-        },
-            { err -> Log.e(TAG, "Request failed: ${err.message}") })
-
-    queue.add(stringRequest)
+class Video(val id: String, val title: String, val artist: String, val cover: String) {
+    constructor() : this("", "", "", "")
 }
