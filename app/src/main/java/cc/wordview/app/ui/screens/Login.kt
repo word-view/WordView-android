@@ -53,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.WVButton
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
@@ -61,8 +62,6 @@ import cc.wordview.app.ui.theme.poppinsFamily
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(navController: NavHostController) {
-    val onBack = { navController.navigate("welcome") }
-
     Scaffold(topBar = {
         TopAppBar(
             colors = topAppBarColors(
@@ -71,7 +70,7 @@ fun Login(navController: NavHostController) {
             ),
             title = {},
             navigationIcon = {
-                IconButton(onClick = onBack) {
+                IconButton(onClick = { navController.goBack() }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Go back"
