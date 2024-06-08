@@ -43,7 +43,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.screens.home.navigation.BottomNavigationItem
-import cc.wordview.app.ui.screens.home.navigation.Screens
+import cc.wordview.app.ui.screens.home.navigation.Tabs
 import cc.wordview.app.ui.theme.redhatFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,21 +105,21 @@ fun Home(navHostController: NavHostController) {
     }) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Screens.Learn.route,
+            startDestination = Tabs.Learn.route,
             modifier = Modifier.padding(paddingValues = paddingValues)
         ) {
-            composable(Screens.Learn.route) {
+            composable(Tabs.Learn.route) {
                 LearnTab(
                     navController,
                     navHostController
                 )
             }
-            composable(Screens.Search.route) {
+            composable(Tabs.Search.route) {
                 SearchTab(
                     navController
                 )
             }
-            composable(Screens.Profile.route) {
+            composable(Tabs.Profile.route) {
                 ProfileTab(
                     navController
                 )

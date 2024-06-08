@@ -17,8 +17,8 @@
 
 package cc.wordview.app.ui.screens.home.navigation
 
-sealed class Screens(val route : String) {
-    data object Learn : Screens("learn_screen")
-    data object Search : Screens("search_screen")
-    data object Profile : Screens("profile_screen")
+sealed class Tabs(val route : String) {
+    data object Learn : Tabs("learn_tab")
+    data object Search : Tabs("search_tab")
+    data object Profile : Tabs("profile_tab")
 }

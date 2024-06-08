@@ -33,17 +33,17 @@ data class BottomNavigationItem(
             BottomNavigationItem(
                 label = "Learn",
                 icon = Icons.Filled.Home,
-                route = Screens.Learn.route
+                route = Tabs.Learn.route
             ),
             BottomNavigationItem(
                 label = "Search",
                 icon = Icons.Filled.Search,
-                route = Screens.Search.route
+                route = Tabs.Search.route
             ),
             BottomNavigationItem(
                 label = "Profile",
                 icon = Icons.Filled.AccountCircle,
-                route = Screens.Profile.route
+                route = Tabs.Profile.route
             ),
         )
     }
