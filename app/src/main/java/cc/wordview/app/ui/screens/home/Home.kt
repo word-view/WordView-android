@@ -110,7 +110,8 @@ fun Home(navHostController: NavHostController) {
         ) {
             composable(Screens.Learn.route) {
                 LearnTab(
-                    navController
+                    navController,
+                    navHostController
                 )
             }
             composable(Screens.Search.route) {

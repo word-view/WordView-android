@@ -50,6 +50,7 @@ import cc.wordview.app.R
 import cc.wordview.app.api.APICallback
 import cc.wordview.app.api.Video
 import cc.wordview.app.api.getHistory
+import cc.wordview.app.currentSong
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
@@ -57,7 +58,7 @@ import com.google.gson.Gson
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LearnTab(navController: NavHostController) {
+fun LearnTab(navController: NavHostController, navHostController: NavHostController) {
     val context = LocalContext.current
     var json by remember { mutableStateOf(Video()) }
 
@@ -85,7 +86,7 @@ fun LearnTab(navController: NavHostController) {
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.background,
             ),
-            onClick = { }
+            onClick = { currentSong = json; navHostController.navigate("player") }
         ) {
             Column(
                 modifier = Modifier.padding(10.dp),
@@ -102,7 +103,10 @@ fun LearnTab(navController: NavHostController) {
                             contentScale = ContentScale.Crop,
                         )
                     }
-                    Column(Modifier.width(120.dp).padding(top = 5.dp)) {
+                    Column(
+                        Modifier
+                            .width(120.dp)
+                            .padding(top = 5.dp)) {
                         Text(
                             text = json.title,
                             style = Typography.labelMedium,

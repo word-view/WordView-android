@@ -22,11 +22,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.api.Video
 import cc.wordview.app.ui.screens.LanguagePicker
 import cc.wordview.app.ui.screens.Login
+import cc.wordview.app.ui.screens.Player
 import cc.wordview.app.ui.screens.Settings
 import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.screens.home.Home
@@ -44,6 +49,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// TODO: quick hack, find a better solution for sending the picked song at the learn tab to the Music Screen
+var currentSong by mutableStateOf(Video())
+
 @Composable
 fun AppNavigationHost() {
     val navController = rememberNavController()
@@ -56,13 +64,17 @@ fun AppNavigationHost() {
         composable("login") {
             Login(navController)
         }
-        
+
         composable("language-picker") {
             LanguagePicker(navController)
         }
 
         composable("settings") {
             Settings(navController)
+        }
+
+        composable("player") {
+            Player(navController)
         }
 
         composable("home") {
