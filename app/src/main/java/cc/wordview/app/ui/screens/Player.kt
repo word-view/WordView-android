@@ -17,6 +17,8 @@
 
 package cc.wordview.app.ui.screens
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +28,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
@@ -43,18 +47,58 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.media3.common.text.Cue
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.extractor.text.SubtitleParser
+import androidx.media3.extractor.text.webvtt.WebvttParser
 import androidx.navigation.NavHostController
+import cc.wordview.app.api.APICallback
+import cc.wordview.app.api.getLyrics
 import cc.wordview.app.currentSong
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Player(navController: NavHostController) {
+    val context = LocalContext.current
+    var cues by remember { mutableStateOf(ArrayList<Cue>()) }
+
+    val callback = object : APICallback {
+        @androidx.annotation.OptIn(UnstableApi::class)
+        override fun onSuccessResponse(response: String?) {
+            if (response != null) {
+                WebvttParser().parse(
+                    response.encodeToByteArray(),
+                    SubtitleParser.OutputOptions.allCues()
+                ) { result ->
+                    for (cue in result.cues)
+                        cues.add(cue)
+                }
+
+                Log.i("Player", "Parsed ${cues.size} cues")
+            }
+        }
+
+        override fun onErrorResponse(response: String?) {
+            TODO("Not yet implemented")
+        }
+    }
+
+    LaunchedEffect(Unit) { getLyrics(currentSong.id, "ja", callback, context) }
+
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
@@ -88,8 +132,16 @@ fun Player(navController: NavHostController) {
                 color = MaterialTheme.colorScheme.primaryContainer,
                 shape = DefaultRoundedCornerShape
             ) {
-                Column(modifier = Modifier.fillMaxSize().padding(18.dp)) {
-                    /*TODO*/
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(18.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    for (cue in cues) {
+                        Text(text = cue.text.toString(), fontSize = 24.sp)
+                        Spacer(modifier = Modifier.size(5.dp))
+                    }
                 }
             }
         }

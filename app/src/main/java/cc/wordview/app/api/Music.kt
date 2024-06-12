@@ -23,15 +23,29 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
-private const val TAG = "History"
+private const val TAG = "Music"
 
 interface APICallback {
     fun onSuccessResponse(response: String?)
     fun onErrorResponse(response: String?)
 }
+
 fun getHistory(callback: APICallback, context: Context) {
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/history"
+
+    val stringRequest =
+        StringRequest(Request.Method.GET, url, { response ->
+            callback.onSuccessResponse(response)
+        },
+            { err -> Log.e(TAG, "Request failed: ${err.message}") })
+
+    queue.add(stringRequest)
+}
+
+fun getLyrics(id: String, lang: String, callback: APICallback, context: Context) {
+    val queue = Volley.newRequestQueue(context)
+    val url = "$apiURL/music/lyrics?id=$id&lang=$lang"
 
     val stringRequest =
         StringRequest(Request.Method.GET, url, { response ->
