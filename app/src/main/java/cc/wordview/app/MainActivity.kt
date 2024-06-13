@@ -29,12 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.api.Video
-import cc.wordview.app.ui.screens.LanguagePicker
-import cc.wordview.app.ui.screens.Login
-import cc.wordview.app.ui.screens.Player
-import cc.wordview.app.ui.screens.Settings
-import cc.wordview.app.ui.screens.Welcome
-import cc.wordview.app.ui.screens.home.Home
+import cc.wordview.app.ui.screens.Screens
 import cc.wordview.app.ui.theme.WordViewTheme
 
 class MainActivity : ComponentActivity() {
@@ -56,29 +51,29 @@ var currentSong by mutableStateOf(Video())
 fun AppNavigationHost() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "home") {
-        composable("welcome") {
-            Welcome(navController)
+    NavHost(navController = navController, startDestination = Screens.Home.route) {
+        composable(Screens.Welcome.route) {
+            Screens.Welcome.Composable(navController)
         }
 
-        composable("login") {
-            Login(navController)
+        composable(Screens.Login.route) {
+            Screens.Login.Composable(navController)
         }
 
-        composable("language-picker") {
-            LanguagePicker(navController)
+        composable(Screens.LanguagePicker.route) {
+            Screens.LanguagePicker.Composable(navController)
         }
 
-        composable("settings") {
-            Settings(navController)
+        composable(Screens.Settings.route) {
+            Screens.Settings.Composable(navController)
         }
 
-        composable("player") {
-            Player(navController)
+        composable(Screens.Player.route) {
+            Screens.Player.Composable(navController)
         }
 
-        composable("home") {
-            Home(navController)
+        composable(Screens.Home.route) {
+            Screens.Home.Composable(navController)
         }
     }
 }

@@ -51,6 +51,7 @@ import cc.wordview.app.api.APICallback
 import cc.wordview.app.api.Video
 import cc.wordview.app.api.getHistory
 import cc.wordview.app.currentSong
+import cc.wordview.app.ui.screens.Screens
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
@@ -86,7 +87,7 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.background,
             ),
-            onClick = { currentSong = json; navHostController.navigate("player") }
+            onClick = { currentSong = json; navHostController.navigate(Screens.Player.route) }
         ) {
             Column(
                 modifier = Modifier.padding(10.dp),
