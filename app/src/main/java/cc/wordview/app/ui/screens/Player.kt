@@ -31,21 +31,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -66,6 +61,7 @@ import cc.wordview.app.api.APICallback
 import cc.wordview.app.api.getLyrics
 import cc.wordview.app.currentSong
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 
@@ -75,6 +71,14 @@ import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 fun Player(navController: NavHostController) {
     val context = LocalContext.current
     var cues by remember { mutableStateOf(ArrayList<Cue>()) }
+
+    var playing by remember { mutableStateOf(false) }
+    var icon by remember { mutableStateOf(Icons.Filled.PlayArrow) }
+
+    fun togglePlay() {
+        playing = !playing
+        icon = if (playing) Icons.Filled.Pause else Icons.Filled.PlayArrow
+    }
 
     val callback = object : APICallback {
         @androidx.annotation.OptIn(UnstableApi::class)
@@ -100,23 +104,7 @@ fun Player(navController: NavHostController) {
     LaunchedEffect(Unit) { getLyrics(currentSong.id, "ja", callback, context) }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        TopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                titleContentColor = LocalContentColor.current
-            ),
-            title = {
-                Text(currentSong.title)
-            },
-            navigationIcon = {
-                IconButton(onClick = { navController.goBack() }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Go back"
-                    )
-                }
-            }
-        )
+        BackTopAppBar(text = currentSong.title, onClickBack = { navController.goBack() })
     }) { innerPadding ->
         Box(
             modifier = Modifier
@@ -164,8 +152,8 @@ fun Player(navController: NavHostController) {
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 WVIconButton(
-                    onClick = { /*TODO*/ },
-                    imageVector = Icons.Filled.PlayArrow,
+                    onClick = { togglePlay() },
+                    imageVector = icon,
                     size = 80.dp,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.surface,
