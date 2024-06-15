@@ -18,6 +18,8 @@
 package cc.wordview.app.ui.screens
 
 import android.annotation.SuppressLint
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +38,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -58,6 +59,7 @@ import androidx.media3.extractor.text.SubtitleParser
 import androidx.media3.extractor.text.webvtt.WebvttParser
 import androidx.navigation.NavHostController
 import cc.wordview.app.api.APICallback
+import cc.wordview.app.api.apiURL
 import cc.wordview.app.api.getLyrics
 import cc.wordview.app.currentSong
 import cc.wordview.app.extensions.goBack
@@ -66,19 +68,13 @@ import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 
 @SuppressLint("MutableCollectionMutableState")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Player(navController: NavHostController) {
     val context = LocalContext.current
     var cues by remember { mutableStateOf(ArrayList<Cue>()) }
 
-    var playing by remember { mutableStateOf(false) }
-    var icon by remember { mutableStateOf(Icons.Filled.PlayArrow) }
-
-    fun togglePlay() {
-        playing = !playing
-        icon = if (playing) Icons.Filled.Pause else Icons.Filled.PlayArrow
-    }
+    var mediaPlayer by remember { mutableStateOf(MediaPlayer()) }
+    var playButtonIcon by remember { mutableStateOf(Icons.Filled.Pause) }
 
     val callback = object : APICallback {
         @androidx.annotation.OptIn(UnstableApi::class)
@@ -101,7 +97,25 @@ fun Player(navController: NavHostController) {
         }
     }
 
-    LaunchedEffect(Unit) { getLyrics(currentSong.id, "ja", callback, context) }
+    LaunchedEffect(Unit) {
+        getLyrics(currentSong.id, "ja", callback, context)
+
+        try {
+            mediaPlayer.apply {
+                setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+                )
+                setDataSource("$apiURL/music/download?id=${currentSong.id}")
+                prepare()
+                start()
+            }
+        } catch (e: Exception) {
+            Log.e("Player", e.message, e)
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         BackTopAppBar(text = currentSong.title, onClickBack = { navController.goBack() })
@@ -140,7 +154,10 @@ fun Player(navController: NavHostController) {
                 .padding(innerPadding),
             contentAlignment = Alignment.BottomCenter
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.padding(bottom = 32.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 WVIconButton(
                     onClick = { /*TODO*/ },
                     imageVector = Icons.Filled.SkipPrevious,
@@ -152,8 +169,16 @@ fun Player(navController: NavHostController) {
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 WVIconButton(
-                    onClick = { togglePlay() },
-                    imageVector = icon,
+                    onClick = {
+                        if (mediaPlayer.isPlaying) {
+                            mediaPlayer.pause()
+                            playButtonIcon = Icons.Filled.PlayArrow
+                        } else {
+                            mediaPlayer.start()
+                            playButtonIcon = Icons.Filled.Pause
+                        }
+                    },
+                    imageVector = playButtonIcon,
                     size = 80.dp,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.surface,
