@@ -18,9 +18,6 @@
 package cc.wordview.app.ui.screens
 
 import android.annotation.SuppressLint
-import android.media.AudioAttributes
-import android.media.MediaPlayer
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -54,9 +51,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.text.Cue
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.extractor.text.SubtitleParser
-import androidx.media3.extractor.text.webvtt.WebvttParser
 import androidx.navigation.NavHostController
 import cc.wordview.app.api.APICallback
 import cc.wordview.app.api.apiURL
@@ -66,29 +60,23 @@ import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
+import cc.wordview.app.util.AudioPlayer
+import cc.wordview.app.util.SubtitleManager
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun Player(navController: NavHostController) {
     val context = LocalContext.current
-    var cues by remember { mutableStateOf(ArrayList<Cue>()) }
 
-    var mediaPlayer by remember { mutableStateOf(MediaPlayer()) }
+    var cues by remember { mutableStateOf(ArrayList<Cue>()) }
     var playButtonIcon by remember { mutableStateOf(Icons.Filled.Pause) }
 
     val callback = object : APICallback {
-        @androidx.annotation.OptIn(UnstableApi::class)
         override fun onSuccessResponse(response: String?) {
             if (response != null) {
-                WebvttParser().parse(
-                    response.encodeToByteArray(),
-                    SubtitleParser.OutputOptions.allCues()
-                ) { result ->
-                    for (cue in result.cues)
-                        cues.add(cue)
-                }
-
-                Log.i("Player", "Parsed ${cues.size} cues")
+                val subtitleManager = SubtitleManager()
+                subtitleManager.parseWebvttCues(response)
+                cues = subtitleManager.cues
             }
         }
 
@@ -100,25 +88,16 @@ fun Player(navController: NavHostController) {
     LaunchedEffect(Unit) {
         getLyrics(currentSong.id, "ja", callback, context)
 
-        try {
-            mediaPlayer.apply {
-                setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-                )
-                setDataSource("$apiURL/music/download?id=${currentSong.id}")
-                prepare()
-                start()
-            }
-        } catch (e: Exception) {
-            Log.e("Player", e.message, e)
-        }
+        AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
+        AudioPlayer.prepare()
+        AudioPlayer.start()
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        BackTopAppBar(text = currentSong.title, onClickBack = { navController.goBack() })
+        BackTopAppBar(text = currentSong.title, onClickBack = {
+            navController.goBack()
+            AudioPlayer.stop()
+        })
     }) { innerPadding ->
         Box(
             modifier = Modifier
@@ -159,7 +138,7 @@ fun Player(navController: NavHostController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 WVIconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { AudioPlayer.skipBackward() },
                     imageVector = Icons.Filled.SkipPrevious,
                     size = 75.dp,
                     colors = ButtonDefaults.buttonColors(
@@ -170,13 +149,9 @@ fun Player(navController: NavHostController) {
                 Spacer(modifier = Modifier.size(10.dp))
                 WVIconButton(
                     onClick = {
-                        if (mediaPlayer.isPlaying) {
-                            mediaPlayer.pause()
-                            playButtonIcon = Icons.Filled.PlayArrow
-                        } else {
-                            mediaPlayer.start()
-                            playButtonIcon = Icons.Filled.Pause
-                        }
+                        AudioPlayer.togglePlay(
+                            { playButtonIcon = Icons.Filled.Pause },
+                            { playButtonIcon = Icons.Filled.PlayArrow })
                     },
                     imageVector = playButtonIcon,
                     size = 80.dp,
@@ -187,7 +162,7 @@ fun Player(navController: NavHostController) {
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 WVIconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { AudioPlayer.skipForward() },
                     imageVector = Icons.Filled.SkipNext,
                     size = 75.dp,
                     colors = ButtonDefaults.buttonColors(
