@@ -29,7 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.api.Video
-import cc.wordview.app.ui.screens.Screens
+import cc.wordview.app.ui.screens.Screen
 import cc.wordview.app.ui.theme.WordViewTheme
 
 class MainActivity : ComponentActivity() {
@@ -51,29 +51,11 @@ var currentSong by mutableStateOf(Video())
 fun AppNavigationHost() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screens.Home.route) {
-        composable(Screens.Welcome.route) {
-            Screens.Welcome.Composable(navController)
-        }
-
-        composable(Screens.Login.route) {
-            Screens.Login.Composable(navController)
-        }
-
-        composable(Screens.LanguagePicker.route) {
-            Screens.LanguagePicker.Composable(navController)
-        }
-
-        composable(Screens.Settings.route) {
-            Screens.Settings.Composable(navController)
-        }
-
-        composable(Screens.Player.route) {
-            Screens.Player.Composable(navController)
-        }
-
-        composable(Screens.Home.route) {
-            Screens.Home.Composable(navController)
+    NavHost(navController = navController, startDestination = "home") {
+        for (screen in Screen.screens) {
+            composable(screen.route) {
+                screen.Composable(navHostController = navController)
+            }
         }
     }
 }

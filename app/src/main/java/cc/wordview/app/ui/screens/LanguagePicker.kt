@@ -84,11 +84,11 @@ fun LanguagePicker(navController: NavHostController) {
                 Spacer(Modifier.size(20.dp))
                 LanguageFlagButton(
                     languageName = "Japanese",
-                    onClick = { navController.navigate(Screens.Home.route) })
+                    onClick = { navController.navigate(Screen.Home.route) })
                 Spacer(Modifier.size(10.dp))
                 LanguageFlagButton(
                     languageName = "English",
-                    onClick = { navController.navigate(Screens.Home.route) })
+                    onClick = { navController.navigate(Screen.Home.route) })
             }
         }
     }

@@ -77,11 +77,11 @@ fun Welcome(navController: NavHostController) {
                 Spacer(Modifier.size(120.dp))
                 WVButton(
                     "Start learning",
-                    onClick = { navController.navigate(Screens.LanguagePicker.route) })
+                    onClick = { navController.navigate(Screen.LanguagePicker.route) })
                 Spacer(Modifier.size(10.dp))
                 WVButton(
                     "I already have an account",
-                    onClick = { navController.navigate(Screens.Login.route) },
+                    onClick = { navController.navigate(Screen.Login.route) },
                 )
             }
         }

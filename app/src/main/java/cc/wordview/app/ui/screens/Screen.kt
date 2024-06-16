@@ -21,46 +21,52 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import cc.wordview.app.ui.screens.home.Home
 
-sealed class Screens(val route: String) {
-    data object Welcome : Screens("welcome") {
+sealed class Screen(val route: String) {
+    @Composable
+    open fun Composable(navHostController: NavHostController) {}
+    data object Welcome : Screen("welcome") {
         @Composable
-        fun Composable(navHostController: NavHostController) {
+        override fun Composable(navHostController: NavHostController) {
             Welcome(navHostController)
         }
     }
 
-    data object Login : Screens("login") {
+    data object Login : Screen("login") {
         @Composable
-        fun Composable(navHostController: NavHostController) {
+        override fun Composable(navHostController: NavHostController) {
             Login(navHostController)
         }
     }
 
-    data object LanguagePicker : Screens("language-picker") {
+    data object LanguagePicker : Screen("language-picker") {
         @Composable
-        fun Composable(navHostController: NavHostController) {
+        override fun Composable(navHostController: NavHostController) {
             LanguagePicker(navHostController)
         }
     }
 
-    data object Settings : Screens("settings") {
+    data object Settings : Screen("settings") {
         @Composable
-        fun Composable(navHostController: NavHostController) {
+        override fun Composable(navHostController: NavHostController) {
             Settings(navHostController)
         }
     }
 
-    data object Player : Screens("player") {
+    data object Player : Screen("player") {
         @Composable
-        fun Composable(navHostController: NavHostController) {
+        override fun Composable(navHostController: NavHostController) {
             Player(navHostController)
         }
     }
 
-    data object Home : Screens("home") {
+    data object Home : Screen("home") {
         @Composable
-        fun Composable(navHostController: NavHostController) {
+        override fun Composable(navHostController: NavHostController) {
             Home(navHostController)
         }
+    }
+
+    companion object {
+        val screens = listOf(Welcome, Login, LanguagePicker, Settings, Player, Home)
     }
 }
