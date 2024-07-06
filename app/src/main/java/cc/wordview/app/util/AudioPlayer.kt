@@ -45,9 +45,6 @@ object AudioPlayer : MediaPlayer() {
         }
     }
 
-    /**
-     * If the media is playing then this will pause it, if not it will play the media.
-     */
     fun togglePlay(onPlay: () -> Unit, onPause: () -> Unit) {
         if (this.isPlaying) {
             pause()

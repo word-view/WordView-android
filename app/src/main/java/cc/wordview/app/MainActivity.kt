@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WordViewTheme {
-                AppNavigationHost()
+                Main()
             }
         }
     }
@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
 var currentSong by mutableStateOf(Video())
 
 @Composable
-fun AppNavigationHost() {
+fun Main() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "home") {

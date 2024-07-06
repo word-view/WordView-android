@@ -47,9 +47,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.ColorUtils
 import androidx.media3.common.text.Cue
 import androidx.navigation.NavHostController
 import cc.wordview.app.api.APICallback
@@ -119,8 +122,13 @@ fun Player(navController: NavHostController) {
                         .padding(18.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
+                    val disabledCueColor = ColorUtils.blendARGB(
+                        MaterialTheme.colorScheme.inverseSurface.toArgb(),
+                        MaterialTheme.colorScheme.background.toArgb(),
+                        0.4f)
+
                     for (cue in cues) {
-                        Text(text = cue.text.toString(), fontSize = 24.sp)
+                        Text(text = cue.text.toString(), fontSize = 24.sp, color = Color(disabledCueColor))
                         Spacer(modifier = Modifier.size(5.dp))
                     }
                 }
