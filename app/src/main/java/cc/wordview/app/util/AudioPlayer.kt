@@ -19,11 +19,15 @@ package cc.wordview.app.util
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 
 object AudioPlayer : MediaPlayer() {
     private const val TAG = "AudioPlayer"
     private var initialized = false;
+    private val handler = Handler(Looper.getMainLooper())
+    private var onPositionChanged: (Int) -> Unit = {}
 
     fun initialize(dataSource: String) {
         Log.d(TAG, "Initializing MediaPlayer with dataSource: $dataSource")
@@ -52,6 +56,7 @@ object AudioPlayer : MediaPlayer() {
         } else {
             start()
             onPlay()
+            checkOnPositionChange()
         }
     }
 
@@ -69,5 +74,21 @@ object AudioPlayer : MediaPlayer() {
         if (position < 0) {
             seekTo(0)
         } else seekTo(position)
+    }
+
+     fun checkOnPositionChange() {
+        val runnable = object : Runnable {
+            override fun run() {
+                if (isPlaying) {
+                    onPositionChanged(currentPosition)
+                    handler.postDelayed(this, 500)
+                }
+            }
+        }
+        handler.post(runnable)
+    }
+
+    fun addOnPositionChange(onPositionChanged: (Int) -> Unit) {
+        this.onPositionChanged = onPositionChanged;
     }
 }

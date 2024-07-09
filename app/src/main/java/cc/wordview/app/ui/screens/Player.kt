@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -94,6 +95,10 @@ fun Player(navController: NavHostController) {
         AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
         AudioPlayer.prepare()
         AudioPlayer.start()
+        AudioPlayer.addOnPositionChange { position ->
+            Log.i("Player", "Player updated to position $position")
+        }
+        AudioPlayer.checkOnPositionChange()
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
