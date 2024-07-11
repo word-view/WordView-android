@@ -65,14 +65,15 @@ import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.util.AudioPlayer
-import cc.wordview.app.util.SubtitleManager
+import cc.wordview.app.subtitle.SubtitleManager
+import cc.wordview.app.subtitle.WordViewCue
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun Player(navController: NavHostController) {
     val context = LocalContext.current
 
-    var cues by remember { mutableStateOf(ArrayList<Cue>()) }
+    var cues by remember { mutableStateOf(ArrayList<WordViewCue>()) }
     var playButtonIcon by remember { mutableStateOf(Icons.Filled.Pause) }
 
     val callback = object : APICallback {
@@ -96,7 +97,6 @@ fun Player(navController: NavHostController) {
         AudioPlayer.prepare()
         AudioPlayer.start()
         AudioPlayer.addOnPositionChange { position ->
-            Log.i("Player", "Player updated to position $position")
         }
         AudioPlayer.checkOnPositionChange()
     }
@@ -133,7 +133,7 @@ fun Player(navController: NavHostController) {
                         0.4f)
 
                     for (cue in cues) {
-                        Text(text = cue.text.toString(), fontSize = 24.sp, color = Color(disabledCueColor))
+                        Text(text = cue.text, fontSize = 24.sp, color = Color(disabledCueColor))
                         Spacer(modifier = Modifier.size(5.dp))
                     }
                 }
