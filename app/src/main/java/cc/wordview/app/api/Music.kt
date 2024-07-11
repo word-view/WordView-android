@@ -19,7 +19,9 @@ package cc.wordview.app.api
 
 import android.content.Context
 import android.util.Log
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
+import com.android.volley.RetryPolicy
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
@@ -43,7 +45,29 @@ fun getHistory(callback: APICallback, context: Context) {
     queue.add(stringRequest)
 }
 
+fun search(query: String, callback: APICallback, context: Context) {
+    val queue = Volley.newRequestQueue(context)
+    val url = "$apiURL/music/search?q=$query"
+
+    val stringRequest =
+        StringRequest(Request.Method.GET, url, { response ->
+            callback.onSuccessResponse(response)
+        },
+            { err -> Log.e(TAG, "Request failed: ${err.stackTraceToString()}") })
+
+    // Little hack to deal with the search taking too much due to using ytdl
+    // TODO: Remove this retry policy when the API starts using the NewPipeExtractor
+    stringRequest.setRetryPolicy(DefaultRetryPolicy(
+        20000,
+        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+    ))
+
+    queue.add(stringRequest)
+}
+
 fun getLyrics(id: String, lang: String, callback: APICallback, context: Context) {
+
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/lyrics?id=$id&lang=$lang"
 
