@@ -81,7 +81,7 @@ object AudioPlayer : MediaPlayer() {
             override fun run() {
                 if (isPlaying) {
                     onPositionChanged(currentPosition)
-                    handler.postDelayed(this, 1)
+                    handler.postDelayed(this, 2)
                 }
             }
         }

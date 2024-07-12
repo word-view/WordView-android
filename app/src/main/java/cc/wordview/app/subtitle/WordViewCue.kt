@@ -26,4 +26,5 @@ class WordViewCue {
     var startTimeMs = 0
     var endTimeMs = 0
     var durationMs = 0
+    var highlighted = false
 }

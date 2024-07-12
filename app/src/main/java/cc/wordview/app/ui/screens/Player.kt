@@ -43,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,32 +55,34 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
-import androidx.media3.common.text.Cue
 import androidx.navigation.NavHostController
 import cc.wordview.app.api.APICallback
 import cc.wordview.app.api.apiURL
 import cc.wordview.app.api.getLyrics
 import cc.wordview.app.currentSong
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.subtitle.SubtitleManager
+import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.util.AudioPlayer
-import cc.wordview.app.subtitle.SubtitleManager
-import cc.wordview.app.subtitle.WordViewCue
+import kotlin.time.Duration.Companion.microseconds
+import kotlin.time.Duration.Companion.milliseconds
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun Player(navController: NavHostController) {
     val context = LocalContext.current
+    val subtitleManager = SubtitleManager()
 
     var cues by remember { mutableStateOf(ArrayList<WordViewCue>()) }
+    var highlightedCuePosition by remember { mutableIntStateOf(0) }
     var playButtonIcon by remember { mutableStateOf(Icons.Filled.Pause) }
 
     val callback = object : APICallback {
         override fun onSuccessResponse(response: String?) {
             if (response != null) {
-                val subtitleManager = SubtitleManager()
                 subtitleManager.parseWebvttCues(response)
                 cues = subtitleManager.cues
             }
@@ -96,7 +99,14 @@ fun Player(navController: NavHostController) {
         AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
         AudioPlayer.prepare()
         AudioPlayer.start()
+
         AudioPlayer.addOnPositionChange { position ->
+            val cue = subtitleManager.getCueAt(position)
+
+            if (cue.startTimeMs != -1) {
+                Log.i("Player", cue.text);
+                highlightedCuePosition = cue.startTimeMs
+            }
         }
         AudioPlayer.checkOnPositionChange()
     }
@@ -130,10 +140,13 @@ fun Player(navController: NavHostController) {
                     val disabledCueColor = ColorUtils.blendARGB(
                         MaterialTheme.colorScheme.inverseSurface.toArgb(),
                         MaterialTheme.colorScheme.background.toArgb(),
-                        0.4f)
+                        0.4f
+                    )
 
                     for (cue in cues) {
-                        Text(text = cue.text, fontSize = 24.sp, color = Color(disabledCueColor))
+                        val cueColor = if (cue.startTimeMs == highlightedCuePosition) MaterialTheme.colorScheme.inverseSurface else Color(disabledCueColor)
+
+                        Text(text = cue.text, fontSize = 24.sp, color = cueColor)
                         Spacer(modifier = Modifier.size(5.dp))
                     }
                 }

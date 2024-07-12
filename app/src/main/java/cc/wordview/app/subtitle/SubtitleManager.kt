@@ -19,7 +19,6 @@ package cc.wordview.app.subtitle
 
 import android.util.Log
 import androidx.annotation.OptIn
-import androidx.media3.common.text.Cue
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.extractor.text.SubtitleParser
 import androidx.media3.extractor.text.webvtt.WebvttParser
@@ -38,12 +37,29 @@ class SubtitleManager {
             val cue = WordViewCue()
 
             cue.text = result.cues.first().text.toString()
-            cue.startTimeMs = result.startTimeUs.milliseconds.inWholeMilliseconds.toInt()
-            cue.endTimeMs = result.endTimeUs.milliseconds.inWholeMilliseconds.toInt()
-            cue.durationMs = result.durationUs.milliseconds.inWholeMilliseconds.toInt()
+            cue.startTimeMs = normalize(result.startTimeUs.milliseconds.inWholeMilliseconds.toString()).toInt()
+            cue.endTimeMs = normalize(result.endTimeUs.milliseconds.inWholeMilliseconds.toString()).toInt()
+            cue.durationMs = normalize(result.durationUs.milliseconds.inWholeMilliseconds.toString()).toInt()
 
             cues.add(cue)
         }
         Log.i(TAG, "Parsed ${cues.size} cues")
+    }
+
+   fun getCueAt(position: Int): WordViewCue {
+        for (cue in cues) {
+            if (position >= cue.startTimeMs && position <= cue.endTimeMs)
+                    return cue
+        }
+
+       val voidCue = WordViewCue()
+       voidCue.startTimeMs = -1
+       return voidCue
+   }
+
+    private fun normalize(s: String): String {
+        return (if ((s == null || s.length === 0)
+        ) null
+        else (s.substring(0, s.length - 3)))!!
     }
 }
