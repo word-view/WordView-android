@@ -83,7 +83,7 @@ fun Player(navController: NavHostController) {
     val callback = object : APICallback {
         override fun onSuccessResponse(response: String?) {
             if (response != null) {
-                subtitleManager.parseWebvttCues(response)
+                subtitleManager.parseCues(response)
                 cues = subtitleManager.cues
             }
         }
@@ -99,14 +99,11 @@ fun Player(navController: NavHostController) {
         AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
         AudioPlayer.prepare()
         AudioPlayer.start()
-
         AudioPlayer.addOnPositionChange { position ->
             val cue = subtitleManager.getCueAt(position)
 
-            if (cue.startTimeMs != -1) {
-                Log.i("Player", cue.text);
+            if (cue.startTimeMs != -1)
                 highlightedCuePosition = cue.startTimeMs
-            }
         }
         AudioPlayer.checkOnPositionChange()
     }

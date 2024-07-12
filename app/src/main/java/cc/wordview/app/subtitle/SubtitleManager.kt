@@ -29,19 +29,16 @@ class SubtitleManager {
     val cues = ArrayList<WordViewCue>()
 
     @OptIn(UnstableApi::class)
-    fun parseWebvttCues(cuesString: String) {
+    fun parseCues(str: String) {
         WebvttParser().parse(
-            cuesString.encodeToByteArray(),
+            str.encodeToByteArray(),
             SubtitleParser.OutputOptions.allCues()
         ) { result ->
-            val cue = WordViewCue()
-
-            cue.text = result.cues.first().text.toString()
-            cue.startTimeMs = normalize(result.startTimeUs.milliseconds.inWholeMilliseconds.toString()).toInt()
-            cue.endTimeMs = normalize(result.endTimeUs.milliseconds.inWholeMilliseconds.toString()).toInt()
-            cue.durationMs = normalize(result.durationUs.milliseconds.inWholeMilliseconds.toString()).toInt()
-
-            cues.add(cue)
+            cues.add(WordViewCue(
+                result.cues.first().text.toString(),
+                normalize(result.startTimeUs.milliseconds.inWholeMilliseconds),
+                normalize(result.endTimeUs.milliseconds.inWholeMilliseconds),
+            ))
         }
         Log.i(TAG, "Parsed ${cues.size} cues")
     }
@@ -52,14 +49,14 @@ class SubtitleManager {
                     return cue
         }
 
-       val voidCue = WordViewCue()
-       voidCue.startTimeMs = -1
-       return voidCue
+        // a empty cue used to ignore if no cue was found.
+        return WordViewCue("", -1, -1)
    }
 
-    private fun normalize(s: String): String {
+    private fun normalize(num: Long): Int {
+        val s = num.toString()
         return (if ((s == null || s.length === 0)
         ) null
-        else (s.substring(0, s.length - 3)))!!
+        else (s.substring(0, s.length - 3)))!!.toInt()
     }
 }
