@@ -102,8 +102,7 @@ fun Player(navController: NavHostController) {
         AudioPlayer.addOnPositionChange { position ->
             val cue = subtitleManager.getCueAt(position)
 
-            if (cue.startTimeMs != -1)
-                highlightedCuePosition = cue.startTimeMs
+            highlightedCuePosition = if (cue.startTimeMs != -1) cue.startTimeMs else 0
         }
         AudioPlayer.checkOnPositionChange()
     }
