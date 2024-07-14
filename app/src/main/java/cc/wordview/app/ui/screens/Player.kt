@@ -63,12 +63,15 @@ import cc.wordview.app.subtitle.SubtitleManager
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.WVIconButton
+import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.util.AudioPlayer
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun Player(navController: NavHostController) {
+    KeepScreenOn()
+
     val context = LocalContext.current
     val subtitleManager = SubtitleManager()
     val lyricsScrollState = rememberLazyListState()

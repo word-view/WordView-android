@@ -51,7 +51,7 @@ import cc.wordview.app.api.APICallback
 import cc.wordview.app.api.Video
 import cc.wordview.app.api.getHistory
 import cc.wordview.app.currentSong
-import cc.wordview.app.ui.screens.Screen
+import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage

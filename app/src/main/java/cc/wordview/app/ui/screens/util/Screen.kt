@@ -15,10 +15,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens
+package cc.wordview.app.ui.screens.util
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import cc.wordview.app.ui.screens.LanguagePicker
+import cc.wordview.app.ui.screens.Login
+import cc.wordview.app.ui.screens.Player
+import cc.wordview.app.ui.screens.Settings
+import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.screens.home.Home
 
 sealed class Screen(val route: String) {
