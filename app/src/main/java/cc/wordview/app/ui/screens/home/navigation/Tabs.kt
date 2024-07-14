@@ -19,6 +19,6 @@ package cc.wordview.app.ui.screens.home.navigation
 
 sealed class Tabs(val route : String) {
     data object Learn : Tabs("learn_tab")
-    data object Search : Tabs("search_tab")
+    data object Explore : Tabs("explore_tab")
     data object Profile : Tabs("profile_tab")
 }

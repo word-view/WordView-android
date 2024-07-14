@@ -20,6 +20,7 @@ package cc.wordview.app.ui.screens.home.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -36,9 +37,9 @@ data class BottomNavigationItem(
                 route = Tabs.Learn.route
             ),
             BottomNavigationItem(
-                label = "Search",
-                icon = Icons.Filled.Search,
-                route = Tabs.Search.route
+                label = "Explore",
+                icon = Icons.Filled.Map,
+                route = Tabs.Explore.route
             ),
             BottomNavigationItem(
                 label = "Profile",

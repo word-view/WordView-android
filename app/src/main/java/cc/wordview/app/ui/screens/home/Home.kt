@@ -114,8 +114,8 @@ fun Home(navHostController: NavHostController) {
                     navHostController
                 )
             }
-            composable(Tabs.Search.route) {
-                SearchTab(
+            composable(Tabs.Explore.route) {
+                ExploreTab(
                     navController
                 )
             }

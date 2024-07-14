@@ -35,7 +35,7 @@ import cc.wordview.app.api.APICallback
 import cc.wordview.app.api.search
 
 @Composable
-fun SearchTab(navController: NavHostController) {
+fun ExploreTab(navController: NavHostController) {
     val context = LocalContext.current
 
     val callback = object : APICallback {
