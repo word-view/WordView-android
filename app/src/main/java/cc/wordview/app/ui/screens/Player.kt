@@ -18,9 +18,7 @@
 package cc.wordview.app.ui.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,8 +26,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -67,14 +65,13 @@ import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.util.AudioPlayer
-import kotlin.time.Duration.Companion.microseconds
-import kotlin.time.Duration.Companion.milliseconds
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun Player(navController: NavHostController) {
     val context = LocalContext.current
     val subtitleManager = SubtitleManager()
+    val lyricsScrollState = rememberLazyListState()
 
     var cues by remember { mutableStateOf(ArrayList<WordViewCue>()) }
     var highlightedCuePosition by remember { mutableIntStateOf(0) }
@@ -101,10 +98,20 @@ fun Player(navController: NavHostController) {
         AudioPlayer.start()
         AudioPlayer.addOnPositionChange { position ->
             val cue = subtitleManager.getCueAt(position)
-
             highlightedCuePosition = if (cue.startTimeMs != -1) cue.startTimeMs else 0
         }
         AudioPlayer.checkOnPositionChange()
+    }
+
+    LaunchedEffect(highlightedCuePosition) {
+        if (highlightedCuePosition != 0) {
+            for (cue in cues) {
+                if (cue.startTimeMs == highlightedCuePosition) {
+                    // this offset is the sweet spot in the middle of the lyrics viewer
+                    lyricsScrollState.animateScrollToItem(cues.indexOf(cue), -550)
+                }
+            }
+        }
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
@@ -127,23 +134,31 @@ fun Player(navController: NavHostController) {
                 color = MaterialTheme.colorScheme.primaryContainer,
                 shape = DefaultRoundedCornerShape
             ) {
-                Column(
+                LazyColumn(
+                    userScrollEnabled = false,
+                    state = lyricsScrollState,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(18.dp)
-                        .verticalScroll(rememberScrollState())
+                        .height(500.dp)
                 ) {
-                    val disabledCueColor = ColorUtils.blendARGB(
-                        MaterialTheme.colorScheme.inverseSurface.toArgb(),
-                        MaterialTheme.colorScheme.background.toArgb(),
-                        0.4f
-                    )
-
                     for (cue in cues) {
-                        val cueColor = if (cue.startTimeMs == highlightedCuePosition) MaterialTheme.colorScheme.inverseSurface else Color(disabledCueColor)
+                        item {
+                            val disabledCueColor = ColorUtils.blendARGB(
+                                MaterialTheme.colorScheme.inverseSurface.toArgb(),
+                                MaterialTheme.colorScheme.background.toArgb(),
+                                0.4f
+                            )
 
-                        Text(text = cue.text, fontSize = 24.sp, color = cueColor)
-                        Spacer(modifier = Modifier.size(5.dp))
+                            val cueColor =
+                                if (cue.startTimeMs == highlightedCuePosition)
+                                    MaterialTheme.colorScheme.inverseSurface
+                                else
+                                    Color(disabledCueColor)
+
+                            Text(text = cue.text, fontSize = 24.sp, color = cueColor)
+                            Spacer(modifier = Modifier.size(5.dp))
+                        }
                     }
                 }
             }

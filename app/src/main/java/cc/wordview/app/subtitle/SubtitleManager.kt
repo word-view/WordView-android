@@ -43,7 +43,7 @@ class SubtitleManager {
         Log.i(TAG, "Parsed ${cues.size} cues")
     }
 
-   fun getCueAt(position: Int): WordViewCue {
+    fun getCueAt(position: Int): WordViewCue {
         for (cue in cues) {
             if (position >= cue.startTimeMs && position <= cue.endTimeMs)
                     return cue
@@ -51,7 +51,7 @@ class SubtitleManager {
 
         // a empty cue used to ignore if no cue was found.
         return WordViewCue("", -1, -1)
-   }
+    }
 
     private fun normalize(num: Long): Int {
         val s = num.toString()
