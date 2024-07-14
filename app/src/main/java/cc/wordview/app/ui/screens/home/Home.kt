@@ -43,8 +43,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.screens.home.navigation.BottomNavigationItem
-import cc.wordview.app.ui.screens.home.navigation.Tabs
+import cc.wordview.app.ui.screens.home.tabs.BottomNavigationItem
+import cc.wordview.app.ui.screens.home.tabs.ExploreTab
+import cc.wordview.app.ui.screens.home.tabs.LearnTab
+import cc.wordview.app.ui.screens.home.tabs.ProfileTab
+import cc.wordview.app.ui.screens.home.tabs.Tabs
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.redhatFamily
 

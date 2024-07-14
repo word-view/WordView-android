@@ -22,7 +22,7 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.ui.screens.LanguagePicker
 import cc.wordview.app.ui.screens.Login
 import cc.wordview.app.ui.screens.Player
-import cc.wordview.app.ui.screens.Settings
+import cc.wordview.app.ui.screens.home.Settings
 import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.screens.home.Home
 import cc.wordview.app.ui.screens.home.Search

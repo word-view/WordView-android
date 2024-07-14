@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home
+package cc.wordview.app.ui.screens.home.tabs
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box

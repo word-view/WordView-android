@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home.navigation
+package cc.wordview.app.ui.screens.home.tabs
 
 sealed class Tabs(val route : String) {
     data object Learn : Tabs("learn_tab")
