@@ -25,6 +25,7 @@ import cc.wordview.app.ui.screens.Player
 import cc.wordview.app.ui.screens.Settings
 import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.screens.home.Home
+import cc.wordview.app.ui.screens.home.Search
 
 sealed class Screen(val route: String) {
     @Composable
@@ -71,7 +72,14 @@ sealed class Screen(val route: String) {
         }
     }
 
+    data object Search : Screen("search") {
+       @Composable
+       override fun Composable(navHostController: NavHostController) {
+           Search(navHostController)
+       }
+    }
+
     companion object {
-        val screens = listOf(Welcome, Login, LanguagePicker, Settings, Player, Home)
+        val screens = listOf(Welcome, Login, LanguagePicker, Settings, Player, Home, Search)
     }
 }

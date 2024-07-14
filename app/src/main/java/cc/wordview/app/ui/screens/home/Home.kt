@@ -21,6 +21,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,6 +45,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.screens.home.navigation.BottomNavigationItem
 import cc.wordview.app.ui.screens.home.navigation.Tabs
+import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.redhatFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +70,13 @@ fun Home(navHostController: NavHostController) {
                 )
             },
             actions = {
-                IconButton(onClick = { navHostController.navigate("settings") }) {
+                IconButton(onClick = { navHostController.navigate(Screen.Search.route) }) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search"
+                    )
+                }
+                IconButton(onClick = { navHostController.navigate(Screen.Settings.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Settings,
                         contentDescription = "Settings"
