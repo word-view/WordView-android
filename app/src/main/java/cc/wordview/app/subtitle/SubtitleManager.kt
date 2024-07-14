@@ -34,11 +34,15 @@ class SubtitleManager {
             str.encodeToByteArray(),
             SubtitleParser.OutputOptions.allCues()
         ) { result ->
-            cues.add(WordViewCue(
-                result.cues.first().text.toString(),
-                normalize(result.startTimeUs.milliseconds.inWholeMilliseconds),
-                normalize(result.endTimeUs.milliseconds.inWholeMilliseconds),
-            ))
+            if (result.cues.first().text?.isNotEmpty()!!) {
+                cues.add(
+                    WordViewCue(
+                        result.cues.first().text.toString().trim(),
+                        normalize(result.startTimeUs.milliseconds.inWholeMilliseconds),
+                        normalize(result.endTimeUs.milliseconds.inWholeMilliseconds),
+                    )
+                )
+            }
         }
         Log.i(TAG, "Parsed ${cues.size} cues")
     }
