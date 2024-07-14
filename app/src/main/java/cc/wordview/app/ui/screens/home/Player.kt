@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens
+package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
