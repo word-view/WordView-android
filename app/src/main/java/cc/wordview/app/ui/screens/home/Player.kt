@@ -108,15 +108,14 @@ fun Player(navController: NavHostController) {
 
     LaunchedEffect(Unit) {
         thread {
-            getLyrics(currentSong.id, "ja", callback, context)
-
             AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
             AudioPlayer.prepare()
-            AudioPlayer.start()
             AudioPlayer.addOnPositionChange { position ->
                 val cue = subtitleManager.getCueAt(position)
                 highlightedCuePosition = if (cue.startTimeMs != -1) cue.startTimeMs else 0
             }
+            getLyrics(currentSong.id, "ja", callback, context)
+            AudioPlayer.start()
             AudioPlayer.checkOnPositionChange()
         }
     }
