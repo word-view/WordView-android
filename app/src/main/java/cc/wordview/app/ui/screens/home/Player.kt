@@ -65,6 +65,7 @@ import cc.wordview.app.currentSong
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.subtitle.SubtitleManager
 import cc.wordview.app.subtitle.WordViewCue
+import cc.wordview.app.ui.components.AsyncComposable
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.screens.util.KeepScreenOn
@@ -151,7 +152,10 @@ fun Player(navController: NavHostController) {
                 color = MaterialTheme.colorScheme.primaryContainer,
                 shape = DefaultRoundedCornerShape
             ) {
-                if (cues.size > 0 && AudioPlayer.trackExists()) {
+                AsyncComposable(
+                    condition = (cues.size > 0 && AudioPlayer.trackExists()),
+                    surface = true
+                ) {
                     LazyColumn(
                         userScrollEnabled = false,
                         state = lyricsScrollState,
@@ -178,20 +182,6 @@ fun Player(navController: NavHostController) {
                                 Spacer(modifier = Modifier.size(5.dp))
                             }
                         }
-                    }
-                } else {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        val inverseSurfaceDarker = ColorUtils.blendARGB(
-                            MaterialTheme.colorScheme.inverseSurface.toArgb(),
-                            MaterialTheme.colorScheme.background.toArgb(),
-                            0.4f
-                        )
-
-                        CircularProgressIndicator(
-                            modifier = Modifier.width(64.dp),
-                            color = MaterialTheme.colorScheme.inverseSurface,
-                            trackColor = Color(inverseSurfaceDarker),
-                        )
                     }
                 }
             }

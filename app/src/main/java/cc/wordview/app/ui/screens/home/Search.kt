@@ -68,6 +68,7 @@ import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.api.search
 import cc.wordview.app.currentSong
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.ui.components.AsyncComposable
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
@@ -161,20 +162,7 @@ fun Search(navController: NavHostController) {
             }
         }
     }) { innerPadding ->
-        if (waitingForResponse) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.width(64.dp),
-                    color = MaterialTheme.colorScheme.secondary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                )
-            }
-        } else {
+        AsyncComposable(Modifier.padding(innerPadding), condition = !waitingForResponse) {
             Column(
                 Modifier
                     .fillMaxSize()
