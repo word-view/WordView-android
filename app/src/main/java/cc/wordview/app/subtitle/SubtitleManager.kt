@@ -58,6 +58,8 @@ class SubtitleManager {
     }
 
     private fun normalize(num: Long): Int {
+        if (num == 0L) return 0
+
         val s = num.toString()
         return (if ((s == null || s.length === 0)
         ) null
