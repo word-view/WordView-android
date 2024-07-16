@@ -76,7 +76,11 @@ object AudioPlayer : MediaPlayer() {
         } else seekTo(position)
     }
 
-     fun checkOnPositionChange() {
+    fun trackExists(): Boolean {
+        return this.trackInfo != null
+    }
+
+    fun checkOnPositionChange() {
         val runnable = object : Runnable {
             override fun run() {
                 if (isPlaying) {

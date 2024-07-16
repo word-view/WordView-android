@@ -18,6 +18,8 @@
 package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +28,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -34,6 +37,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -67,6 +71,7 @@ import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.util.AudioPlayer
 import com.android.volley.VolleyError
+import kotlin.concurrent.thread
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
@@ -90,21 +95,29 @@ fun Player(navController: NavHostController) {
         }
 
         override fun onErrorResponse(response: VolleyError) {
-            TODO("Not yet implemented")
+            Log.e("Player", response.stackTraceToString())
+            // showing the entire stack trace here is weird, but its probably better than showing null
+            Toast.makeText(
+                context,
+                "Request failed: ${response.stackTraceToString()}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
     LaunchedEffect(Unit) {
-        getLyrics(currentSong.id, "ja", callback, context)
+        thread {
+            getLyrics(currentSong.id, "ja", callback, context)
 
-        AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
-        AudioPlayer.prepare()
-        AudioPlayer.start()
-        AudioPlayer.addOnPositionChange { position ->
-            val cue = subtitleManager.getCueAt(position)
-            highlightedCuePosition = if (cue.startTimeMs != -1) cue.startTimeMs else 0
+            AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
+            AudioPlayer.prepare()
+            AudioPlayer.start()
+            AudioPlayer.addOnPositionChange { position ->
+                val cue = subtitleManager.getCueAt(position)
+                highlightedCuePosition = if (cue.startTimeMs != -1) cue.startTimeMs else 0
+            }
+            AudioPlayer.checkOnPositionChange()
         }
-        AudioPlayer.checkOnPositionChange()
     }
 
     LaunchedEffect(highlightedCuePosition) {
@@ -138,31 +151,47 @@ fun Player(navController: NavHostController) {
                 color = MaterialTheme.colorScheme.primaryContainer,
                 shape = DefaultRoundedCornerShape
             ) {
-                LazyColumn(
-                    userScrollEnabled = false,
-                    state = lyricsScrollState,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(18.dp)
-                        .height(500.dp)
-                ) {
-                    for (cue in cues) {
-                        item {
-                            val disabledCueColor = ColorUtils.blendARGB(
-                                MaterialTheme.colorScheme.inverseSurface.toArgb(),
-                                MaterialTheme.colorScheme.background.toArgb(),
-                                0.4f
-                            )
+                if (cues.size > 0 && AudioPlayer.trackExists()) {
+                    LazyColumn(
+                        userScrollEnabled = false,
+                        state = lyricsScrollState,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(18.dp)
+                            .height(500.dp)
+                    ) {
+                        for (cue in cues) {
+                            item {
+                                val disabledCueColor = ColorUtils.blendARGB(
+                                    MaterialTheme.colorScheme.inverseSurface.toArgb(),
+                                    MaterialTheme.colorScheme.background.toArgb(),
+                                    0.4f
+                                )
 
-                            val cueColor =
-                                if (cue.startTimeMs == highlightedCuePosition)
-                                    MaterialTheme.colorScheme.inverseSurface
-                                else
-                                    Color(disabledCueColor)
+                                val cueColor =
+                                    if (cue.startTimeMs == highlightedCuePosition)
+                                        MaterialTheme.colorScheme.inverseSurface
+                                    else
+                                        Color(disabledCueColor)
 
-                            Text(text = cue.text, fontSize = 24.sp, color = cueColor)
-                            Spacer(modifier = Modifier.size(5.dp))
+                                Text(text = cue.text, fontSize = 24.sp, color = cueColor)
+                                Spacer(modifier = Modifier.size(5.dp))
+                            }
                         }
+                    }
+                } else {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        val inverseSurfaceDarker = ColorUtils.blendARGB(
+                            MaterialTheme.colorScheme.inverseSurface.toArgb(),
+                            MaterialTheme.colorScheme.background.toArgb(),
+                            0.4f
+                        )
+
+                        CircularProgressIndicator(
+                            modifier = Modifier.width(64.dp),
+                            color = MaterialTheme.colorScheme.inverseSurface,
+                            trackColor = Color(inverseSurfaceDarker),
+                        )
                     }
                 }
             }
