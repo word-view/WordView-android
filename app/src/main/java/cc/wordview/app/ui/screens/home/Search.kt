@@ -19,6 +19,7 @@ package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -103,7 +104,10 @@ fun Search(navController: NavHostController) {
         }
 
         override fun onErrorResponse(response: VolleyError) {
-            TODO("Not yet implemented")
+            waitingForResponse = false
+            Log.e("Search", response.stackTraceToString())
+            // showing the entire stack trace here is weird, but its probably better than showing null
+            Toast.makeText(context, "Request failed: ${response.stackTraceToString()}", Toast.LENGTH_LONG).show()
         }
     }
 
