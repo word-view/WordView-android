@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.home.tabs
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -73,7 +74,9 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
         }
 
         override fun onErrorResponse(response: VolleyError) {
-            TODO("Not yet implemented")
+            Log.e("LearnTab", response.stackTraceToString())
+            // showing the entire stack trace here is weird, but its probably better than showing null
+            Toast.makeText(context, "Request failed: ${response.stackTraceToString()}", Toast.LENGTH_LONG).show()
         }
     }
 
