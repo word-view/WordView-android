@@ -21,9 +21,9 @@ import android.content.Context
 import android.util.Log
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
-import com.android.volley.RetryPolicy
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import java.net.URLEncoder
 
 private const val TAG = "Music"
 
@@ -36,32 +36,46 @@ fun getHistory(callback: APICallback, context: Context) {
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/history"
 
-    val stringRequest =
-        StringRequest(Request.Method.GET, url, { response ->
+    val stringRequest = object :
+        StringRequest(Method.GET, url, { response ->
             callback.onSuccessResponse(response)
         },
-            { err -> Log.e(TAG, "Request failed: ${err.message}") })
+            { err -> Log.e(TAG, "Request failed: ${err.message}") }) {
+        override fun getHeaders(): MutableMap<String, String> {
+            val headers = HashMap<String, String>()
+            headers["Accept"] = "application/json;charset=utf-8"
+            return headers
+        }
+    }
 
     queue.add(stringRequest)
 }
 
 fun search(query: String, callback: APICallback, context: Context) {
     val queue = Volley.newRequestQueue(context)
-    val url = "$apiURL/music/search?q=$query"
+    val url = "$apiURL/music/search?q=${URLEncoder.encode(query)}"
 
-    val stringRequest =
-        StringRequest(Request.Method.GET, url, { response ->
+    val stringRequest = object :
+        StringRequest(Method.GET, url, { response ->
             callback.onSuccessResponse(response)
         },
-            { err -> Log.e(TAG, "Request failed: ${err.stackTraceToString()}") })
+            { err -> Log.e(TAG, "Request failed: ${err.stackTraceToString()}") }) {
+        override fun getHeaders(): MutableMap<String, String> {
+            val headers = HashMap<String, String>()
+            headers["Accept"] = "application/json;charset=utf-8"
+            return headers
+        }
+    }
 
     // Little hack to deal with the search taking too much due to using ytdl
     // TODO: Remove this retry policy when the API starts using the NewPipeExtractor
-    stringRequest.setRetryPolicy(DefaultRetryPolicy(
-        20000,
-        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-    ))
+    stringRequest.setRetryPolicy(
+        DefaultRetryPolicy(
+            20000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+    )
 
     queue.add(stringRequest)
 }
