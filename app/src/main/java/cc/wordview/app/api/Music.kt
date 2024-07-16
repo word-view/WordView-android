@@ -23,6 +23,7 @@ import com.android.volley.Request
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import java.lang.reflect.Method
 import java.net.URLEncoder
 
 interface APICallback {
@@ -34,40 +35,28 @@ fun getHistory(callback: APICallback, context: Context) {
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/history"
 
-    val stringRequest = object :
-        StringRequest(Method.GET, url, { response ->
-            callback.onSuccessResponse(response)
-        },
-            { err -> callback.onErrorResponse(err) }) {
-        override fun getHeaders(): MutableMap<String, String> {
-            val headers = HashMap<String, String>()
-            headers["Accept"] = "application/json;charset=utf-8"
-            return headers
-        }
-    }
+    val request = JsonAcceptingRequest(
+        Request.Method.GET,
+        url,
+        { res -> callback.onSuccessResponse(res) },
+        { err -> callback.onErrorResponse(err) })
 
-    queue.add(stringRequest)
+    queue.add(request)
 }
 
 fun search(query: String, callback: APICallback, context: Context) {
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/search?q=${URLEncoder.encode(query)}"
 
-    val stringRequest = object :
-        StringRequest(Method.GET, url, { response ->
-            callback.onSuccessResponse(response)
-        },
-            { err -> callback.onErrorResponse(err) }) {
-        override fun getHeaders(): MutableMap<String, String> {
-            val headers = HashMap<String, String>()
-            headers["Accept"] = "application/json;charset=utf-8"
-            return headers
-        }
-    }
+    val request = JsonAcceptingRequest(
+        Request.Method.GET,
+        url,
+        { res -> callback.onSuccessResponse(res) },
+        { err -> callback.onErrorResponse(err) })
 
     // Little hack to deal with the search taking too much due to using ytdl
     // TODO: Remove this retry policy when the API starts using the NewPipeExtractor
-    stringRequest.setRetryPolicy(
+    request.setRetryPolicy(
         DefaultRetryPolicy(
             20000,
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
@@ -75,11 +64,10 @@ fun search(query: String, callback: APICallback, context: Context) {
         )
     )
 
-    queue.add(stringRequest)
+    queue.add(request)
 }
 
 fun getLyrics(id: String, lang: String, callback: APICallback, context: Context) {
-
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/lyrics?id=$id&lang=$lang"
 
