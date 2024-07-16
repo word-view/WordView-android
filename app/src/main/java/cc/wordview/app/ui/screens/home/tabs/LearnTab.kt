@@ -55,6 +55,7 @@ import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
+import com.android.volley.VolleyError
 import com.google.gson.Gson
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +72,7 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
             }
         }
 
-        override fun onErrorResponse(response: String?) {
+        override fun onErrorResponse(response: VolleyError) {
             TODO("Not yet implemented")
         }
     }

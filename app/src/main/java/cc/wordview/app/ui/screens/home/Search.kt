@@ -70,6 +70,7 @@ import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
+import com.android.volley.VolleyError
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -101,7 +102,7 @@ fun Search(navController: NavHostController) {
             }
         }
 
-        override fun onErrorResponse(response: String?) {
+        override fun onErrorResponse(response: VolleyError) {
             TODO("Not yet implemented")
         }
     }

@@ -18,18 +18,16 @@
 package cc.wordview.app.api
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import java.net.URLEncoder
 
-private const val TAG = "Music"
-
 interface APICallback {
     fun onSuccessResponse(response: String?)
-    fun onErrorResponse(response: String?)
+    fun onErrorResponse(response: VolleyError)
 }
 
 fun getHistory(callback: APICallback, context: Context) {
@@ -40,7 +38,7 @@ fun getHistory(callback: APICallback, context: Context) {
         StringRequest(Method.GET, url, { response ->
             callback.onSuccessResponse(response)
         },
-            { err -> Log.e(TAG, "Request failed: ${err.message}") }) {
+            { err -> callback.onErrorResponse(err) }) {
         override fun getHeaders(): MutableMap<String, String> {
             val headers = HashMap<String, String>()
             headers["Accept"] = "application/json;charset=utf-8"
@@ -59,7 +57,7 @@ fun search(query: String, callback: APICallback, context: Context) {
         StringRequest(Method.GET, url, { response ->
             callback.onSuccessResponse(response)
         },
-            { err -> Log.e(TAG, "Request failed: ${err.stackTraceToString()}") }) {
+            { err -> callback.onErrorResponse(err) }) {
         override fun getHeaders(): MutableMap<String, String> {
             val headers = HashMap<String, String>()
             headers["Accept"] = "application/json;charset=utf-8"
@@ -89,7 +87,7 @@ fun getLyrics(id: String, lang: String, callback: APICallback, context: Context)
         StringRequest(Request.Method.GET, url, { response ->
             callback.onSuccessResponse(response)
         },
-            { err -> Log.e(TAG, "Request failed: ${err.message}") })
+            { err -> callback.onErrorResponse(err) })
 
     queue.add(stringRequest)
 }

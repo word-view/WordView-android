@@ -66,6 +66,7 @@ import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.util.AudioPlayer
+import com.android.volley.VolleyError
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
@@ -88,7 +89,7 @@ fun Player(navController: NavHostController) {
             }
         }
 
-        override fun onErrorResponse(response: String?) {
+        override fun onErrorResponse(response: VolleyError) {
             TODO("Not yet implemented")
         }
     }
