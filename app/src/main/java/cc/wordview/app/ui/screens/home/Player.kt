@@ -20,6 +20,7 @@ package cc.wordview.app.ui.screens.home
 import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -74,8 +75,6 @@ import kotlin.concurrent.thread
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun Player(navController: NavHostController) {
-    KeepScreenOn()
-
     val context = LocalContext.current
     val subtitleManager = SubtitleManager()
     val lyricsScrollState = rememberLazyListState()
@@ -124,6 +123,12 @@ fun Player(navController: NavHostController) {
                 }
             }
         }
+    }
+
+    KeepScreenOn()
+    BackHandler {
+        AudioPlayer.stop()
+        navController.goBack()
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
