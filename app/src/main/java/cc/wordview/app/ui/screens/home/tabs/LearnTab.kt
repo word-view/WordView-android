@@ -48,7 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
-import cc.wordview.app.api.APICallback
+import cc.wordview.app.api.ResponseHandler
 import cc.wordview.app.api.Video
 import cc.wordview.app.api.getHistory
 import cc.wordview.app.currentSong
@@ -56,7 +56,6 @@ import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
-import com.android.volley.VolleyError
 import com.google.gson.Gson
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,22 +64,24 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
     val context = LocalContext.current
     var json by remember { mutableStateOf(Video()) }
 
-    val callback = object : APICallback {
-        override fun onSuccessResponse(response: String?) {
-            if (response != null) {
-                Log.i("LearnTab", response)
-                json = Gson().fromJson(response, Video::class.java)
+    val handler = ResponseHandler(
+        { res ->
+            if (res != null) {
+                Log.i("LearnTab", res)
+                json = Gson().fromJson(res, Video::class.java)
             }
-        }
-
-        override fun onErrorResponse(response: VolleyError) {
-            Log.e("LearnTab", response.stackTraceToString())
+        },
+        { err ->
+            Log.e("LearnTab", err.stackTraceToString())
             // showing the entire stack trace here is weird, but its probably better than showing null
-            Toast.makeText(context, "Request failed: ${response.stackTraceToString()}", Toast.LENGTH_LONG).show()
-        }
-    }
+            Toast.makeText(
+                context,
+                "Request failed: ${err.stackTraceToString()}",
+                Toast.LENGTH_LONG
+            ).show()
+        })
 
-    LaunchedEffect(Unit) { getHistory(callback, context) }
+    LaunchedEffect(Unit) { getHistory(handler, context) }
 
     Box(
         Modifier
@@ -111,7 +112,8 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
                     Column(
                         Modifier
                             .width(120.dp)
-                            .padding(top = 5.dp)) {
+                            .padding(top = 5.dp)
+                    ) {
                         Text(
                             text = json.title,
                             style = Typography.labelMedium,

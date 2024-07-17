@@ -20,39 +20,32 @@ package cc.wordview.app.api
 import android.content.Context
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import java.lang.reflect.Method
 import java.net.URLEncoder
 
-interface APICallback {
-    fun onSuccessResponse(response: String?)
-    fun onErrorResponse(response: VolleyError)
-}
-
-fun getHistory(callback: APICallback, context: Context) {
+fun getHistory(handler: ResponseHandler, context: Context) {
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/history"
 
     val request = JsonAcceptingRequest(
         Request.Method.GET,
         url,
-        { res -> callback.onSuccessResponse(res) },
-        { err -> callback.onErrorResponse(err) })
+        { res -> handler.onSuccessResponse(res) },
+        { err -> handler.onErrorResponse(err) })
 
     queue.add(request)
 }
 
-fun search(query: String, callback: APICallback, context: Context) {
+fun search(query: String, handler: ResponseHandler, context: Context) {
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/search?q=${URLEncoder.encode(query)}"
 
     val request = JsonAcceptingRequest(
         Request.Method.GET,
         url,
-        { res -> callback.onSuccessResponse(res) },
-        { err -> callback.onErrorResponse(err) })
+        { res -> handler.onSuccessResponse(res) },
+        { err -> handler.onErrorResponse(err) })
 
     // Little hack to deal with the search taking too much due to using ytdl
     // TODO: Remove this retry policy when the API starts using the NewPipeExtractor
@@ -67,15 +60,15 @@ fun search(query: String, callback: APICallback, context: Context) {
     queue.add(request)
 }
 
-fun getLyrics(id: String, lang: String, callback: APICallback, context: Context) {
+fun getLyrics(id: String, lang: String, handler: ResponseHandler, context: Context) {
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/lyrics?id=$id&lang=$lang"
 
     val stringRequest =
         StringRequest(Request.Method.GET, url, { response ->
-            callback.onSuccessResponse(response)
+            handler.onSuccessResponse(response)
         },
-            { err -> callback.onErrorResponse(err) })
+            { err -> handler.onErrorResponse(err) })
 
     queue.add(stringRequest)
 }

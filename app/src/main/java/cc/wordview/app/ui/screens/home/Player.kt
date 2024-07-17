@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -37,7 +36,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -58,7 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavHostController
-import cc.wordview.app.api.APICallback
+import cc.wordview.app.api.ResponseHandler
 import cc.wordview.app.api.apiURL
 import cc.wordview.app.api.getLyrics
 import cc.wordview.app.currentSong
@@ -71,7 +69,6 @@ import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.util.AudioPlayer
-import com.android.volley.VolleyError
 import kotlin.concurrent.thread
 
 @SuppressLint("MutableCollectionMutableState")
@@ -87,24 +84,22 @@ fun Player(navController: NavHostController) {
     var highlightedCuePosition by remember { mutableIntStateOf(0) }
     var playButtonIcon by remember { mutableStateOf(Icons.Filled.Pause) }
 
-    val callback = object : APICallback {
-        override fun onSuccessResponse(response: String?) {
-            if (response != null) {
-                subtitleManager.parseCues(response)
+    val handler = ResponseHandler(
+        { res ->
+            if (res != null) {
+                subtitleManager.parseCues(res)
                 cues = subtitleManager.cues
             }
-        }
-
-        override fun onErrorResponse(response: VolleyError) {
-            Log.e("Player", response.stackTraceToString())
+        },
+        { err ->
+            Log.e("Player", err.stackTraceToString())
             // showing the entire stack trace here is weird, but its probably better than showing null
             Toast.makeText(
                 context,
-                "Request failed: ${response.stackTraceToString()}",
+                "Request failed: ${err.stackTraceToString()}",
                 Toast.LENGTH_LONG
             ).show()
-        }
-    }
+        })
 
     LaunchedEffect(Unit) {
         thread {
@@ -114,7 +109,7 @@ fun Player(navController: NavHostController) {
                 val cue = subtitleManager.getCueAt(position)
                 highlightedCuePosition = if (cue.startTimeMs != -1) cue.startTimeMs else 0
             }
-            getLyrics(currentSong.id, "ja", callback, context)
+            getLyrics(currentSong.id, "ja", handler, context)
             AudioPlayer.start()
             AudioPlayer.checkOnPositionChange()
         }

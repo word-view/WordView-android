@@ -21,7 +21,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +29,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -39,7 +37,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,7 +59,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
-import cc.wordview.app.api.APICallback
+import cc.wordview.app.api.ResponseHandler
 import cc.wordview.app.api.Video
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.api.search
@@ -72,7 +69,6 @@ import cc.wordview.app.ui.components.AsyncComposable
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
-import com.android.volley.VolleyError
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -88,29 +84,24 @@ fun Search(navController: NavHostController) {
     var waitingForResponse by remember { mutableStateOf(false) }
     var results by remember { mutableStateOf(ArrayList<VideoSearchResult>()) }
 
-    val callback = object : APICallback {
-        override fun onSuccessResponse(response: String?) {
-            if (response != null) {
-                Log.i("Search", "$response")
-
-
+    val handler = ResponseHandler(
+        { res ->
+            if (res != null) {
                 val typeToken = object : TypeToken<List<VideoSearchResult>>() {}.type
                 results = Gson().fromJson<List<VideoSearchResult>>(
-                    response,
+                    res,
                     typeToken
                 ) as ArrayList<VideoSearchResult>
 
                 waitingForResponse = false
             }
-        }
-
-        override fun onErrorResponse(response: VolleyError) {
+        },
+        { err ->
             waitingForResponse = false
-            Log.e("Search", response.stackTraceToString())
+            Log.e("Search", err.stackTraceToString())
             // showing the entire stack trace here is weird, but its probably better than showing null
-            Toast.makeText(context, "Request failed: ${response.stackTraceToString()}", Toast.LENGTH_LONG).show()
-        }
-    }
+            Toast.makeText(context, "Request failed: ${err.stackTraceToString()}", Toast.LENGTH_LONG).show()
+        })
 
 
     fun playResult(result: VideoSearchResult) {
@@ -134,7 +125,7 @@ fun Search(navController: NavHostController) {
                 query = searchText,
                 onQueryChange = { query -> searchText = query },
                 onSearch = { query ->
-                    search(query, callback, context)
+                    search(query, handler, context)
                     waitingForResponse = true
                     isSearching = false
 
