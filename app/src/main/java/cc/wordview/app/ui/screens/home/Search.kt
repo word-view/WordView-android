@@ -46,12 +46,15 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -83,6 +86,7 @@ fun Search(navController: NavHostController) {
     var leadingIcon by remember { mutableStateOf(Icons.Filled.Search) }
     var waitingForResponse by remember { mutableStateOf(false) }
     var results by remember { mutableStateOf(ArrayList<VideoSearchResult>()) }
+    val focusRequester = remember { FocusRequester() }
 
     val handler = ResponseHandler(
         { res ->
@@ -116,9 +120,14 @@ fun Search(navController: NavHostController) {
         navController.navigate(Screen.Player.route)
     }
 
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             SearchBar(
+                modifier = Modifier.focusRequester(focusRequester),
                 placeholder = {
                     Text("Search for music, artists, albums...")
                 },
