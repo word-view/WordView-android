@@ -60,6 +60,7 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.api.ResponseHandler
 import cc.wordview.app.api.apiURL
 import cc.wordview.app.api.getLyrics
+import cc.wordview.app.api.getLyricsWordFind
 import cc.wordview.app.currentSong
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.subtitle.SubtitleManager
@@ -83,11 +84,34 @@ fun Player(navController: NavHostController) {
     var highlightedCuePosition by remember { mutableIntStateOf(0) }
     var playButtonIcon by remember { mutableStateOf(Icons.Filled.Pause) }
 
+    fun play() {
+        AudioPlayer.checkOnPositionChange()
+        AudioPlayer.start()
+    }
+
+    val wordFindHandler = ResponseHandler(
+        { res ->
+            if (res != null) {
+                subtitleManager.parseCues(res)
+                cues = subtitleManager.cues
+                play()
+            }
+        },
+        { err ->
+            Log.e("Player", err.stackTraceToString())
+            Toast.makeText(
+                context,
+                "Could not find any lyrics matching this song.",
+                Toast.LENGTH_LONG
+            ).show()
+        })
+
     val handler = ResponseHandler(
         { res ->
             if (res != null) {
                 subtitleManager.parseCues(res)
                 cues = subtitleManager.cues
+                play()
             }
         },
         { err ->
@@ -95,9 +119,10 @@ fun Player(navController: NavHostController) {
             // showing the entire stack trace here is weird, but its probably better than showing null
             Toast.makeText(
                 context,
-                "Request failed: ${err.stackTraceToString()}",
+                "Could not find any lyrics on youtube, will try searching for other platforms (beware: this may produce inaccurate lyrics)",
                 Toast.LENGTH_LONG
             ).show()
+            getLyricsWordFind(currentSong.title, wordFindHandler, context);
         })
 
     LaunchedEffect(Unit) {
@@ -109,8 +134,6 @@ fun Player(navController: NavHostController) {
                 highlightedCuePosition = if (cue.startTimeMs != -1) cue.startTimeMs else 0
             }
             getLyrics(currentSong.id, "ja", handler, context)
-            AudioPlayer.start()
-            AudioPlayer.checkOnPositionChange()
         }
     }
 

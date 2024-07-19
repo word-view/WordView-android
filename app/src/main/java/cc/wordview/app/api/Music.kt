@@ -72,3 +72,24 @@ fun getLyrics(id: String, lang: String, handler: ResponseHandler, context: Conte
 
     queue.add(stringRequest)
 }
+
+fun getLyricsWordFind(title: String, handler: ResponseHandler, context: Context) {
+    val queue = Volley.newRequestQueue(context);
+    val url = "$apiURL/music/lyrics/find?title=${URLEncoder.encode(title)}"
+
+    val stringRequest =
+        StringRequest(Request.Method.GET, url, { response ->
+            handler.onSuccessResponse(response)
+        },
+            { err -> handler.onErrorResponse(err) })
+
+    stringRequest.setRetryPolicy(
+        DefaultRetryPolicy(
+            20000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+    )
+
+    queue.add(stringRequest)
+}
