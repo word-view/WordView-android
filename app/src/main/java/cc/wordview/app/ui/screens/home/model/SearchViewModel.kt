@@ -19,12 +19,11 @@ package cc.wordview.app.ui.screens.home.model
 
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.api.VideoSearchResult
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 object SearchViewModel : ViewModel() {
     private val _searching = MutableStateFlow(false)
@@ -43,12 +42,22 @@ object SearchViewModel : ViewModel() {
         _query.update { query }
     }
 
-    fun setSearchResultsFromJson(json: String) {
-        val typeToken = object : TypeToken<List<VideoSearchResult>>() {}.type
-        val parsedSearchResults = Gson().fromJson<List<VideoSearchResult>>(
-            json,
-            typeToken
-        ) as ArrayList<VideoSearchResult>
-        _searchResults.update { parsedSearchResults }
+    fun setSearchResults(resultList: List<StreamInfoItem>) {
+        val parsed = ArrayList<VideoSearchResult>()
+
+        for (item in resultList) {
+            parsed.add(VideoSearchResult(
+                id = getIdFromUrl(item.url),
+                title = item.name,
+                channel = item.uploaderName,
+                duration = item.duration.toInt(),
+            ))
+        }
+
+        _searchResults.update { parsed }
+    }
+
+    private fun getIdFromUrl(url: String): String {
+        return url.split("watch?v=")[1]
     }
 }

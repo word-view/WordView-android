@@ -27,6 +27,9 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+
+
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -47,7 +50,7 @@ android {
 }
 
 dependencies {
-
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,6 +67,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.7")
     implementation("androidx.media3:media3-extractor:1.3.1")
+    implementation("com.github.TeamNewPipe:NewPipeExtractor:0.24.1")
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.lifecycle.runtime.compose.android)
     testImplementation(libs.junit)

@@ -27,14 +27,20 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.extractor.DownloaderImpl
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.WordViewTheme
+import org.schabi.newpipe.extractor.NewPipe
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
+
+        DownloaderImpl.init(null)
+        NewPipe.init(DownloaderImpl.getInstance())
+
         enableEdgeToEdge()
         setContent {
             WordViewTheme {

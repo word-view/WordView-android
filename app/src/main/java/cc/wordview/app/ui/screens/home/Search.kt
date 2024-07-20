@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,18 +62,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.api.ResponseHandler
 import cc.wordview.app.api.Video
 import cc.wordview.app.api.VideoSearchResult
-import cc.wordview.app.api.search
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.extractor.search
 import cc.wordview.app.ui.components.AsyncComposable
 import cc.wordview.app.ui.screens.home.model.SearchViewModel
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,29 +86,15 @@ fun Search(navController: NavHostController, viewModel: SearchViewModel = Search
     var leadingIcon by remember { mutableStateOf(Icons.Filled.Search) }
     val focusRequester = remember { FocusRequester() }
 
-    val handler = ResponseHandler(
-        { res ->
-            viewModel.setSearchResultsFromJson(res)
-            waitingForResponse = false
-        },
-        { err ->
-            waitingForResponse = false
-            // showing the entire stack trace here is weird, but its probably better than showing null
-            Toast.makeText(
-                context,
-                "Request failed: ${err.stackTraceToString()}",
-                Toast.LENGTH_LONG
-            ).show()
-        })
-
-
     fun playResult(result: VideoSearchResult) {
-        SongViewModel.setVideo(Video(
-            result.id,
-            result.title,
-            result.channel,
-            "https://img.youtube.com/vi/${result.id}/0.jpg"
-        ))
+        SongViewModel.setVideo(
+            Video(
+                result.id,
+                result.title,
+                result.channel,
+                "https://img.youtube.com/vi/${result.id}/0.jpg"
+            )
+        )
         navController.navigate(Screen.Player.route)
     }
 
@@ -130,10 +112,13 @@ fun Search(navController: NavHostController, viewModel: SearchViewModel = Search
                 query = searchText,
                 onQueryChange = { query -> viewModel.setQuery(query) },
                 onSearch = { query ->
-                    search(query, handler, context)
+                    search(query) { items ->
+                        viewModel.setSearchResults(items);
+                        waitingForResponse = false
+                    }
+
                     waitingForResponse = true
                     viewModel.setSearching(false)
-
                     // we need to manually fix the icon cause onActiveChange
                     // is not called if we change isSearching.
                     leadingIcon = Icons.Filled.Search

@@ -37,29 +37,6 @@ fun getHistory(handler: ResponseHandler, context: Context) {
     queue.add(request)
 }
 
-fun search(query: String, handler: ResponseHandler, context: Context) {
-    val queue = Volley.newRequestQueue(context)
-    val url = "$apiURL/music/search?q=${URLEncoder.encode(query)}"
-
-    val request = JsonAcceptingRequest(
-        Request.Method.GET,
-        url,
-        { res -> handler.onSuccessResponse(res) },
-        { err -> handler.onErrorResponse(err) })
-
-    // Little hack to deal with the search taking too much due to using ytdl
-    // TODO: Remove this retry policy when the API starts using the NewPipeExtractor
-    request.setRetryPolicy(
-        DefaultRetryPolicy(
-            20000,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
-    )
-
-    queue.add(request)
-}
-
 fun getLyrics(id: String, lang: String, handler: ResponseHandler, context: Context) {
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/lyrics?id=$id&lang=$lang"
