@@ -91,11 +91,9 @@ fun Player(navController: NavHostController) {
 
     val wordFindHandler = ResponseHandler(
         { res ->
-            if (res != null) {
-                subtitleManager.parseCues(res)
-                cues = subtitleManager.cues
-                play()
-            }
+            subtitleManager.parseCues(res)
+            cues = subtitleManager.cues
+            play()
         },
         { err ->
             Log.e("Player", err.stackTraceToString())
@@ -108,11 +106,9 @@ fun Player(navController: NavHostController) {
 
     val handler = ResponseHandler(
         { res ->
-            if (res != null) {
-                subtitleManager.parseCues(res)
-                cues = subtitleManager.cues
-                play()
-            }
+            subtitleManager.parseCues(res)
+            cues = subtitleManager.cues
+            play()
         },
         { err ->
             Log.e("Player", err.stackTraceToString())

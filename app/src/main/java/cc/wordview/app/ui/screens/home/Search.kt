@@ -90,21 +90,23 @@ fun Search(navController: NavHostController) {
 
     val handler = ResponseHandler(
         { res ->
-            if (res != null) {
-                val typeToken = object : TypeToken<List<VideoSearchResult>>() {}.type
-                results = Gson().fromJson<List<VideoSearchResult>>(
-                    res,
-                    typeToken
-                ) as ArrayList<VideoSearchResult>
+            val typeToken = object : TypeToken<List<VideoSearchResult>>() {}.type
+            results = Gson().fromJson<List<VideoSearchResult>>(
+                res,
+                typeToken
+            ) as ArrayList<VideoSearchResult>
 
-                waitingForResponse = false
-            }
+            waitingForResponse = false
         },
         { err ->
             waitingForResponse = false
             Log.e("Search", err.stackTraceToString())
             // showing the entire stack trace here is weird, but its probably better than showing null
-            Toast.makeText(context, "Request failed: ${err.stackTraceToString()}", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context,
+                "Request failed: ${err.stackTraceToString()}",
+                Toast.LENGTH_LONG
+            ).show()
         })
 
 

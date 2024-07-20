@@ -20,11 +20,13 @@ package cc.wordview.app.api
 import com.android.volley.VolleyError
 
 class ResponseHandler(
-    private val onSuccess: (res: String?) -> Unit,
+    private val onSuccess: (res: String) -> Unit,
     private val onError: (err: VolleyError) -> Unit
 ) {
     fun onSuccessResponse(response: String?) {
-        onSuccess.invoke(response)
+        if (response != null) {
+            onSuccess.invoke(response)
+        }
     }
 
     fun onErrorResponse(error: VolleyError) {

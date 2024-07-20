@@ -66,10 +66,8 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
 
     val handler = ResponseHandler(
         { res ->
-            if (res != null) {
-                Log.i("LearnTab", res)
-                json = Gson().fromJson(res, Video::class.java)
-            }
+            Log.i("LearnTab", res)
+            json = Gson().fromJson(res, Video::class.java)
         },
         { err ->
             Log.e("LearnTab", err.stackTraceToString())
