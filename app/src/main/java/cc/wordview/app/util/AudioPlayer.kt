@@ -52,6 +52,10 @@ object AudioPlayer : MediaPlayer() {
         }
     }
 
+    override fun stop() {
+        if (initialized) super.stop()
+    }
+
     fun togglePlay() {
         if (this.isPlaying) {
             pause()
