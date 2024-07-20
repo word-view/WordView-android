@@ -82,11 +82,13 @@ fun Player(navController: NavHostController) {
 
     var cues by remember { mutableStateOf(ArrayList<WordViewCue>()) }
     var highlightedCuePosition by remember { mutableIntStateOf(0) }
-    var playButtonIcon by remember { mutableStateOf(Icons.Filled.Pause) }
+    var playButtonIcon by remember { mutableStateOf(Icons.Filled.PlayArrow) }
 
     fun play() {
         AudioPlayer.checkOnPositionChange()
-        AudioPlayer.start()
+        AudioPlayer.togglePlay(
+            { playButtonIcon = Icons.Filled.Pause },
+            { playButtonIcon = Icons.Filled.PlayArrow })
     }
 
     val wordFindHandler = ResponseHandler(
