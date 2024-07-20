@@ -95,8 +95,7 @@ fun Player(navController: NavHostController) {
             cues = subtitleManager.cues
             play()
         },
-        { err ->
-            Log.e("Player", err.stackTraceToString())
+        { _ ->
             Toast.makeText(
                 context,
                 "Could not find any lyrics matching this song.",
@@ -110,8 +109,7 @@ fun Player(navController: NavHostController) {
             cues = subtitleManager.cues
             play()
         },
-        { err ->
-            Log.e("Player", err.stackTraceToString())
+        { _ ->
             // showing the entire stack trace here is weird, but its probably better than showing null
             Toast.makeText(
                 context,

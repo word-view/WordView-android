@@ -100,7 +100,6 @@ fun Search(navController: NavHostController) {
         },
         { err ->
             waitingForResponse = false
-            Log.e("Search", err.stackTraceToString())
             // showing the entire stack trace here is weird, but its probably better than showing null
             Toast.makeText(
                 context,

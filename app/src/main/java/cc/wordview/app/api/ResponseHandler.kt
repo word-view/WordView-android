@@ -17,12 +17,15 @@
 
 package cc.wordview.app.api
 
+import android.util.Log
 import com.android.volley.VolleyError
 
 class ResponseHandler(
     private val onSuccess: (res: String) -> Unit,
     private val onError: (err: VolleyError) -> Unit
 ) {
+    private val TAG = "ResponseHandler"
+
     fun onSuccessResponse(response: String?) {
         if (response != null) {
             onSuccess.invoke(response)
@@ -30,6 +33,7 @@ class ResponseHandler(
     }
 
     fun onErrorResponse(error: VolleyError) {
+        Log.e(TAG, "Request Failed: ", error)
         onError.invoke(error)
     }
 }

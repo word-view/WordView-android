@@ -70,7 +70,6 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
             json = Gson().fromJson(res, Video::class.java)
         },
         { err ->
-            Log.e("LearnTab", err.stackTraceToString())
             // showing the entire stack trace here is weird, but its probably better than showing null
             Toast.makeText(
                 context,
