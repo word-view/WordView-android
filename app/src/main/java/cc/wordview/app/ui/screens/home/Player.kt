@@ -55,12 +55,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.ResponseHandler
 import cc.wordview.app.api.apiURL
 import cc.wordview.app.api.getLyrics
 import cc.wordview.app.api.getLyricsWordFind
-import cc.wordview.app.currentSong
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.subtitle.SubtitleManager
 import cc.wordview.app.subtitle.WordViewCue
@@ -78,6 +79,8 @@ fun Player(navController: NavHostController) {
     val context = LocalContext.current
     val subtitleManager = SubtitleManager()
     val lyricsScrollState = rememberLazyListState()
+
+    val currentSong by SongViewModel.video.collectAsStateWithLifecycle()
 
     var cues by remember { mutableStateOf(ArrayList<WordViewCue>()) }
     var highlightedCuePosition by remember { mutableIntStateOf(0) }

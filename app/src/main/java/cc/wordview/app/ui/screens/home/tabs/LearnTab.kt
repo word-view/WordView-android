@@ -48,10 +48,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
+import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.ResponseHandler
 import cc.wordview.app.api.Video
 import cc.wordview.app.api.getHistory
-import cc.wordview.app.currentSong
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
@@ -89,7 +89,7 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.background,
             ),
-            onClick = { currentSong = json; navHostController.navigate(Screen.Player.route) }
+            onClick = { SongViewModel.setVideo(json); navHostController.navigate(Screen.Player.route) }
         ) {
             Column(
                 modifier = Modifier.padding(10.dp),

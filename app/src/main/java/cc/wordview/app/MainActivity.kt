@@ -44,9 +44,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// TODO: quick hack, find a better solution for sending the picked song at the learn tab to the Music Screen
-var currentSong by mutableStateOf(Video())
-
 @Composable
 fun Main() {
     val navController = rememberNavController()

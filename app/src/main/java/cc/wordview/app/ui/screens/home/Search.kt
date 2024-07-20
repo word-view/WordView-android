@@ -62,11 +62,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
+import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.ResponseHandler
 import cc.wordview.app.api.Video
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.api.search
-import cc.wordview.app.currentSong
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.AsyncComposable
 import cc.wordview.app.ui.screens.home.model.SearchViewModel
@@ -107,14 +107,12 @@ fun Search(navController: NavHostController, viewModel: SearchViewModel = Search
 
 
     fun playResult(result: VideoSearchResult) {
-        val video = Video(
+        SongViewModel.setVideo(Video(
             result.id,
             result.title,
             result.channel,
             "https://img.youtube.com/vi/${result.id}/0.jpg"
-        )
-
-        currentSong = video
+        ))
         navController.navigate(Screen.Player.route)
     }
 
