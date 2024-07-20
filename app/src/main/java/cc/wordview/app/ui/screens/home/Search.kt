@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,6 +59,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.api.ResponseHandler
@@ -69,6 +69,7 @@ import cc.wordview.app.api.search
 import cc.wordview.app.currentSong
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.AsyncComposable
+import cc.wordview.app.ui.screens.home.model.SearchViewModel
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
@@ -78,24 +79,20 @@ import com.google.gson.reflect.TypeToken
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Search(navController: NavHostController) {
+fun Search(navController: NavHostController, viewModel: SearchViewModel = SearchViewModel) {
     val context = LocalContext.current
 
-    var searchText by remember { mutableStateOf("") }
-    var isSearching by remember { mutableStateOf(false) }
-    var leadingIcon by remember { mutableStateOf(Icons.Filled.Search) }
+    val searchText by viewModel.query.collectAsStateWithLifecycle()
+    val searching by viewModel.searching.collectAsStateWithLifecycle()
+    val results by viewModel.searchResults.collectAsStateWithLifecycle()
+
     var waitingForResponse by remember { mutableStateOf(false) }
-    var results by remember { mutableStateOf(ArrayList<VideoSearchResult>()) }
+    var leadingIcon by remember { mutableStateOf(Icons.Filled.Search) }
     val focusRequester = remember { FocusRequester() }
 
     val handler = ResponseHandler(
         { res ->
-            val typeToken = object : TypeToken<List<VideoSearchResult>>() {}.type
-            results = Gson().fromJson<List<VideoSearchResult>>(
-                res,
-                typeToken
-            ) as ArrayList<VideoSearchResult>
-
+            viewModel.setSearchResultsFromJson(res)
             waitingForResponse = false
         },
         { err ->
@@ -122,7 +119,7 @@ fun Search(navController: NavHostController) {
     }
 
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        if (results.isEmpty()) focusRequester.requestFocus()
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
@@ -133,25 +130,25 @@ fun Search(navController: NavHostController) {
                     Text("Search for music, artists, albums...")
                 },
                 query = searchText,
-                onQueryChange = { query -> searchText = query },
+                onQueryChange = { query -> viewModel.setQuery(query) },
                 onSearch = { query ->
                     search(query, handler, context)
                     waitingForResponse = true
-                    isSearching = false
+                    viewModel.setSearching(false)
 
                     // we need to manually fix the icon cause onActiveChange
                     // is not called if we change isSearching.
                     leadingIcon = Icons.Filled.Search
                 },
-                active = isSearching,
+                active = searching,
                 onActiveChange = { active ->
-                    isSearching = active
+                    viewModel.setSearching(active)
                     leadingIcon = if (active) Icons.Filled.ArrowBack else Icons.Filled.Search
                 },
                 leadingIcon = {
                     // This button will act only as a icon in
                     // the case of the searchbar being deselected
-                    IconButton(onClick = { navController.goBack() }, enabled = isSearching) {
+                    IconButton(onClick = { navController.goBack() }, enabled = searching) {
                         Icon(
                             imageVector = leadingIcon,
                             contentDescription = ""
