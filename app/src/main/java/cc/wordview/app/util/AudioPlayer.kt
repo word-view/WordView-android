@@ -25,9 +25,12 @@ import android.util.Log
 
 object AudioPlayer : MediaPlayer() {
     private const val TAG = "AudioPlayer"
-    private var initialized = false;
+    private var initialized = false
     private val handler = Handler(Looper.getMainLooper())
-    private var onPositionChanged: (Int) -> Unit = {}
+
+    var onPositionChange: (Int) -> Unit = {}
+    var onPlay: () -> Unit = {}
+    var onPause: () -> Unit = {}
 
     fun initialize(dataSource: String) {
         Log.d(TAG, "Initializing MediaPlayer with dataSource: $dataSource")
@@ -49,7 +52,7 @@ object AudioPlayer : MediaPlayer() {
         }
     }
 
-    fun togglePlay(onPlay: () -> Unit, onPause: () -> Unit) {
+    fun togglePlay() {
         if (this.isPlaying) {
             pause()
             onPause()
@@ -84,15 +87,11 @@ object AudioPlayer : MediaPlayer() {
         val runnable = object : Runnable {
             override fun run() {
                 if (isPlaying) {
-                    onPositionChanged(currentPosition)
+                    onPositionChange(currentPosition)
                     handler.postDelayed(this, 1)
                 }
             }
         }
         handler.post(runnable)
-    }
-
-    fun addOnPositionChange(onPositionChanged: (Int) -> Unit) {
-        this.onPositionChanged = onPositionChanged;
     }
 }

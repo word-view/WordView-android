@@ -86,9 +86,7 @@ fun Player(navController: NavHostController) {
 
     fun play() {
         AudioPlayer.checkOnPositionChange()
-        AudioPlayer.togglePlay(
-            { playButtonIcon = Icons.Filled.Pause },
-            { playButtonIcon = Icons.Filled.PlayArrow })
+        AudioPlayer.togglePlay()
     }
 
     val wordFindHandler = ResponseHandler(
@@ -131,10 +129,12 @@ fun Player(navController: NavHostController) {
         thread {
             AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
             AudioPlayer.prepare()
-            AudioPlayer.addOnPositionChange { position ->
+            AudioPlayer.onPositionChange = { position ->
                 val cue = subtitleManager.getCueAt(position)
                 highlightedCuePosition = if (cue.startTimeMs != -1) cue.startTimeMs else 0
             }
+            AudioPlayer.onPlay = { playButtonIcon = Icons.Filled.Pause }
+            AudioPlayer.onPause = { playButtonIcon = Icons.Filled.PlayArrow }
             getLyrics(currentSong.id, "ja", handler, context)
         }
     }
@@ -232,11 +232,7 @@ fun Player(navController: NavHostController) {
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 WVIconButton(
-                    onClick = {
-                        AudioPlayer.togglePlay(
-                            { playButtonIcon = Icons.Filled.Pause },
-                            { playButtonIcon = Icons.Filled.PlayArrow })
-                    },
+                    onClick = { AudioPlayer.togglePlay() },
                     imageVector = playButtonIcon,
                     size = 80.dp,
                     colors = ButtonDefaults.buttonColors(
