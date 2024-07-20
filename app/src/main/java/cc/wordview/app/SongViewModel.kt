@@ -17,6 +17,7 @@
 
 package cc.wordview.app
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.api.Video
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,11 +26,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 object SongViewModel : ViewModel() {
+    private const val TAG = "SongViewModel"
     private val _video = MutableStateFlow(Video())
 
     val video: StateFlow<Video> = _video.asStateFlow()
 
     fun setVideo(vid: Video) {
-        _video.update { vid }
+        _video.update { oldValue ->
+            Log.d(TAG, "Updating working video from '${oldValue.title}' to '${vid.title}'")
+            vid
+        }
     }
 }
