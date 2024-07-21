@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.home
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -54,7 +53,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -72,12 +70,9 @@ import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
 
-@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Search(navController: NavHostController, viewModel: SearchViewModel = SearchViewModel) {
-    val context = LocalContext.current
-
     val searchText by viewModel.query.collectAsStateWithLifecycle()
     val searching by viewModel.searching.collectAsStateWithLifecycle()
     val results by viewModel.searchResults.collectAsStateWithLifecycle()
@@ -112,16 +107,17 @@ fun Search(navController: NavHostController, viewModel: SearchViewModel = Search
                 query = searchText,
                 onQueryChange = { query -> viewModel.setQuery(query) },
                 onSearch = { query ->
+                    waitingForResponse = true
+                    viewModel.setSearching(false)
+
+                    // we need to manually fix the icon cause onActiveChange
+                    // is not called if we change isSearching.
+                    leadingIcon = Icons.Filled.Search
+
                     search(query) { items ->
                         viewModel.setSearchResults(items);
                         waitingForResponse = false
                     }
-
-                    waitingForResponse = true
-                    viewModel.setSearching(false)
-                    // we need to manually fix the icon cause onActiveChange
-                    // is not called if we change isSearching.
-                    leadingIcon = Icons.Filled.Search
                 },
                 active = searching,
                 onActiveChange = { active ->
