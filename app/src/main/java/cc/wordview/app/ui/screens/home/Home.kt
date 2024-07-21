@@ -36,6 +36,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -91,6 +92,7 @@ fun Home(navHostController: NavHostController) {
         NavigationBar {
             BottomNavigationItem().bottomNavigationItems().forEachIndexed { _, navigationItem ->
                 NavigationBarItem(
+                    modifier = Modifier.testTag("${navigationItem.route}-tab"),
                     selected = navigationItem.route == currentDestination?.route,
                     label = {
                         Text(navigationItem.label)
