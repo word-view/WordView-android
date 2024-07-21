@@ -86,16 +86,11 @@ fun Player(navController: NavHostController) {
     var highlightedCuePosition by remember { mutableIntStateOf(0) }
     var playButtonIcon by remember { mutableStateOf(Icons.Filled.PlayArrow) }
 
-    fun play() {
-        AudioPlayer.checkOnPositionChange()
-        AudioPlayer.togglePlay()
-    }
-
     val wordFindHandler = ResponseHandler(
         { res ->
             subtitleManager.parseCues(res)
             cues = subtitleManager.cues
-            play()
+            AudioPlayer.togglePlay()
         },
         { _ ->
             Toast.makeText(
@@ -109,10 +104,9 @@ fun Player(navController: NavHostController) {
         { res ->
             subtitleManager.parseCues(res)
             cues = subtitleManager.cues
-            play()
+            AudioPlayer.togglePlay()
         },
         { _ ->
-            // showing the entire stack trace here is weird, but its probably better than showing null
             Toast.makeText(
                 context,
                 "Could not find any lyrics on youtube, will try searching for other platforms (beware: this may produce inaccurate lyrics)",

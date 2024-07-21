@@ -57,9 +57,9 @@ object AudioPlayer : MediaPlayer() {
             pause()
             onPause()
         } else {
+            checkOnPositionChange()
             start()
             onPlay()
-            checkOnPositionChange()
         }
     }
 
@@ -83,7 +83,7 @@ object AudioPlayer : MediaPlayer() {
         return this.trackInfo != null
     }
 
-    fun checkOnPositionChange() {
+    private fun checkOnPositionChange() {
         val runnable = object : Runnable {
             override fun run() {
                 if (isPlaying) {
