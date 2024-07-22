@@ -24,7 +24,7 @@ class ResponseHandler(
     private val onSuccess: (res: String) -> Unit,
     private val onError: (err: VolleyError) -> Unit
 ) {
-    private val TAG = "ResponseHandler"
+    private val TAG = ResponseHandler::class.java.simpleName
 
     fun onSuccessResponse(response: String?) {
         if (response != null) {

@@ -24,7 +24,7 @@ import android.os.Looper
 import android.util.Log
 
 object AudioPlayer : MediaPlayer() {
-    private const val TAG = "AudioPlayer"
+    private val TAG = AudioPlayer::class.java.simpleName
     private val handler = Handler(Looper.getMainLooper())
 
     private var state = AudioPlayerState.STALE

@@ -25,7 +25,7 @@ import androidx.media3.extractor.text.webvtt.WebvttParser
 import kotlin.time.Duration.Companion.milliseconds
 
 class SubtitleManager {
-    private val TAG = "SubtitleManager"
+    private val TAG = SubtitleManager::class.java.simpleName
     val cues = ArrayList<WordViewCue>()
 
     @OptIn(UnstableApi::class)
