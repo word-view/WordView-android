@@ -70,7 +70,7 @@ import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
-import cc.wordview.app.util.AudioPlayer
+import cc.wordview.app.audio.AudioPlayer
 import kotlin.concurrent.thread
 
 @SuppressLint("MutableCollectionMutableState")
@@ -148,8 +148,8 @@ fun Player(navController: NavHostController) {
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         BackTopAppBar(text = currentSong.title, onClickBack = {
-            navController.goBack()
             AudioPlayer.stop()
+            navController.goBack()
         })
     }) { innerPadding ->
         Box(
@@ -167,7 +167,7 @@ fun Player(navController: NavHostController) {
                 shape = DefaultRoundedCornerShape
             ) {
                 AsyncComposable(
-                    condition = (cues.size > 0 && AudioPlayer.trackExists()),
+                    condition = (cues.size > 0),
                     surface = true
                 ) {
                     LazyColumn(

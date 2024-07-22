@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.util
+package cc.wordview.app.audio
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -25,8 +25,9 @@ import android.util.Log
 
 object AudioPlayer : MediaPlayer() {
     private const val TAG = "AudioPlayer"
-    private var initialized = false
     private val handler = Handler(Looper.getMainLooper())
+
+    private var state = AudioPlayerState.STALE
 
     var onPositionChange: (Int) -> Unit = {}
     var onPlay: () -> Unit = {}
@@ -35,7 +36,11 @@ object AudioPlayer : MediaPlayer() {
     fun initialize(dataSource: String) {
         Log.d(TAG, "Initializing MediaPlayer with dataSource: $dataSource")
 
-        if (initialized) reset()
+        if (state == AudioPlayerState.INITIALIZED) {
+            state = AudioPlayerState.STALE
+            reset()
+        }
+
         try {
             this.apply {
                 setAudioAttributes(
@@ -45,11 +50,16 @@ object AudioPlayer : MediaPlayer() {
                         .build()
                 )
                 setDataSource(dataSource)
-                initialized = true
+                state = AudioPlayerState.INITIALIZED
             }
         } catch (e: Exception) {
             Log.e(TAG, e.message, e)
         }
+    }
+
+    override fun stop() {
+        if (state == AudioPlayerState.INITIALIZED)
+            super.stop()
     }
 
     fun togglePlay() {
@@ -77,10 +87,6 @@ object AudioPlayer : MediaPlayer() {
         if (position < 0) {
             seekTo(0)
         } else seekTo(position)
-    }
-
-    fun trackExists(): Boolean {
-        return this.trackInfo != null
     }
 
     private fun checkOnPositionChange() {
