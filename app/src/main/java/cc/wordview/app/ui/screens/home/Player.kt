@@ -39,7 +39,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,13 +48,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.SongViewModel
@@ -71,6 +66,7 @@ import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.subtitle.Lyrics
+import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import kotlin.concurrent.thread
 
@@ -130,7 +126,7 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
             for (cue in cues) {
                 if (cue.startTimeMs == highlightedCuePosition) {
                     // this offset is the sweet spot in the middle of the lyrics viewer
-                    lyricsScrollState.animateScrollToItem(cues.indexOf(cue), -550)
+                    lyricsScrollState.animateScrollToItem(cues.indexOf(cue), -480)
                 }
             }
         }
@@ -179,18 +175,10 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
                     ) {
                         for (cue in cues) {
                             item {
-                                val disabledCueColor = ColorUtils.blendARGB(
-                                    MaterialTheme.colorScheme.inverseSurface.toArgb(),
-                                    MaterialTheme.colorScheme.background.toArgb(),
-                                    0.4f
+                                TextCue(
+                                    cue = cue,
+                                    highlightedCuePosition = highlightedCuePosition,
                                 )
-
-                                val cueColor =
-                                    if (cue.startTimeMs == highlightedCuePosition) MaterialTheme.colorScheme.inverseSurface
-                                    else Color(disabledCueColor)
-
-                                Text(text = cue.text, fontSize = 24.sp, color = cueColor)
-                                Spacer(modifier = Modifier.size(5.dp))
                             }
                         }
                     }
