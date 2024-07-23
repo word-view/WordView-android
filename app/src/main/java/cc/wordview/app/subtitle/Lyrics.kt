@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (c) 2024 Arthur Araujo
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,18 +24,18 @@ import androidx.media3.extractor.text.SubtitleParser
 import androidx.media3.extractor.text.webvtt.WebvttParser
 import kotlin.time.Duration.Companion.milliseconds
 
-class SubtitleManager {
-    private val TAG = SubtitleManager::class.java.simpleName
-    val cues = ArrayList<WordViewCue>()
 
-    @OptIn(UnstableApi::class)
-    fun parseCues(str: String) {
+@OptIn(UnstableApi::class)
+class Lyrics : ArrayList<WordViewCue>() {
+    private val TAG = Lyrics::class.java.simpleName
+
+    fun parse(str: String) {
         WebvttParser().parse(
             str.encodeToByteArray(),
             SubtitleParser.OutputOptions.allCues()
         ) { result ->
             if (result.cues.first().text?.isNotEmpty()!!) {
-                cues.add(
+                this.add(
                     WordViewCue(
                         result.cues.first().text.toString().trim(),
                         normalize(result.startTimeUs.milliseconds.inWholeMilliseconds),
@@ -44,13 +44,13 @@ class SubtitleManager {
                 )
             }
         }
-        Log.i(TAG, "Parsed ${cues.size} cues")
+        Log.i(TAG, "Parsed ${this.size} cues")
     }
 
     fun getCueAt(position: Int): WordViewCue {
-        for (cue in cues) {
+        for (cue in this) {
             if (position >= cue.startTimeMs && position <= cue.endTimeMs)
-                    return cue
+                return cue
         }
 
         // a empty cue used to ignore if no cue was found.

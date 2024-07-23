@@ -52,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
@@ -63,64 +64,59 @@ import cc.wordview.app.api.apiURL
 import cc.wordview.app.api.getLyrics
 import cc.wordview.app.api.getLyricsWordFind
 import cc.wordview.app.extensions.goBack
-import cc.wordview.app.subtitle.SubtitleManager
-import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.components.AsyncComposable
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.audio.AudioPlayer
+import cc.wordview.app.subtitle.Lyrics
+import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import kotlin.concurrent.thread
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun Player(navController: NavHostController) {
+fun Player(navController: NavHostController, viewModel: PlayerViewModel = PlayerViewModel) {
     val context = LocalContext.current
-    val subtitleManager = SubtitleManager()
     val lyricsScrollState = rememberLazyListState()
 
     val currentSong by SongViewModel.video.collectAsStateWithLifecycle()
 
-    var cues by remember { mutableStateOf(ArrayList<WordViewCue>()) }
+    val cues by viewModel.cues.collectAsStateWithLifecycle()
+    val lyrics = Lyrics()
+
     var highlightedCuePosition by remember { mutableIntStateOf(0) }
     var playButtonIcon by remember { mutableStateOf(Icons.Filled.PlayArrow) }
 
-    val wordFindHandler = ResponseHandler(
-        { res ->
-            subtitleManager.parseCues(res)
-            cues = subtitleManager.cues
-            AudioPlayer.togglePlay()
-        },
-        { _ ->
-            Toast.makeText(
-                context,
-                "Could not find any lyrics matching this song.",
-                Toast.LENGTH_LONG
-            ).show()
-        })
+    val wordFindHandler = ResponseHandler({ res ->
+        lyrics.parse(res)
+        viewModel.setCues(lyrics)
+        AudioPlayer.togglePlay()
+    }, { _ ->
+        Toast.makeText(
+            context, "Could not find any lyrics matching this song.", Toast.LENGTH_LONG
+        ).show()
+    })
 
-    val handler = ResponseHandler(
-        { res ->
-            subtitleManager.parseCues(res)
-            cues = subtitleManager.cues
-            AudioPlayer.togglePlay()
-        },
-        { _ ->
-            Toast.makeText(
-                context,
-                "Could not find any lyrics on youtube, will try searching for other platforms (beware: this may produce inaccurate lyrics)",
-                Toast.LENGTH_LONG
-            ).show()
-            getLyricsWordFind(currentSong.title, wordFindHandler, context);
-        })
+    val handler = ResponseHandler({ res ->
+        lyrics.parse(res)
+        viewModel.setCues(lyrics)
+        AudioPlayer.togglePlay()
+    }, { _ ->
+        Toast.makeText(
+            context,
+            "Could not find any lyrics on youtube, will try searching for other platforms (beware: this may produce inaccurate lyrics)",
+            Toast.LENGTH_LONG
+        ).show()
+        getLyricsWordFind(currentSong.title, wordFindHandler, context);
+    })
 
     LaunchedEffect(Unit) {
         thread {
             AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
             AudioPlayer.prepare()
             AudioPlayer.onPositionChange = { position ->
-                val cue = subtitleManager.getCueAt(position)
+                val cue = lyrics.getCueAt(position)
                 highlightedCuePosition = if (cue.startTimeMs != -1) cue.startTimeMs else 0
             }
             AudioPlayer.onPlay = { playButtonIcon = Icons.Filled.Pause }
@@ -143,12 +139,14 @@ fun Player(navController: NavHostController) {
     KeepScreenOn()
     BackHandler {
         AudioPlayer.stop()
+        viewModel.clearCues()
         navController.goBack()
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         BackTopAppBar(text = currentSong.title, onClickBack = {
             AudioPlayer.stop()
+            viewModel.clearCues()
             navController.goBack()
         })
     }) { innerPadding ->
@@ -168,6 +166,7 @@ fun Player(navController: NavHostController) {
             ) {
                 AsyncComposable(
                     condition = (cues.size > 0),
+                    modifier = Modifier.testTag("lyrics-loader"),
                     surface = true
                 ) {
                     LazyColumn(
@@ -187,10 +186,8 @@ fun Player(navController: NavHostController) {
                                 )
 
                                 val cueColor =
-                                    if (cue.startTimeMs == highlightedCuePosition)
-                                        MaterialTheme.colorScheme.inverseSurface
-                                    else
-                                        Color(disabledCueColor)
+                                    if (cue.startTimeMs == highlightedCuePosition) MaterialTheme.colorScheme.inverseSurface
+                                    else Color(disabledCueColor)
 
                                 Text(text = cue.text, fontSize = 24.sp, color = cueColor)
                                 Spacer(modifier = Modifier.size(5.dp))

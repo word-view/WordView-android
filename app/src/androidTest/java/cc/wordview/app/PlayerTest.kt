@@ -18,10 +18,13 @@
 package cc.wordview.app
 
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.api.Video
+import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.screens.home.Player
+import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.theme.WordViewTheme
 import org.junit.Rule
 import org.junit.Test
@@ -32,12 +35,7 @@ class PlayerTest {
 
     @Test
     fun renders() {
-        SongViewModel.setVideo(Video(
-            "",
-            "No Title",
-            "REOL",
-            ""
-        ))
+        SongViewModel.setVideo(Video("", "No Title", "REOL", ""))
 
         composeTestRule.setContent {
             WordViewTheme {
@@ -46,5 +44,24 @@ class PlayerTest {
         }
 
         composeTestRule.onNodeWithText("No Title").assertExists()
+    }
+
+    @Test
+    fun loaderDisappearsWhenLyricsAreLoaded() {
+        SongViewModel.setVideo(Video("", "No Title", "REOL", ""))
+        val mockLyrics = arrayListOf(WordViewCue("hello world", 0, 1000))
+
+        composeTestRule.setContent {
+            WordViewTheme {
+                Player(navController = rememberNavController())
+            }
+        }
+
+        composeTestRule.onNodeWithTag("lyrics-loader").assertExists()
+
+        PlayerViewModel.setCues(mockLyrics)
+
+        composeTestRule.onNodeWithTag("lyrics-loader").assertDoesNotExist()
+        composeTestRule.onNodeWithText("hello world").assertExists()
     }
 }
