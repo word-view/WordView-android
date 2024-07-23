@@ -32,6 +32,25 @@ object SongViewModel : ViewModel() {
     val video: StateFlow<Video> = _video.asStateFlow()
 
     fun setVideo(vid: Video) {
+        // For now doing this is ok but as the filter grows
+        // a less repetitive solution should be created
+        val artistClean = vid.artist.lowercase()
+            .replace("official", "")
+            .replace("channel", "")
+
+        val titleClean = vid.title.lowercase()
+            .replace("\\[[^\\[]*\\]", "")
+            .replace("[", "")
+            .replace("]", "")
+            .replace("MV", "")
+            .replace("Music Video", "")
+            .replace(
+                "歌ってみた",
+                ""
+            )
+
+        vid.searchQuery = "$titleClean $artistClean"
+
         _video.update { oldValue ->
             Log.d(TAG, "Updating working video from '${oldValue.title}' to '${vid.title}'")
             vid

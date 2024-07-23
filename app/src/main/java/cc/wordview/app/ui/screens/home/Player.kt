@@ -104,7 +104,7 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
             "Could not find any lyrics on youtube, will try searching for other platforms (beware: this may produce inaccurate lyrics)",
             Toast.LENGTH_LONG
         ).show()
-        getLyricsWordFind(currentSong.title, wordFindHandler, context);
+        getLyricsWordFind(currentSong.searchQuery, wordFindHandler, context);
     })
 
     LaunchedEffect(Unit) {

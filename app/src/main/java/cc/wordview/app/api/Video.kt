@@ -17,6 +17,12 @@
 
 package cc.wordview.app.api
 
-class Video(val id: String, val title: String, val artist: String, val cover: String) {
+class Video(
+    val id: String,
+    var title: String,
+    var artist: String,
+    val cover: String,
+    var searchQuery: String = ""
+) {
     constructor() : this("", "", "", "")
 }
