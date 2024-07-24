@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -79,6 +80,22 @@ fun Player(
 
     requestHandler.init(context)
 
+    requestHandler.onGetLyricsFail = {
+        Toast.makeText(
+            context,
+            "Could not find any lyrics on youtube, will try searching for other platforms (this may produce inaccurate lyrics)",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    requestHandler.onWordFindFail = {
+        Toast.makeText(
+            context,
+            "Could not find any lyrics for this song",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
     LaunchedEffect(Unit) {
         thread {
             AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
@@ -87,10 +104,8 @@ fun Player(
             AudioPlayer.onPositionChange = { position ->
                 val cue = lyrics.getCueAt(position)
 
-                if (cue.startTimeMs != -1)
-                    viewModel.highlightCueAt(cue.startTimeMs)
-                else
-                    viewModel.unhighlightCues()
+                if (cue.startTimeMs != -1) viewModel.highlightCueAt(cue.startTimeMs)
+                else viewModel.unhighlightCues()
             }
         }
     }

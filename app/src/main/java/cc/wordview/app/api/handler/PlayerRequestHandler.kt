@@ -35,21 +35,25 @@ object PlayerRequestHandler {
     private val TAG = PlayerRequestHandler::class.java.simpleName
     private lateinit var queue: RequestQueue
 
-    val wordFindHandler = Response({ res ->
+    var successResponse: (res: String) -> Unit = { res ->
         PlayerViewModel.lyricsParse(res)
         PlayerViewModel.setCues(PlayerViewModel.lyrics.value)
         AudioPlayer.togglePlay()
-    }, { Log.e(TAG, "getLyricsWordFind failed!") })
+    }
 
-    var getLyricsHandler = Response({ res ->
-        PlayerViewModel.lyricsParse(res)
-        PlayerViewModel.setCues(PlayerViewModel.lyrics.value)
-        AudioPlayer.togglePlay()
-    }, {
+    var onGetLyricsFail: () -> Unit = {}
+    var onWordFindFail: () -> Unit = {}
+
+    private val wordFindHandler = Response(successResponse) {
+        Log.e(TAG, "getLyricsWordFind failed!")
+        onWordFindFail()
+    }
+
+    private var getLyricsHandler = Response(successResponse) {
         Log.e(TAG, "getLyrics failed! Retrying with wordFind")
+        onGetLyricsFail()
         getLyricsWordFind(SongViewModel.video.value.searchQuery)
-    })
-
+    }
 
     fun init(context: Context) {
         queue = Volley.newRequestQueue(context)
