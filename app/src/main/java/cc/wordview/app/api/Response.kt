@@ -20,11 +20,11 @@ package cc.wordview.app.api
 import android.util.Log
 import com.android.volley.VolleyError
 
-class ResponseHandler(
+class Response(
     private val onSuccess: (res: String) -> Unit,
     private val onError: (err: VolleyError) -> Unit
 ) {
-    private val TAG = ResponseHandler::class.java.simpleName
+    private val TAG = Response::class.java.simpleName
 
     fun onSuccessResponse(response: String?) {
         if (response != null) {

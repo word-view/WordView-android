@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.api.ResponseHandler
+import cc.wordview.app.api.Response
 import cc.wordview.app.api.apiURL
 import cc.wordview.app.api.getLyrics
 import cc.wordview.app.api.getLyricsWordFind
@@ -78,7 +78,7 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
 
     val lyrics = Lyrics()
 
-    val wordFindHandler = ResponseHandler({ res ->
+    val wordFindHandler = Response({ res ->
         lyrics.parse(res)
         viewModel.setCues(lyrics)
         AudioPlayer.togglePlay()
@@ -88,7 +88,7 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
         ).show()
     })
 
-    val handler = ResponseHandler({ res ->
+    val handler = Response({ res ->
         lyrics.parse(res)
         viewModel.setCues(lyrics)
         AudioPlayer.togglePlay()

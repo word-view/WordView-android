@@ -24,7 +24,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import java.net.URLEncoder
 
-fun getHistory(handler: ResponseHandler, context: Context) {
+fun getHistory(handler: Response, context: Context) {
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/history"
 
@@ -37,7 +37,7 @@ fun getHistory(handler: ResponseHandler, context: Context) {
     queue.add(request)
 }
 
-fun getLyrics(id: String, lang: String, handler: ResponseHandler, context: Context) {
+fun getLyrics(id: String, lang: String, handler: Response, context: Context) {
     val queue = Volley.newRequestQueue(context)
     val url = "$apiURL/music/lyrics?id=$id&lang=$lang"
 
@@ -50,7 +50,7 @@ fun getLyrics(id: String, lang: String, handler: ResponseHandler, context: Conte
     queue.add(stringRequest)
 }
 
-fun getLyricsWordFind(title: String, handler: ResponseHandler, context: Context) {
+fun getLyricsWordFind(title: String, handler: Response, context: Context) {
     val queue = Volley.newRequestQueue(context);
     val url = "$apiURL/music/lyrics/find?title=${URLEncoder.encode(title)}"
 

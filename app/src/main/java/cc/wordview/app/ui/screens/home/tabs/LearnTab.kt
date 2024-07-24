@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.api.ResponseHandler
+import cc.wordview.app.api.Response
 import cc.wordview.app.api.Video
 import cc.wordview.app.api.getHistory
 import cc.wordview.app.ui.screens.util.Screen
@@ -65,7 +65,7 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
     val context = LocalContext.current
     var json by remember { mutableStateOf(Video()) }
 
-    val handler = ResponseHandler(
+    val handler = Response(
         { res ->
             Log.i("LearnTab", res)
             json = Gson().fromJson(res, Video::class.java)

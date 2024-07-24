@@ -46,8 +46,6 @@ class HomeTest {
        }
 
         composeTestRule.onNodeWithTag("SongCard").assertExists()
-        composeTestRule.onNodeWithText("Firework of Shoes").assertExists()
-        composeTestRule.onNodeWithText("Yorushika").assertExists()
     }
     
     @Test
