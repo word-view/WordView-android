@@ -17,6 +17,7 @@
 
 package cc.wordview.app
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -28,6 +29,7 @@ import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.theme.WordViewTheme
 import org.junit.Rule
 import org.junit.Test
+import java.util.ArrayList
 
 class PlayerTest {
     @get:Rule
@@ -37,25 +39,17 @@ class PlayerTest {
     fun renders() {
         SongViewModel.setVideo(Video("", "No Title", "REOL", ""))
 
-        composeTestRule.setContent {
-            WordViewTheme {
-                Player(navController = rememberNavController())
-            }
-        }
+        composeTestRule.setContent { Player() }
 
         composeTestRule.onNodeWithText("No Title").assertExists()
     }
 
     @Test
     fun loaderDisappearsWhenLyricsAreLoaded() {
-        SongViewModel.setVideo(Video("", "No Title", "REOL", ""))
+        PlayerViewModel.setCues(ArrayList())
         val mockLyrics = arrayListOf(WordViewCue("hello world", 0, 1000))
 
-        composeTestRule.setContent {
-            WordViewTheme {
-                Player(navController = rememberNavController())
-            }
-        }
+        composeTestRule.setContent { Player() }
 
         composeTestRule.onNodeWithTag("lyrics-loader").assertExists()
 
@@ -63,5 +57,30 @@ class PlayerTest {
 
         composeTestRule.onNodeWithTag("lyrics-loader").assertDoesNotExist()
         composeTestRule.onNodeWithText("hello world").assertExists()
+    }
+
+    @Test
+    fun lyricsRenderCorrectly() {
+        val mockLyrics = ArrayList<WordViewCue>()
+
+        for (i in 1..20) {
+            mockLyrics.add(WordViewCue("$i hello world", 1000 * i, 2000 * i))
+        }
+
+        PlayerViewModel.setCues(mockLyrics)
+
+        composeTestRule.setContent { Player() }
+
+        for (i in 1..20) {
+            PlayerViewModel.highlightCueAt(1000 * i)
+            composeTestRule.onNodeWithText("$i hello world").assertExists()
+        }
+    }
+
+    @Composable
+    fun Player() {
+        WordViewTheme {
+            Player(navController = rememberNavController())
+        }
     }
 }
