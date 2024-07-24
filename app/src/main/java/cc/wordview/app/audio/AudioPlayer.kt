@@ -58,11 +58,15 @@ object AudioPlayer : MediaPlayer() {
     }
 
     override fun stop() {
+        onPause()
+
         if (state == AudioPlayerState.INITIALIZED)
             super.stop()
     }
 
     fun togglePlay() {
+        if (state == AudioPlayerState.STALE) return
+
         if (this.isPlaying) {
             pause()
             onPause()

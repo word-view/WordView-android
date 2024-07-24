@@ -17,6 +17,10 @@
 
 package cc.wordview.app.ui.screens.home.model
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.subtitle.WordViewCue
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,9 +31,11 @@ import kotlinx.coroutines.flow.update
 object PlayerViewModel : ViewModel() {
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
     private val _highlightedCuePosition = MutableStateFlow(0)
+    private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
 
     val cues: StateFlow<ArrayList<WordViewCue>> = _cues.asStateFlow()
     val highlightedCuePosition: StateFlow<Int> = _highlightedCuePosition.asStateFlow()
+    val playIcon: StateFlow<ImageVector> = _playIcon.asStateFlow()
 
     fun setCues(cues: ArrayList<WordViewCue>) {
         _cues.update { cues }
@@ -45,5 +51,13 @@ object PlayerViewModel : ViewModel() {
 
     fun unhighlightCues() {
         _highlightedCuePosition.update { 0 }
+    }
+
+    fun playIconPause() {
+        _playIcon.update { Icons.Filled.PlayArrow }
+    }
+
+    fun playIconPlay() {
+        _playIcon.update { Icons.Filled.Pause }
     }
 }

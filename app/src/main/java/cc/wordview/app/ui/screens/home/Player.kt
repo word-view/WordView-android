@@ -31,8 +31,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ButtonDefaults
@@ -42,10 +40,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -80,8 +74,7 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
 
     val cues by viewModel.cues.collectAsStateWithLifecycle()
     val highlightedCuePosition by viewModel.highlightedCuePosition.collectAsStateWithLifecycle()
-
-    var playButtonIcon by remember { mutableStateOf(Icons.Filled.PlayArrow) }
+    val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
 
     val lyrics = Lyrics()
 
@@ -120,8 +113,8 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
                 else
                     viewModel.unhighlightCues()
             }
-            AudioPlayer.onPlay = { playButtonIcon = Icons.Filled.Pause }
-            AudioPlayer.onPause = { playButtonIcon = Icons.Filled.PlayArrow }
+            AudioPlayer.onPlay = { viewModel.playIconPlay() }
+            AudioPlayer.onPause = { viewModel.playIconPause() }
             getLyrics(currentSong.id, "ja", handler, context)
         }
     }
@@ -213,7 +206,7 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
                 Spacer(modifier = Modifier.size(10.dp))
                 WVIconButton(
                     onClick = { AudioPlayer.togglePlay() },
-                    imageVector = playButtonIcon,
+                    imageVector = playIcon,
                     size = 80.dp,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.surface,
