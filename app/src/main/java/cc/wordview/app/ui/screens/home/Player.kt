@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -48,10 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.api.Response
 import cc.wordview.app.api.apiURL
-import cc.wordview.app.api.getLyrics
-import cc.wordview.app.api.getLyricsWordFind
+import cc.wordview.app.api.handler.PlayerRequestHandler
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.AsyncComposable
 import cc.wordview.app.ui.components.BackTopAppBar
@@ -59,14 +56,17 @@ import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.audio.AudioPlayer
-import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import kotlin.concurrent.thread
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun Player(navController: NavHostController, viewModel: PlayerViewModel = PlayerViewModel) {
+fun Player(
+    navController: NavHostController,
+    viewModel: PlayerViewModel = PlayerViewModel,
+    requestHandler: PlayerRequestHandler = PlayerRequestHandler
+) {
     val context = LocalContext.current
     val lyricsScrollState = rememberLazyListState()
 
@@ -75,36 +75,15 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
     val cues by viewModel.cues.collectAsStateWithLifecycle()
     val highlightedCuePosition by viewModel.highlightedCuePosition.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
+    val lyrics by viewModel.lyrics.collectAsStateWithLifecycle()
 
-    val lyrics = Lyrics()
-
-    val wordFindHandler = Response({ res ->
-        lyrics.parse(res)
-        viewModel.setCues(lyrics)
-        AudioPlayer.togglePlay()
-    }, { _ ->
-        Toast.makeText(
-            context, "Could not find any lyrics matching this song.", Toast.LENGTH_LONG
-        ).show()
-    })
-
-    val handler = Response({ res ->
-        lyrics.parse(res)
-        viewModel.setCues(lyrics)
-        AudioPlayer.togglePlay()
-    }, { _ ->
-        Toast.makeText(
-            context,
-            "Could not find any lyrics on youtube, will try searching for other platforms (beware: this may produce inaccurate lyrics)",
-            Toast.LENGTH_LONG
-        ).show()
-        getLyricsWordFind(currentSong.searchQuery, wordFindHandler, context);
-    })
+    requestHandler.init(context)
 
     LaunchedEffect(Unit) {
         thread {
             AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
             AudioPlayer.prepare()
+            requestHandler.getLyrics(currentSong.id, "ja")
             AudioPlayer.onPositionChange = { position ->
                 val cue = lyrics.getCueAt(position)
 
@@ -113,9 +92,6 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
                 else
                     viewModel.unhighlightCues()
             }
-            AudioPlayer.onPlay = { viewModel.playIconPlay() }
-            AudioPlayer.onPause = { viewModel.playIconPause() }
-            getLyrics(currentSong.id, "ja", handler, context)
         }
     }
 

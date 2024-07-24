@@ -44,7 +44,7 @@ class Lyrics : ArrayList<WordViewCue>() {
                 )
             }
         }
-        Log.i(TAG, "Parsed ${this.size} cues")
+        Log.d(TAG, "Parsed ${this.size} cues")
     }
 
     fun getCueAt(position: Int): WordViewCue {

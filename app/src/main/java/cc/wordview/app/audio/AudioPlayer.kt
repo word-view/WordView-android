@@ -22,16 +22,18 @@ import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 
 object AudioPlayer : MediaPlayer() {
     private val TAG = AudioPlayer::class.java.simpleName
+
     private val handler = Handler(Looper.getMainLooper())
+    private val onPlay = { PlayerViewModel.playIconPlay() }
+    private val onPause = { PlayerViewModel.playIconPause() }
 
     private var state = AudioPlayerState.STALE
 
     var onPositionChange: (Int) -> Unit = {}
-    var onPlay: () -> Unit = {}
-    var onPause: () -> Unit = {}
 
     fun initialize(dataSource: String) {
         Log.d(TAG, "Initializing MediaPlayer with dataSource: $dataSource")
