@@ -26,8 +26,10 @@ import kotlinx.coroutines.flow.update
 
 object PlayerViewModel : ViewModel() {
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
+    private val _highlightedCuePosition = MutableStateFlow(0)
 
     val cues: StateFlow<ArrayList<WordViewCue>> = _cues.asStateFlow()
+    val highlightedCuePosition: StateFlow<Int> = _highlightedCuePosition.asStateFlow()
 
     fun setCues(cues: ArrayList<WordViewCue>) {
         _cues.update { cues }
@@ -35,5 +37,13 @@ object PlayerViewModel : ViewModel() {
 
     fun clearCues() {
         _cues.update { ArrayList() }
+    }
+
+    fun highlightCueAt(position: Int) {
+        _highlightedCuePosition.update { position }
+    }
+
+    fun unhighlightCues() {
+        _highlightedCuePosition.update { 0 }
     }
 }

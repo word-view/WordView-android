@@ -79,10 +79,11 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
     val currentSong by SongViewModel.video.collectAsStateWithLifecycle()
 
     val cues by viewModel.cues.collectAsStateWithLifecycle()
-    val lyrics = Lyrics()
+    val highlightedCuePosition by viewModel.highlightedCuePosition.collectAsStateWithLifecycle()
 
-    var highlightedCuePosition by remember { mutableIntStateOf(0) }
     var playButtonIcon by remember { mutableStateOf(Icons.Filled.PlayArrow) }
+
+    val lyrics = Lyrics()
 
     val wordFindHandler = ResponseHandler({ res ->
         lyrics.parse(res)
@@ -113,7 +114,11 @@ fun Player(navController: NavHostController, viewModel: PlayerViewModel = Player
             AudioPlayer.prepare()
             AudioPlayer.onPositionChange = { position ->
                 val cue = lyrics.getCueAt(position)
-                highlightedCuePosition = if (cue.startTimeMs != -1) cue.startTimeMs else 0
+
+                if (cue.startTimeMs != -1)
+                    viewModel.highlightCueAt(cue.startTimeMs)
+                else
+                    viewModel.unhighlightCues()
             }
             AudioPlayer.onPlay = { playButtonIcon = Icons.Filled.Pause }
             AudioPlayer.onPause = { playButtonIcon = Icons.Filled.PlayArrow }
