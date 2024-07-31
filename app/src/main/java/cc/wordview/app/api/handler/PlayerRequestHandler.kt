@@ -20,6 +20,7 @@ package cc.wordview.app.api.handler
 import android.content.Context
 import android.util.Log
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.api.JsonAcceptingRequest
 import cc.wordview.app.api.Response
 import cc.wordview.app.api.apiURL
 import cc.wordview.app.audio.AudioPlayer
@@ -35,7 +36,7 @@ object PlayerRequestHandler {
     private val TAG = PlayerRequestHandler::class.java.simpleName
     private lateinit var queue: RequestQueue
 
-    var successResponse: (res: String) -> Unit = { res ->
+    var onLyricsSucceed: (res: String) -> Unit = { res ->
         PlayerViewModel.lyricsParse(res)
         PlayerViewModel.setCues(PlayerViewModel.lyrics.value)
         AudioPlayer.togglePlay()
@@ -44,15 +45,23 @@ object PlayerRequestHandler {
     var onGetLyricsFail: () -> Unit = {}
     var onWordFindFail: () -> Unit = {}
 
-    private val wordFindHandler = Response(successResponse) {
+    var onGetDictionariesSucceed: (res: String) -> Unit = {}
+    var onGetDictionariesFail: () -> Unit = {}
+
+    private val wordFindHandler = Response(onLyricsSucceed) {
         Log.e(TAG, "getLyricsWordFind failed!")
         onWordFindFail()
     }
 
-    private var getLyricsHandler = Response(successResponse) {
+    private var getLyricsHandler = Response(onLyricsSucceed) {
         Log.e(TAG, "getLyrics failed! Retrying with wordFind")
         onGetLyricsFail()
         getLyricsWordFind(SongViewModel.video.value.searchQuery)
+    }
+
+    private val getDictionariesHandler = Response({ res -> onGetDictionariesSucceed(res) }) {
+        Log.e(TAG, "getDictionaries failed!")
+        onGetDictionariesFail()
     }
 
     fun init(context: Context) {
@@ -89,5 +98,18 @@ object PlayerRequestHandler {
         }, { err -> getLyricsHandler.onErrorResponse(err) })
 
         queue.add(stringRequest)
+    }
+
+    fun getDictionary(dictionary: String) {
+        Log.d(TAG, "Requesting a dictionary named \"$dictionary\"")
+
+        val url = "$apiURL/dictionary?lang=$dictionary"
+
+        val jsonRequest = JsonAcceptingRequest(Request.Method.GET,
+            url,
+            { response -> getDictionariesHandler.onSuccessResponse(response) },
+            { err -> getDictionariesHandler.onErrorResponse(err) })
+
+        queue.add(jsonRequest)
     }
 }

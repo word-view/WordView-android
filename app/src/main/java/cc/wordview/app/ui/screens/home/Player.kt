@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
@@ -96,6 +97,19 @@ fun Player(
         ).show()
     }
 
+
+    requestHandler.onGetDictionariesFail = {
+        Toast.makeText(
+            context,
+            "Unable to find a dictionary for this language",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    requestHandler.onGetDictionariesSucceed = { res ->
+        Log.i("Player", res)
+    }
+
     LaunchedEffect(Unit) {
         thread {
             AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
@@ -107,6 +121,7 @@ fun Player(
                 if (cue.startTimeMs != -1) viewModel.highlightCueAt(cue.startTimeMs)
                 else viewModel.unhighlightCues()
             }
+            requestHandler.getDictionary("kanji")
         }
     }
 
