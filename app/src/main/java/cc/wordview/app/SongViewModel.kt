@@ -42,8 +42,8 @@ object SongViewModel : ViewModel() {
             .replace("\\[[^\\[]*\\]", "")
             .replace("[", "")
             .replace("]", "")
-            .replace("MV", "")
-            .replace("Music Video", "")
+            .replace("mv", "")
+            .replace("music video", "")
             .replace(
                 "歌ってみた",
                 ""
