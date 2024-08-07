@@ -17,8 +17,6 @@
 
 package cc.wordview.app.ui.screens.home.tabs
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -42,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -50,9 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.api.Response
 import cc.wordview.app.api.Video
-import cc.wordview.app.api.getHistory
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
@@ -62,26 +57,14 @@ import com.google.gson.Gson
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LearnTab(navController: NavHostController, navHostController: NavHostController) {
-    val context = LocalContext.current
     var json by remember { mutableStateOf(Video()) }
 
-    val handler = Response(
-        {
-            json = Gson().fromJson(
-                "{\"id\":\"D0ehC_8sQuU\",\"title\":\"It's raining after all\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/D0ehC_8sQuU/0.jpg\"}",
-                Video::class.java
-            )
-        },
-        { err ->
-            // showing the entire stack trace here is weird, but its probably better than showing null
-            Toast.makeText(
-                context,
-                "Request failed: ${err.stackTraceToString()}",
-                Toast.LENGTH_LONG
-            ).show()
-        })
-
-    LaunchedEffect(Unit) { getHistory(handler, context) }
+    LaunchedEffect(Unit) {
+        json = Gson().fromJson(
+            "{\"id\":\"D0ehC_8sQuU\",\"title\":\"It's raining after all\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/D0ehC_8sQuU/0.jpg\"}",
+            Video::class.java
+        )
+    }
 
     Box(
         Modifier
