@@ -66,9 +66,11 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
     var json by remember { mutableStateOf(Video()) }
 
     val handler = Response(
-        { res ->
-            Log.i("LearnTab", res)
-            json = Gson().fromJson(res, Video::class.java)
+        {
+            json = Gson().fromJson(
+                "{\"id\":\"D0ehC_8sQuU\",\"title\":\"It's raining after all\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/D0ehC_8sQuU/0.jpg\"}",
+                Video::class.java
+            )
         },
         { err ->
             // showing the entire stack trace here is weird, but its probably better than showing null
