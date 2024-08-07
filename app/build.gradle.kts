@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation("cc.wordview.gengolex:Gengolex:1.1-SNAPSHOT")
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("io.coil-kt:coil:2.6.0")

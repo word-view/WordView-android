@@ -31,29 +31,52 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import java.net.URLEncoder
+import java.util.ArrayList
 
 object PlayerRequestHandler {
     private val TAG = PlayerRequestHandler::class.java.simpleName
     private lateinit var queue: RequestQueue
 
-    var onLyricsSucceed: (res: String) -> Unit = { res ->
+    val sharedLyricsSucceed: (res: String) -> Unit = { res ->
         PlayerViewModel.lyricsParse(res)
         PlayerViewModel.setCues(PlayerViewModel.lyrics.value)
         AudioPlayer.togglePlay()
     }
 
+    var onLyricsSucceed: () -> Unit = {}
     var onGetLyricsFail: () -> Unit = {}
     var onWordFindFail: () -> Unit = {}
 
-    var onGetDictionariesSucceed: (res: String) -> Unit = {}
+    val onGetDictionariesSucceed: (res: String) -> Unit = { res ->
+        PlayerViewModel.addDictionary("kanji", res)
+
+        val wordsFound = ArrayList<String>()
+
+        for (cue in PlayerViewModel.lyrics.value) {
+            val words = PlayerViewModel.parser.value.findWords(cue.text)
+            for (word in words) wordsFound.add(word)
+        }
+
+        PlayerViewModel.setWords(wordsFound)
+    }
     var onGetDictionariesFail: () -> Unit = {}
 
-    private val wordFindHandler = Response(onLyricsSucceed) {
+    private val wordFindHandler = Response({ res ->
+        run {
+            sharedLyricsSucceed(res)
+            onLyricsSucceed()
+        }
+    }) {
         Log.e(TAG, "getLyricsWordFind failed!")
         onWordFindFail()
     }
 
-    private var getLyricsHandler = Response(onLyricsSucceed) {
+    private var getLyricsHandler = Response({ res ->
+        run {
+            sharedLyricsSucceed(res)
+            onLyricsSucceed()
+        }
+    }) {
         Log.e(TAG, "getLyrics failed! Retrying with wordFind")
         onGetLyricsFail()
         getLyricsWordFind(SongViewModel.video.value.searchQuery)
@@ -101,7 +124,7 @@ object PlayerRequestHandler {
     }
 
     fun getDictionary(dictionary: String) {
-        Log.d(TAG, "Requesting a dictionary named \"$dictionary\"")
+        Log.d(TAG, "Requesting a dictionary called \"$dictionary\"")
 
         val url = "$apiURL/dictionary?lang=$dictionary"
 

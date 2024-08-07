@@ -60,6 +60,9 @@ import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
+import cc.wordview.gengolex.Language
+import cc.wordview.gengolex.Parser
+import java.util.ArrayList
 import kotlin.concurrent.thread
 
 @SuppressLint("MutableCollectionMutableState")
@@ -78,8 +81,7 @@ fun Player(
     val highlightedCuePosition by viewModel.highlightedCuePosition.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val lyrics by viewModel.lyrics.collectAsStateWithLifecycle()
-
-    requestHandler.init(context)
+    val words by viewModel.words.collectAsStateWithLifecycle()
 
     requestHandler.onGetLyricsFail = {
         Toast.makeText(
@@ -97,7 +99,6 @@ fun Player(
         ).show()
     }
 
-
     requestHandler.onGetDictionariesFail = {
         Toast.makeText(
             context,
@@ -106,12 +107,15 @@ fun Player(
         ).show()
     }
 
-    requestHandler.onGetDictionariesSucceed = { res ->
-        Log.i("Player", res)
+    requestHandler.onLyricsSucceed = {
+        requestHandler.getDictionary("kanji")
     }
+
+    requestHandler.init(context)
 
     LaunchedEffect(Unit) {
         thread {
+            viewModel.initParser(Language.JAPANESE)
             AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
             AudioPlayer.prepare()
             requestHandler.getLyrics(currentSong.id, "ja")
@@ -121,7 +125,6 @@ fun Player(
                 if (cue.startTimeMs != -1) viewModel.highlightCueAt(cue.startTimeMs)
                 else viewModel.unhighlightCues()
             }
-            requestHandler.getDictionary("kanji")
         }
     }
 
@@ -136,9 +139,14 @@ fun Player(
         }
     }
 
+    LaunchedEffect(words) {
+        Log.d("Player", "Found ${words.size} words within this song")
+    }
+
     KeepScreenOn()
     BackHandler {
         AudioPlayer.stop()
+        viewModel.clearWords()
         viewModel.clearCues()
         navController.goBack()
     }
