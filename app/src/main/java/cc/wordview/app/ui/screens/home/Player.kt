@@ -218,6 +218,7 @@ fun Player(
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 WVIconButton(
+                    modifier = Modifier.testTag("play-button"),
                     onClick = { AudioPlayer.togglePlay() },
                     imageVector = playIcon,
                     size = 80.dp,
@@ -228,6 +229,7 @@ fun Player(
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 WVIconButton(
+                    modifier = Modifier.testTag("skip-forward"),
                     onClick = { AudioPlayer.skipForward() },
                     imageVector = Icons.Filled.SkipNext,
                     size = 75.dp,

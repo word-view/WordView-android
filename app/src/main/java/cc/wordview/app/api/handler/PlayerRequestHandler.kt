@@ -37,7 +37,7 @@ object PlayerRequestHandler {
     private val TAG = PlayerRequestHandler::class.java.simpleName
     private lateinit var queue: RequestQueue
 
-    val sharedLyricsSucceed: (res: String) -> Unit = { res ->
+    var sharedLyricsSucceed: (res: String) -> Unit = { res ->
         PlayerViewModel.lyricsParse(res)
         PlayerViewModel.setCues(PlayerViewModel.lyrics.value)
         AudioPlayer.togglePlay()
