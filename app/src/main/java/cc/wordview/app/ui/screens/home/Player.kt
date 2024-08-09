@@ -82,28 +82,20 @@ fun Player(
     val lyrics by viewModel.lyrics.collectAsStateWithLifecycle()
     val words by viewModel.words.collectAsStateWithLifecycle()
 
+    fun toast(msg: String) {
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+    }
+
     requestHandler.onGetLyricsFail = {
-        Toast.makeText(
-            context,
-            "Could not find any lyrics on youtube, will try searching for other platforms (this may produce inaccurate lyrics)",
-            Toast.LENGTH_LONG
-        ).show()
+        toast("Could not find any lyrics on youtube, will try searching for other platforms (this may produce inaccurate lyrics)")
     }
 
     requestHandler.onWordFindFail = {
-        Toast.makeText(
-            context,
-            "Could not find any lyrics for this song",
-            Toast.LENGTH_LONG
-        ).show()
+        toast("Could not find any lyrics for this song")
     }
 
     requestHandler.onGetDictionariesFail = {
-        Toast.makeText(
-            context,
-            "Unable to find a dictionary for this language",
-            Toast.LENGTH_LONG
-        ).show()
+        toast("Unable to find a dictionary for this language")
     }
 
     requestHandler.onLyricsSucceed = {
