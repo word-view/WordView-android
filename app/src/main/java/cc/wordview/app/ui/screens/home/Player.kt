@@ -58,11 +58,10 @@ import cc.wordview.app.ui.components.WVIconButton
 import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.audio.AudioPlayer
+import cc.wordview.app.extractor.getSubtitleFor
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.gengolex.Language
-import cc.wordview.gengolex.Parser
-import java.util.ArrayList
 import kotlin.concurrent.thread
 
 @SuppressLint("MutableCollectionMutableState")
@@ -118,12 +117,20 @@ fun Player(
             viewModel.initParser(Language.JAPANESE)
             AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
             AudioPlayer.prepare()
-            requestHandler.getLyrics(currentSong.id, "ja")
             AudioPlayer.onPositionChange = { position ->
                 val cue = lyrics.getCueAt(position)
 
                 if (cue.startTimeMs != -1) viewModel.highlightCueAt(cue.startTimeMs)
                 else viewModel.unhighlightCues()
+            }
+
+
+            val url = getSubtitleFor(currentSong.id, "ja")
+
+            if (!url.isNullOrEmpty()) {
+                requestHandler.getLyrics(url)
+            } else {
+                requestHandler.getLyricsWordFind(SongViewModel.video.value.searchQuery)
             }
         }
     }

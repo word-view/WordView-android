@@ -91,7 +91,7 @@ object PlayerRequestHandler {
         queue = Volley.newRequestQueue(context)
     }
 
-    private fun getLyricsWordFind(searchQuery: String) {
+    fun getLyricsWordFind(searchQuery: String) {
         Log.d(TAG, "Searching for \"$searchQuery\" using WordFind")
 
         val url = "$apiURL/music/lyrics/find?title=${URLEncoder.encode(searchQuery)}"
@@ -111,11 +111,7 @@ object PlayerRequestHandler {
         queue.add(stringRequest)
     }
 
-    fun getLyrics(id: String, lang: String) {
-        Log.d(TAG, "Looking for lyrics for video with id \"$id\" and language \"$lang\" ")
-
-        val url = "$apiURL/music/lyrics?id=$id&lang=$lang"
-
+    fun getLyrics(url: String) {
         val stringRequest = StringRequest(Request.Method.GET, url, { response ->
             getLyricsHandler.onSuccessResponse(response)
         }, { err -> getLyricsHandler.onErrorResponse(err) })
