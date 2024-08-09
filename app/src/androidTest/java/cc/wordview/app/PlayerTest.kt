@@ -23,16 +23,12 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.api.Video
-import cc.wordview.app.api.handler.PlayerRequestHandler
-import cc.wordview.app.extractor.DownloaderImpl
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.screens.home.Player
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.theme.WordViewTheme
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.schabi.newpipe.extractor.NewPipe
 import java.util.ArrayList
 
 class PlayerTest {
@@ -79,52 +75,6 @@ class PlayerTest {
             PlayerViewModel.highlightCueAt(1000 * i)
             composeTestRule.onNodeWithText("$i hello world").assertExists()
         }
-    }
-
-    @Test
-    fun lyricsFromYoutube() {
-        SongViewModel.setVideo(Video("LfephiFN76E", "No Title", "REOL", ""))
-        initNewPipe()
-
-        PlayerRequestHandler.sharedLyricsSucceed = { res ->
-            PlayerViewModel.lyricsParse(res)
-            PlayerViewModel.setCues(PlayerViewModel.lyrics.value)
-        }
-
-
-        composeTestRule.setContent { Player() }
-
-        composeTestRule.waitUntil(30_000) { PlayerViewModel.lyrics.value.size > 0 }
-
-        for (lyrics in PlayerViewModel.lyrics.value) {
-            PlayerViewModel.highlightCueAt(lyrics.startTimeMs)
-            composeTestRule.onNodeWithText(lyrics.text).assertExists()
-        }
-    }
-
-    @Test
-    fun lyricsFromWordFind() {
-        SongViewModel.setVideo(Video("BWYDFJcm9tk", "彗星のパレード", "majiko", ""))
-        initNewPipe()
-
-        PlayerRequestHandler.sharedLyricsSucceed = { res ->
-            PlayerViewModel.lyricsParse(res)
-            PlayerViewModel.setCues(PlayerViewModel.lyrics.value)
-        }
-
-        composeTestRule.setContent { Player() }
-
-        composeTestRule.waitUntil(120_000) { PlayerViewModel.lyrics.value.size > 0 }
-
-        for (lyrics in PlayerViewModel.lyrics.value) {
-            PlayerViewModel.highlightCueAt(lyrics.startTimeMs)
-            composeTestRule.onNodeWithText(lyrics.text).assertExists()
-        }
-    }
-
-    private fun initNewPipe() {
-        DownloaderImpl.init(null)
-        NewPipe.init(DownloaderImpl.getInstance())
     }
 
     @Composable

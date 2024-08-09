@@ -30,10 +30,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun WVIconButton(modifier: Modifier = Modifier, onClick: () -> Unit, imageVector: ImageVector, size: Dp, colors: ButtonColors = ButtonDefaults.buttonColors()) {
+fun WVIconButton(onClick: () -> Unit, imageVector: ImageVector, size: Dp, colors: ButtonColors = ButtonDefaults.buttonColors()) {
     Button(
         onClick = onClick,
-        modifier = modifier.size(size),
+        modifier = Modifier.size(size),
         colors = colors,
         shape = CircleShape
     ) {
