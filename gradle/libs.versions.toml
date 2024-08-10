@@ -2,7 +2,7 @@
 agp = "8.5.2"
 coil = "2.6.0"
 coilCompose = "2.6.0"
-desugar_jdk_libs = "2.0.4"
+desugar_jdk_libs_nio = "2.0.4"
 gengolex = "1.1-SNAPSHOT"
 gson = "2.11.0"
 junitJupiter = "5.10.3"
@@ -20,7 +20,7 @@ navigationRuntimeKtx = "2.7.7"
 navigationCompose = "2.7.7"
 media3Common = "1.4.0"
 lifecycleRuntimeComposeAndroid = "2.8.4"
-newpipeextractor = "0.24.1"
+newpipeextractor = "0.24.2"
 uiTestJunit4 = "1.6.8"
 uiTestManifest = "1.6.8"
 volley = "1.2.1"
@@ -31,7 +31,6 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 androidx-media3-extractor = { module = "androidx.media3:media3-extractor", version.ref = "media3Extractor" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
-desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 gengolex = { module = "cc.wordview.gengolex:Gengolex", version.ref = "gengolex" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -53,6 +52,7 @@ androidx-media3-common = { group = "androidx.media3", name = "media3-common", ve
 androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 newpipeextractor = { module = "com.github.TeamNewPipe:NewPipeExtractor", version.ref = "newpipeextractor" }
+tools-desugar_jdk_libs_nio = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "desugar_jdk_libs_nio" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
 ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestManifest" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
