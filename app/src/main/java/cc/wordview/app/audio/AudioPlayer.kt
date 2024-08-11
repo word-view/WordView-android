@@ -28,12 +28,18 @@ object AudioPlayer : MediaPlayer() {
     private val TAG = AudioPlayer::class.java.simpleName
 
     private val handler = Handler(Looper.getMainLooper())
-    private val onPlay = { PlayerViewModel.playIconPlay() }
-    private val onPause = { PlayerViewModel.playIconPause() }
 
     private var state = AudioPlayerState.STALE
 
     var onPositionChange: (Int) -> Unit = {}
+
+    init {
+        setOnPreparedListener {
+            Log.d(TAG, "Audio is prepared")
+            state = AudioPlayerState.INITIALIZED
+        }
+        setOnCompletionListener { PlayerViewModel.playIconPause() }
+    }
 
     fun initialize(dataSource: String) {
         Log.d(TAG, "Initializing MediaPlayer with dataSource: $dataSource")
@@ -52,15 +58,15 @@ object AudioPlayer : MediaPlayer() {
                         .build()
                 )
                 setDataSource(dataSource)
-                state = AudioPlayerState.INITIALIZED
             }
+            prepare()
         } catch (e: Exception) {
             Log.e(TAG, e.message, e)
         }
     }
 
     override fun stop() {
-        onPause()
+        PlayerViewModel.playIconPause()
 
         if (state == AudioPlayerState.INITIALIZED)
             super.stop()
@@ -71,11 +77,11 @@ object AudioPlayer : MediaPlayer() {
 
         if (this.isPlaying) {
             pause()
-            onPause()
+            PlayerViewModel.playIconPause()
         } else {
             checkOnPositionChange()
             start()
-            onPlay()
+            PlayerViewModel.playIconPlay()
         }
     }
 

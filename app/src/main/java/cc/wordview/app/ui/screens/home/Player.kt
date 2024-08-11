@@ -108,7 +108,6 @@ fun Player(
         thread {
             viewModel.initParser(Language.JAPANESE)
             AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
-            AudioPlayer.prepare()
             AudioPlayer.onPositionChange = { position ->
                 val cue = lyrics.getCueAt(position)
 
