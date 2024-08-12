@@ -24,12 +24,13 @@ import android.os.Looper
 import android.util.Log
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 
-object AudioPlayer : MediaPlayer() {
+class AudioPlayer : MediaPlayer() {
     private val TAG = AudioPlayer::class.java.simpleName
 
     private val handler = Handler(Looper.getMainLooper())
-
     private var state = AudioPlayerState.STALE
+
+    private lateinit var positionChangeRunnable: Runnable
 
     var onPositionChange: (Int) -> Unit = {}
 
@@ -68,14 +69,18 @@ object AudioPlayer : MediaPlayer() {
     override fun stop() {
         PlayerViewModel.playIconPause()
 
-        if (state == AudioPlayerState.INITIALIZED)
-            super.stop()
+        if (state == AudioPlayerState.INITIALIZED) super.stop()
+
+        handler.removeCallbacks(positionChangeRunnable)
+        this.reset()
+        this.release()
     }
 
     fun togglePlay() {
         if (state == AudioPlayerState.STALE) return
 
         if (this.isPlaying) {
+            handler.removeCallbacks(positionChangeRunnable)
             pause()
             PlayerViewModel.playIconPause()
         } else {
@@ -102,7 +107,7 @@ object AudioPlayer : MediaPlayer() {
     }
 
     private fun checkOnPositionChange() {
-        val runnable = object : Runnable {
+        positionChangeRunnable = object : Runnable {
             override fun run() {
                 if (isPlaying) {
                     onPositionChange(currentPosition)
@@ -110,6 +115,6 @@ object AudioPlayer : MediaPlayer() {
                 }
             }
         }
-        handler.post(runnable)
+        handler.post(positionChangeRunnable)
     }
 }

@@ -41,6 +41,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -82,6 +84,8 @@ fun Player(
     val lyrics by viewModel.lyrics.collectAsStateWithLifecycle()
     val words by viewModel.words.collectAsStateWithLifecycle()
 
+    val audioPlayer by remember { mutableStateOf(AudioPlayer()) }
+
     fun toast(msg: String) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
     }
@@ -99,6 +103,7 @@ fun Player(
     }
 
     requestHandler.onLyricsSucceed = {
+        audioPlayer.togglePlay()
         requestHandler.getDictionary("kanji")
     }
 
@@ -107,8 +112,8 @@ fun Player(
     LaunchedEffect(Unit) {
         thread {
             viewModel.initParser(Language.JAPANESE)
-            AudioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
-            AudioPlayer.onPositionChange = { position ->
+            audioPlayer.initialize("$apiURL/music/download?id=${currentSong.id}")
+            audioPlayer.onPositionChange = { position ->
                 val cue = lyrics.getCueAt(position)
 
                 if (cue.startTimeMs != -1) viewModel.highlightCueAt(cue.startTimeMs)
@@ -143,7 +148,7 @@ fun Player(
 
     KeepScreenOn()
     BackHandler {
-        AudioPlayer.stop()
+        audioPlayer.stop()
         viewModel.clearWords()
         viewModel.clearCues()
         navController.goBack()
@@ -151,7 +156,8 @@ fun Player(
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         BackTopAppBar(text = currentSong.title, onClickBack = {
-            AudioPlayer.stop()
+            audioPlayer.stop()
+            viewModel.clearWords()
             viewModel.clearCues()
             navController.goBack()
         })
@@ -207,7 +213,7 @@ fun Player(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 WVIconButton(
-                    onClick = { AudioPlayer.skipBackward() },
+                    onClick = { audioPlayer.skipBackward() },
                     imageVector = Icons.Filled.SkipPrevious,
                     size = 75.dp,
                     colors = ButtonDefaults.buttonColors(
@@ -217,7 +223,7 @@ fun Player(
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 WVIconButton(
-                    onClick = { AudioPlayer.togglePlay() },
+                    onClick = { audioPlayer.togglePlay() },
                     imageVector = playIcon,
                     size = 80.dp,
                     colors = ButtonDefaults.buttonColors(
@@ -227,7 +233,7 @@ fun Player(
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 WVIconButton(
-                    onClick = { AudioPlayer.skipForward() },
+                    onClick = { audioPlayer.skipForward() },
                     imageVector = Icons.Filled.SkipNext,
                     size = 75.dp,
                     colors = ButtonDefaults.buttonColors(

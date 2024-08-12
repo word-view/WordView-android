@@ -40,7 +40,6 @@ object PlayerRequestHandler {
     val sharedLyricsSucceed: (res: String) -> Unit = { res ->
         PlayerViewModel.lyricsParse(res)
         PlayerViewModel.setCues(PlayerViewModel.lyrics.value)
-        AudioPlayer.togglePlay()
     }
 
     var onLyricsSucceed: () -> Unit = {}
