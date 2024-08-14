@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import kotlin.time.Duration.Companion.milliseconds
 
 object SearchViewModel : ViewModel() {
     private val _searching = MutableStateFlow(false)
@@ -50,7 +51,7 @@ object SearchViewModel : ViewModel() {
                 id = getIdFromUrl(item.url),
                 title = item.name,
                 channel = item.uploaderName,
-                duration = item.duration.toInt(),
+                duration = item.duration,
             ))
         }
 

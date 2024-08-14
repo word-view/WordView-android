@@ -21,6 +21,6 @@ class VideoSearchResult(
     var id: String = "",
     var title: String = "",
     var channel: String = "",
-    var duration: Int = 0,
+    var duration: Long = 0,
     var categories: Array<String> = arrayOf(),
 )

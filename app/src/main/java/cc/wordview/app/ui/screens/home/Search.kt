@@ -23,24 +23,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,94 +44,65 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.Video
-import cc.wordview.app.api.VideoSearchResult
-import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extractor.search
 import cc.wordview.app.ui.components.AsyncComposable
+import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.screens.home.model.SearchViewModel
 import cc.wordview.app.ui.screens.util.Screen
-import cc.wordview.app.ui.theme.Typography
-import coil.compose.AsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Search(navController: NavHostController, viewModel: SearchViewModel = SearchViewModel) {
     val searchText by viewModel.query.collectAsStateWithLifecycle()
-    val searching by viewModel.searching.collectAsStateWithLifecycle()
     val results by viewModel.searchResults.collectAsStateWithLifecycle()
+    val searching by viewModel.searching.collectAsStateWithLifecycle()
 
     var waitingForResponse by remember { mutableStateOf(false) }
-    var leadingIcon by remember { mutableStateOf(Icons.Filled.Search) }
+
     val focusRequester = remember { FocusRequester() }
 
-    fun playResult(result: VideoSearchResult) {
-        SongViewModel.setVideo(
-            Video(
-                result.id,
-                result.title,
-                result.channel,
-                "https://img.youtube.com/vi/${result.id}/0.jpg"
-            )
-        )
-        navController.navigate(Screen.Player.route)
-    }
-
-    LaunchedEffect(Unit) {
-        if (results.isEmpty()) focusRequester.requestFocus()
-    }
-
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            SearchBar(
-                modifier = Modifier.focusRequester(focusRequester),
-                placeholder = {
-                    Text("Search for music, artists, albums...")
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            SearchBar(modifier = Modifier
+                .focusRequester(focusRequester)
+                .fillMaxWidth(0.97F)
+                .testTag("search-bar"),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = null
+                    )
                 },
+                placeholder = { Text("Search for music, artists, albums...") },
                 query = searchText,
-                onQueryChange = { query -> viewModel.setQuery(query) },
-                onSearch = { query ->
+                onQueryChange = { viewModel.setQuery(it) },
+                onSearch = {
                     waitingForResponse = true
                     viewModel.setSearching(false)
 
-                    // we need to manually fix the icon cause onActiveChange
-                    // is not called if we change isSearching.
-                    leadingIcon = Icons.Filled.Search
-
-                    search(query) { items ->
-                        viewModel.setSearchResults(items);
+                    search(it) { r ->
+                        viewModel.setSearchResults(r)
                         waitingForResponse = false
                     }
                 },
                 active = searching,
-                onActiveChange = { active ->
-                    viewModel.setSearching(active)
-                    leadingIcon = if (active) Icons.Filled.ArrowBack else Icons.Filled.Search
-                },
-                leadingIcon = {
-                    // This button will act only as a icon in
-                    // the case of the searchbar being deselected
-                    IconButton(onClick = { navController.goBack() }, enabled = searching) {
-                        Icon(
-                            imageVector = leadingIcon,
-                            contentDescription = ""
-                        )
-                    }
-                },
-            ) {
-
-            }
+                onActiveChange = { viewModel.setSearching(it) }) {}
         }
     }) { innerPadding ->
-        AsyncComposable(Modifier.padding(innerPadding), condition = !waitingForResponse) {
+        // For tests to work, the launched effect has to be inside
+        // the scaffold (https://issuetracker.google.com/issues/206249038#comment9)
+        LaunchedEffect(Unit) { if (results.isEmpty()) focusRequester.requestFocus() }
+
+        AsyncComposable(
+            modifier = Modifier.padding(innerPadding),
+            condition = !waitingForResponse
+        ) {
             Column(
                 Modifier
                     .fillMaxSize()
@@ -149,47 +112,16 @@ fun Search(navController: NavHostController, viewModel: SearchViewModel = Search
             ) {
                 for (result in results) {
                     Spacer(Modifier.size(12.dp))
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(72.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.background,
-                        ),
-                        onClick = { playResult(result) }
-                    ) {
-                        Row {
-                            Surface(
-                                modifier = Modifier
-                                    .size(72.dp)
-                                    .padding(8.dp),
-                                shape = RoundedCornerShape(5.dp)
-                            ) {
-                                AsyncImage(
-                                    model = "https://img.youtube.com/vi/${result.id}/0.jpg",
-                                    placeholder = painterResource(id = R.drawable.radio),
-                                    error = painterResource(id = R.drawable.radio),
-                                    contentDescription = "${result.title} cover",
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Crop,
-                                )
-                            }
-                            Column(Modifier.padding(8.dp)) {
-                                Text(
-                                    text = result.title,
-                                    style = Typography.labelMedium,
-                                    textAlign = TextAlign.Left,
-                                    modifier = Modifier.fillMaxWidth(),
-                                )
-                                Text(
-                                    text = result.channel,
-                                    style = Typography.labelSmall,
-                                    textAlign = TextAlign.Left,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    color = MaterialTheme.colorScheme.inverseSurface
-                                )
-                            }
-                        }
+                    ResultItem(result = result) {
+                        SongViewModel.setVideo(
+                            Video(
+                                result.id,
+                                result.title,
+                                result.channel,
+                                "https://img.youtube.com/vi/${result.id}/0.jpg"
+                            )
+                        )
+                        navController.navigate(Screen.Player.route)
                     }
                 }
             }
