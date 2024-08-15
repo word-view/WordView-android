@@ -75,7 +75,7 @@ sealed class Screen(val route: String) {
     data object Search : Screen("search") {
         @Composable
         override fun Composable(navHostController: NavHostController) {
-            Search(navController = navHostController)
+            Search(navHostController)
         }
     }
 

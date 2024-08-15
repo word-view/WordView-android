@@ -37,7 +37,7 @@ class SearchTest {
 
     private fun setupScreen() {
         composeTestRule.setContent {
-            WordViewTheme { Search(navController = rememberNavController()) }
+            WordViewTheme { Search(rememberNavController()) }
         }
     }
 

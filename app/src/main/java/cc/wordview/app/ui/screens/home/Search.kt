@@ -58,7 +58,7 @@ import cc.wordview.app.ui.screens.util.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Search(navController: NavHostController, viewModel: SearchViewModel = SearchViewModel) {
+fun Search(navHostController: NavHostController, viewModel: SearchViewModel = SearchViewModel) {
     val searchText by viewModel.query.collectAsStateWithLifecycle()
     val results by viewModel.searchResults.collectAsStateWithLifecycle()
     val searching by viewModel.searching.collectAsStateWithLifecycle()
@@ -121,7 +121,7 @@ fun Search(navController: NavHostController, viewModel: SearchViewModel = Search
                                 "https://img.youtube.com/vi/${result.id}/0.jpg"
                             )
                         )
-                        navController.navigate(Screen.Player.route)
+                        navHostController.navigate(Screen.Player.route)
                     }
                 }
             }
