@@ -27,12 +27,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -79,14 +83,21 @@ fun ResultItem(result: VideoSearchResult, onClick: () -> Unit) {
                     softWrap = false,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Text(
-                    text = result.channel,
-                    style = Typography.labelSmall,
-                    textAlign = TextAlign.Left,
-                    softWrap = false,
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.inverseSurface
-                )
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    if (result.channelIsVerified) {
+                        Icon(imageVector = Icons.Filled.Verified, modifier = Modifier.size(12.dp), contentDescription = "")
+                        Spacer(Modifier.size(2.dp))
+                    }
+
+                    Text(
+                        text = result.channel,
+                        style = Typography.labelSmall,
+                        textAlign = TextAlign.Left,
+                        softWrap = false,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.inverseSurface
+                    )
+                }
                 Spacer(Modifier.size(3.dp))
                 Text(
                     modifier = Modifier

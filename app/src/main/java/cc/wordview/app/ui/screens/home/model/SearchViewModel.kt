@@ -51,6 +51,7 @@ object SearchViewModel : ViewModel() {
                 id = getIdFromUrl(item.url),
                 title = item.name,
                 channel = item.uploaderName,
+                channelIsVerified = item.isUploaderVerified,
                 duration = item.duration,
             ))
         }

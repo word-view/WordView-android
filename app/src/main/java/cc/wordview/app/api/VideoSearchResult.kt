@@ -22,5 +22,6 @@ class VideoSearchResult(
     var title: String = "",
     var channel: String = "",
     var duration: Long = 0,
+    var channelIsVerified: Boolean = false,
     var categories: Array<String> = arrayOf(),
 )
