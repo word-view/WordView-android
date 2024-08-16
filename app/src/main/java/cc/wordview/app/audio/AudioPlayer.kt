@@ -30,7 +30,7 @@ class AudioPlayer : MediaPlayer() {
     private val handler = Handler(Looper.getMainLooper())
     private var state = AudioPlayerState.STALE
 
-    private lateinit var positionChangeRunnable: Runnable
+    private var positionChangeRunnable: Runnable? = null
 
     var onPositionChange: (Int) -> Unit = {}
 
@@ -67,11 +67,11 @@ class AudioPlayer : MediaPlayer() {
     }
 
     override fun stop() {
+        if (state == AudioPlayerState.INITIALIZED) super.stop()
         PlayerViewModel.playIconPause()
 
-        if (state == AudioPlayerState.INITIALIZED) super.stop()
 
-        handler.removeCallbacks(positionChangeRunnable)
+        positionChangeRunnable?.let { handler.removeCallbacks(it) }
         this.reset()
         this.release()
     }
@@ -79,14 +79,18 @@ class AudioPlayer : MediaPlayer() {
     fun togglePlay() {
         if (state == AudioPlayerState.STALE) return
 
-        if (this.isPlaying) {
-            handler.removeCallbacks(positionChangeRunnable)
-            pause()
-            PlayerViewModel.playIconPause()
-        } else {
-            checkOnPositionChange()
-            start()
-            PlayerViewModel.playIconPlay()
+        try {
+            if (this.isPlaying) {
+                positionChangeRunnable?.let { handler.removeCallbacks(it) }
+                pause()
+                PlayerViewModel.playIconPause()
+            } else {
+                checkOnPositionChange()
+                start()
+                PlayerViewModel.playIconPlay()
+            }
+        } catch (e: IllegalStateException) {
+            e.message?.let { Log.w(TAG, it) }
         }
     }
 
@@ -115,6 +119,6 @@ class AudioPlayer : MediaPlayer() {
                 }
             }
         }
-        handler.post(positionChangeRunnable)
+        handler.post(positionChangeRunnable as Runnable)
     }
 }

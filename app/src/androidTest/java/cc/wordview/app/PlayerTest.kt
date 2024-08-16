@@ -17,16 +17,17 @@
 
 package cc.wordview.app
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.api.Video
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.screens.home.Player
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.theme.WordViewTheme
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import java.util.ArrayList
@@ -35,28 +36,45 @@ class PlayerTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    @Test
-    fun renders() {
-        SongViewModel.setVideo(Video("", "No Title", "REOL", ""))
+    private fun setupScreen() {
+        composeTestRule.setContent {
+            WordViewTheme { Player(rememberNavController(), autoplay = false) }
+        }
+    }
 
-        composeTestRule.setContent { Player() }
-
-        composeTestRule.onNodeWithText("No Title").assertExists()
+    private fun getMockSong(): Video {
+        return Video("LfephiFN76E", "No Title", "REOL", "")
     }
 
     @Test
-    fun loaderDisappearsWhenLyricsAreLoaded() {
-        PlayerViewModel.setCues(ArrayList())
-        val mockLyrics = arrayListOf(WordViewCue("hello world", 0, 1000))
+    fun renders() {
+        SongViewModel.setVideo(getMockSong())
+        setupScreen()
+        composeTestRule.onNodeWithTag("back-button").assertExists()
+        composeTestRule.onNodeWithText("No Title").assertExists()
+        composeTestRule.onNodeWithTag("play").assertExists()
+        composeTestRule.onNodeWithTag("skip-back").assertExists()
+        composeTestRule.onNodeWithTag("skip-forward").assertExists()
+    }
 
-        composeTestRule.setContent { Player() }
+    @Test
+    fun performGoBack() {
+        setupScreen()
+        composeTestRule.onNodeWithTag("back-button").performClick()
+    }
 
-        composeTestRule.onNodeWithTag("lyrics-loader").assertExists()
+    @Test
+    fun loaderWhenNoLyrics() {
+        PlayerViewModel.setCues(arrayListOf())
+        setupScreen()
+        composeTestRule.onNodeWithTag("async-composable-progress").assertExists()
+    }
 
-        PlayerViewModel.setCues(mockLyrics)
-
-        composeTestRule.onNodeWithTag("lyrics-loader").assertDoesNotExist()
-        composeTestRule.onNodeWithText("hello world").assertExists()
+    @Test
+    fun lyricsViewerWhenLyrics() {
+        PlayerViewModel.setCues(arrayListOf(WordViewCue("hello world", 1000, 2000)))
+        setupScreen()
+        composeTestRule.onNodeWithTag("lyrics-viewer").assertExists()
     }
 
     @Test
@@ -69,7 +87,7 @@ class PlayerTest {
 
         PlayerViewModel.setCues(mockLyrics)
 
-        composeTestRule.setContent { Player() }
+        setupScreen()
 
         for (i in 1..20) {
             PlayerViewModel.highlightCueAt(1000 * i)
@@ -77,10 +95,36 @@ class PlayerTest {
         }
     }
 
-    @Composable
-    fun Player() {
-        WordViewTheme {
-            Player(navController = rememberNavController())
-        }
+    @Test
+    @Ignore("Works individually but hangs when it is run along with other tests")
+    fun playButtonWorks() {
+        SongViewModel.setVideo(getMockSong())
+        setupScreen()
+        composeTestRule.waitUntil(60_000) { PlayerViewModel.lyrics.value.size > 0 }
+        composeTestRule.onNodeWithTag("play").performClick()
+        composeTestRule.waitUntil(10_000) { PlayerViewModel.highlightedCuePosition.value != 0 }
+    }
+
+    @Test
+    @Ignore("Works individually but hangs when it is run along with other tests")
+    fun skipForwardButtonWorks() {
+        SongViewModel.setVideo(getMockSong())
+        setupScreen()
+        composeTestRule.waitUntil(60_000) { PlayerViewModel.lyrics.value.size > 0 }
+        composeTestRule.onNodeWithTag("skip-forward").performClick().performClick().performClick()
+        composeTestRule.onNodeWithTag("play").performClick()
+        composeTestRule.waitUntil(10_000) { PlayerViewModel.highlightedCuePosition.value > 15000 }
+    }
+
+    @Test
+    @Ignore("Works individually but hangs when it is run along with other tests")
+    fun skipBackButtonWorks() {
+        SongViewModel.setVideo(getMockSong())
+        setupScreen()
+        composeTestRule.waitUntil(60_000) { PlayerViewModel.lyrics.value.size > 0 }
+        composeTestRule.onNodeWithTag("skip-forward").performClick().performClick().performClick()
+        composeTestRule.onNodeWithTag("skip-back").performClick().performClick().performClick()
+        composeTestRule.onNodeWithTag("play").performClick()
+        composeTestRule.waitUntil(10_000) { PlayerViewModel.highlightedCuePosition.value < 15000 }
     }
 }

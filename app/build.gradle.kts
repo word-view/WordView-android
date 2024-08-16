@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.media3.extractor)
     implementation(libs.newpipeextractor)
     implementation(libs.androidx.media3.common)
+    implementation(libs.composefadingedges)
     implementation(libs.androidx.lifecycle.runtime.compose.android)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)

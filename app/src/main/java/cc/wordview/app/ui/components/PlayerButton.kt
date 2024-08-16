@@ -17,31 +17,25 @@
 
 package cc.wordview.app.ui.components
 
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 @Composable
-fun WVIconButton(modifier: Modifier = Modifier, onClick: () -> Unit, enabled: Boolean = true, imageVector: ImageVector, size: Dp, colors: ButtonColors = ButtonDefaults.buttonColors()) {
-    Button(
+fun PlayerButton(modifier: Modifier = Modifier, enabled: Boolean = true, icon: ImageVector, size: Dp, onClick: () -> Unit) {
+    WVIconButton(
+        modifier = modifier,
         onClick = onClick,
-        modifier = modifier.size(size),
-        colors = colors,
+        imageVector = icon,
+        size = size,
         enabled = enabled,
-        shape = CircleShape,
-    ) {
-        Icon(
-            imageVector = imageVector,
-            modifier = Modifier.size(60.dp),
-            contentDescription = ""
-        )
-    }
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            disabledContainerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.primary
+        ),
+    )
 }

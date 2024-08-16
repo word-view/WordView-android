@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 
@@ -37,7 +38,7 @@ import androidx.core.graphics.ColorUtils
  */
 fun AsyncComposable(modifier: Modifier = Modifier, condition: Boolean, surface: Boolean = false, composable: @Composable () -> Unit) {
     if (!condition) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(modifier = modifier.fillMaxSize().testTag("async-composable-progress"), contentAlignment = Alignment.Center) {
             val inverseSurfaceDarker = ColorUtils.blendARGB(
                 MaterialTheme.colorScheme.inverseSurface.toArgb(),
                 MaterialTheme.colorScheme.background.toArgb(),

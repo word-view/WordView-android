@@ -23,7 +23,6 @@ import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.JsonAcceptingRequest
 import cc.wordview.app.api.Response
 import cc.wordview.app.api.apiURL
-import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
@@ -37,17 +36,16 @@ object PlayerRequestHandler {
     private val TAG = PlayerRequestHandler::class.java.simpleName
     private lateinit var queue: RequestQueue
 
-    val sharedLyricsSucceed: (res: String) -> Unit = { res ->
-        PlayerViewModel.lyricsParse(res)
+    var onLyricsSucceed: () -> Unit = {}
+
+    val lyricsSucceed: (res: String) -> Unit = {
+        PlayerViewModel.lyricsParse(it)
         PlayerViewModel.setCues(PlayerViewModel.lyrics.value)
+        onLyricsSucceed()
     }
 
-    var onLyricsSucceed: () -> Unit = {}
-    var onGetLyricsFail: () -> Unit = {}
-    var onWordFindFail: () -> Unit = {}
-
-    val onGetDictionariesSucceed: (res: String) -> Unit = { res ->
-        PlayerViewModel.addDictionary("kanji", res)
+    val onGetDictionariesSucceed: (res: String) -> Unit = {
+        PlayerViewModel.addDictionary("kanji", it)
 
         val wordsFound = ArrayList<String>()
 
@@ -58,32 +56,18 @@ object PlayerRequestHandler {
 
         PlayerViewModel.setWords(wordsFound)
     }
-    var onGetDictionariesFail: () -> Unit = {}
 
-    private val wordFindHandler = Response({ res ->
-        run {
-            sharedLyricsSucceed(res)
-            onLyricsSucceed()
-        }
-    }) {
-        Log.e(TAG, "getLyricsWordFind failed!")
-        onWordFindFail()
+    private val wordFindHandler = Response({ lyricsSucceed(it) }) {
+        Log.e(TAG, "Failed to find lyrics using WordFind", it)
     }
 
-    private var getLyricsHandler = Response({ res ->
-        run {
-            sharedLyricsSucceed(res)
-            onLyricsSucceed()
-        }
-    }) {
-        Log.e(TAG, "getLyrics failed! Retrying with wordFind")
-        onGetLyricsFail()
+    private var getLyricsHandler = Response({ lyricsSucceed(it) }) {
+        Log.e(TAG, "Failed to find lyrics", it)
         getLyricsWordFind(SongViewModel.video.value.searchQuery)
     }
 
-    private val getDictionariesHandler = Response({ res -> onGetDictionariesSucceed(res) }) {
-        Log.e(TAG, "getDictionaries failed!")
-        onGetDictionariesFail()
+    private val getDictionariesHandler = Response({ onGetDictionariesSucceed(it) }) {
+        Log.e(TAG, "Failed to retrieve a dictionary", it)
     }
 
     fun init(context: Context) {
@@ -95,9 +79,11 @@ object PlayerRequestHandler {
 
         val url = "$apiURL/music/lyrics/find?title=${URLEncoder.encode(searchQuery)}"
 
-        val stringRequest = StringRequest(Request.Method.GET, url, { response ->
-            wordFindHandler.onSuccessResponse(response)
-        }, { err -> wordFindHandler.onErrorResponse(err) })
+        val stringRequest = StringRequest(
+            Request.Method.GET,
+            url,
+            { wordFindHandler.onSuccessResponse(it) },
+            { wordFindHandler.onErrorResponse(it) })
 
         stringRequest.setRetryPolicy(
             DefaultRetryPolicy(
@@ -111,9 +97,11 @@ object PlayerRequestHandler {
     }
 
     fun getLyrics(url: String) {
-        val stringRequest = StringRequest(Request.Method.GET, url, { response ->
-            getLyricsHandler.onSuccessResponse(response)
-        }, { err -> getLyricsHandler.onErrorResponse(err) })
+        val stringRequest = StringRequest(
+            Request.Method.GET,
+            url,
+            { getLyricsHandler.onSuccessResponse(it) },
+            { getLyricsHandler.onErrorResponse(it) })
 
         queue.add(stringRequest)
     }
@@ -125,8 +113,8 @@ object PlayerRequestHandler {
 
         val jsonRequest = JsonAcceptingRequest(Request.Method.GET,
             url,
-            { response -> getDictionariesHandler.onSuccessResponse(response) },
-            { err -> getDictionariesHandler.onErrorResponse(err) })
+            { getDictionariesHandler.onSuccessResponse(it) },
+            { getDictionariesHandler.onErrorResponse(it) })
 
         queue.add(jsonRequest)
     }

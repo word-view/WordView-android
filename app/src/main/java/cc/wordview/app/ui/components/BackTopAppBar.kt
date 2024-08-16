@@ -28,6 +28,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,7 +43,7 @@ fun BackTopAppBar(text: String, onClickBack: () -> Unit) {
             Text(text)
         },
         navigationIcon = {
-            IconButton(onClick = onClickBack) {
+            IconButton(onClick = onClickBack, modifier = Modifier.testTag("back-button")) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Go back"
