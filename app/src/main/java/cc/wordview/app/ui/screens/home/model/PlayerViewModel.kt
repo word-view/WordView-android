@@ -36,14 +36,12 @@ object PlayerViewModel : ViewModel() {
     private val _highlightedCuePosition = MutableStateFlow(0)
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
     private val _lyrics = MutableStateFlow(Lyrics())
-    private val _words = MutableStateFlow(ArrayList<String>())
     private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
 
     val cues: StateFlow<ArrayList<WordViewCue>> = _cues.asStateFlow()
     val highlightedCuePosition: StateFlow<Int> = _highlightedCuePosition.asStateFlow()
     val playIcon: StateFlow<ImageVector> = _playIcon.asStateFlow()
     val lyrics: StateFlow<Lyrics> = _lyrics.asStateFlow()
-    val words: StateFlow<ArrayList<String>> = _words.asStateFlow()
     val parser: StateFlow<Parser> = _parser.asStateFlow()
 
     fun setCues(cues: ArrayList<WordViewCue>) {
@@ -74,14 +72,6 @@ object PlayerViewModel : ViewModel() {
         val newLyrics = Lyrics()
         newLyrics.parse(res)
         _lyrics.update { newLyrics }
-    }
-
-    fun setWords(words: ArrayList<String>) {
-        _words.update { words }
-    }
-
-    fun clearWords() {
-        _words.update { ArrayList() }
     }
 
     fun initParser(language: Language) {

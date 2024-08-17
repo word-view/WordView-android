@@ -53,8 +53,6 @@ object PlayerRequestHandler {
             val words = PlayerViewModel.parser.value.findWords(cue.text)
             for (word in words) wordsFound.add(word)
         }
-
-        PlayerViewModel.setWords(wordsFound)
     }
 
     private val wordFindHandler = Response({ lyricsSucceed(it) }) {

@@ -121,7 +121,6 @@ fun Player(
 
     fun leave() {
         audioPlayer.stop()
-        viewModel.clearWords()
         viewModel.clearCues()
         navHostController.goBack()
     }
