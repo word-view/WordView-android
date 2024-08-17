@@ -18,14 +18,17 @@
 package cc.wordview.app.ui.screens.home
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -34,6 +37,7 @@ import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,9 +48,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.apiURL
 import cc.wordview.app.api.handler.PlayerRequestHandler
@@ -59,6 +67,7 @@ import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
+import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
 import com.gigamole.composefadingedges.verticalFadingEdges
 import kotlin.concurrent.thread
@@ -79,7 +88,9 @@ fun Player(
     val cuesScroll = rememberLazyListState()
 
     val audioPlayer by remember { mutableStateOf(AudioPlayer()) }
+
     var controlsLocked by remember { mutableStateOf(true) }
+    var audioInitFailed by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -94,11 +105,18 @@ fun Player(
         init(context)
     }
 
-    audioPlayer.onPositionChange = {
-        val cue = lyrics.getCueAt(it)
+    audioPlayer.apply {
+        onPositionChange = {
+            val cue = lyrics.getCueAt(it)
 
-        if (cue.startTimeMs != -1) viewModel.highlightCueAt(cue.startTimeMs)
-        else viewModel.unhighlightCues()
+            if (cue.startTimeMs != -1) viewModel.highlightCueAt(cue.startTimeMs)
+            else viewModel.unhighlightCues()
+        }
+
+        onInitializeFail = {
+            audioInitFailed = true
+            controlsLocked = true
+        }
     }
 
     fun leave() {
@@ -158,29 +176,50 @@ fun Player(
                     .fillMaxWidth()
                     .fillMaxHeight(0.70f)
             ) {
-                AsyncComposable(condition = (cues.size > 0)) {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
-                            .height(500.dp)
-                            .testTag("lyrics-viewer"),
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = DefaultRoundedCornerShape
+                if (audioInitFailed) {
+                    Column(
+                        modifier = Modifier.fillMaxSize().testTag("error-message"),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        LazyColumn(
+                        Image(
+                            modifier = Modifier.size(180.dp),
+                            painter = painterResource(id = R.drawable.radio),
+                            contentDescription = ""
+                        )
+                        Spacer(Modifier.size(15.dp))
+                        Text(
+                            text = "An error has occurred \nand the audio could not be played.",
+                            textAlign = TextAlign.Center,
+                            style = Typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                } else {
+                    AsyncComposable(condition = (cues.size > 0)) {
+                        Surface(
                             modifier = Modifier
-                                .padding(horizontal = 9.dp, vertical = 20.dp)
-                                .verticalFadingEdges(),
-                            userScrollEnabled = false,
-                            state = cuesScroll
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp)
+                                .height(500.dp)
+                                .testTag("lyrics-viewer"),
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = DefaultRoundedCornerShape
                         ) {
-                            for (cue in cues) {
-                                item {
-                                    TextCue(
-                                        cue = cue,
-                                        highlightedCuePosition = highlightedCuePosition,
-                                    )
+                            LazyColumn(
+                                modifier = Modifier
+                                    .padding(horizontal = 9.dp, vertical = 20.dp)
+                                    .verticalFadingEdges(),
+                                userScrollEnabled = false,
+                                state = cuesScroll
+                            ) {
+                                for (cue in cues) {
+                                    item {
+                                        TextCue(
+                                            cue = cue,
+                                            highlightedCuePosition = highlightedCuePosition,
+                                        )
+                                    }
                                 }
                             }
                         }

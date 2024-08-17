@@ -33,6 +33,7 @@ class AudioPlayer : MediaPlayer() {
     private var positionChangeRunnable: Runnable? = null
 
     var onPositionChange: (Int) -> Unit = {}
+    var onInitializeFail: (Exception) -> Unit = {}
 
     init {
         setOnPreparedListener {
@@ -63,6 +64,7 @@ class AudioPlayer : MediaPlayer() {
             prepare()
         } catch (e: Exception) {
             Log.e(TAG, e.message, e)
+            onInitializeFail(e)
         }
     }
 
