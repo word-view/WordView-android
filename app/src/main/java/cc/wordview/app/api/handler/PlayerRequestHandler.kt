@@ -30,28 +30,30 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import java.net.URLEncoder
-import java.util.ArrayList
 
 object PlayerRequestHandler {
     private val TAG = PlayerRequestHandler::class.java.simpleName
+    private val viewModel = PlayerViewModel
     private lateinit var queue: RequestQueue
 
     var onLyricsSucceed: () -> Unit = {}
 
     val lyricsSucceed: (res: String) -> Unit = {
-        PlayerViewModel.lyricsParse(it)
-        PlayerViewModel.setCues(PlayerViewModel.lyrics.value)
+        viewModel.lyricsParse(it)
+        viewModel.setCues(viewModel.lyrics.value)
         onLyricsSucceed()
     }
 
     val onGetDictionariesSucceed: (res: String) -> Unit = {
         PlayerViewModel.addDictionary("kanji", it)
 
-        val wordsFound = ArrayList<String>()
+        for (cue in viewModel.lyrics.value) {
+            val wordsFound = viewModel.parser.value.findWords(cue.text)
 
-        for (cue in PlayerViewModel.lyrics.value) {
-            val words = PlayerViewModel.parser.value.findWords(cue.text)
-            for (word in words) wordsFound.add(word)
+            for (word in wordsFound) {
+                    cue.words.add(word)
+                    Log.d(TAG, "Found word: $word")
+            }
         }
     }
 

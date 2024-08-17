@@ -17,6 +17,8 @@
 
 package cc.wordview.app.subtitle
 
+import cc.wordview.gengolex.languages.Verb
+
 /**
  * A simple cue class, in the future this will include the identified words
  * within this cue and their respective symbols and translations.
@@ -26,4 +28,5 @@ class WordViewCue(
     var text: String = "",
     var startTimeMs: Int = 0,
     var endTimeMs: Int = 0,
+    var words: ArrayList<String> = arrayListOf()
 )
