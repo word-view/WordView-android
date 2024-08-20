@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.home.tabs
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,9 +26,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -53,17 +55,22 @@ import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun LearnTab(navController: NavHostController, navHostController: NavHostController) {
-    var json by remember { mutableStateOf(Video()) }
+    var videos by remember { mutableStateOf(ArrayList<Video>()) }
 
     LaunchedEffect(Unit) {
-        json = Gson().fromJson(
-            "{\"id\":\"D0ehC_8sQuU\",\"title\":\"It's raining after all\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/D0ehC_8sQuU/0.jpg\"}",
-            Video::class.java
+        val typeToken = object : TypeToken<ArrayList<Video>>() {}.type
+
+        val parsed = Gson().fromJson<ArrayList<Video>>(
+            "[{\"id\":\"D0ehC_8sQuU\",\"title\":\"It's raining after all\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/D0ehC_8sQuU/0.jpg\"}, {\"id\":\"vcw5THyM7Jo\",\"title\":\"If there was an endpoint\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/vcw5THyM7Jo/0.jpg\"}, {\"id\":\"gqiRJn7me-s\",\"title\":\"君に最後の口づけを\",\"artist\":\"majiko\",\"cover\":\"https://img.youtube.com/vi/gqiRJn7me-s/0.jpg\"}]",
+            typeToken
         )
+
+        videos = parsed
     }
 
     Box(
@@ -71,49 +78,59 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
             .fillMaxSize()
             .padding(PaddingValues(start = 6.dp))
     ) {
-        Card(
-            modifier = Modifier.testTag("SongCard"),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.background,
-            ),
-            onClick = { SongViewModel.setVideo(json); navHostController.navigate(Screen.Player.route) }
-        ) {
-            Column(
-                modifier = Modifier.padding(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (json.id != "") {
-                    Surface(modifier = Modifier.size(120.dp), shape = DefaultRoundedCornerShape) {
-                        AsyncImage(
-                            model = json.cover,
-                            placeholder = painterResource(id = R.drawable.radio),
-                            error = painterResource(id = R.drawable.radio),
-                            contentDescription = "${json.title} cover",
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop,
-                        )
-                    }
-                    Column(
-                        Modifier
-                            .width(120.dp)
-                            .padding(top = 5.dp)
+        LazyRow(modifier = Modifier.fillMaxWidth(), state = rememberLazyListState()) {
+            for (video in videos) {
+                item {
+                    Card(
+                        modifier = Modifier.testTag("song-card"),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                        ),
+                        onClick = { SongViewModel.setVideo(video); navHostController.navigate(Screen.Player.route) }
                     ) {
-                        Text(
-                            text = json.title,
-                            style = Typography.labelMedium,
-                            textAlign = TextAlign.Left,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                        Text(
-                            text = json.artist,
-                            style = Typography.labelSmall,
-                            textAlign = TextAlign.Left,
-                            modifier = Modifier.fillMaxWidth(),
-                            color = MaterialTheme.colorScheme.inverseSurface
-                        )
+                        Column(
+                            modifier = Modifier.padding(10.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            if (video.id != "") {
+                                Surface(
+                                    modifier = Modifier.size(120.dp),
+                                    shape = DefaultRoundedCornerShape
+                                ) {
+                                    AsyncImage(
+                                        model = video.cover,
+                                        placeholder = painterResource(id = R.drawable.radio),
+                                        error = painterResource(id = R.drawable.radio),
+                                        contentDescription = "${video.title} cover",
+                                        modifier = Modifier.fillMaxSize(),
+                                        contentScale = ContentScale.Crop,
+                                    )
+                                }
+                                Column(
+                                    Modifier
+                                        .width(120.dp)
+                                        .padding(top = 5.dp)
+                                ) {
+                                    Text(
+                                        text = video.title,
+                                        style = Typography.labelMedium,
+                                        textAlign = TextAlign.Left,
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                    Text(
+                                        text = video.artist,
+                                        style = Typography.labelSmall,
+                                        textAlign = TextAlign.Left,
+                                        modifier = Modifier.fillMaxWidth(),
+                                        color = MaterialTheme.colorScheme.inverseSurface
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+
     }
 }
