@@ -66,7 +66,7 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
         val typeToken = object : TypeToken<ArrayList<Video>>() {}.type
 
         val parsed = Gson().fromJson<ArrayList<Video>>(
-            "[{\"id\":\"D0ehC_8sQuU\",\"title\":\"It's raining after all\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/D0ehC_8sQuU/0.jpg\"}, {\"id\":\"vcw5THyM7Jo\",\"title\":\"If there was an endpoint\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/vcw5THyM7Jo/0.jpg\"}, {\"id\":\"gqiRJn7me-s\",\"title\":\"君に最後の口づけを\",\"artist\":\"majiko\",\"cover\":\"https://img.youtube.com/vi/gqiRJn7me-s/0.jpg\"}]",
+            "[{\"id\":\"D0ehC_8sQuU\",\"title\":\"It's raining after all\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/D0ehC_8sQuU/hq720.jpg\"}, {\"id\":\"vcw5THyM7Jo\",\"title\":\"If there was an endpoint\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/vcw5THyM7Jo/hq720.jpg\"}, {\"id\":\"gqiRJn7me-s\",\"title\":\"君に最後の口づけを\",\"artist\":\"majiko\",\"cover\":\"https://img.youtube.com/vi/gqiRJn7me-s/hq720.jpg\"}]",
             typeToken
         )
 
@@ -103,7 +103,7 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
                                         error = painterResource(id = R.drawable.radio),
                                         contentDescription = "${video.title} cover",
                                         modifier = Modifier.fillMaxSize(),
-                                        contentScale = ContentScale.Crop,
+                                        contentScale = ContentScale.FillHeight,
                                     )
                                 }
                                 Column(

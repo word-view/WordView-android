@@ -53,7 +53,7 @@ fun ResultItem(result: VideoSearchResult, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(72.dp),
+            .height(80.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
@@ -62,17 +62,17 @@ fun ResultItem(result: VideoSearchResult, onClick: () -> Unit) {
         Row {
             Surface(
                 modifier = Modifier
-                    .size(72.dp)
+                    .size(80.dp)
                     .padding(8.dp),
                 shape = RoundedCornerShape(5.dp)
             ) {
                 AsyncImage(
-                    model = "https://img.youtube.com/vi/${result.id}/0.jpg",
+                    model = "https://img.youtube.com/vi/${result.id}/hq720.jpg",
                     placeholder = painterResource(id = R.drawable.radio),
                     error = painterResource(id = R.drawable.radio),
                     contentDescription = "${result.title} cover",
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.FillHeight,
                 )
             }
             Column(Modifier.padding(8.dp)) {

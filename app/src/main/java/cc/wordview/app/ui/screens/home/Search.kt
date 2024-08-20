@@ -118,7 +118,7 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
                                 result.id,
                                 result.title,
                                 result.channel,
-                                "https://img.youtube.com/vi/${result.id}/0.jpg"
+                                "https://img.youtube.com/vi/${result.id}/hq720.jpg"
                             )
                         )
                         navHostController.navigate(Screen.Player.route)
