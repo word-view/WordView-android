@@ -17,8 +17,13 @@
 
 package cc.wordview.app.ui.components
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import cc.wordview.app.subtitle.WordViewCue
+import cc.wordview.app.subtitle.getIconForWord
+import cc.wordview.app.subtitle.initializeIcons
 
 @Composable
 fun TextCue(cue: WordViewCue, highlightedCuePosition: Int) {
@@ -44,7 +51,47 @@ fun TextCue(cue: WordViewCue, highlightedCuePosition: Int) {
         if (highlighted) MaterialTheme.colorScheme.inverseSurface
         else Color(disabledCueColor)
 
-    Spacer(modifier = Modifier.size(24.dp))
+    initializeIcons()
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(24.dp)
+    ) {
+        var previousWordsCount = 0;
+        var previousWord = ""
+
+        if (highlighted) for (word in cue.words) {
+            val wordIndex = cue.text.indexOf(word.word)
+
+            var iconMargin = 1
+
+            if (wordIndex > 0) for (i in 0..<wordIndex) {
+                iconMargin += if (cue.text[i] == ' ' || cue.text[i] == '「' || cue.text[i] == '」') 10 else 24
+            }
+
+            if (previousWordsCount > 0) for (i in 1..previousWordsCount) {
+                for (o in previousWord.indices - 1) {
+                    iconMargin -= 24
+                }
+            }
+
+            if (iconMargin < 0) iconMargin = 1
+
+            getIconForWord(word.parent)?.let {
+                Icon(
+                    painter = it,
+                    modifier = Modifier
+                        .padding(start = iconMargin.dp)
+                        .size(24.dp),
+                    contentDescription = ""
+                )
+
+                previousWordsCount++
+                previousWord = word.word
+            }
+        }
+    }
     Text(text = cue.text, fontSize = 24.sp, color = cueColor)
     Spacer(modifier = Modifier.size(24.dp))
 }

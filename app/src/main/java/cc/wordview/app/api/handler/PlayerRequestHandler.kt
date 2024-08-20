@@ -51,8 +51,7 @@ object PlayerRequestHandler {
             val wordsFound = viewModel.parser.value.findWords(cue.text)
 
             for (word in wordsFound) {
-                    cue.words.add(word)
-                    Log.d(TAG, "Found word: $word")
+                cue.words.add(word)
             }
         }
     }

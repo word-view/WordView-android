@@ -3,8 +3,9 @@ agp = "8.5.2"
 coil = "2.6.0"
 coilCompose = "2.6.0"
 composefadingedges = "1.0.4"
+composeResources = "1.0.0-alpha01"
 desugar_jdk_libs_nio = "2.0.4"
-gengolex = "1.2-SNAPSHOT"
+gengolex = "2.0-SNAPSHOT"
 gson = "2.11.0"
 junitJupiter = "5.10.3"
 kotlin = "1.9.0"
@@ -32,6 +33,7 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 androidx-media3-extractor = { module = "androidx.media3:media3-extractor", version.ref = "media3Extractor" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+compose-resources = { module = "com.github.ygorluizfrazao:compose-resources", version.ref = "composeResources" }
 composefadingedges = { module = "com.github.GIGAMOLE:ComposeFadingEdges", version.ref = "composefadingedges" }
 gengolex = { module = "cc.wordview.gengolex:Gengolex", version.ref = "gengolex" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
