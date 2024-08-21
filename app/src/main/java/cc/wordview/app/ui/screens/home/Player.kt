@@ -56,7 +56,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.api.apiURL
 import cc.wordview.app.api.handler.PlayerRequestHandler
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.extensions.goBack
@@ -70,6 +69,7 @@ import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
 import com.gigamole.composefadingedges.verticalFadingEdges
+import me.zhanghai.compose.preference.defaultPreferenceFlow
 import kotlin.concurrent.thread
 
 @Composable
@@ -94,7 +94,11 @@ fun Player(
 
     val context = LocalContext.current
 
+    val preferences = defaultPreferenceFlow()
+
     requestHandler.apply {
+        endpoint = preferences.value["api_endpoint"]!!
+
         onLyricsSucceed = {
             controlsLocked = false
 
@@ -105,20 +109,6 @@ fun Player(
         init(context)
     }
 
-    audioPlayer.apply {
-        onPositionChange = {
-            val cue = lyrics.getCueAt(it)
-
-            if (cue.startTimeMs != -1) viewModel.highlightCueAt(cue.startTimeMs)
-            else viewModel.unhighlightCues()
-        }
-
-        onInitializeFail = {
-            audioInitFailed = true
-            controlsLocked = true
-        }
-    }
-
     fun leave() {
         audioPlayer.stop()
         viewModel.clearCues()
@@ -126,7 +116,10 @@ fun Player(
     }
 
     fun initAudio() {
-        audioPlayer.initialize("$apiURL/music/download?id=${song.id}")
+        var endpoint: String? = preferences.value["api_endpoint"]
+        if (endpoint == null) endpoint = "10.0.2.2"
+
+        audioPlayer.initialize("http://$endpoint:8080/api/v1/music/download?id=${song.id}")
     }
 
     fun fetchLyrics() {
@@ -140,6 +133,20 @@ fun Player(
     }
 
     LaunchedEffect(Unit) {
+        audioPlayer.apply {
+            onPositionChange = {
+                val cue = lyrics.getCueAt(it)
+
+                if (cue.startTimeMs != -1) viewModel.highlightCueAt(cue.startTimeMs)
+                else viewModel.unhighlightCues()
+            }
+
+            onInitializeFail = {
+                audioInitFailed = true
+                controlsLocked = true
+            }
+        }
+
         // This is only threaded to make clear for the user that the app is not frozen
         // while it is downloading the necessary resources.
         // TODO: thread doesn't seem right to be placed here, delegate it elsewhere.
@@ -177,7 +184,9 @@ fun Player(
             ) {
                 if (audioInitFailed) {
                     Column(
-                        modifier = Modifier.fillMaxSize().testTag("error-message"),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .testTag("error-message"),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {

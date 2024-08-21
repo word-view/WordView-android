@@ -33,10 +33,13 @@ import java.net.URLEncoder
 
 object PlayerRequestHandler {
     private val TAG = PlayerRequestHandler::class.java.simpleName
+
     private val viewModel = PlayerViewModel
     private lateinit var queue: RequestQueue
 
     var onLyricsSucceed: () -> Unit = {}
+
+    var endpoint: String = "10.0.2.2"
 
     val lyricsSucceed: (res: String) -> Unit = {
         viewModel.lyricsParse(it)
@@ -76,7 +79,7 @@ object PlayerRequestHandler {
     fun getLyricsWordFind(searchQuery: String) {
         Log.d(TAG, "Searching for \"$searchQuery\" using WordFind")
 
-        val url = "$apiURL/music/lyrics/find?title=${URLEncoder.encode(searchQuery)}"
+        val url = "http://$endpoint:8080/api/v1/music/lyrics/find?title=${URLEncoder.encode(searchQuery)}"
 
         val stringRequest = StringRequest(
             Request.Method.GET,
@@ -108,7 +111,7 @@ object PlayerRequestHandler {
     fun getDictionary(dictionary: String) {
         Log.d(TAG, "Requesting a dictionary called \"$dictionary\"")
 
-        val url = "$apiURL/dictionary?lang=$dictionary"
+        val url = "http://$endpoint:8080/api/v1/dictionary?lang=$dictionary"
 
         val jsonRequest = JsonAcceptingRequest(Request.Method.GET,
             url,

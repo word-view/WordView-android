@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.extractor.DownloaderImpl
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.WordViewTheme
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.schabi.newpipe.extractor.NewPipe
 
 class MainActivity : ComponentActivity() {
@@ -44,7 +45,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WordViewTheme {
-                Main()
+                ProvidePreferenceLocals {
+                    Main()
+                }
             }
         }
     }

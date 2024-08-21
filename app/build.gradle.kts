@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.media3.common)
     implementation(libs.composefadingedges)
     implementation(libs.compose.resources)
+    implementation(libs.compose.preference)
     implementation(libs.androidx.lifecycle.runtime.compose.android)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)

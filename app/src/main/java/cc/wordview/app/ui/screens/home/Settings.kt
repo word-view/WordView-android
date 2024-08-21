@@ -20,6 +20,7 @@ package cc.wordview.app.ui.screens.home
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,6 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.goBack
+import me.zhanghai.compose.preference.ListPreferenceType
+import me.zhanghai.compose.preference.listPreference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,6 +68,16 @@ fun Settings(navController: NavHostController) {
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                listPreference(
+                    key = "api_endpoint",
+                    defaultValue = "10.0.2.2",
+                    values = listOf("10.0.2.2", "192.168.1.100", "api.wordview.cc"),
+                    title = { Text(text = "API endpoint") },
+                    summary = { Text(text = it) },
+                    type = ListPreferenceType.ALERT_DIALOG
+                )
+            }
         }
     }
 }
