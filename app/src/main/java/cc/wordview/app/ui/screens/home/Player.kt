@@ -69,7 +69,7 @@ import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
 import com.gigamole.composefadingedges.verticalFadingEdges
-import me.zhanghai.compose.preference.defaultPreferenceFlow
+import me.zhanghai.compose.preference.LocalPreferenceFlow
 import kotlin.concurrent.thread
 
 @Composable
@@ -94,10 +94,10 @@ fun Player(
 
     val context = LocalContext.current
 
-    val preferences = defaultPreferenceFlow()
+    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
 
     requestHandler.apply {
-        endpoint = preferences.value["api_endpoint"]!!
+        endpoint = preferences["api_endpoint"]!!
 
         onLyricsSucceed = {
             controlsLocked = false
@@ -116,7 +116,7 @@ fun Player(
     }
 
     fun initAudio() {
-        var endpoint: String? = preferences.value["api_endpoint"]
+        var endpoint: String? = preferences["api_endpoint"]
         if (endpoint == null) endpoint = "10.0.2.2"
 
         audioPlayer.initialize("http://$endpoint:8080/api/v1/music/download?id=${song.id}")
