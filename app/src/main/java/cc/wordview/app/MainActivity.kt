@@ -17,8 +17,6 @@
 
 package cc.wordview.app
 
-import android.annotation.SuppressLint
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -34,9 +32,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.schabi.newpipe.extractor.NewPipe
 
 class MainActivity : ComponentActivity() {
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
-        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
 
         DownloaderImpl.init(null)
