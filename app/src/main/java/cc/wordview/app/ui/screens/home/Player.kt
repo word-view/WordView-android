@@ -17,28 +17,25 @@
 
 package cc.wordview.app.ui.screens.home
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.SkipNext
-import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,12 +43,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
@@ -60,18 +60,18 @@ import cc.wordview.app.api.handler.PlayerRequestHandler
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extractor.getSubtitleFor
+import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.components.AsyncComposable
-import cc.wordview.app.ui.components.BackTopAppBar
-import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
-import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
-import com.gigamole.composefadingedges.verticalFadingEdges
+import coil.compose.AsyncImage
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 import kotlin.concurrent.thread
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Player(
     navHostController: NavHostController,
@@ -82,15 +82,15 @@ fun Player(
     val song by SongViewModel.video.collectAsStateWithLifecycle()
     val cues by viewModel.cues.collectAsStateWithLifecycle()
     val lyrics by viewModel.lyrics.collectAsStateWithLifecycle()
-    val highlightedCuePosition by viewModel.highlightedCuePosition.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
 
-    val cuesScroll = rememberLazyListState()
-
     val audioPlayer by remember { mutableStateOf(AudioPlayer()) }
+    val systemUiController = rememberSystemUiController()
 
     var controlsLocked by remember { mutableStateOf(true) }
     var audioInitFailed by remember { mutableStateOf(false) }
+
+    var currentCue by remember { mutableStateOf(WordViewCue()) }
 
     val context = LocalContext.current
 
@@ -132,13 +132,14 @@ fun Player(
         }
     }
 
+    BackHandler {
+        leave()
+    }
+
     LaunchedEffect(Unit) {
         audioPlayer.apply {
             onPositionChange = {
-                val cue = lyrics.getCueAt(it)
-
-                if (cue.startTimeMs != -1) viewModel.highlightCueAt(cue.startTimeMs)
-                else viewModel.unhighlightCues()
+                currentCue = lyrics.getCueAt(it)
             }
 
             onInitializeFail = {
@@ -157,116 +158,60 @@ fun Player(
         }
     }
 
-    LaunchedEffect(highlightedCuePosition) {
-        if (highlightedCuePosition != 0) {
-            for (cue in cues) {
-                if (cue.startTimeMs == highlightedCuePosition) {
-                    cuesScroll.animateScrollToItem(cues.indexOf(cue), -480)
-                }
-            }
+    DisposableEffect(Unit) {
+        (context as? Activity)?.requestedOrientation =
+            ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
+        systemUiController.isSystemBarsVisible = false
+        systemUiController.systemBarsBehavior = 2
+        onDispose {
+            (context as? Activity)?.requestedOrientation =
+                ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
+            systemUiController.isSystemBarsVisible = true
         }
     }
 
-    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        BackHandler { leave() }
-        BackTopAppBar(text = song.title, onClickBack = { leave() })
-    }) { innerPadding ->
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(),
+        verticalArrangement = Arrangement.Center
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.Center
+                .fillMaxWidth()
+                .fillMaxHeight(1f)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.70f)
-            ) {
-                if (audioInitFailed) {
+            if (audioInitFailed) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag("error-message"),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = Modifier.size(180.dp),
+                        painter = painterResource(id = R.drawable.radio),
+                        contentDescription = ""
+                    )
+                    Spacer(Modifier.size(15.dp))
+                    Text(
+                        text = "An error has occurred \nand the audio could not be played.",
+                        textAlign = TextAlign.Center,
+                        style = Typography.bodyLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            } else {
+                AsyncComposable(condition = (cues.size > 0)) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .testTag("error-message"),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Bottom
                     ) {
-                        Image(
-                            modifier = Modifier.size(180.dp),
-                            painter = painterResource(id = R.drawable.radio),
-                            contentDescription = ""
-                        )
-                        Spacer(Modifier.size(15.dp))
-                        Text(
-                            text = "An error has occurred \nand the audio could not be played.",
-                            textAlign = TextAlign.Center,
-                            style = Typography.bodyLarge,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        TextCue(modifier = Modifier.zIndex(1f), cue = currentCue)
                     }
-                } else {
-                    AsyncComposable(condition = (cues.size > 0)) {
-                        Surface(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp)
-                                .height(500.dp)
-                                .testTag("lyrics-viewer"),
-                            color = MaterialTheme.colorScheme.primaryContainer,
-                            shape = DefaultRoundedCornerShape
-                        ) {
-                            LazyColumn(
-                                modifier = Modifier
-                                    .padding(horizontal = 9.dp, vertical = 20.dp)
-                                    .verticalFadingEdges(),
-                                userScrollEnabled = false,
-                                state = cuesScroll
-                            ) {
-                                for (cue in cues) {
-                                    item {
-                                        TextCue(
-                                            cue = cue,
-                                            highlightedCuePosition = highlightedCuePosition,
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(1F),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                PlayerButton(
-                    modifier = Modifier.testTag("skip-back"),
-                    icon = Icons.Filled.SkipPrevious,
-                    enabled = !controlsLocked,
-                    size = 75.dp
-                ) {
-                    audioPlayer.skipBackward()
-                }
-
-                PlayerButton(
-                    modifier = Modifier.testTag("play"),
-                    icon = playIcon,
-                    enabled = !controlsLocked,
-                    size = 80.dp
-                ) {
-                    audioPlayer.togglePlay()
-                }
-
-                PlayerButton(
-                    modifier = Modifier.testTag("skip-forward"),
-                    icon = Icons.Filled.SkipNext,
-                    enabled = !controlsLocked,
-                    size = 75.dp
-                ) {
-                    audioPlayer.skipForward()
                 }
             }
         }

@@ -1,4 +1,5 @@
 [versions]
+accompanistSystemuicontroller = "0.31.2-alpha"
 agp = "8.5.2"
 coil = "2.6.0"
 coilCompose = "2.6.0"
@@ -29,6 +30,7 @@ uiTestManifest = "1.6.8"
 volley = "1.2.1"
 
 [libraries]
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-media3-extractor = { module = "androidx.media3:media3-extractor", version.ref = "media3Extractor" }
