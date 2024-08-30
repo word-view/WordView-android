@@ -39,6 +39,7 @@ object PlayerViewModel : ViewModel() {
     private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
     private val _initialized = MutableStateFlow(false)
     private val _player = MutableStateFlow(AudioPlayer())
+    private val _currentCue = MutableStateFlow(WordViewCue())
 
     val cues: StateFlow<ArrayList<WordViewCue>> = _cues.asStateFlow()
     val playIcon: StateFlow<ImageVector> = _playIcon.asStateFlow()
@@ -46,6 +47,7 @@ object PlayerViewModel : ViewModel() {
     val parser: StateFlow<Parser> = _parser.asStateFlow()
     val initialized: StateFlow<Boolean> = _initialized.asStateFlow()
     val player: StateFlow<AudioPlayer> = _player.asStateFlow()
+    val currentCue: StateFlow<WordViewCue> = _currentCue.asStateFlow()
 
     fun setCues(cues: ArrayList<WordViewCue>) {
         _cues.update { cues }
@@ -83,5 +85,9 @@ object PlayerViewModel : ViewModel() {
 
     fun deinitialize() {
         _initialized.update { false }
+    }
+
+    fun setCurrentCue(cue: WordViewCue) {
+        _currentCue.update { cue }
     }
 }

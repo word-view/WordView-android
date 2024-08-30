@@ -96,13 +96,12 @@ fun Player(
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val initialized by viewModel.initialized.collectAsStateWithLifecycle()
     val audioPlayer by viewModel.player.collectAsStateWithLifecycle()
+    val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
 
     val systemUiController = rememberSystemUiController()
 
     var controlsLocked by remember { mutableStateOf(true) }
     var audioInitFailed by remember { mutableStateOf(false) }
-
-    var currentCue by remember { mutableStateOf(WordViewCue()) }
 
     val context = LocalContext.current
 
@@ -112,12 +111,12 @@ fun Player(
         audioPlayer.stop()
         viewModel.clearCues()
         viewModel.deinitialize()
+        viewModel.setCurrentCue(WordViewCue())
         navHostController.goBack()
     }
 
     fun initAudio() {
-        var endpoint: String? = preferences["api_endpoint"]
-        if (endpoint == null) endpoint = "10.0.2.2"
+        val endpoint: String = preferences["api_endpoint"] ?: "10.0.2.2"
 
         audioPlayer.initialize("http://$endpoint:8080/api/v1/music/download?id=${song.id}")
     }
@@ -136,7 +135,7 @@ fun Player(
 
     LaunchedEffect(Unit) {
         requestHandler.apply {
-            endpoint = preferences["api_endpoint"]!!
+            endpoint = preferences["api_endpoint"] ?: "10.0.2.2"
 
             onLyricsSucceed = {
                 controlsLocked = false
@@ -150,7 +149,7 @@ fun Player(
 
         audioPlayer.apply {
             onPositionChange = {
-                currentCue = lyrics.getCueAt(it)
+                viewModel.setCurrentCue(lyrics.getCueAt(it))
             }
 
             onInitializeFail = {
@@ -248,6 +247,7 @@ fun Player(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     IconButton(
                                         onClick = { leave() },
+                                        modifier = Modifier.testTag("back-button"),
                                         colors = IconButtonDefaults.iconButtonColors(contentColor = MaterialTheme.colorScheme.inverseSurface)
                                     ) {
                                         Icon(
@@ -271,13 +271,25 @@ fun Player(
                                     horizontalArrangement = Arrangement.SpaceEvenly,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    PlayerButton(icon = Icons.Filled.SkipPrevious, size = 72.dp) {
+                                    PlayerButton(
+                                        icon = Icons.Filled.SkipPrevious,
+                                        size = 72.dp,
+                                        modifier = Modifier.testTag("skip-back")
+                                    ) {
                                         audioPlayer.skipBackward()
                                     }
-                                    PlayerButton(icon = playIcon, size = 80.dp) {
+                                    PlayerButton(
+                                        icon = playIcon,
+                                        size = 80.dp,
+                                        modifier = Modifier.testTag("play")
+                                    ) {
                                         audioPlayer.togglePlay()
                                     }
-                                    PlayerButton(icon = Icons.Filled.SkipNext, size = 72.dp) {
+                                    PlayerButton(
+                                        icon = Icons.Filled.SkipNext,
+                                        size = 72.dp,
+                                        modifier = Modifier.testTag("skip-forward")
+                                    ) {
                                         audioPlayer.skipForward()
                                     }
                                 }
