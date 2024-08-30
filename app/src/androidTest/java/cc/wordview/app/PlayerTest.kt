@@ -103,7 +103,7 @@ class PlayerTest {
         setupScreen()
         composeTestRule.waitUntil(60_000) { PlayerViewModel.lyrics.value.size > 0 }
         composeTestRule.onNodeWithTag("play").performClick()
-//        composeTestRule.waitUntil(10_000) { PlayerViewModel.highlightedCuePosition.value != 0 }
+        composeTestRule.waitUntil(10_000) { PlayerViewModel.player.value.currentPosition != 0 }
     }
 
     @Test
@@ -114,7 +114,7 @@ class PlayerTest {
         composeTestRule.waitUntil(60_000) { PlayerViewModel.lyrics.value.size > 0 }
         composeTestRule.onNodeWithTag("skip-forward").performClick().performClick().performClick()
         composeTestRule.onNodeWithTag("play").performClick()
-//        composeTestRule.waitUntil(10_000) { PlayerViewModel.highlightedCuePosition.value > 15000 }
+        composeTestRule.waitUntil(10_000) { PlayerViewModel.player.value.currentPosition > 15000 }
     }
 
     @Test
@@ -126,6 +126,6 @@ class PlayerTest {
         composeTestRule.onNodeWithTag("skip-forward").performClick().performClick().performClick()
         composeTestRule.onNodeWithTag("skip-back").performClick().performClick().performClick()
         composeTestRule.onNodeWithTag("play").performClick()
-//        composeTestRule.waitUntil(10_000) { PlayerViewModel.highlightedCuePosition.value < 15000 }
+        composeTestRule.waitUntil(10_000) { PlayerViewModel.player.value.currentPosition < 15000 }
     }
 }
