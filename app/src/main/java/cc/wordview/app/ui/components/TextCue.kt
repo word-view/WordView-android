@@ -82,7 +82,12 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                 }
             }
         }
-        Text(text = cue.text, fontSize = 32.sp, color = MaterialTheme.colorScheme.inverseSurface)
+        Text(
+            text = cue.text,
+            fontSize = 32.sp,
+            color = MaterialTheme.colorScheme.inverseSurface,
+            lineHeight = 32.sp
+        )
         Spacer(Modifier.size(24.dp))
     }
 }
