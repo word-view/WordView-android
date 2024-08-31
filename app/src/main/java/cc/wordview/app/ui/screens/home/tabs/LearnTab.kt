@@ -86,7 +86,10 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.background,
                         ),
-                        onClick = { SongViewModel.setVideo(video); navHostController.navigate(Screen.Player.route) }
+                        onClick = {
+                            SongViewModel.setVideo(video)
+                            navHostController.navigate(Screen.Player.route)
+                        }
                     ) {
                         Column(
                             modifier = Modifier.padding(10.dp),
@@ -131,6 +134,5 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
                 }
             }
         }
-
     }
 }

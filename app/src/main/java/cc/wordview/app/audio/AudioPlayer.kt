@@ -72,10 +72,8 @@ class AudioPlayer : MediaPlayer() {
         if (state == AudioPlayerState.INITIALIZED) super.stop()
         PlayerViewModel.playIconPause()
 
-
         positionChangeRunnable?.let { handler.removeCallbacks(it) }
         this.reset()
-        this.release()
     }
 
     fun togglePlay() {

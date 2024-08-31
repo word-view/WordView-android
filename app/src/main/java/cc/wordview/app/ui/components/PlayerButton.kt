@@ -21,6 +21,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 
@@ -33,8 +34,8 @@ fun PlayerButton(modifier: Modifier = Modifier, enabled: Boolean = true, icon: I
         size = size,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            disabledContainerColor = MaterialTheme.colorScheme.background,
+            containerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.primary
         ),
     )

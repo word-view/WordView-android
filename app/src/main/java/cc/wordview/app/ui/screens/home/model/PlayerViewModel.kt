@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
+import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.gengolex.Language
@@ -33,16 +34,20 @@ import kotlinx.coroutines.flow.update
 
 object PlayerViewModel : ViewModel() {
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
-    private val _highlightedCuePosition = MutableStateFlow(0)
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
     private val _lyrics = MutableStateFlow(Lyrics())
     private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
+    private val _initialized = MutableStateFlow(false)
+    private val _player = MutableStateFlow(AudioPlayer())
+    private val _currentCue = MutableStateFlow(WordViewCue())
 
     val cues: StateFlow<ArrayList<WordViewCue>> = _cues.asStateFlow()
-    val highlightedCuePosition: StateFlow<Int> = _highlightedCuePosition.asStateFlow()
     val playIcon: StateFlow<ImageVector> = _playIcon.asStateFlow()
     val lyrics: StateFlow<Lyrics> = _lyrics.asStateFlow()
     val parser: StateFlow<Parser> = _parser.asStateFlow()
+    val initialized: StateFlow<Boolean> = _initialized.asStateFlow()
+    val player: StateFlow<AudioPlayer> = _player.asStateFlow()
+    val currentCue: StateFlow<WordViewCue> = _currentCue.asStateFlow()
 
     fun setCues(cues: ArrayList<WordViewCue>) {
         _cues.update { cues }
@@ -50,14 +55,6 @@ object PlayerViewModel : ViewModel() {
 
     fun clearCues() {
         _cues.update { ArrayList() }
-    }
-
-    fun highlightCueAt(position: Int) {
-        _highlightedCuePosition.update { position }
-    }
-
-    fun unhighlightCues() {
-        _highlightedCuePosition.update { 0 }
     }
 
     fun playIconPause() {
@@ -80,5 +77,17 @@ object PlayerViewModel : ViewModel() {
 
     fun addDictionary(name: String, dictionary: String) {
         _parser.value.addDictionary(name, dictionary)
+    }
+
+    fun initialize() {
+        _initialized.update { true }
+    }
+
+    fun deinitialize() {
+        _initialized.update { false }
+    }
+
+    fun setCurrentCue(cue: WordViewCue) {
+        _currentCue.update { cue }
     }
 }

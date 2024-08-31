@@ -27,6 +27,7 @@ import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.screens.home.Player
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.theme.WordViewTheme
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
@@ -38,7 +39,11 @@ class PlayerTest {
 
     private fun setupScreen() {
         composeTestRule.setContent {
-            WordViewTheme { Player(rememberNavController(), autoplay = false) }
+            WordViewTheme {
+                ProvidePreferenceLocals {
+                    Player(rememberNavController(), autoplay = false)
+                }
+            }
         }
     }
 
@@ -50,6 +55,7 @@ class PlayerTest {
     fun renders() {
         SongViewModel.setVideo(getMockSong())
         setupScreen()
+        composeTestRule.waitUntil(15_000) { PlayerViewModel.lyrics.value.size > 0 }
         composeTestRule.onNodeWithTag("back-button").assertExists()
         composeTestRule.onNodeWithText("No Title").assertExists()
         composeTestRule.onNodeWithTag("play").assertExists()
@@ -59,7 +65,9 @@ class PlayerTest {
 
     @Test
     fun performGoBack() {
+        SongViewModel.setVideo(getMockSong())
         setupScreen()
+        composeTestRule.waitUntil(15_000) { PlayerViewModel.lyrics.value.size > 0 }
         composeTestRule.onNodeWithTag("back-button").performClick()
     }
 
@@ -68,13 +76,6 @@ class PlayerTest {
         PlayerViewModel.setCues(arrayListOf())
         setupScreen()
         composeTestRule.onNodeWithTag("async-composable-progress").assertExists()
-    }
-
-    @Test
-    fun lyricsViewerWhenLyrics() {
-        PlayerViewModel.setCues(arrayListOf(WordViewCue("hello world", 1000, 2000)))
-        setupScreen()
-        composeTestRule.onNodeWithTag("lyrics-viewer").assertExists()
     }
 
     @Test
@@ -89,9 +90,9 @@ class PlayerTest {
 
         setupScreen()
 
-        for (i in 1..20) {
-            PlayerViewModel.highlightCueAt(1000 * i)
-            composeTestRule.onNodeWithText("$i hello world").assertExists()
+        for (cue in PlayerViewModel.lyrics.value) {
+            PlayerViewModel.setCurrentCue(cue)
+            composeTestRule.onNodeWithText(cue.text).assertExists()
         }
     }
 
@@ -102,7 +103,7 @@ class PlayerTest {
         setupScreen()
         composeTestRule.waitUntil(60_000) { PlayerViewModel.lyrics.value.size > 0 }
         composeTestRule.onNodeWithTag("play").performClick()
-        composeTestRule.waitUntil(10_000) { PlayerViewModel.highlightedCuePosition.value != 0 }
+        composeTestRule.waitUntil(10_000) { PlayerViewModel.player.value.currentPosition != 0 }
     }
 
     @Test
@@ -113,7 +114,7 @@ class PlayerTest {
         composeTestRule.waitUntil(60_000) { PlayerViewModel.lyrics.value.size > 0 }
         composeTestRule.onNodeWithTag("skip-forward").performClick().performClick().performClick()
         composeTestRule.onNodeWithTag("play").performClick()
-        composeTestRule.waitUntil(10_000) { PlayerViewModel.highlightedCuePosition.value > 15000 }
+        composeTestRule.waitUntil(10_000) { PlayerViewModel.player.value.currentPosition > 15000 }
     }
 
     @Test
@@ -125,6 +126,6 @@ class PlayerTest {
         composeTestRule.onNodeWithTag("skip-forward").performClick().performClick().performClick()
         composeTestRule.onNodeWithTag("skip-back").performClick().performClick().performClick()
         composeTestRule.onNodeWithTag("play").performClick()
-        composeTestRule.waitUntil(10_000) { PlayerViewModel.highlightedCuePosition.value < 15000 }
+        composeTestRule.waitUntil(10_000) { PlayerViewModel.player.value.currentPosition < 15000 }
     }
 }

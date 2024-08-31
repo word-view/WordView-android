@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.compose.resources)
     implementation(libs.compose.preference)
     implementation(libs.androidx.lifecycle.runtime.compose.android)
+    implementation(libs.accompanist.systemuicontroller)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
