@@ -100,7 +100,6 @@ fun Player(
 
     val systemUiController = rememberSystemUiController()
 
-    var controlsLocked by remember { mutableStateOf(true) }
     var audioInitFailed by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
@@ -131,37 +130,32 @@ fun Player(
         }
     }
 
-    BackHandler { leave() }
-
     LaunchedEffect(Unit) {
-        requestHandler.apply {
-            endpoint = preferences["api_endpoint"] ?: "10.0.2.2"
-
-            onLyricsSucceed = {
-                controlsLocked = false
-
-                if (autoplay) audioPlayer.togglePlay()
-                requestHandler.getDictionary("kanji")
-            }
-
-            init(context)
-        }
-
-        audioPlayer.apply {
-            onPositionChange = {
-                viewModel.setCurrentCue(lyrics.getCueAt(it))
-            }
-
-            onInitializeFail = {
-                audioInitFailed = true
-                controlsLocked = true
-            }
-        }
-
         // This is only threaded to make clear for the user that the app is not frozen
         // while it is downloading the necessary resources.
         // TODO: thread doesn't seem right to be placed here, delegate it elsewhere.
         thread {
+            requestHandler.apply {
+                endpoint = preferences["api_endpoint"] ?: "10.0.2.2"
+
+                onLyricsSucceed = {
+                    if (autoplay) audioPlayer.togglePlay()
+                    requestHandler.getDictionary("kanji")
+                }
+
+                init(context)
+            }
+
+            audioPlayer.apply {
+                onPositionChange = {
+                    viewModel.setCurrentCue(lyrics.getCueAt(it))
+                }
+
+                onInitializeFail = {
+                    audioInitFailed = true
+                }
+            }
+
             if (!initialized) {
                 viewModel.initialize()
                 viewModel.initParser(Language.JAPANESE)
@@ -184,6 +178,8 @@ fun Player(
             systemUiController.isSystemBarsVisible = true
         }
     }
+
+    BackHandler { leave() }
 
     Column(
         modifier = Modifier
@@ -215,7 +211,8 @@ fun Player(
                         text = "An error has occurred \nand the audio could not be played.",
                         textAlign = TextAlign.Center,
                         style = Typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
             } else {
