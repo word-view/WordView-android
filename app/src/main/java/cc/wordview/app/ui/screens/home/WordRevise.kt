@@ -17,47 +17,92 @@
 
 package cc.wordview.app.ui.screens.home
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Timelapse
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.goBack
-import cc.wordview.app.ui.components.BackTopAppBar
-import cc.wordview.app.ui.screens.home.lesson.WordPresenter
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.ReviseScreen
+import cc.wordview.app.ui.screens.home.revise.ReviseTimer
+import cc.wordview.gengolex.languages.Word
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun WordRevise(navHostController: NavHostController, viewModel: WordReviseViewModel = WordReviseViewModel) {
+fun WordRevise(
+    navHostController: NavHostController,
+    viewModel: WordReviseViewModel = WordReviseViewModel
+) {
     val current by viewModel.currentWord.collectAsStateWithLifecycle()
     val screen by viewModel.screen.collectAsStateWithLifecycle()
+    val formattedTime by viewModel.formattedTime.collectAsStateWithLifecycle()
 
     fun leave() {
         navHostController.goBack()
     }
 
     LaunchedEffect(Unit) {
-        viewModel.setScreen("presenter")
+        viewModel.setWordsToRevise(listOf(
+            Word("night", "夜"),
+            Word("voice", "声"),
+            Word("cloud", "雲"),
+            Word("umbrella", "傘"),
+            Word("rain", "雨"),
+        ))
+        viewModel.setWord(viewModel.wordsToRevise.value.random())
+        viewModel.setScreen(ReviseScreen.DragAndDrop.route)
+    }
+
+    DisposableEffect(Unit) {
+        ReviseTimer.start()
+        onDispose {
+            ReviseTimer.cancel()
+        }
     }
 
     Scaffold(topBar = {
         BackHandler { leave() }
-        BackTopAppBar(text = "", onClickBack = { leave() })
-    }) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-        ) {
-            when (screen) {
-                "presenter" -> WordPresenter(current)
+        TopAppBar(title = {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(imageVector = Icons.Filled.Timelapse, contentDescription = "timer")
+                Text(text = formattedTime)
             }
+        }, navigationIcon = {
+            IconButton(onClick = { leave() }, modifier = Modifier.testTag("back-button")) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Go back"
+                )
+            }
+        })
+    }) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            ReviseScreen.getByRoute(screen)?.Composable(current)
         }
     }
 }
