@@ -25,6 +25,7 @@ import cc.wordview.app.ui.screens.home.Settings
 import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.screens.home.Home
 import cc.wordview.app.ui.screens.home.Player
+import cc.wordview.app.ui.screens.home.ReviseResults
 import cc.wordview.app.ui.screens.home.Search
 import cc.wordview.app.ui.screens.home.WordRevise
 
@@ -87,7 +88,14 @@ sealed class Screen(val route: String) {
         }
     }
 
+    data object ReviseResults : Screen("revise-results") {
+        @Composable
+        override fun Composable(navHostController: NavHostController) {
+            ReviseResults(navHostController)
+        }
+    }
+
     companion object {
-        val screens = listOf(Welcome, Login, LanguagePicker, Settings, Player, Home, Search, WordRevise)
+        val screens = listOf(Welcome, Login, LanguagePicker, Settings, Player, Home, Search, WordRevise, ReviseResults)
     }
 }

@@ -45,6 +45,7 @@ import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.ReviseScreen
 import cc.wordview.app.ui.screens.home.revise.ReviseTimer
+import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.gengolex.languages.Word
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +76,7 @@ fun WordRevise(
     }
 
     DisposableEffect(Unit) {
-        ReviseTimer.start()
+        ReviseTimer.start { navHostController.navigate(Screen.ReviseResults.route) }
         onDispose { ReviseTimer.pause() }
     }
 
@@ -100,7 +101,7 @@ fun WordRevise(
         })
     }) {
         Box(modifier = Modifier.fillMaxSize()) {
-            ReviseScreen.getByRoute(screen)?.Composable(current)
+            ReviseScreen.getByRoute(screen)?.Composable(current, navHostController)
         }
     }
 }

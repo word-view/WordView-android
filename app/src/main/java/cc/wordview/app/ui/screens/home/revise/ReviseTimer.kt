@@ -30,7 +30,7 @@ object ReviseTimer {
 
     private var timer: CountDownTimer? = null
 
-    fun start() {
+    fun start(onFinish: () -> Unit = {}) {
         Log.i(TAG, "Initializing timer with ${formatMillisecondsToMS(timeRemaining)} left")
 
         timer = object : CountDownTimer(timeRemaining, 1000) {
@@ -42,6 +42,7 @@ object ReviseTimer {
 
             override fun onFinish() {
                 Log.i(TAG, "Timer finished!")
+                onFinish()
             }
         }
 

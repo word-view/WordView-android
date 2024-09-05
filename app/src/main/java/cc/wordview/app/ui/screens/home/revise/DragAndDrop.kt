@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.home.revise
 
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
@@ -42,9 +43,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.languages.Word
 import java.lang.Thread.sleep
@@ -52,7 +55,7 @@ import kotlin.concurrent.thread
 import kotlin.math.roundToInt
 
 @Composable
-fun DragAndDrop(current: Word, viewModel: WordReviseViewModel = WordReviseViewModel) {
+fun DragAndDrop(current: Word, navHostController: NavHostController, viewModel: WordReviseViewModel = WordReviseViewModel) {
     initializeIcons()
 
     val words by viewModel.wordsToRevise.collectAsStateWithLifecycle()
@@ -108,10 +111,19 @@ fun DragAndDrop(current: Word, viewModel: WordReviseViewModel = WordReviseViewMo
     }
 
     LaunchedEffect(Unit) {
-        val wordsOfLesson = listOf(current, words.filter { w -> w.word != current.word }.random()).shuffled()
+        try {
+            val wordsOfLesson =
+                listOf(current, words.filter { w -> w.word != current.word }.random()).shuffled()
+            topWord = wordsOfLesson.first()
+            downWord = wordsOfLesson.last()
+        } catch (e: Throwable) {
+            // ideally when this exception happens all the words should have been revised
+            if (e is NoSuchElementException) {
+                navHostController.navigate(Screen.ReviseResults.route)
+            }
 
-        topWord = wordsOfLesson.first()
-        downWord = wordsOfLesson.last()
+            Log.e("DragAndDrop", "", e)
+        }
     }
 
     Column(
