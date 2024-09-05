@@ -76,9 +76,7 @@ fun WordRevise(
 
     DisposableEffect(Unit) {
         ReviseTimer.start()
-        onDispose {
-            ReviseTimer.cancel()
-        }
+        onDispose { ReviseTimer.pause() }
     }
 
     Scaffold(topBar = {

@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.home.revise
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
@@ -82,7 +81,6 @@ fun DragAndDrop(current: Word, viewModel: WordReviseViewModel = WordReviseViewMo
 
     fun correct() {
         thread {
-            Log.i("WordDragAndDrop", "Correct")
             viewModel.setAnswer(Answer.CORRECT)
             sleep(500)
             viewModel.setScreen(ReviseScreen.Presenter.route)
@@ -91,7 +89,6 @@ fun DragAndDrop(current: Word, viewModel: WordReviseViewModel = WordReviseViewMo
 
     fun wrong() {
         thread {
-            Log.i("WordDragAndDrop", "Wrong")
             viewModel.setAnswer(Answer.WRONG)
             sleep(500)
             viewModel.setScreen(ReviseScreen.Presenter.route)
@@ -99,8 +96,6 @@ fun DragAndDrop(current: Word, viewModel: WordReviseViewModel = WordReviseViewMo
     }
 
     fun handleDrop(x: Float, y: Float) {
-        Log.i("WordDragAndDrop", "$y")
-
         if (y < -450) {
             if (current == topWord) correct()
             else wrong()

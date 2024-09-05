@@ -22,25 +22,42 @@ import android.os.CountDownTimer
 import android.util.Log
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 
-object ReviseTimer : CountDownTimer(300000, 1000) {
+object ReviseTimer {
     private val TAG = ReviseTimer::class.java.simpleName
     private val viewModel = WordReviseViewModel
 
-    override fun onTick(millisUntilFinished: Long) {
-        // TODO: communicate the timer progress through a websocket
-        viewModel.setFormattedTime(formatMillisecondsToMS(millisUntilFinished))
+    private var timeRemaining = 300000L
+
+    private var timer: CountDownTimer? = null
+
+    fun start() {
+        Log.i(TAG, "Initializing timer with ${formatMillisecondsToMS(timeRemaining)} left")
+
+        timer = object : CountDownTimer(timeRemaining, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                // TODO: communicate the timer progress through a websocket
+                timeRemaining = millisUntilFinished
+                viewModel.setFormattedTime(formatMillisecondsToMS(millisUntilFinished))
+            }
+
+            override fun onFinish() {
+                Log.i(TAG, "Timer finished!")
+            }
+        }
+
+        timer?.start()
+    }
+
+    fun pause() {
+        timer?.cancel()
+        timer = null
     }
 
     @SuppressLint("DefaultLocale")
     private fun formatMillisecondsToMS(milliseconds: Long): String {
         val totalSeconds = milliseconds / 1000
-        val minutes= totalSeconds / 60
+        val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
         return String.format("%d:%02d", minutes, seconds)
-    }
-
-
-    override fun onFinish() {
-        Log.i(TAG, "Timer finished!")
     }
 }
