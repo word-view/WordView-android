@@ -67,7 +67,7 @@ fun Presenter(current: Word, viewModel: WordReviseViewModel = WordReviseViewMode
         finishedListener = {
             thread {
                 // show if the user answered correctly
-                sleep(3000)
+                sleep(1500)
                 visible = false
                 sleep(500) // wait for the scale out animation to end
 
