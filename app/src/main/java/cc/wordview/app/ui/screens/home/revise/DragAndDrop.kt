@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.subtitle.initializeIcons
+import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
@@ -85,6 +86,7 @@ fun DragAndDrop(current: Word, navHostController: NavHostController, viewModel: 
     fun correct() {
         thread {
             viewModel.setAnswer(Answer.CORRECT)
+            ReviseResultsViewModel.incrementCorrect()
             sleep(500)
             viewModel.setScreen(ReviseScreen.Presenter.route)
         }
@@ -93,6 +95,7 @@ fun DragAndDrop(current: Word, navHostController: NavHostController, viewModel: 
     fun wrong() {
         thread {
             viewModel.setAnswer(Answer.WRONG)
+            ReviseResultsViewModel.incrementWrong()
             sleep(500)
             viewModel.setScreen(ReviseScreen.Presenter.route)
         }

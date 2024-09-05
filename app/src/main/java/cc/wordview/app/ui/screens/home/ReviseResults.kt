@@ -19,27 +19,43 @@ package cc.wordview.app.ui.screens.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.BackTopAppBar
+import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
+import cc.wordview.app.ui.screens.util.Screen
 
 @Composable
-fun ReviseResults(navHostController: NavHostController) {
+fun ReviseResults(navHostController: NavHostController, viewModel: ReviseResultsViewModel = ReviseResultsViewModel) {
+    val words by viewModel.words.collectAsStateWithLifecycle()
+    val answeredCorrectly by viewModel.answeredCorrectly.collectAsStateWithLifecycle()
+    val answeredWrong by viewModel.answeredWrong.collectAsStateWithLifecycle()
+
     fun leave() {
-        navHostController.goBack()
+        navHostController.navigate(Screen.Home.route)
     }
 
     Scaffold(topBar = {
         BackHandler { leave() }
         BackTopAppBar(text = "Results") { leave() }
     }) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Column {
+                Text(text = "Correct: $answeredCorrectly")
+                Text(text = "Wrong: $answeredWrong")
+            }
         }
     }
 }

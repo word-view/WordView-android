@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.ReviseScreen
 import cc.wordview.app.ui.screens.home.revise.ReviseTimer
@@ -71,6 +72,7 @@ fun WordRevise(
             Word("umbrella", "傘"),
             Word("rain", "雨"),
         ))
+        ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
         viewModel.setWord(viewModel.wordsToRevise.value.random())
         viewModel.setScreen(ReviseScreen.DragAndDrop.route)
     }
