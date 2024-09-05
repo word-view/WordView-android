@@ -65,13 +65,7 @@ fun WordRevise(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.setWordsToRevise(listOf(
-            Word("night", "夜"),
-            Word("voice", "声"),
-            Word("cloud", "雲"),
-            Word("umbrella", "傘"),
-            Word("rain", "雨"),
-        ))
+        // We assume Player or some other actor has populated wordsToRevise before entering here
         ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
         viewModel.setWord(viewModel.wordsToRevise.value.random())
         viewModel.setScreen(ReviseScreen.DragAndDrop.route)

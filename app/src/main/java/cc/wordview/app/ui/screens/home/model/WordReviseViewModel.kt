@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.home.model
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.ui.screens.home.revise.Answer
 import cc.wordview.gengolex.languages.Word
@@ -25,6 +26,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 object WordReviseViewModel : ViewModel() {
+    private val TAG = WordReviseViewModel::class.java.simpleName
+
     private val _currentWord = MutableStateFlow(Word("", ""))
     private val _screen = MutableStateFlow("")
     private val _wordsToRevise = MutableStateFlow<List<Word>>(listOf())
@@ -61,5 +64,10 @@ object WordReviseViewModel : ViewModel() {
 
     fun setAnswer(answer: Answer) {
         _answerStatus.update { answer }
+    }
+
+    fun appendWord(word: Word) {
+        Log.d(TAG, "Appending the word '${word.word}' to be revised")
+        _wordsToRevise.update { old -> old + word }
     }
 }
