@@ -48,6 +48,7 @@ import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.model.DragAndDropViewModel
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.languages.Word
@@ -56,10 +57,15 @@ import kotlin.concurrent.thread
 import kotlin.math.roundToInt
 
 @Composable
-fun DragAndDrop(current: Word, navHostController: NavHostController, viewModel: WordReviseViewModel = WordReviseViewModel) {
+fun DragAndDrop(
+    navHostController: NavHostController,
+    viewModel: WordReviseViewModel = WordReviseViewModel,
+    screenViewModel: DragAndDropViewModel = DragAndDropViewModel
+) {
     initializeIcons()
 
     val words by viewModel.wordsToRevise.collectAsStateWithLifecycle()
+    val current by viewModel.currentWord.collectAsStateWithLifecycle()
 
     val iconPainter = getIconForWord(current.parent)!!
 
@@ -68,8 +74,8 @@ fun DragAndDrop(current: Word, navHostController: NavHostController, viewModel: 
 
     var isDragging by remember { mutableStateOf(false) }
 
-    var topWord by remember { mutableStateOf<Word?>(null) }
-    var downWord by remember { mutableStateOf<Word?>(null) }
+    val topWord by screenViewModel.topWord.collectAsStateWithLifecycle()
+    val downWord by screenViewModel.downWord.collectAsStateWithLifecycle()
 
     val animatedOffsetX by animateFloatAsState(
         targetValue = if (isDragging) offsetX else 0f,
@@ -117,11 +123,12 @@ fun DragAndDrop(current: Word, navHostController: NavHostController, viewModel: 
         try {
             val wordsOfLesson =
                 listOf(current, words.filter { w -> w.word != current.word }.random()).shuffled()
-            topWord = wordsOfLesson.first()
-            downWord = wordsOfLesson.last()
+            screenViewModel.setTopWord(wordsOfLesson.first())
+            screenViewModel.setDownWord(wordsOfLesson.last())
         } catch (e: Throwable) {
             // ideally when this exception happens all the words should have been revised
             if (e is NoSuchElementException) {
+                viewModel.deInitialize()
                 navHostController.navigate(Screen.ReviseResults.route)
             }
 

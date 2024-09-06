@@ -59,9 +59,9 @@ fun WordRevise(
     navHostController: NavHostController,
     viewModel: WordReviseViewModel = WordReviseViewModel
 ) {
-    val current by viewModel.currentWord.collectAsStateWithLifecycle()
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val formattedTime by viewModel.formattedTime.collectAsStateWithLifecycle()
+    val initialized by viewModel.initialized.collectAsStateWithLifecycle()
 
     val systemUiController = rememberSystemUiController()
 
@@ -73,18 +73,22 @@ fun WordRevise(
 
     LaunchedEffect(Unit) {
         // We assume Player or some other actor has populated wordsToRevise before entering here
-        ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
-        viewModel.setWord(viewModel.wordsToRevise.value.random())
-        viewModel.setScreen(ReviseScreen.DragAndDrop.route)
+        if (!initialized) {
+            viewModel.initialize()
+            ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
+            viewModel.nextWord()
+            viewModel.setScreen(ReviseScreen.DragAndDrop.route)
+        }
+        ReviseTimer.start { navHostController.navigate(Screen.ReviseResults.route) }
     }
 
     DisposableEffect(Unit) {
         (context as? Activity)?.requestedOrientation =
             ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 
-        ReviseTimer.start { navHostController.navigate(Screen.ReviseResults.route) }
         onDispose {
             ReviseTimer.pause()
+
             (context as? Activity)?.requestedOrientation =
                 ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             systemUiController.isSystemBarsVisible = true
@@ -112,7 +116,7 @@ fun WordRevise(
         })
     }) {
         Box(modifier = Modifier.fillMaxSize()) {
-            ReviseScreen.getByRoute(screen)?.Composable(current, navHostController)
+            ReviseScreen.getByRoute(screen)?.Composable(navHostController)
         }
     }
 }

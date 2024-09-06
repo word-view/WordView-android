@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.home.revise
 
+import android.util.Log
 import androidx.compose.animation.core.EaseInOutExpo
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -30,11 +31,13 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,45 +49,51 @@ import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.theme.Typography
-import cc.wordview.gengolex.languages.Word
-import java.lang.Thread.sleep
-import kotlin.concurrent.thread
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.toJavaDuration
 
 @Composable
-fun Presenter(current: Word, viewModel: WordReviseViewModel = WordReviseViewModel) {
+fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
     initializeIcons()
+
+    val answerStatus by viewModel.answerStatus.collectAsStateWithLifecycle()
+    val current by viewModel.currentWord.collectAsStateWithLifecycle()
 
     val iconPainter = getIconForWord(current.parent)!!
 
     var visible by remember { mutableStateOf(false) }
 
-    val answerStatus by viewModel.answerStatus.collectAsStateWithLifecycle()
-
     val scaleIn = animateFloatAsState(
-        if (visible) 1f else 0f,
+        if (visible) 1f else 0.01f,
         tween(500, easing = EaseInOutExpo),
         label = "WordPresenterAnimation",
-        finishedListener = {
-            thread {
-                // show if the user answered correctly
-                sleep(1500)
+    )
+
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = scaleIn.value) {
+        if (scaleIn.value == 1f) {
+            scope.launch {
+                Log.i("Presenter", "$answerStatus")
+                delay(1500.milliseconds.toJavaDuration())
                 visible = false
-                sleep(500) // wait for the scale out animation to end
+                delay(500.milliseconds.toJavaDuration())
 
                 if (answerStatus != Answer.NONE) {
-                    // show the right alternative
-                    visible = true
                     viewModel.setAnswer(Answer.NONE)
-                    sleep(3000)
+                    visible = true
+                    delay(3000.milliseconds.toJavaDuration())
                     visible = false
-                    sleep(500)
+                    delay(500.milliseconds.toJavaDuration())
 
                     viewModel.nextWord()
                     viewModel.setScreen(ReviseScreen.DragAndDrop.route)
                 }
             }
         }
-    )
+    }
 
     LaunchedEffect(Unit) {
         visible = true

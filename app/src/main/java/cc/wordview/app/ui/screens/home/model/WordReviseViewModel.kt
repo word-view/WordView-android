@@ -18,17 +18,16 @@
 package cc.wordview.app.ui.screens.home.model
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import cc.wordview.app.ui.screens.home.revise.Answer
 import cc.wordview.gengolex.languages.Word
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-object WordReviseViewModel : ViewModel() {
+object WordReviseViewModel : InitializeViewModel() {
     private val TAG = WordReviseViewModel::class.java.simpleName
 
-    private val _currentWord = MutableStateFlow(Word("", ""))
+    private val _currentWord = MutableStateFlow(Word("", "cu"))
     private val _screen = MutableStateFlow("")
     private val _wordsToRevise = MutableStateFlow<List<Word>>(listOf())
     private val _answerStatus = MutableStateFlow(Answer.NONE)
@@ -43,15 +42,14 @@ object WordReviseViewModel : ViewModel() {
     fun nextWord() {
         val wordsWithoutCurrent = _wordsToRevise.value.filter { w -> w.word != currentWord.value.word }
         _wordsToRevise.update { wordsWithoutCurrent }
-        _currentWord.update { _wordsToRevise.value.random() }
+        setWord(_wordsToRevise.value.random())
     }
 
     fun setWord(word: Word) {
-        _currentWord.update { word }
-    }
-
-    fun setWordsToRevise(words: List<Word>) {
-        _wordsToRevise.update { words }
+        _currentWord.update {
+            Log.d(TAG, "Updating word from '${it.word}' to '${word.word}'")
+            word
+        }
     }
 
     fun setScreen(screen: String) {
