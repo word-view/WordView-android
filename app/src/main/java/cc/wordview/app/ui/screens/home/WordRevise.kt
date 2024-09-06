@@ -18,6 +18,8 @@
 package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -47,10 +50,10 @@ import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.ReviseScreen
 import cc.wordview.app.ui.screens.home.revise.ReviseTimer
 import cc.wordview.app.ui.screens.util.Screen
-import cc.wordview.gengolex.languages.Word
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SourceLockedOrientationActivity")
 @Composable
 fun WordRevise(
     navHostController: NavHostController,
@@ -59,6 +62,10 @@ fun WordRevise(
     val current by viewModel.currentWord.collectAsStateWithLifecycle()
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val formattedTime by viewModel.formattedTime.collectAsStateWithLifecycle()
+
+    val systemUiController = rememberSystemUiController()
+
+    val context = LocalContext.current
 
     fun leave() {
         navHostController.goBack()
@@ -72,8 +79,16 @@ fun WordRevise(
     }
 
     DisposableEffect(Unit) {
+        (context as? Activity)?.requestedOrientation =
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+
         ReviseTimer.start { navHostController.navigate(Screen.ReviseResults.route) }
-        onDispose { ReviseTimer.pause() }
+        onDispose {
+            ReviseTimer.pause()
+            (context as? Activity)?.requestedOrientation =
+                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            systemUiController.isSystemBarsVisible = true
+        }
     }
 
     Scaffold(topBar = {
