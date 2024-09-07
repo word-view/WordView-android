@@ -33,14 +33,14 @@ import androidx.compose.ui.platform.testTag
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BackTopAppBar(text: String, onClickBack: () -> Unit) {
+fun BackTopAppBar(title: @Composable () -> Unit, onClickBack: () -> Unit) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
             titleContentColor = LocalContentColor.current
         ),
         title = {
-            Text(text)
+            title()
         },
         navigationIcon = {
             IconButton(onClick = onClickBack, modifier = Modifier.testTag("back-button")) {

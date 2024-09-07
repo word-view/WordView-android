@@ -24,16 +24,14 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Timelapse
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -41,82 +39,65 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.ReviseScreen
 import cc.wordview.app.ui.screens.home.revise.ReviseTimer
 import cc.wordview.app.ui.screens.util.Screen
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SourceLockedOrientationActivity")
+@SuppressLint("SourceLockedOrientationActivity", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun WordRevise(
     navHostController: NavHostController,
     viewModel: WordReviseViewModel = WordReviseViewModel
 ) {
-    val screen by viewModel.screen.collectAsStateWithLifecycle()
-    val formattedTime by viewModel.formattedTime.collectAsStateWithLifecycle()
+    val activity = (LocalContext.current as Activity)
+
+    val currentScreen by viewModel.screen.collectAsStateWithLifecycle()
+    val lessonTime by viewModel.formattedTime.collectAsStateWithLifecycle()
     val initialized by viewModel.initialized.collectAsStateWithLifecycle()
 
-    val systemUiController = rememberSystemUiController()
-
-    val context = LocalContext.current
-
-    fun leave() {
-        navHostController.goBack()
-    }
-
     LaunchedEffect(Unit) {
-        // We assume Player or some other actor has populated wordsToRevise before entering here
         if (!initialized) {
-            viewModel.initialize()
+            viewModel.deInitialize()
             ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
             viewModel.nextWord()
             viewModel.setScreen(ReviseScreen.DragAndDrop.route)
         }
-        ReviseTimer.start { navHostController.navigate(Screen.ReviseResults.route) }
     }
 
     DisposableEffect(Unit) {
-        (context as? Activity)?.requestedOrientation =
-            ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+
+        ReviseTimer.start { navHostController.navigate(Screen.ReviseResults.route) }
 
         onDispose {
             ReviseTimer.pause()
-
-            (context as? Activity)?.requestedOrientation =
-                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-            systemUiController.isSystemBarsVisible = true
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
 
     Scaffold(topBar = {
-        BackHandler { leave() }
-        TopAppBar(title = {
+        BackHandler { navHostController.goBack() }
+        BackTopAppBar(title = {
             Row(
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(imageVector = Icons.Filled.Timelapse, contentDescription = "timer")
-                Text(text = formattedTime)
+                Spacer(Modifier.size(12.dp))
+                Text(text = lessonTime)
             }
-        }, navigationIcon = {
-            IconButton(onClick = { leave() }, modifier = Modifier.testTag("back-button")) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Go back"
-                )
-            }
-        })
+        }) { navHostController.goBack() }
     }) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            ReviseScreen.getByRoute(screen)?.Composable(navHostController)
+        Box(Modifier.fillMaxSize()) {
+            ReviseScreen.getByRoute(currentScreen)?.Composable(navHostController)
         }
     }
 }

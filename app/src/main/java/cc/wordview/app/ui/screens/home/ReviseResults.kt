@@ -45,7 +45,7 @@ fun ReviseResults(navHostController: NavHostController, viewModel: ReviseResults
 
     Scaffold(topBar = {
         BackHandler { leave() }
-        BackTopAppBar(text = "Results") { leave() }
+        BackTopAppBar(title = {}) { leave() }
     }) { innerPadding ->
         Box(
             modifier = Modifier
