@@ -64,7 +64,7 @@ fun WordRevise(
 
     LaunchedEffect(Unit) {
         if (!initialized) {
-            viewModel.deInitialize()
+            viewModel.initialize()
             ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
             viewModel.nextWord()
             viewModel.setScreen(ReviseScreen.DragAndDrop.route)

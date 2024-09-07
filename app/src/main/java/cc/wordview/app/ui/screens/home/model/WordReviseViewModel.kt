@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.update
 object WordReviseViewModel : InitializeViewModel() {
     private val TAG = WordReviseViewModel::class.java.simpleName
 
-    private val _currentWord = MutableStateFlow(Word("", "cu"))
+    private val _currentWord = MutableStateFlow(Word("", ""))
     private val _screen = MutableStateFlow("")
     private val _wordsToRevise = MutableStateFlow<List<Word>>(listOf())
     private val _answerStatus = MutableStateFlow(Answer.NONE)
