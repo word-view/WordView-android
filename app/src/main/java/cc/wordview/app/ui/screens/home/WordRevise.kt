@@ -62,28 +62,32 @@ fun WordRevise(
     val lessonTime by viewModel.formattedTime.collectAsStateWithLifecycle()
     val initialized by viewModel.initialized.collectAsStateWithLifecycle()
 
+    fun leave() {
+        ReviseTimer.pause()
+        navHostController.goBack()
+    }
+
     LaunchedEffect(Unit) {
         if (!initialized) {
             viewModel.initialize()
             ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
             viewModel.nextWord()
             viewModel.setScreen(ReviseScreen.DragAndDrop.route)
+
+            ReviseTimer.start { navHostController.navigate(Screen.ReviseResults.route) }
         }
     }
 
     DisposableEffect(Unit) {
         activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
 
-        ReviseTimer.start { navHostController.navigate(Screen.ReviseResults.route) }
-
         onDispose {
-            ReviseTimer.pause()
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
 
     Scaffold(topBar = {
-        BackHandler { navHostController.goBack() }
+        BackHandler { leave() }
         BackTopAppBar(title = {
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -94,7 +98,7 @@ fun WordRevise(
                 Spacer(Modifier.size(12.dp))
                 Text(text = lessonTime)
             }
-        }) { navHostController.goBack() }
+        }) { leave() }
     }) {
         Box(Modifier.fillMaxSize()) {
             ReviseScreen.getByRoute(currentScreen)?.Composable(navHostController)

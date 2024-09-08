@@ -56,6 +56,7 @@ object ReviseTimer {
     }
 
     fun pause() {
+        Log.i(TAG, "Pausing timer with ${formatMillisecondsToMS(timeRemaining)} left")
         timer?.cancel()
         timer = null
     }

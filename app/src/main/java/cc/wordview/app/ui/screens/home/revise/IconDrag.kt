@@ -81,8 +81,9 @@ fun IconDrag(
     LaunchedEffect(Unit) {
         val wordsWithoutCurrent = words.filter { w -> w.word != currentWord.word }
 
-        if (wordsWithoutCurrent.isEmpty()) {
+        if (wordsWithoutCurrent.size <= 1) {
             viewModel.deInitialize()
+            ReviseTimer.pause()
             navHostController.navigate(Screen.ReviseResults.route)
         }
 
