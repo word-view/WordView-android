@@ -45,7 +45,7 @@ import cc.wordview.app.extensions.dragGestures
 import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
-import cc.wordview.app.ui.screens.home.revise.model.DragAndDropViewModel
+import cc.wordview.app.ui.screens.home.revise.model.IconDragViewModel
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import java.lang.Thread.sleep
@@ -56,7 +56,7 @@ import kotlin.math.roundToInt
 fun IconDrag(
     navHostController: NavHostController,
     viewModel: WordReviseViewModel = WordReviseViewModel,
-    dragViewModel: DragAndDropViewModel = DragAndDropViewModel
+    dragViewModel: IconDragViewModel = IconDragViewModel
 ) {
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }

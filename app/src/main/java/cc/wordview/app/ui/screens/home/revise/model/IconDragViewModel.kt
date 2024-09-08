@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-object DragAndDropViewModel : ViewModel() {
+object IconDragViewModel : ViewModel() {
     private val _topWord = MutableStateFlow<Word?>(null)
     private val _downWord = MutableStateFlow<Word?>(null)
 
