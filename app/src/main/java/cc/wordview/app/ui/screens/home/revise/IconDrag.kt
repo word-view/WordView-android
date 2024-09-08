@@ -17,11 +17,9 @@
 
 package cc.wordview.app.ui.screens.home.revise
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,101 +36,86 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.extensions.dragGestures
 import cc.wordview.app.subtitle.getIconForWord
-import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.model.DragAndDropViewModel
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
-import cc.wordview.gengolex.languages.Word
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 import kotlin.math.roundToInt
 
 @Composable
-fun DragAndDrop(
+fun IconDrag(
     navHostController: NavHostController,
     viewModel: WordReviseViewModel = WordReviseViewModel,
-    screenViewModel: DragAndDropViewModel = DragAndDropViewModel
+    dragViewModel: DragAndDropViewModel = DragAndDropViewModel
 ) {
-    initializeIcons()
-
-    val words by viewModel.wordsToRevise.collectAsStateWithLifecycle()
-    val current by viewModel.currentWord.collectAsStateWithLifecycle()
-
-    val iconPainter = getIconForWord(current.parent)!!
-
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
 
     var isDragging by remember { mutableStateOf(false) }
 
-    val topWord by screenViewModel.topWord.collectAsStateWithLifecycle()
-    val downWord by screenViewModel.downWord.collectAsStateWithLifecycle()
+    val currentWord by viewModel.currentWord.collectAsStateWithLifecycle()
+    val words by viewModel.wordsToRevise.collectAsStateWithLifecycle()
+    val topWord by dragViewModel.topWord.collectAsStateWithLifecycle()
+    val downWord by dragViewModel.downWord.collectAsStateWithLifecycle()
 
     val animatedOffsetX by animateFloatAsState(
         targetValue = if (isDragging) offsetX else 0f,
         animationSpec = spring(dampingRatio = 0.5f, stiffness = 300f),
-        label = ""
     )
 
     val animatedOffsetY by animateFloatAsState(
         targetValue = if (isDragging) offsetY else 0f,
         animationSpec = spring(dampingRatio = 0.5f, stiffness = 300f),
-        label = ""
     )
 
-    fun correct() {
-        thread {
-            viewModel.setAnswer(Answer.CORRECT)
-            ReviseResultsViewModel.incrementCorrect()
-            sleep(500)
-            viewModel.setScreen(ReviseScreen.Presenter.route)
+    LaunchedEffect(Unit) {
+        val wordsWithoutCurrent = words.filter { w -> w.word != currentWord.word }
+
+        if (wordsWithoutCurrent.isEmpty()) {
+            viewModel.deInitialize()
+            navHostController.navigate(Screen.ReviseResults.route)
         }
+
+        val alternatives = listOf(currentWord, wordsWithoutCurrent.random()).shuffled()
+
+        dragViewModel.setTopWord(alternatives.first())
+        dragViewModel.setDownWord(alternatives.last())
+    }
+
+    fun correct() {
+        viewModel.setAnswer(Answer.CORRECT)
+        ReviseResultsViewModel.incrementCorrect()
     }
 
     fun wrong() {
-        thread {
-            viewModel.setAnswer(Answer.WRONG)
-            ReviseResultsViewModel.incrementWrong()
-            sleep(500)
-            viewModel.setScreen(ReviseScreen.Presenter.route)
-        }
+        viewModel.setAnswer(Answer.WRONG)
+        ReviseResultsViewModel.incrementWrong()
     }
 
-    fun handleDrop(x: Float, y: Float) {
+    fun handleDrop(y: Float) {
         if (y < -450) {
-            if (current == topWord) correct()
+            if (currentWord == topWord) correct()
             else wrong()
         }
 
         if (y > 450) {
-            if (current == downWord) correct()
+            if (currentWord == downWord) correct()
             else wrong()
         }
-    }
 
-    LaunchedEffect(Unit) {
-        try {
-            val wordsOfLesson =
-                listOf(current, words.filter { w -> w.word != current.word }.random()).shuffled()
-            screenViewModel.setTopWord(wordsOfLesson.first())
-            screenViewModel.setDownWord(wordsOfLesson.last())
-        } catch (e: Throwable) {
-            // ideally when this exception happens all the words should have been revised
-            if (e is NoSuchElementException) {
-                viewModel.deInitialize()
-                navHostController.navigate(Screen.ReviseResults.route)
-            }
-
-            Log.e("DragAndDrop", "", e)
+        thread {
+            sleep(500)
+            viewModel.setScreen(ReviseScreen.Presenter.route)
         }
     }
 
@@ -148,20 +131,17 @@ fun DragAndDrop(
                 style = Typography.displayMedium,
             )
         }
-        Box(modifier = Modifier
-            .offset {
-                IntOffset(
-                    animatedOffsetX.roundToInt(),
-                    animatedOffsetY.roundToInt()
-                )
-            }
-            .pointerInput(Unit) {
-                detectDragGestures(
+        Box(
+            Modifier
+                .offset {
+                    IntOffset(animatedOffsetX.roundToInt(), animatedOffsetY.roundToInt())
+                }
+                .dragGestures(
                     onDragStart = { isDragging = true },
                     onDragEnd = {
                         isDragging = false
 
-                        handleDrop(offsetX, offsetY)
+                        handleDrop(offsetY)
 
                         offsetX = 0f
                         offsetY = 0f
@@ -172,13 +152,14 @@ fun DragAndDrop(
                         offsetX += dragAmount.x
                         offsetY += dragAmount.y
                     })
-            }
         ) {
-            Image(
-                modifier = Modifier.size(130.dp),
-                painter = iconPainter,
-                contentDescription = current.word
-            )
+            getIconForWord(currentWord.parent)?.let {
+                Image(
+                    modifier = Modifier.size(130.dp),
+                    painter = it,
+                    contentDescription = currentWord.word
+                )
+            }
         }
         downWord?.let {
             Text(

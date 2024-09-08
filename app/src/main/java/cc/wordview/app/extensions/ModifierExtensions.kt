@@ -15,26 +15,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home.revise.model
+package cc.wordview.app.extensions
 
-import androidx.lifecycle.ViewModel
-import cc.wordview.gengolex.languages.Word
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.pointerInput
 
-object DragAndDropViewModel : ViewModel() {
-    private val _topWord = MutableStateFlow<Word?>(null)
-    private val _downWord = MutableStateFlow<Word?>(null)
-
-    var topWord = _topWord.asStateFlow()
-    val downWord = _downWord.asStateFlow()
-
-    fun setTopWord(word: Word) {
-        _topWord.update { word }
-    }
-
-    fun setDownWord(word: Word) {
-        _downWord.update { word }
-    }
+fun Modifier.dragGestures(
+    onDragStart: (offset: Offset) -> Unit,
+    onDragEnd: () -> Unit,
+    onDragCancel: () -> Unit,
+    onDrag: (change: PointerInputChange, dragAmount: Offset) -> Unit
+): Modifier {
+    return this.pointerInput(Unit) { detectDragGestures(onDragStart, onDragEnd, onDragCancel, onDrag) }
 }
