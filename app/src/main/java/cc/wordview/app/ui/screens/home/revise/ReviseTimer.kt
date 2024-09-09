@@ -21,6 +21,8 @@ import android.annotation.SuppressLint
 import android.os.CountDownTimer
 import android.util.Log
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import java.lang.Thread.sleep
+import kotlin.concurrent.thread
 
 object ReviseTimer {
     private val TAG = ReviseTimer::class.java.simpleName
@@ -46,10 +48,15 @@ object ReviseTimer {
             }
         }
 
-        timer?.start()
+        // wait a bit in case the transition to the reviser took a bit longer
+        thread {
+            sleep(1000)
+            timer?.start()
+        }
     }
 
     fun pause() {
+        Log.i(TAG, "Pausing timer with ${formatMillisecondsToMS(timeRemaining)} left")
         timer?.cancel()
         timer = null
     }

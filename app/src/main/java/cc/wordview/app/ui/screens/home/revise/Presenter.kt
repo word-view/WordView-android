@@ -35,10 +35,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,45 +48,49 @@ import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.theme.Typography
-import cc.wordview.gengolex.languages.Word
-import java.lang.Thread.sleep
-import kotlin.concurrent.thread
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun Presenter(current: Word, viewModel: WordReviseViewModel = WordReviseViewModel) {
+fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
     initializeIcons()
 
-    val iconPainter = getIconForWord(current.parent)!!
+    val answerStatus by viewModel.answerStatus.collectAsStateWithLifecycle()
+    val current by viewModel.currentWord.collectAsStateWithLifecycle()
+
+    val iconPainter = getIconForWord(current.parent)
 
     var visible by remember { mutableStateOf(false) }
 
-    val answerStatus by viewModel.answerStatus.collectAsStateWithLifecycle()
-
     val scaleIn = animateFloatAsState(
-        if (visible) 1f else 0f,
+        if (visible) 1f else 0.01f,
         tween(500, easing = EaseInOutExpo),
         label = "WordPresenterAnimation",
-        finishedListener = {
-            thread {
-                // show if the user answered correctly
-                sleep(1500)
+    )
+
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = scaleIn.value) {
+        if (scaleIn.value == 1f) {
+            scope.launch {
+                delay(1500.milliseconds)
                 visible = false
-                sleep(500) // wait for the scale out animation to end
+                delay(500.milliseconds)
 
                 if (answerStatus != Answer.NONE) {
-                    // show the right alternative
-                    visible = true
                     viewModel.setAnswer(Answer.NONE)
-                    sleep(3000)
+                    visible = true
+                    delay(3000.milliseconds)
                     visible = false
-                    sleep(500)
+                    delay(500.milliseconds)
 
                     viewModel.nextWord()
                     viewModel.setScreen(ReviseScreen.DragAndDrop.route)
                 }
             }
         }
-    )
+    }
 
     LaunchedEffect(Unit) {
         visible = true
@@ -93,14 +99,15 @@ fun Presenter(current: Word, viewModel: WordReviseViewModel = WordReviseViewMode
     Column(
         modifier = Modifier
             .scale(scaleIn.value)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .testTag("root"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         when (answerStatus) {
             Answer.CORRECT -> {
                 Icon(
-                    modifier = Modifier.size(130.dp),
+                    modifier = Modifier.size(130.dp).testTag("correct"),
                     imageVector = Icons.Filled.CheckCircle,
                     contentDescription = "Correct"
                 )
@@ -108,18 +115,20 @@ fun Presenter(current: Word, viewModel: WordReviseViewModel = WordReviseViewMode
 
             Answer.WRONG -> {
                 Icon(
-                    modifier = Modifier.size(130.dp),
+                    modifier = Modifier.size(130.dp).testTag("wrong"),
                     imageVector = Icons.Filled.Cancel,
                     contentDescription = "Wrong"
                 )
             }
 
             Answer.NONE -> {
-                Image(
-                    modifier = Modifier.size(130.dp),
-                    painter = iconPainter,
-                    contentDescription = current.word
-                )
+                iconPainter?.let {
+                    Image(
+                        modifier = Modifier.size(130.dp).testTag("word"),
+                        painter = iconPainter,
+                        contentDescription = current.word
+                    )
+                }
                 Text(
                     text = current.word,
                     textAlign = TextAlign.Center,

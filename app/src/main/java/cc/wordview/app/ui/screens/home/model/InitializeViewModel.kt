@@ -18,35 +18,23 @@
 package cc.wordview.app.ui.screens.home.model
 
 import androidx.lifecycle.ViewModel
-import cc.wordview.gengolex.languages.Word
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-object ReviseResultsViewModel : ViewModel() {
-    private val _words = MutableStateFlow<List<Word>>(listOf())
-    private val _answeredCorrectly = MutableStateFlow(0)
-    private val _answeredWrong = MutableStateFlow(0)
+/**
+ * A view model with a initialize property
+ */
+open class InitializeViewModel : ViewModel() {
+    private val _initialized = MutableStateFlow(false)
 
-    val words = _words.asStateFlow()
-    val answeredCorrectly = _answeredCorrectly.asStateFlow()
-    val answeredWrong = _answeredWrong.asStateFlow()
+    val initialized = _initialized.asStateFlow()
 
-    fun setWords(words: List<Word>) {
-        _words.update { words }
+    fun initialize() {
+        _initialized.update { true }
     }
 
-    fun incrementCorrect() {
-        _answeredCorrectly.update { old -> old + 1 }
-    }
-
-    fun incrementWrong() {
-        _answeredWrong.update { old -> old + 1 }
-    }
-
-    fun reset() {
-        _words.update { listOf() }
-        _answeredWrong.update { 0 }
-        _answeredCorrectly.update { 0 }
+    fun deInitialize() {
+        _initialized.update { false }
     }
 }

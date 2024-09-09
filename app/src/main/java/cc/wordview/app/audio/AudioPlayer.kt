@@ -23,6 +23,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
+import kotlin.concurrent.thread
 
 class AudioPlayer : MediaPlayer() {
     private val TAG = AudioPlayer::class.java.simpleName
@@ -40,10 +41,10 @@ class AudioPlayer : MediaPlayer() {
             Log.d(TAG, "Audio is prepared")
             state = AudioPlayerState.INITIALIZED
         }
-        setOnCompletionListener { PlayerViewModel.playIconPause() }
+
     }
 
-    fun initialize(dataSource: String) {
+    fun initialize(dataSource: String, onComplete: () -> Unit = {}) {
         Log.d(TAG, "Initializing MediaPlayer with dataSource: $dataSource")
 
         if (state == AudioPlayerState.INITIALIZED) {

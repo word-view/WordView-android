@@ -55,7 +55,7 @@ import cc.wordview.app.ui.theme.poppinsFamily
 @Composable
 fun Login(navController: NavHostController) {
     Scaffold(topBar = {
-        BackTopAppBar(text = "", onClickBack = { navController.goBack() })
+        BackTopAppBar(title = {}, onClickBack = { navController.goBack() })
     }, modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(
             modifier = Modifier

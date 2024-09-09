@@ -70,11 +70,14 @@ import cc.wordview.app.api.handler.PlayerRequestHandler
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extractor.getSubtitleFor
 import cc.wordview.app.subtitle.WordViewCue
+import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.ui.components.AsyncComposable
 import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
+import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
 import coil.compose.AsyncImage
@@ -153,6 +156,24 @@ fun Player(
 
                 onInitializeFail = {
                     audioInitFailed = true
+                }
+
+                setOnCompletionListener {
+                    for (cue in cues) {
+                        for (word in cue.words) {
+                            if (getIconForWord(word.parent) != null)
+                                WordReviseViewModel.appendWord(word)
+
+                        }
+                    }
+
+                    // emulate a leave() without goBack()
+                    audioPlayer.stop()
+                    viewModel.clearCues()
+                    viewModel.deinitialize()
+                    viewModel.setCurrentCue(WordViewCue())
+
+                    navHostController.navigate(Screen.WordRevise.route)
                 }
             }
 

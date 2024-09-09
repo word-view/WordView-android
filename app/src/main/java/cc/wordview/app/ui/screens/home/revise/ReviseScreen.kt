@@ -19,23 +19,22 @@ package cc.wordview.app.ui.screens.home.revise
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import cc.wordview.gengolex.languages.Word
 
 sealed class ReviseScreen(val route: String) {
     @Composable
-    open fun Composable(current: Word, navHostController: NavHostController) {}
+    open fun Composable(navHostController: NavHostController) {}
 
     data object Presenter : ReviseScreen("presenter") {
         @Composable
-        override fun Composable(current: Word, navHostController: NavHostController) {
-            Presenter(current)
+        override fun Composable(navHostController: NavHostController) {
+            Presenter()
         }
     }
 
     data object DragAndDrop : ReviseScreen("d-a-d") {
         @Composable
-        override fun Composable(current: Word, navHostController: NavHostController) {
-            DragAndDrop(current, navHostController)
+        override fun Composable(navHostController: NavHostController) {
+            IconDrag(navHostController)
         }
     }
 

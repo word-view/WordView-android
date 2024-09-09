@@ -40,12 +40,13 @@ fun ReviseResults(navHostController: NavHostController, viewModel: ReviseResults
     val answeredWrong by viewModel.answeredWrong.collectAsStateWithLifecycle()
 
     fun leave() {
+        viewModel.reset()
         navHostController.navigate(Screen.Home.route)
     }
 
     Scaffold(topBar = {
         BackHandler { leave() }
-        BackTopAppBar(text = "Results") { leave() }
+        BackTopAppBar(title = {}) { leave() }
     }) { innerPadding ->
         Box(
             modifier = Modifier
