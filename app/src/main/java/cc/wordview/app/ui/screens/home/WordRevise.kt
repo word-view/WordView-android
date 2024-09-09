@@ -94,9 +94,9 @@ fun WordRevise(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(imageVector = Icons.Filled.Timelapse, contentDescription = "timer")
-                Spacer(Modifier.size(12.dp))
                 Text(text = lessonTime)
+                Spacer(Modifier.size(6.dp))
+                Icon(imageVector = Icons.Filled.Timelapse, contentDescription = "timer")
             }
         }) { leave() }
     }) {
