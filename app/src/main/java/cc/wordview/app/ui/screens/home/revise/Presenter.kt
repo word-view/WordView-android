@@ -31,7 +31,6 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,7 +61,7 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
     val answerStatus by viewModel.answerStatus.collectAsStateWithLifecycle()
     val current by viewModel.currentWord.collectAsStateWithLifecycle()
 
-    val iconPainter = getIconForWord(current.parent)!!
+    val iconPainter = getIconForWord(current.parent)
 
     var visible by remember { mutableStateOf(false) }
 
@@ -102,14 +102,15 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
     Column(
         modifier = Modifier
             .scale(scaleIn.value)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .testTag("root"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         when (answerStatus) {
             Answer.CORRECT -> {
                 Icon(
-                    modifier = Modifier.size(130.dp),
+                    modifier = Modifier.size(130.dp).testTag("correct"),
                     imageVector = Icons.Filled.CheckCircle,
                     contentDescription = "Correct"
                 )
@@ -117,18 +118,20 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
 
             Answer.WRONG -> {
                 Icon(
-                    modifier = Modifier.size(130.dp),
+                    modifier = Modifier.size(130.dp).testTag("wrong"),
                     imageVector = Icons.Filled.Cancel,
                     contentDescription = "Wrong"
                 )
             }
 
             Answer.NONE -> {
-                Image(
-                    modifier = Modifier.size(130.dp),
-                    painter = iconPainter,
-                    contentDescription = current.word
-                )
+                iconPainter?.let {
+                    Image(
+                        modifier = Modifier.size(130.dp).testTag("word"),
+                        painter = iconPainter,
+                        contentDescription = current.word
+                    )
+                }
                 Text(
                     text = current.word,
                     textAlign = TextAlign.Center,
