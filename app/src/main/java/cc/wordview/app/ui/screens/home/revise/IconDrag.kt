@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.home.revise
 
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
@@ -85,12 +86,12 @@ fun IconDrag(
             viewModel.deInitialize()
             ReviseTimer.pause()
             navHostController.navigate(Screen.ReviseResults.route)
+        } else {
+            val alternatives = listOf(currentWord, wordsWithoutCurrent.random()).shuffled()
+
+            dragViewModel.setTopWord(alternatives.first())
+            dragViewModel.setDownWord(alternatives.last())
         }
-
-        val alternatives = listOf(currentWord, wordsWithoutCurrent.random()).shuffled()
-
-        dragViewModel.setTopWord(alternatives.first())
-        dragViewModel.setDownWord(alternatives.last())
     }
 
     fun correct() {
