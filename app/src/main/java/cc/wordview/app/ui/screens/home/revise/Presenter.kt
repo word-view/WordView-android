@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.home.revise
 
-import android.util.Log
 import androidx.compose.animation.core.EaseInOutExpo
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -50,9 +49,8 @@ import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.theme.Typography
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.delay
+import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.toJavaDuration
 
 @Composable
 fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
@@ -76,17 +74,16 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
     LaunchedEffect(key1 = scaleIn.value) {
         if (scaleIn.value == 1f) {
             scope.launch {
-                Log.i("Presenter", "$answerStatus")
-                delay(1500.milliseconds.toJavaDuration())
+                delay(1500.milliseconds)
                 visible = false
-                delay(500.milliseconds.toJavaDuration())
+                delay(500.milliseconds)
 
                 if (answerStatus != Answer.NONE) {
                     viewModel.setAnswer(Answer.NONE)
                     visible = true
-                    delay(3000.milliseconds.toJavaDuration())
+                    delay(3000.milliseconds)
                     visible = false
-                    delay(500.milliseconds.toJavaDuration())
+                    delay(500.milliseconds)
 
                     viewModel.nextWord()
                     viewModel.setScreen(ReviseScreen.DragAndDrop.route)
