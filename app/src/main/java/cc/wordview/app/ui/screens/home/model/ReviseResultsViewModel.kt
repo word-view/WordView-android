@@ -43,4 +43,10 @@ object ReviseResultsViewModel : ViewModel() {
     fun incrementWrong() {
         _answeredWrong.update { old -> old + 1 }
     }
+
+    fun reset() {
+        _words.update { listOf() }
+        _answeredWrong.update { 0 }
+        _answeredCorrectly.update { 0 }
+    }
 }

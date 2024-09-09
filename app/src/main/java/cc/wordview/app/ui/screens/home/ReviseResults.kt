@@ -40,6 +40,7 @@ fun ReviseResults(navHostController: NavHostController, viewModel: ReviseResults
     val answeredWrong by viewModel.answeredWrong.collectAsStateWithLifecycle()
 
     fun leave() {
+        viewModel.reset()
         navHostController.navigate(Screen.Home.route)
     }
 
