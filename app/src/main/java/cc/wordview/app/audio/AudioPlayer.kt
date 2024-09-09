@@ -69,10 +69,6 @@ class AudioPlayer : MediaPlayer() {
         }
     }
 
-//    override fun setOnCompletionListener(listener: OnCompletionListener?) {
-//        super.setOnCompletionListener(listener)
-//    }
-
     override fun stop() {
         if (state == AudioPlayerState.INITIALIZED) super.stop()
         PlayerViewModel.playIconPause()
