@@ -1,19 +1,19 @@
- /*
- * Copyright (c) 2024 Arthur Araujo
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+/*
+* Copyright (c) 2024 Arthur Araujo
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
 
 package cc.wordview.app.subtitle
 
@@ -22,6 +22,7 @@ import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.extractor.text.SubtitleParser
 import androidx.media3.extractor.text.webvtt.WebvttParser
+import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import kotlin.time.Duration.Companion.milliseconds
 
 
@@ -30,14 +31,32 @@ class Lyrics : ArrayList<WordViewCue>() {
     private val TAG = Lyrics::class.java.simpleName
 
     fun parse(str: String) {
+        val filterRomanizations = PlayerViewModel.filterRomanizations.value
+
+        if (filterRomanizations)
+            Log.i(TAG, "Romanizations will be filtered out")
+
         WebvttParser().parse(
             str.encodeToByteArray(),
             SubtitleParser.OutputOptions.allCues()
         ) { result ->
             if (result.cues.first().text?.isNotEmpty()!!) {
+                var text = result.cues.first().text.toString().trim()
+                val lineSplit = text.split("\n")
+
+                if (filterRomanizations && lineSplit.size > 1) {
+                    val regex = Regex("[a-zA-Z]")
+                    val matches = regex.findAll(lineSplit.last()).count()
+                    val ratio = matches.toFloat() / lineSplit.last().length
+
+                    if (ratio >= 0.7) {
+                        text = lineSplit.first()
+                    }
+                }
+
                 this.add(
                     WordViewCue(
-                        result.cues.first().text.toString().trim(),
+                        text,
                         normalize(result.startTimeUs.milliseconds.inWholeMilliseconds),
                         normalize(result.endTimeUs.milliseconds.inWholeMilliseconds),
                     )

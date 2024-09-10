@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.NetworkPing
+import androidx.compose.material.icons.outlined.ShortText
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,16 +35,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.goBack
 import me.zhanghai.compose.preference.ListPreferenceType
+import me.zhanghai.compose.preference.LocalPreferenceFlow
 import me.zhanghai.compose.preference.listPreference
+import me.zhanghai.compose.preference.switchPreference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(navController: NavHostController) {
+    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
+
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
@@ -75,7 +83,25 @@ fun Settings(navController: NavHostController) {
                     values = listOf("10.0.2.2", "192.168.1.100", "api.wordview.cc"),
                     title = { Text(text = "API endpoint") },
                     summary = { Text(text = it) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.NetworkPing,
+                            contentDescription = null
+                        )
+                    },
                     type = ListPreferenceType.ALERT_DIALOG
+                )
+                switchPreference(
+                    key = "filter_romanizations",
+                    defaultValue = true,
+                    title = { Text(text = "Filter romanizations") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.ShortText,
+                            contentDescription = null
+                        )
+                    },
+                    summary = { Text(text = "Attempts to remove romanizations from lyrics of non alphabetic languages") }
                 )
             }
         }

@@ -124,6 +124,9 @@ fun Player(
     }
 
     fun fetchLyrics() {
+        val filterRomanizations = preferences["filter_romanizations"] ?: true
+        viewModel.setFilterRomanizations(filterRomanizations)
+
         val url = getSubtitleFor(song.id, "ja")
 
         if (!url.isNullOrEmpty()) {
