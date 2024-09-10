@@ -85,8 +85,6 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
 
                 if (!foundWord) {
                     Text(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.surfaceDim),
                         text = text[currentIndex].toString(),
                         fontSize = 32.sp,
                         color = MaterialTheme.colorScheme.inverseSurface
