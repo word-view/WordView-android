@@ -19,9 +19,14 @@ package cc.wordview.app.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cc.wordview.app.subtitle.WordViewCue
@@ -41,7 +47,7 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
 
     Column(Modifier.wrapContentWidth(Alignment.Start)) {
         Row(
-            modifier = modifier.height(128.dp),
+            modifier = modifier.fillMaxHeight(),
             verticalAlignment = Alignment.Bottom
         ) {
             val text = cue.text
@@ -52,17 +58,20 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
 
                 for (word in cue.words) {
                     if (text.startsWith(word.word, currentIndex)) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(modifier = Modifier.width(IntrinsicSize.Max), horizontalAlignment = Alignment.CenterHorizontally) {
                             getIconForWord(word.parent)?.let {
                                 Icon(
                                     painter = it,
-                                    modifier = Modifier.size(32.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(1f),
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.inverseSurface
                                 )
                             }
                             Text(
-                                modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer),
+                                modifier = Modifier
+                                    .background(MaterialTheme.colorScheme.primaryContainer),
                                 text = word.word,
                                 fontSize = 32.sp,
                                 color = MaterialTheme.colorScheme.inverseSurface
