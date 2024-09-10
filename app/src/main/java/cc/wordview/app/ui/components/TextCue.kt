@@ -17,12 +17,10 @@
 
 package cc.wordview.app.ui.components
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Icon
@@ -43,51 +41,50 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
 
     Column(Modifier.wrapContentWidth(Alignment.Start)) {
         Row(
-            modifier = modifier.height(32.dp),
-            horizontalArrangement = Arrangement.Start
+            modifier = modifier.height(128.dp),
+            verticalAlignment = Alignment.Bottom
         ) {
-            var previousWordsCount = 0
-            var previousWord = ""
+            val text = cue.text
+            var currentIndex = 0
 
-            for (word in cue.words) {
-                val wordIndex = cue.text.indexOf(word.word)
+            while (currentIndex < text.length) {
+                var foundWord = false
 
-                var iconMargin = 1
-
-                if (wordIndex > 0) for (i in 0..<wordIndex) {
-                    iconMargin += if (cue.text[i] == ' ' || cue.text[i] == '「' || cue.text[i] == '」') 15 else 32
-
-                }
-
-                if (previousWordsCount > 0) for (i in 1..previousWordsCount) {
-                    for (o in previousWord.indices - 1) {
-                        iconMargin -= 32
+                for (word in cue.words) {
+                    if (text.startsWith(word.word, currentIndex)) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            getIconForWord(word.parent)?.let {
+                                Icon(
+                                    painter = it,
+                                    modifier = Modifier.size(32.dp),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.inverseSurface
+                                )
+                            }
+                            Text(
+                                modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer),
+                                text = word.word,
+                                fontSize = 32.sp,
+                                color = MaterialTheme.colorScheme.inverseSurface
+                            )
+                        }
+                        currentIndex += word.word.length
+                        foundWord = true
+                        break
                     }
                 }
 
-                if (iconMargin < 0) iconMargin = 1
-
-                getIconForWord(word.parent)?.let {
-                    Icon(
-                        painter = it,
+                if (!foundWord) {
+                    Text(
                         modifier = Modifier
-                            .padding(start = iconMargin.dp)
-                            .size(32.dp),
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.inverseSurface
+                            .background(MaterialTheme.colorScheme.surfaceDim),
+                        text = text[currentIndex].toString(),
+                        fontSize = 32.sp,
+                        color = MaterialTheme.colorScheme.inverseSurface
                     )
-
-                    previousWordsCount++
-                    previousWord = word.word
+                    currentIndex++
                 }
             }
         }
-        Text(
-            text = cue.text,
-            fontSize = 32.sp,
-            color = MaterialTheme.colorScheme.inverseSurface,
-            lineHeight = 32.sp
-        )
-        Spacer(Modifier.size(24.dp))
     }
 }
