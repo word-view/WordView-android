@@ -20,6 +20,7 @@ package cc.wordview.app.ui.screens.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -68,6 +69,7 @@ import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.handler.PlayerRequestHandler
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.extractor.getStreamFrom
 import cc.wordview.app.extractor.getSubtitleFor
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.subtitle.getIconForWord
@@ -118,9 +120,15 @@ fun Player(
     }
 
     fun initAudio() {
-        val endpoint: String = preferences["api_endpoint"] ?: "10.0.2.2"
+        val stream = getStreamFrom(song.id)
 
-        audioPlayer.initialize("http://$endpoint:8080/api/v1/music/download?id=${song.id}")
+        if (stream == null) {
+            Log.e("Player", "Stream url is null")
+            audioInitFailed = true
+            return
+        }
+
+        audioPlayer.initialize(stream)
     }
 
     fun fetchLyrics() {
