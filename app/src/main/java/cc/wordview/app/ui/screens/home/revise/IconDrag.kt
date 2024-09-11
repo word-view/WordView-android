@@ -89,8 +89,8 @@ fun IconDrag(
         } else {
             val alternatives = listOf(currentWord, wordsWithoutCurrent.random()).shuffled()
 
-            dragViewModel.setTopWord(alternatives.first())
-            dragViewModel.setDownWord(alternatives.last())
+            dragViewModel.setTopWord(alternatives.first().word)
+            dragViewModel.setDownWord(alternatives.last().word)
         }
     }
 
@@ -106,12 +106,12 @@ fun IconDrag(
 
     fun handleDrop(y: Float) {
         if (y < -450) {
-            if (currentWord == topWord) correct()
+            if (currentWord.word == topWord) correct()
             else wrong()
         }
 
         if (y > 450) {
-            if (currentWord == downWord) correct()
+            if (currentWord.word == downWord) correct()
             else wrong()
         }
 
@@ -159,13 +159,13 @@ fun IconDrag(
                     })
                 .testTag("drag")
         ) {
-            getIconForWord(currentWord.parent)?.let {
+            getIconForWord(currentWord.word.parent)?.let {
                 Image(
                     modifier = Modifier
                         .size(130.dp)
                         .testTag("icon"),
                     painter = it,
-                    contentDescription = currentWord.word
+                    contentDescription = currentWord.word.word
                 )
             }
         }

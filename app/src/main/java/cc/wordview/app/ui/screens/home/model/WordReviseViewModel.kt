@@ -19,6 +19,7 @@ package cc.wordview.app.ui.screens.home.model
 
 import android.util.Log
 import cc.wordview.app.ui.screens.home.revise.Answer
+import cc.wordview.app.ui.screens.home.revise.algo.ReviseWord
 import cc.wordview.gengolex.languages.Word
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,9 +28,9 @@ import kotlinx.coroutines.flow.update
 object WordReviseViewModel : InitializeViewModel() {
     private val TAG = WordReviseViewModel::class.java.simpleName
 
-    private val _currentWord = MutableStateFlow(Word("", ""))
+    private val _currentWord = MutableStateFlow(ReviseWord())
     private val _screen = MutableStateFlow("")
-    private val _wordsToRevise = MutableStateFlow<List<Word>>(listOf())
+    private val _wordsToRevise = MutableStateFlow<List<ReviseWord>>(listOf())
     private val _answerStatus = MutableStateFlow(Answer.NONE)
     private val _formattedTime = MutableStateFlow("")
 
@@ -40,12 +41,12 @@ object WordReviseViewModel : InitializeViewModel() {
     val formattedTime = _formattedTime.asStateFlow()
 
     fun nextWord() {
-        val wordsWithoutCurrent = _wordsToRevise.value.filter { w -> w.word != currentWord.value.word }
+        val wordsWithoutCurrent = _wordsToRevise.value.filter { w -> w.word?.word != currentWord.value.word?.word }
         _wordsToRevise.update { wordsWithoutCurrent }
         setWord(_wordsToRevise.value.random())
     }
 
-    fun setWord(word: Word) {
+    fun setWord(word: ReviseWord) {
         _currentWord.update {
             Log.d(TAG, "Updating word from '${it.word}' to '${word.word}'")
             word
@@ -64,8 +65,8 @@ object WordReviseViewModel : InitializeViewModel() {
         _answerStatus.update { answer }
     }
 
-    fun appendWord(word: Word) {
-        Log.d(TAG, "Appending the word '${word.word}' to be revised")
+    fun appendWord(word: ReviseWord) {
+        Log.d(TAG, "Appending the word '${word.word.word}' to be revised")
         _wordsToRevise.update { old -> old + word }
     }
 }

@@ -89,8 +89,8 @@ fun WordDrag(
         } else {
             val alternatives = listOf(currentWord, wordsWithoutCurrent.random()).shuffled()
 
-            dragViewModel.setTopWord(alternatives.first())
-            dragViewModel.setDownWord(alternatives.last())
+            dragViewModel.setTopWord(alternatives.first().word)
+            dragViewModel.setDownWord(alternatives.last().word)
         }
     }
 
@@ -106,12 +106,12 @@ fun WordDrag(
 
     fun handleDrop(y: Float) {
         if (y < -450) {
-            if (currentWord == topWord) correct()
+            if (currentWord.word == topWord) correct()
             else wrong()
         }
 
         if (y > 450) {
-            if (currentWord == downWord) correct()
+            if (currentWord.word == downWord) correct()
             else wrong()
         }
 
@@ -135,7 +135,7 @@ fun WordDrag(
                         .size(130.dp)
                         .testTag("top-word"),
                     painter = it,
-                    contentDescription = currentWord.word
+                    contentDescription = currentWord.word.word
                 )
             }
         }
@@ -164,7 +164,7 @@ fun WordDrag(
         ) {
             Text(
                 modifier = Modifier,
-                text = currentWord.word,
+                text = currentWord.word.word,
                 textAlign = TextAlign.Center,
                 style = Typography.displayMedium,
             )
@@ -176,7 +176,7 @@ fun WordDrag(
                         .size(130.dp)
                         .testTag("down-word"),
                     painter = it,
-                    contentDescription = currentWord.word
+                    contentDescription = currentWord.word.word
                 )
             }
         }

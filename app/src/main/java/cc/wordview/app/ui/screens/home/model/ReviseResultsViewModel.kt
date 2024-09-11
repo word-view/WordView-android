@@ -18,13 +18,14 @@
 package cc.wordview.app.ui.screens.home.model
 
 import androidx.lifecycle.ViewModel
+import cc.wordview.app.ui.screens.home.revise.algo.ReviseWord
 import cc.wordview.gengolex.languages.Word
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 object ReviseResultsViewModel : ViewModel() {
-    private val _words = MutableStateFlow<List<Word>>(listOf())
+    private val _words = MutableStateFlow<List<ReviseWord>>(listOf())
     private val _answeredCorrectly = MutableStateFlow(0)
     private val _answeredWrong = MutableStateFlow(0)
 
@@ -32,7 +33,7 @@ object ReviseResultsViewModel : ViewModel() {
     val answeredCorrectly = _answeredCorrectly.asStateFlow()
     val answeredWrong = _answeredWrong.asStateFlow()
 
-    fun setWords(words: List<Word>) {
+    fun setWords(words: List<ReviseWord>) {
         _words.update { words }
     }
 

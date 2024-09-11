@@ -59,7 +59,7 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
     val answerStatus by viewModel.answerStatus.collectAsStateWithLifecycle()
     val current by viewModel.currentWord.collectAsStateWithLifecycle()
 
-    val iconPainter = getIconForWord(current.parent)
+    val iconPainter = getIconForWord(current.word.parent)
 
     var visible by remember { mutableStateOf(false) }
 
@@ -126,11 +126,11 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
                     Image(
                         modifier = Modifier.size(130.dp).testTag("word"),
                         painter = iconPainter,
-                        contentDescription = current.word
+                        contentDescription = current.word.word
                     )
                 }
                 Text(
-                    text = current.word,
+                    text = current.word.word,
                     textAlign = TextAlign.Center,
                     style = Typography.displayMedium,
                 )

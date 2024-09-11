@@ -29,6 +29,7 @@ import cc.wordview.app.ui.screens.home.ReviseResults
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.IconDrag
 import cc.wordview.app.ui.screens.home.revise.ReviseScreen
+import cc.wordview.app.ui.screens.home.revise.algo.ReviseWord
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
@@ -46,11 +47,11 @@ class IconDragTest {
         composeTestRule.mainClock.autoAdvance = autoAdvance
 
         if (appendWords) {
-            viewModel.appendWord(Word("tear", "lágrima"))
-            viewModel.appendWord(Word("rain", "chuva"))
-            viewModel.appendWord(Word("voice", "voz"))
+            viewModel.appendWord(ReviseWord(Word("tear", "lágrima")))
+            viewModel.appendWord(ReviseWord(Word("rain", "chuva")))
+            viewModel.appendWord(ReviseWord(Word("voice", "voz")))
 
-            viewModel.setWord(Word("tear", "lágrima"))
+            viewModel.setWord(ReviseWord(Word("tear", "lágrima")))
         }
 
         composeTestRule.setContent {
