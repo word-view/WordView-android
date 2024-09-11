@@ -72,7 +72,7 @@ fun WordRevise(
             viewModel.initialize()
             ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
             viewModel.nextWord()
-            viewModel.setScreen(ReviseScreen.DragAndDrop.route)
+            viewModel.setScreen(ReviseScreen.getRandomScreen().route)
 
             ReviseTimer.start { navHostController.navigate(Screen.ReviseResults.route) }
         }

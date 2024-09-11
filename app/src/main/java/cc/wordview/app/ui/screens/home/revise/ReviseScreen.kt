@@ -31,15 +31,22 @@ sealed class ReviseScreen(val route: String) {
         }
     }
 
-    data object DragAndDrop : ReviseScreen("d-a-d") {
+    data object IconDrag : ReviseScreen("icon-drag") {
         @Composable
         override fun Composable(navHostController: NavHostController) {
             IconDrag(navHostController)
         }
     }
 
+    data object WordDrag : ReviseScreen("word-drag") {
+        @Composable
+        override fun Composable(navHostController: NavHostController) {
+            WordDrag(navHostController)
+        }
+    }
+
     companion object {
-        val screens = listOf(Presenter, DragAndDrop)
+        val screens = listOf(Presenter, IconDrag, WordDrag)
 
         fun getByRoute(route: String): ReviseScreen? {
             for (screen in screens) {
@@ -47,6 +54,10 @@ sealed class ReviseScreen(val route: String) {
             }
 
             return null
+        }
+
+        fun getRandomScreen(): ReviseScreen {
+            return screens.filter { s -> s.route != Presenter.route }.random()
         }
     }
 }

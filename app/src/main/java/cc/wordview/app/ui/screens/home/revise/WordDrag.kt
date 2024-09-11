@@ -54,7 +54,7 @@ import kotlin.concurrent.thread
 import kotlin.math.roundToInt
 
 @Composable
-fun IconDrag(
+fun WordDrag(
     navHostController: NavHostController,
     viewModel: WordReviseViewModel = WordReviseViewModel,
     dragViewModel: DragViewModel = DragViewModel
@@ -128,13 +128,16 @@ fun IconDrag(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        topWord?.let {
-            Text(
-                modifier = Modifier.testTag("top-word"),
-                text = it.word,
-                textAlign = TextAlign.Center,
-                style = Typography.displayMedium,
-            )
+        topWord?.let { word ->
+            getIconForWord(word.parent)?.let {
+                Image(
+                    modifier = Modifier
+                        .size(130.dp)
+                        .testTag("top-word"),
+                    painter = it,
+                    contentDescription = currentWord.word
+                )
+            }
         }
         Box(
             Modifier
@@ -159,23 +162,23 @@ fun IconDrag(
                     })
                 .testTag("drag")
         ) {
-            getIconForWord(currentWord.parent)?.let {
+            Text(
+                modifier = Modifier,
+                text = currentWord.word,
+                textAlign = TextAlign.Center,
+                style = Typography.displayMedium,
+            )
+        }
+        downWord?.let { word ->
+            getIconForWord(word.parent)?.let {
                 Image(
                     modifier = Modifier
                         .size(130.dp)
-                        .testTag("icon"),
+                        .testTag("down-word"),
                     painter = it,
                     contentDescription = currentWord.word
                 )
             }
-        }
-        downWord?.let {
-            Text(
-                modifier = Modifier.testTag("down-word"),
-                text = it.word,
-                textAlign = TextAlign.Center,
-                style = Typography.displayMedium,
-            )
         }
     }
 }

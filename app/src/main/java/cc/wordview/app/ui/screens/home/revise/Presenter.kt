@@ -86,7 +86,7 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
                     delay(500.milliseconds)
 
                     viewModel.nextWord()
-                    viewModel.setScreen(ReviseScreen.DragAndDrop.route)
+                    viewModel.setScreen(ReviseScreen.getRandomScreen().route)
                 }
             }
         }
