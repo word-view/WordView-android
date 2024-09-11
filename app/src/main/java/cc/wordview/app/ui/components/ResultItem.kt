@@ -67,7 +67,7 @@ fun ResultItem(result: VideoSearchResult, onClick: () -> Unit) {
                 shape = RoundedCornerShape(5.dp)
             ) {
                 AsyncImage(
-                    model = "https://img.youtube.com/vi/${result.id}/hq720.jpg",
+                    model = "https://img.youtube.com/vi/${result.id}/0.jpg",
                     placeholder = painterResource(id = R.drawable.radio),
                     error = painterResource(id = R.drawable.radio),
                     contentDescription = "${result.title} cover",
