@@ -17,10 +17,13 @@
 
 package cc.wordview.app.ui.screens.home
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,6 +34,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
@@ -45,9 +49,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.Video
 import cc.wordview.app.extractor.search
@@ -55,6 +63,7 @@ import cc.wordview.app.ui.components.AsyncComposable
 import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.screens.home.model.SearchViewModel
 import cc.wordview.app.ui.screens.util.Screen
+import cc.wordview.app.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +74,16 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
 
     var waitingForResponse by remember { mutableStateOf(false) }
 
+    var errored by remember { mutableStateOf(false) }
+
     val focusRequester = remember { FocusRequester() }
+
+    val darkTheme = isSystemInDarkTheme()
+
+    fun onError() {
+        errored = true
+        waitingForResponse = false
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -86,8 +104,10 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
                     waitingForResponse = true
                     viewModel.setSearching(false)
 
-                    search(it) { r ->
+                    search(it, onError = { onError() }) { r ->
                         viewModel.setSearchResults(r)
+
+                        errored = false
                         waitingForResponse = false
                     }
                 },
@@ -103,25 +123,49 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
             modifier = Modifier.padding(innerPadding),
             condition = !waitingForResponse
         ) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                for (result in results) {
-                    Spacer(Modifier.size(12.dp))
-                    ResultItem(result = result) {
-                        SongViewModel.setVideo(
-                            Video(
-                                result.id,
-                                result.title,
-                                result.channel,
-                                "https://img.youtube.com/vi/${result.id}/hq720.jpg"
+            if (errored) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f),
+                        painter = painterResource(id = if (darkTheme) R.drawable.nonet else R.drawable.nonet_dark),
+                        contentDescription = ""
+                    )
+                    Spacer(Modifier.size(15.dp))
+                    Text(
+                        text = "It seems that you are offline",
+                        textAlign = TextAlign.Center,
+                        style = Typography.headlineSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.inverseSurface
+                    )
+                }
+            } else {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    for (result in results) {
+                        Spacer(Modifier.size(12.dp))
+                        ResultItem(result = result) {
+                            SongViewModel.setVideo(
+                                Video(
+                                    result.id,
+                                    result.title,
+                                    result.channel,
+                                    "https://img.youtube.com/vi/${result.id}/hq720.jpg"
+                                )
                             )
-                        )
-                        navHostController.navigate(Screen.Player.route)
+                            navHostController.navigate(Screen.Player.route)
+                        }
                     }
                 }
             }

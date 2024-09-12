@@ -17,24 +17,32 @@
 
 package cc.wordview.app.extractor
 
+import android.util.Log
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.StreamingService
 import org.schabi.newpipe.extractor.search.SearchInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import java.net.UnknownHostException
 import kotlin.concurrent.thread
 
 var YTService: StreamingService = NewPipe.getService(0);
 
-fun search(query: String, onRequestCompleted: (items: List<StreamInfoItem>) -> Unit) {
+fun search(query: String, onError: () -> Unit,  onRequestCompleted: (items: List<StreamInfoItem>) -> Unit) {
     thread {
-        val search = SearchInfo.getInfo(YTService, YTService.searchQHFactory.fromQuery(query))
+        try {
+            val search = SearchInfo.getInfo(YTService, YTService.searchQHFactory.fromQuery(query))
 
-        val items = ArrayList<StreamInfoItem>()
+            val items = ArrayList<StreamInfoItem>()
 
-        for (item in search.relatedItems) {
-            if (item is StreamInfoItem) items.add(item)
+            for (item in search.relatedItems) {
+                if (item is StreamInfoItem) items.add(item)
+            }
+
+            onRequestCompleted(items)
+        } catch (e: UnknownHostException) {
+            Log.e("SearchHandlers", "$e", e)
+            onError()
         }
 
-        onRequestCompleted(items)
     }
 }
