@@ -46,6 +46,13 @@ object WordReviseViewModel : InitializeViewModel() {
             } as ArrayList<ReviseWord>
         }
 
+        // remove the empty word that appears from time to time
+        _wordsToRevise.update {
+            _wordsToRevise.value.filter { w ->
+                w.word.word != ""
+            } as ArrayList<ReviseWord>
+        }
+
         _wordsToRevise.value.add(_wordsToRevise.value.lastIndex, currentWord.value)
 
         setWord(_wordsToRevise.value.random())
@@ -71,6 +78,13 @@ object WordReviseViewModel : InitializeViewModel() {
     }
 
     fun appendWord(word: ReviseWord) {
+        for (wordd in _wordsToRevise.value) {
+            if (wordd.word.word == word.word.word) {
+                Log.d(TAG, "Not appending word '${word.word.word}' because it is already in")
+                return
+            }
+        }
+
         Log.d(TAG, "Appending the word '${word.word.word}' to be revised")
         _wordsToRevise.update { old -> (old + word) as ArrayList<ReviseWord> }
     }
