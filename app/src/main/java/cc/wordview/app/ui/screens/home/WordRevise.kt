@@ -64,7 +64,7 @@ fun WordRevise(
 
     fun leave() {
         ReviseTimer.pause()
-        navHostController.goBack()
+        navHostController.navigate(Screen.Home.route)
     }
 
     LaunchedEffect(Unit) {
