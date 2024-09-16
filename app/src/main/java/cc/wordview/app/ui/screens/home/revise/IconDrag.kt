@@ -80,7 +80,7 @@ fun IconDrag(
     )
 
     LaunchedEffect(Unit) {
-        val wordsWithoutCurrent = words.filter { w -> w.word != currentWord.word }
+        val wordsWithoutCurrent = words.filter { w -> w.word.word != currentWord.word.word }
 
         if (wordsWithoutCurrent.size <= 1) {
             viewModel.deInitialize()

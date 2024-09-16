@@ -30,10 +30,12 @@ import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.IconDrag
 import cc.wordview.app.ui.screens.home.revise.ReviseScreen
 import cc.wordview.app.ui.screens.home.revise.algo.ReviseWord
+import cc.wordview.app.ui.screens.home.revise.model.DragViewModel
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -84,6 +86,12 @@ class IconDragTest {
         composeTestRule.onNodeWithTag("top-word").assertExists()
         composeTestRule.onNodeWithTag("down-word").assertExists()
 
+    }
+
+    @Test
+    fun upAndDownNotEqual() {
+        setupScreen(appendWords = true)
+        assertTrue(DragViewModel.topWord.value != DragViewModel.downWord.value)
     }
 
     @Test
