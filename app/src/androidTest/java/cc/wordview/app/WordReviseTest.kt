@@ -22,7 +22,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.screens.home.WordRevise
+import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.algo.ReviseWord
 import cc.wordview.app.ui.theme.WordViewTheme
+import cc.wordview.gengolex.languages.Word
 import org.junit.Rule
 import org.junit.Test
 
@@ -30,7 +33,15 @@ class WordReviseTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private val viewModel = WordReviseViewModel
+
     private fun setupScreen() {
+        viewModel.appendWord(ReviseWord(Word("1", "1")))
+        viewModel.appendWord(ReviseWord(Word("2", "2")))
+        viewModel.appendWord(ReviseWord(Word("3", "3")))
+        viewModel.appendWord(ReviseWord(Word("4", "4")))
+        viewModel.appendWord(ReviseWord(Word("5", "5")))
+
         composeTestRule.setContent {
             WordViewTheme { WordRevise(rememberNavController()) }
         }
