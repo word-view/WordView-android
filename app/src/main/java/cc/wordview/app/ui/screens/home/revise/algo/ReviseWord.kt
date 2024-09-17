@@ -20,8 +20,6 @@ package cc.wordview.app.ui.screens.home.revise.algo
 import cc.wordview.gengolex.languages.Word
 
 class ReviseWord(var word: Word = Word("", "")) {
-    var knowledge: Knowledge = Knowledge.UNKNOWN
-
     var misses = 0
     var corrects = 0
 }
