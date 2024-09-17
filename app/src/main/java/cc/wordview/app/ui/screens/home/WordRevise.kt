@@ -42,7 +42,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
@@ -64,6 +63,7 @@ fun WordRevise(
 
     fun leave() {
         ReviseTimer.pause()
+        viewModel.cleanWords()
         navHostController.navigate(Screen.Home.route)
     }
 

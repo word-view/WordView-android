@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.home.revise
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.animation.core.EaseInOutExpo
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -40,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,6 +52,7 @@ import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.theme.Typography
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
+import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -62,6 +65,8 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
     val iconPainter = getIconForWord(current.word.parent)
 
     var visible by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
 
     val scaleIn = animateFloatAsState(
         if (visible) 1f else 0.01f,
@@ -81,6 +86,24 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
                 if (answerStatus != Answer.NONE) {
                     viewModel.setAnswer(Answer.NONE)
                     visible = true
+
+                    var tts: TextToSpeech? = null
+
+                    tts = TextToSpeech(context) {
+                        if (it == TextToSpeech.SUCCESS) {
+                            tts?.let { textToSpeech ->
+                                textToSpeech.language = Locale.JAPANESE
+                                textToSpeech.setSpeechRate(1.0f)
+                                textToSpeech.speak(
+                                    current.word.word,
+                                    TextToSpeech.QUEUE_ADD,
+                                    null,
+                                    null
+                                )
+                            }
+                        }
+                    }
+
                     delay(3000.milliseconds)
                     visible = false
                     delay(500.milliseconds)
@@ -107,7 +130,9 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
         when (answerStatus) {
             Answer.CORRECT -> {
                 Icon(
-                    modifier = Modifier.size(130.dp).testTag("correct"),
+                    modifier = Modifier
+                        .size(130.dp)
+                        .testTag("correct"),
                     imageVector = Icons.Filled.CheckCircle,
                     contentDescription = "Correct"
                 )
@@ -115,7 +140,9 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
 
             Answer.WRONG -> {
                 Icon(
-                    modifier = Modifier.size(130.dp).testTag("wrong"),
+                    modifier = Modifier
+                        .size(130.dp)
+                        .testTag("wrong"),
                     imageVector = Icons.Filled.Cancel,
                     contentDescription = "Wrong"
                 )
@@ -124,7 +151,9 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
             Answer.NONE -> {
                 iconPainter?.let {
                     Image(
-                        modifier = Modifier.size(130.dp).testTag("word"),
+                        modifier = Modifier
+                            .size(130.dp)
+                            .testTag("word"),
                         painter = iconPainter,
                         contentDescription = current.word.word
                     )
