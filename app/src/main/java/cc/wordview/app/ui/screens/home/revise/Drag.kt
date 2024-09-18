@@ -51,6 +51,7 @@ import cc.wordview.app.ui.screens.home.revise.components.DragMode
 import cc.wordview.app.ui.screens.home.revise.components.ReviseScreen
 import cc.wordview.app.ui.screens.home.revise.model.DragViewModel
 import cc.wordview.app.ui.theme.Typography
+import cc.wordview.gengolex.languages.Word
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -124,32 +125,16 @@ fun Drag(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().testTag("root"),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("root"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         topWord?.let {
             when (dragMode) {
-                DragMode.ICON -> {
-                    Text(
-                        modifier = Modifier.testTag("top-word"),
-                        text = it.word,
-                        textAlign = TextAlign.Center,
-                        style = Typography.displayMedium,
-                    )
-                }
-
-                DragMode.WORD -> {
-                    getIconForWord(it.parent)?.let { icon ->
-                        Image(
-                            modifier = Modifier
-                                .size(130.dp)
-                                .testTag("top-word"),
-                            painter = icon,
-                            contentDescription = currentWord.word.word
-                        )
-                    }
-                }
+                DragMode.ICON -> Text(word = it, testTag = "top-word")
+                DragMode.WORD -> Icon(word = it, testTag = "top-word")
             }
         }
 
@@ -178,48 +163,40 @@ fun Drag(
         ) {
             currentWord.word.let {
                 when (dragMode) {
-                    DragMode.ICON -> {
-                        getIconForWord(it.parent)?.let { icon ->
-                            Image(
-                                modifier = Modifier.size(130.dp),
-                                painter = icon,
-                                contentDescription = currentWord.word.word
-                            )
-                        }
-                    }
-
-                    DragMode.WORD -> {
-                        Text(
-                            modifier = Modifier,
-                            text = it.word,
-                            textAlign = TextAlign.Center,
-                            style = Typography.displayMedium,
-                        )
-                    }
+                    DragMode.ICON -> Icon(word = it, testTag = "current")
+                    DragMode.WORD -> Text(word = it, testTag = "current")
                 }
             }
         }
 
         downWord?.let {
             when (dragMode) {
-                DragMode.ICON -> {
-                    Text(
-                        modifier = Modifier,
-                        text = it.word,
-                        textAlign = TextAlign.Center,
-                        style = Typography.displayMedium,
-                    )
-                }
-                DragMode.WORD -> {
-                    getIconForWord(it.parent)?.let { icon ->
-                        Image(
-                            modifier = Modifier.size(130.dp),
-                            painter = icon,
-                            contentDescription = currentWord.word.word
-                        )
-                    }
-                }
+                DragMode.ICON -> Text(word = it, testTag = "down-word")
+                DragMode.WORD -> Icon(word = it, testTag = "down-word")
             }
         }
+    }
+}
+
+@Composable
+fun Text(word: Word, testTag: String) {
+    Text(
+        modifier = Modifier.testTag(testTag),
+        text = word.word,
+        textAlign = TextAlign.Center,
+        style = Typography.displayMedium,
+    )
+}
+
+@Composable
+fun Icon(word: Word, testTag: String) {
+    getIconForWord(word.parent)?.let { icon ->
+        Image(
+            modifier = Modifier
+                .size(130.dp)
+                .testTag(testTag),
+            painter = icon,
+            contentDescription = word.word
+        )
     }
 }
