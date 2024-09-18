@@ -84,9 +84,9 @@ class WordDragTest {
 
         composeTestRule.onNodeWithTag("root").assertExists()
         composeTestRule.onNodeWithTag("drag").assertExists()
+        composeTestRule.onNodeWithText("lágrima").assertExists()
         composeTestRule.onNodeWithTag("top-word").assertExists()
         composeTestRule.onNodeWithTag("down-word").assertExists()
-        composeTestRule.onNodeWithText("lágrima").assertExists()
     }
 
     @Test
