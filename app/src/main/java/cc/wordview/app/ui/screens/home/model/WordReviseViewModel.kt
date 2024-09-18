@@ -42,7 +42,7 @@ object WordReviseViewModel : InitializeViewModel() {
     val answerStatus = _answerStatus.asStateFlow()
     val formattedTime = _formattedTime.asStateFlow()
 
-    fun nextWord() {
+    fun nextWord(answer: Answer = Answer.NONE) {
         _wordsToRevise.update { value ->
             value.filter { w ->
                 w.word.word != currentWord.value.word.word
@@ -50,7 +50,19 @@ object WordReviseViewModel : InitializeViewModel() {
         }
 
         if (currentWord.value.word.word != "") {
-            _wordsToRevise.value.add(_wordsToRevise.value.lastIndex, currentWord.value)
+            when (answer) {
+                Answer.CORRECT -> _wordsToRevise.value.add(
+                    _wordsToRevise.value.lastIndex,
+                    currentWord.value
+                )
+
+                Answer.WRONG -> _wordsToRevise.value.add(
+                    _wordsToRevise.value.lastIndex / 2,
+                    currentWord.value
+                )
+
+                Answer.NONE -> {}
+            }
         }
 
         setWord(_wordsToRevise.value.first())

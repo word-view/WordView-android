@@ -85,6 +85,8 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
                 delay(500.milliseconds)
 
                 if (answerStatus != Answer.NONE) {
+                    val answerToNextWord = answerStatus
+
                     viewModel.setAnswer(Answer.NONE)
                     visible = true
 
@@ -94,7 +96,7 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
                     visible = false
                     delay(500.milliseconds)
 
-                    viewModel.nextWord()
+                    viewModel.nextWord(answerToNextWord)
                     viewModel.setScreen(ReviseScreen.getRandomScreen().route)
                 }
             }
