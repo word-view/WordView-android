@@ -87,22 +87,7 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
                     viewModel.setAnswer(Answer.NONE)
                     visible = true
 
-                    var tts: TextToSpeech? = null
-
-                    tts = TextToSpeech(context) {
-                        if (it == TextToSpeech.SUCCESS) {
-                            tts?.let { textToSpeech ->
-                                textToSpeech.language = Locale.JAPANESE
-                                textToSpeech.setSpeechRate(1.0f)
-                                textToSpeech.speak(
-                                    current.word.word,
-                                    TextToSpeech.QUEUE_ADD,
-                                    null,
-                                    null
-                                )
-                            }
-                        }
-                    }
+                    viewModel.ttsSpeak(context, current.word.word, Locale.JAPANESE)
 
                     delay(3000.milliseconds)
                     visible = false

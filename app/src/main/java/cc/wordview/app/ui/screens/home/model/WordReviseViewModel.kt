@@ -17,12 +17,15 @@
 
 package cc.wordview.app.ui.screens.home.model
 
+import android.content.Context
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import cc.wordview.app.ui.screens.home.revise.Answer
 import cc.wordview.app.ui.screens.home.revise.algo.ReviseWord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.util.Locale
 
 object WordReviseViewModel : InitializeViewModel() {
     private val TAG = WordReviseViewModel::class.java.simpleName
@@ -86,5 +89,23 @@ object WordReviseViewModel : InitializeViewModel() {
 
         Log.d(TAG, "Appending the word '${word.word.word}' to be revised")
         _wordsToRevise.update { old -> (old + word) as ArrayList<ReviseWord> }
+    }
+
+    fun ttsSpeak(context: Context, message: String, locale: Locale) {
+        var tts: TextToSpeech? = null
+        tts = TextToSpeech(context) {
+            if (it == TextToSpeech.SUCCESS) {
+                tts?.let { textToSpeech ->
+                    textToSpeech.language = locale
+                    textToSpeech.setSpeechRate(1.0f)
+                    textToSpeech.speak(
+                        message,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
+            }
+        }
     }
 }
