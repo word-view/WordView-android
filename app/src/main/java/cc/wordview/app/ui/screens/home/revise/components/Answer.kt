@@ -15,11 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home.revise.algo
+package cc.wordview.app.ui.screens.home.revise.components
 
-import cc.wordview.gengolex.languages.Word
-
-class ReviseWord(var word: Word = Word("", "")) {
-    var misses = 0
-    var corrects = 0
+enum class Answer {
+    CORRECT, WRONG, NONE
 }

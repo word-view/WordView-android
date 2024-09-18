@@ -79,7 +79,7 @@ import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
-import cc.wordview.app.ui.screens.home.revise.algo.ReviseWord
+import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language

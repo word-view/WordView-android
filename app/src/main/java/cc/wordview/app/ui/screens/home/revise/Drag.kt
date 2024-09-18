@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,30 +45,30 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.dragGestures
 import cc.wordview.app.subtitle.getIconForWord
-import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.components.Answer
+import cc.wordview.app.ui.screens.home.revise.components.DragMode
+import cc.wordview.app.ui.screens.home.revise.components.ReviseScreen
 import cc.wordview.app.ui.screens.home.revise.model.DragViewModel
-import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
-import java.lang.Thread.sleep
-import kotlin.concurrent.thread
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
-fun IconDrag(
+fun Drag(
     navHostController: NavHostController,
     viewModel: WordReviseViewModel = WordReviseViewModel,
-    dragViewModel: DragViewModel = DragViewModel
+    dragViewModel: DragViewModel = DragViewModel,
+    mode: DragMode? = null
 ) {
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
 
     var isDragging by remember { mutableStateOf(false) }
+    var dragMode by remember { mutableStateOf(DragMode.random()) }
 
-    val currentWord by viewModel.currentWord.collectAsStateWithLifecycle()
-    val words by viewModel.wordsToRevise.collectAsStateWithLifecycle()
-    val topWord by dragViewModel.topWord.collectAsStateWithLifecycle()
-    val downWord by dragViewModel.downWord.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
 
     val animatedOffsetX by animateFloatAsState(
         targetValue = if (isDragging) offsetX else 0f,
@@ -79,63 +80,79 @@ fun IconDrag(
         animationSpec = spring(dampingRatio = 0.5f, stiffness = 300f),
     )
 
+    val currentWord by viewModel.currentWord.collectAsStateWithLifecycle()
+    val words by viewModel.wordsToRevise.collectAsStateWithLifecycle()
+    val topWord by dragViewModel.topWord.collectAsStateWithLifecycle()
+    val downWord by dragViewModel.downWord.collectAsStateWithLifecycle()
+
     LaunchedEffect(Unit) {
-        val wordsWithoutCurrent = words.filter { w -> w.word.word != currentWord.word.word }
+        val filteredWords = words.filter { w -> w.word.word != currentWord.word.word }
 
-        if (wordsWithoutCurrent.size <= 1) {
-            viewModel.deInitialize()
-            ReviseTimer.pause()
-            navHostController.navigate(Screen.ReviseResults.route)
-        } else {
-            val alternatives = listOf(currentWord, wordsWithoutCurrent.random()).shuffled()
+        val alternatives = listOf(currentWord.word, filteredWords.random().word).shuffled()
 
-            dragViewModel.setTopWord(alternatives.first().word)
-            dragViewModel.setDownWord(alternatives.last().word)
-        }
+        dragViewModel.setTopWord(alternatives.first())
+        dragViewModel.setDownWord(alternatives.last())
+
+        dragMode = mode ?: DragMode.random()
     }
 
     fun correct() {
         viewModel.setAnswer(Answer.CORRECT)
-        ReviseResultsViewModel.incrementCorrect()
+        currentWord.corrects++
     }
 
     fun wrong() {
         viewModel.setAnswer(Answer.WRONG)
-        ReviseResultsViewModel.incrementWrong()
+        currentWord.misses++
     }
 
-    fun handleDrop(y: Float) {
-        if (y < -450) {
-            if (currentWord.word == topWord) correct()
-            else wrong()
-        }
+    fun onDrop(y: Float) {
+        coroutineScope.launch {
+            if (y < -450) {
+                if (currentWord.word == topWord) correct()
+                else wrong()
+            }
 
-        if (y > 450) {
-            if (currentWord.word == downWord) correct()
-            else wrong()
-        }
+            if (y > 450) {
+                if (currentWord.word == downWord) correct()
+                else wrong()
+            }
 
-        thread {
-            sleep(500)
+            delay(500)
             viewModel.setScreen(ReviseScreen.Presenter.route)
         }
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .testTag("root"),
+        modifier = Modifier.fillMaxSize().testTag("root"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         topWord?.let {
-            Text(
-                modifier = Modifier.testTag("top-word"),
-                text = it.word,
-                textAlign = TextAlign.Center,
-                style = Typography.displayMedium,
-            )
+            when (dragMode) {
+                DragMode.ICON -> {
+                    Text(
+                        modifier = Modifier.testTag("top-word"),
+                        text = it.word,
+                        textAlign = TextAlign.Center,
+                        style = Typography.displayMedium,
+                    )
+                }
+
+                DragMode.WORD -> {
+                    getIconForWord(it.parent)?.let { icon ->
+                        Image(
+                            modifier = Modifier
+                                .size(130.dp)
+                                .testTag("top-word"),
+                            painter = icon,
+                            contentDescription = currentWord.word.word
+                        )
+                    }
+                }
+            }
         }
+
         Box(
             Modifier
                 .offset {
@@ -146,7 +163,7 @@ fun IconDrag(
                     onDragEnd = {
                         isDragging = false
 
-                        handleDrop(offsetY)
+                        onDrop(offsetY)
 
                         offsetX = 0f
                         offsetY = 0f
@@ -159,23 +176,50 @@ fun IconDrag(
                     })
                 .testTag("drag")
         ) {
-            getIconForWord(currentWord.word.parent)?.let {
-                Image(
-                    modifier = Modifier
-                        .size(130.dp)
-                        .testTag("icon"),
-                    painter = it,
-                    contentDescription = currentWord.word.word
-                )
+            currentWord.word.let {
+                when (dragMode) {
+                    DragMode.ICON -> {
+                        getIconForWord(it.parent)?.let { icon ->
+                            Image(
+                                modifier = Modifier.size(130.dp),
+                                painter = icon,
+                                contentDescription = currentWord.word.word
+                            )
+                        }
+                    }
+
+                    DragMode.WORD -> {
+                        Text(
+                            modifier = Modifier,
+                            text = it.word,
+                            textAlign = TextAlign.Center,
+                            style = Typography.displayMedium,
+                        )
+                    }
+                }
             }
         }
+
         downWord?.let {
-            Text(
-                modifier = Modifier.testTag("down-word"),
-                text = it.word,
-                textAlign = TextAlign.Center,
-                style = Typography.displayMedium,
-            )
+            when (dragMode) {
+                DragMode.ICON -> {
+                    Text(
+                        modifier = Modifier,
+                        text = it.word,
+                        textAlign = TextAlign.Center,
+                        style = Typography.displayMedium,
+                    )
+                }
+                DragMode.WORD -> {
+                    getIconForWord(it.parent)?.let { icon ->
+                        Image(
+                            modifier = Modifier.size(130.dp),
+                            painter = icon,
+                            contentDescription = currentWord.word.word
+                        )
+                    }
+                }
+            }
         }
     }
 }

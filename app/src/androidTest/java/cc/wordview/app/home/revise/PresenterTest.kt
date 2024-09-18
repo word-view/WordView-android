@@ -21,9 +21,9 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
-import cc.wordview.app.ui.screens.home.revise.Answer
+import cc.wordview.app.ui.screens.home.revise.components.Answer
 import cc.wordview.app.ui.screens.home.revise.Presenter
-import cc.wordview.app.ui.screens.home.revise.algo.ReviseWord
+import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals

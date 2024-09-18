@@ -45,8 +45,8 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
-import cc.wordview.app.ui.screens.home.revise.ReviseScreen
-import cc.wordview.app.ui.screens.home.revise.ReviseTimer
+import cc.wordview.app.ui.screens.home.revise.components.ReviseScreen
+import cc.wordview.app.ui.screens.home.revise.components.ReviseTimer
 import cc.wordview.app.ui.screens.util.Screen
 
 @SuppressLint("SourceLockedOrientationActivity", "UnusedMaterial3ScaffoldPaddingParameter")

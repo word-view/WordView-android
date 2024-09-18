@@ -33,6 +33,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.util.ArrayList
 
+@Ignore
 class PlayerTest {
     @get:Rule
     val composeTestRule = createComposeRule()

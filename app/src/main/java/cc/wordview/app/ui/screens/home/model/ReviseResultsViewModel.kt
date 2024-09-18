@@ -18,8 +18,7 @@
 package cc.wordview.app.ui.screens.home.model
 
 import androidx.lifecycle.ViewModel
-import cc.wordview.app.ui.screens.home.revise.algo.ReviseWord
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

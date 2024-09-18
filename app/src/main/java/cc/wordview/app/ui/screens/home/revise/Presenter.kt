@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.home.revise
 
-import android.speech.tts.TextToSpeech
 import androidx.compose.animation.core.EaseInOutExpo
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -49,6 +48,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.components.Answer
+import cc.wordview.app.ui.screens.home.revise.components.ReviseScreen
 import cc.wordview.app.ui.theme.Typography
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay

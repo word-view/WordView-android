@@ -27,9 +27,10 @@ import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.home.ReviseResults
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
-import cc.wordview.app.ui.screens.home.revise.IconDrag
-import cc.wordview.app.ui.screens.home.revise.ReviseScreen
-import cc.wordview.app.ui.screens.home.revise.algo.ReviseWord
+import cc.wordview.app.ui.screens.home.revise.Drag
+import cc.wordview.app.ui.screens.home.revise.components.ReviseScreen
+import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
+import cc.wordview.app.ui.screens.home.revise.components.DragMode
 import cc.wordview.app.ui.screens.home.revise.model.DragViewModel
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.WordViewTheme
@@ -65,7 +66,7 @@ class IconDragTest {
                 ProvidePreferenceLocals {
                     NavHost(navController = navController, startDestination = "icon-drag") {
                         composable("icon-drag") {
-                            IconDrag(navController)
+                            Drag(navController, mode = DragMode.ICON)
                         }
 
                         composable(Screen.ReviseResults.route) {

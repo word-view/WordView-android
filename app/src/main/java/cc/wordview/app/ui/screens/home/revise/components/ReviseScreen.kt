@@ -15,10 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home.revise
+package cc.wordview.app.ui.screens.home.revise.components
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import cc.wordview.app.ui.screens.home.revise.Drag
+import cc.wordview.app.ui.screens.home.revise.Presenter
 
 sealed class ReviseScreen(val route: String) {
     @Composable
@@ -34,14 +36,14 @@ sealed class ReviseScreen(val route: String) {
     data object IconDrag : ReviseScreen("icon-drag") {
         @Composable
         override fun Composable(navHostController: NavHostController) {
-            IconDrag(navHostController)
+            Drag(navHostController, mode = DragMode.ICON)
         }
     }
 
     data object WordDrag : ReviseScreen("word-drag") {
         @Composable
         override fun Composable(navHostController: NavHostController) {
-            WordDrag(navHostController)
+            Drag(navHostController, mode = DragMode.WORD)
         }
     }
 
