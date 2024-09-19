@@ -28,7 +28,7 @@ object ReviseTimer {
     private val TAG = ReviseTimer::class.java.simpleName
     private val viewModel = WordReviseViewModel
 
-    private var timeRemaining = 3000L // 300000L
+    private var timeRemaining = 300000L
 
     private var timer: CountDownTimer? = null
 
