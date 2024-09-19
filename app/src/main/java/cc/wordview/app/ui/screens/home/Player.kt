@@ -174,9 +174,7 @@ fun Player(
                     for (cue in cues) {
                         for (word in cue.words) {
                             if (getIconForWord(word.parent) != null) {
-                                val reviseWord = ReviseWord()
-                                reviseWord.word = word
-                                WordReviseViewModel.appendWord(reviseWord)
+                                WordReviseViewModel.appendWord(ReviseWord(word))
                             }
                         }
                     }

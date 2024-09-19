@@ -55,26 +55,28 @@ fun WordRevise(
     navHostController: NavHostController,
     viewModel: WordReviseViewModel = WordReviseViewModel
 ) {
-    val activity = (LocalContext.current as Activity)
-
-    val currentScreen by viewModel.screen.collectAsStateWithLifecycle()
-    val lessonTime by viewModel.formattedTime.collectAsStateWithLifecycle()
     val initialized by viewModel.initialized.collectAsStateWithLifecycle()
+    val timerFinished by viewModel.timerFinished.collectAsStateWithLifecycle()
+    val lessonTime by viewModel.formattedTime.collectAsStateWithLifecycle()
+    val currentScreen by viewModel.screen.collectAsStateWithLifecycle()
 
-    fun leave() {
-        ReviseTimer.pause()
-        viewModel.cleanWords()
-        navHostController.navigate(Screen.Home.route)
-    }
+    val activity = LocalContext.current as Activity
 
     LaunchedEffect(Unit) {
         if (!initialized) {
             viewModel.initialize()
+
             ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
             viewModel.nextWord()
             viewModel.setScreen(ReviseScreen.getRandomScreen().route)
 
-            ReviseTimer.start { navHostController.navigate(Screen.ReviseResults.route) }
+            ReviseTimer.start()
+        }
+    }
+
+    LaunchedEffect(timerFinished) {
+        if (timerFinished) {
+            navHostController.navigate(Screen.ReviseResults.route)
         }
     }
 
@@ -86,6 +88,12 @@ fun WordRevise(
         }
     }
 
+    fun leave() {
+        ReviseTimer.pause()
+        viewModel.cleanWords()
+        navHostController.navigate(Screen.Home.route)
+    }
+
     Scaffold(topBar = {
         BackHandler { leave() }
         BackTopAppBar(title = {
@@ -95,7 +103,7 @@ fun WordRevise(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = lessonTime)
-                Spacer(Modifier.size(6.dp))
+                Spacer(Modifier.size(4.dp))
                 Icon(imageVector = Icons.Filled.Timelapse, contentDescription = "timer")
             }
         }) { leave() }

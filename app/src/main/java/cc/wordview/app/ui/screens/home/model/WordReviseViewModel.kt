@@ -35,12 +35,14 @@ object WordReviseViewModel : InitializeViewModel() {
     private val _wordsToRevise = MutableStateFlow<ArrayList<ReviseWord>>(arrayListOf())
     private val _answerStatus = MutableStateFlow(Answer.NONE)
     private val _formattedTime = MutableStateFlow("")
+    private val _timerFinished = MutableStateFlow(false)
 
     val currentWord = _currentWord.asStateFlow()
     val screen = _screen.asStateFlow()
     val wordsToRevise = _wordsToRevise.asStateFlow()
     val answerStatus = _answerStatus.asStateFlow()
     val formattedTime = _formattedTime.asStateFlow()
+    val timerFinished = _timerFinished.asStateFlow()
 
     fun nextWord(answer: Answer = Answer.NONE) {
         _wordsToRevise.update { value ->
@@ -119,5 +121,9 @@ object WordReviseViewModel : InitializeViewModel() {
                 }
             }
         }
+    }
+
+    fun finishTimer() {
+        _timerFinished.update { true }
     }
 }
