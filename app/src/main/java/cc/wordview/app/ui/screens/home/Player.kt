@@ -79,6 +79,7 @@ import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
@@ -172,9 +173,9 @@ fun Player(
                 setOnCompletionListener {
                     for (cue in cues) {
                         for (word in cue.words) {
-                            if (getIconForWord(word.parent) != null)
-                                WordReviseViewModel.appendWord(word)
-
+                            if (getIconForWord(word.parent) != null) {
+                                WordReviseViewModel.appendWord(ReviseWord(word))
+                            }
                         }
                     }
 

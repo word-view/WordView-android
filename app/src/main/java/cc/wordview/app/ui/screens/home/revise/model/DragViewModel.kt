@@ -15,38 +15,26 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home.model
+package cc.wordview.app.ui.screens.home.revise.model
 
 import androidx.lifecycle.ViewModel
-import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
+import cc.wordview.gengolex.languages.Word
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-object ReviseResultsViewModel : ViewModel() {
-    private val _words = MutableStateFlow<List<ReviseWord>>(listOf())
-    private val _answeredCorrectly = MutableStateFlow(0)
-    private val _answeredWrong = MutableStateFlow(0)
+object DragViewModel : ViewModel() {
+    private val _topWord = MutableStateFlow<Word?>(null)
+    private val _downWord = MutableStateFlow<Word?>(null)
 
-    val words = _words.asStateFlow()
-    val answeredCorrectly = _answeredCorrectly.asStateFlow()
-    val answeredWrong = _answeredWrong.asStateFlow()
+    var topWord = _topWord.asStateFlow()
+    val downWord = _downWord.asStateFlow()
 
-    fun setWords(words: List<ReviseWord>) {
-        _words.update { words }
+    fun setTopWord(word: Word) {
+        _topWord.update { word }
     }
 
-    fun incrementCorrect() {
-        _answeredCorrectly.update { old -> old + 1 }
-    }
-
-    fun incrementWrong() {
-        _answeredWrong.update { old -> old + 1 }
-    }
-
-    fun reset() {
-        _words.update { listOf() }
-        _answeredWrong.update { 0 }
-        _answeredCorrectly.update { 0 }
+    fun setDownWord(word: Word) {
+        _downWord.update { word }
     }
 }

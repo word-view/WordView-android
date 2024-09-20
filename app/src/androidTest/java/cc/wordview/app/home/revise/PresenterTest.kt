@@ -21,8 +21,9 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
-import cc.wordview.app.ui.screens.home.revise.Answer
+import cc.wordview.app.ui.screens.home.revise.components.Answer
 import cc.wordview.app.ui.screens.home.revise.Presenter
+import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -54,7 +55,7 @@ class PresenterTest {
 
     @Test
     fun answerCorrect() {
-        viewModel.setWord(Word("rain", "chuva"))
+        viewModel.setWord(ReviseWord(Word("rain", "chuva")))
         viewModel.setAnswer(Answer.CORRECT)
         setupScreen(false)
         composeTestRule.mainClock.advanceTimeBy(1000)
@@ -66,7 +67,7 @@ class PresenterTest {
 
     @Test
     fun answerWrong() {
-        viewModel.setWord(Word("rain", "chuva"))
+        viewModel.setWord(ReviseWord(Word("rain", "chuva")))
         viewModel.setAnswer(Answer.WRONG)
         setupScreen(false)
         composeTestRule.mainClock.advanceTimeBy(1000)

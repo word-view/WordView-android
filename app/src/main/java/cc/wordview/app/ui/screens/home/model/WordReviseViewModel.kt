@@ -17,39 +17,68 @@
 
 package cc.wordview.app.ui.screens.home.model
 
+import android.content.Context
+import android.speech.tts.TextToSpeech
 import android.util.Log
-import cc.wordview.app.ui.screens.home.revise.Answer
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.app.ui.screens.home.revise.components.Answer
+import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.util.Locale
 
 object WordReviseViewModel : InitializeViewModel() {
     private val TAG = WordReviseViewModel::class.java.simpleName
 
-    private val _currentWord = MutableStateFlow(Word("", ""))
+    private val _currentWord = MutableStateFlow(ReviseWord())
     private val _screen = MutableStateFlow("")
-    private val _wordsToRevise = MutableStateFlow<List<Word>>(listOf())
+    private val _wordsToRevise = MutableStateFlow<ArrayList<ReviseWord>>(arrayListOf())
     private val _answerStatus = MutableStateFlow(Answer.NONE)
     private val _formattedTime = MutableStateFlow("")
+    private val _timerFinished = MutableStateFlow(false)
 
     val currentWord = _currentWord.asStateFlow()
     val screen = _screen.asStateFlow()
     val wordsToRevise = _wordsToRevise.asStateFlow()
     val answerStatus = _answerStatus.asStateFlow()
     val formattedTime = _formattedTime.asStateFlow()
+    val timerFinished = _timerFinished.asStateFlow()
 
-    fun nextWord() {
-        val wordsWithoutCurrent = _wordsToRevise.value.filter { w -> w.word != currentWord.value.word }
-        _wordsToRevise.update { wordsWithoutCurrent }
-        setWord(_wordsToRevise.value.random())
+    fun nextWord(answer: Answer = Answer.NONE) {
+        _wordsToRevise.update { value ->
+            value.filter { w ->
+                w.word.word != currentWord.value.word.word
+            } as ArrayList<ReviseWord>
+        }
+
+        if (currentWord.value.word.word != "") {
+            when (answer) {
+                Answer.CORRECT -> _wordsToRevise.value.add(
+                    _wordsToRevise.value.lastIndex,
+                    currentWord.value
+                )
+
+                Answer.WRONG -> _wordsToRevise.value.add(
+                    _wordsToRevise.value.lastIndex / 2,
+                    currentWord.value
+                )
+
+                Answer.NONE -> {}
+            }
+        }
+
+        setWord(_wordsToRevise.value.first())
     }
 
-    fun setWord(word: Word) {
+    fun setWord(word: ReviseWord) {
         _currentWord.update {
-            Log.d(TAG, "Updating word from '${it.word}' to '${word.word}'")
+            Log.d(TAG, "Updating word from '${it.word.word}' to '${word.word.word}'")
             word
         }
+    }
+
+    fun cleanWords() {
+        _wordsToRevise.update { arrayListOf() }
     }
 
     fun setScreen(screen: String) {
@@ -64,8 +93,37 @@ object WordReviseViewModel : InitializeViewModel() {
         _answerStatus.update { answer }
     }
 
-    fun appendWord(word: Word) {
-        Log.d(TAG, "Appending the word '${word.word}' to be revised")
-        _wordsToRevise.update { old -> old + word }
+    fun appendWord(word: ReviseWord) {
+        for (wordd in _wordsToRevise.value) {
+            if (wordd.word.word == word.word.word) {
+                Log.d(TAG, "Not appending word '${word.word.word}' because it is already in")
+                return
+            }
+        }
+
+        Log.d(TAG, "Appending the word '${word.word.word}' to be revised")
+        _wordsToRevise.update { old -> (old + word) as ArrayList<ReviseWord> }
+    }
+
+    fun ttsSpeak(context: Context, message: String, locale: Locale) {
+        var tts: TextToSpeech? = null
+        tts = TextToSpeech(context) {
+            if (it == TextToSpeech.SUCCESS) {
+                tts?.let { textToSpeech ->
+                    textToSpeech.language = locale
+                    textToSpeech.setSpeechRate(1.0f)
+                    textToSpeech.speak(
+                        message,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
+            }
+        }
+    }
+
+    fun finishTimer() {
+        _timerFinished.update { true }
     }
 }

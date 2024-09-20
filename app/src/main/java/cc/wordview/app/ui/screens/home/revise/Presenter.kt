@@ -40,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,9 +48,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.components.Answer
+import cc.wordview.app.ui.screens.home.revise.components.ReviseScreen
 import cc.wordview.app.ui.theme.Typography
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
+import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -59,9 +63,11 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
     val answerStatus by viewModel.answerStatus.collectAsStateWithLifecycle()
     val current by viewModel.currentWord.collectAsStateWithLifecycle()
 
-    val iconPainter = getIconForWord(current.parent)
+    val iconPainter = getIconForWord(current.word.parent)
 
     var visible by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
 
     val scaleIn = animateFloatAsState(
         if (visible) 1f else 0.01f,
@@ -79,14 +85,19 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
                 delay(500.milliseconds)
 
                 if (answerStatus != Answer.NONE) {
+                    val answerToNextWord = answerStatus
+
                     viewModel.setAnswer(Answer.NONE)
                     visible = true
+
+                    viewModel.ttsSpeak(context, current.word.word, Locale.JAPANESE)
+
                     delay(3000.milliseconds)
                     visible = false
                     delay(500.milliseconds)
 
-                    viewModel.nextWord()
-                    viewModel.setScreen(ReviseScreen.DragAndDrop.route)
+                    viewModel.nextWord(answerToNextWord)
+                    viewModel.setScreen(ReviseScreen.getRandomScreen().route)
                 }
             }
         }
@@ -107,7 +118,9 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
         when (answerStatus) {
             Answer.CORRECT -> {
                 Icon(
-                    modifier = Modifier.size(130.dp).testTag("correct"),
+                    modifier = Modifier
+                        .size(130.dp)
+                        .testTag("correct"),
                     imageVector = Icons.Filled.CheckCircle,
                     contentDescription = "Correct"
                 )
@@ -115,7 +128,9 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
 
             Answer.WRONG -> {
                 Icon(
-                    modifier = Modifier.size(130.dp).testTag("wrong"),
+                    modifier = Modifier
+                        .size(130.dp)
+                        .testTag("wrong"),
                     imageVector = Icons.Filled.Cancel,
                     contentDescription = "Wrong"
                 )
@@ -124,13 +139,15 @@ fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
             Answer.NONE -> {
                 iconPainter?.let {
                     Image(
-                        modifier = Modifier.size(130.dp).testTag("word"),
+                        modifier = Modifier
+                            .size(130.dp)
+                            .testTag("word"),
                         painter = iconPainter,
-                        contentDescription = current.word
+                        contentDescription = current.word.word
                     )
                 }
                 Text(
-                    text = current.word,
+                    text = current.word.word,
                     textAlign = TextAlign.Center,
                     style = Typography.displayMedium,
                 )

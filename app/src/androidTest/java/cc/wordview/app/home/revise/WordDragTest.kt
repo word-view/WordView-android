@@ -20,6 +20,7 @@ package cc.wordview.app.home.revise
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,7 +41,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
-class IconDragTest {
+class WordDragTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -64,9 +65,9 @@ class IconDragTest {
 
             WordViewTheme {
                 ProvidePreferenceLocals {
-                    NavHost(navController = navController, startDestination = "icon-drag") {
-                        composable("icon-drag") {
-                            Drag(navController, mode = DragMode.ICON)
+                    NavHost(navController = navController, startDestination = "word-drag") {
+                        composable("word-drag") {
+                            Drag(navController, mode = DragMode.WORD)
                         }
 
                         composable(Screen.ReviseResults.route) {
@@ -84,9 +85,9 @@ class IconDragTest {
 
         composeTestRule.onNodeWithTag("root").assertExists()
         composeTestRule.onNodeWithTag("drag").assertExists()
+        composeTestRule.onNodeWithText("lágrima").assertExists()
         composeTestRule.onNodeWithTag("top-word").assertExists()
         composeTestRule.onNodeWithTag("down-word").assertExists()
-
     }
 
     @Test

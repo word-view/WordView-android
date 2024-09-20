@@ -15,8 +15,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home.revise
+package cc.wordview.app.ui.screens.home.revise.components
 
-enum class Answer {
-    CORRECT, WRONG, NONE
+import kotlin.random.Random
+
+/**
+ * All the modes that the `Drag` screen can be in.
+ */
+enum class DragMode {
+    /**
+     * Means that the middle object should be a Icon
+     */
+    ICON,
+
+    /**
+     * Means that the middle object should e a Word
+     */
+    WORD;
+
+    companion object {
+        fun random(): DragMode {
+            val values = enumValues<DragMode>()
+            return values[Random.nextInt(values.size)]
+        }
+    }
 }

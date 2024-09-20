@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home.revise
+package cc.wordview.app.ui.screens.home.revise.components
 
 import android.annotation.SuppressLint
 import android.os.CountDownTimer
@@ -28,11 +28,11 @@ object ReviseTimer {
     private val TAG = ReviseTimer::class.java.simpleName
     private val viewModel = WordReviseViewModel
 
-    private var timeRemaining = 300000L
+    var timeRemaining = 300000L
 
     private var timer: CountDownTimer? = null
 
-    fun start(onFinish: () -> Unit = {}) {
+    fun start() {
         Log.i(TAG, "Initializing timer with ${formatMillisecondsToMS(timeRemaining)} left")
 
         timer = object : CountDownTimer(timeRemaining, 1000) {
@@ -44,7 +44,7 @@ object ReviseTimer {
 
             override fun onFinish() {
                 Log.i(TAG, "Timer finished!")
-                onFinish()
+                viewModel.finishTimer()
             }
         }
 
