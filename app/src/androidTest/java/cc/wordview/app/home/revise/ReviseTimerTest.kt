@@ -48,10 +48,7 @@ class ReviseTimerTest {
 
     @Test
     fun ticksUpdateFormattedTime() {
-        setup(false, 30_000)
-
-        // The clock waits 1 second before starting so advancing 2 seconds is necessary
-        composeTestRule.mainClock.advanceTimeBy(2_000)
-        composeTestRule.waitUntil { viewModel.formattedTime.value == "0:29" }
+        setup(true, 30_000)
+        composeTestRule.waitUntil(5_000) { viewModel.formattedTime.value == "0:29" }
     }
 }

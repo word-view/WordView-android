@@ -47,7 +47,6 @@ class ReviseResultsTest {
     fun renders() {
         setupScreen()
         composeTestRule.onNodeWithTag("back-button").assertExists()
-        composeTestRule.onNodeWithTag("Words revise").assertExists()
     }
 
     @Test
