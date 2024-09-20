@@ -66,7 +66,6 @@ fun WordRevise(
         if (!initialized) {
             viewModel.initialize()
 
-            ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
             viewModel.nextWord()
             viewModel.setScreen(ReviseScreen.getRandomScreen().route)
 
@@ -76,6 +75,7 @@ fun WordRevise(
 
     LaunchedEffect(timerFinished) {
         if (timerFinished) {
+            ReviseResultsViewModel.setWords(viewModel.wordsToRevise.value)
             navHostController.navigate(Screen.ReviseResults.route)
         }
     }
