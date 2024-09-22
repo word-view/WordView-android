@@ -22,7 +22,6 @@ import android.util.Log
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.JsonAcceptingRequest
 import cc.wordview.app.api.Response
-import cc.wordview.app.api.apiURL
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
@@ -38,6 +37,7 @@ object PlayerRequestHandler {
     private lateinit var queue: RequestQueue
 
     var onLyricsSucceed: () -> Unit = {}
+    var onDictionarySucceed: () -> Unit = {}
 
     var endpoint: String = "10.0.2.2"
 
@@ -57,6 +57,8 @@ object PlayerRequestHandler {
                 cue.words.add(word)
             }
         }
+
+        onDictionarySucceed()
     }
 
     private val wordFindHandler = Response({ lyricsSucceed(it) }) {

@@ -20,7 +20,6 @@ package cc.wordview.app.ui.screens.home.model
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.subtitle.Lyrics
@@ -28,7 +27,6 @@ import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -37,19 +35,19 @@ object PlayerViewModel : ViewModel() {
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
     private val _lyrics = MutableStateFlow(Lyrics())
     private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
-    private val _initialized = MutableStateFlow(false)
     private val _player = MutableStateFlow(AudioPlayer())
     private val _currentCue = MutableStateFlow(WordViewCue())
+    private val _audioInitFailed = MutableStateFlow(false)
     private val _filterRomanizations = MutableStateFlow(true)
 
-    val cues: StateFlow<ArrayList<WordViewCue>> = _cues.asStateFlow()
-    val playIcon: StateFlow<ImageVector> = _playIcon.asStateFlow()
-    val lyrics: StateFlow<Lyrics> = _lyrics.asStateFlow()
-    val parser: StateFlow<Parser> = _parser.asStateFlow()
-    val initialized: StateFlow<Boolean> = _initialized.asStateFlow()
-    val player: StateFlow<AudioPlayer> = _player.asStateFlow()
-    val currentCue: StateFlow<WordViewCue> = _currentCue.asStateFlow()
-    val filterRomanizations: StateFlow<Boolean> = _filterRomanizations.asStateFlow()
+    val cues = _cues.asStateFlow()
+    val playIcon = _playIcon.asStateFlow()
+    val lyrics = _lyrics.asStateFlow()
+    val parser = _parser.asStateFlow()
+    val player  = _player.asStateFlow()
+    val currentCue = _currentCue.asStateFlow()
+    val audioInitFailed = _audioInitFailed.asStateFlow()
+    val filterRomanizations = _filterRomanizations.asStateFlow()
 
     fun setCues(cues: ArrayList<WordViewCue>) {
         _cues.update { cues }
@@ -81,19 +79,22 @@ object PlayerViewModel : ViewModel() {
         _parser.value.addDictionary(name, dictionary)
     }
 
-    fun initialize() {
-        _initialized.update { true }
-    }
-
-    fun deinitialize() {
-        _initialized.update { false }
-    }
-
     fun setCurrentCue(cue: WordViewCue) {
         _currentCue.update { cue }
     }
 
     fun setFilterRomanizations(filter: Boolean) {
         _filterRomanizations.update { filter }
+    }
+
+    fun setAudioInitFailed(failed: Boolean) {
+        _audioInitFailed.update { failed }
+    }
+
+    fun reset() {
+        this.player.value.stop()
+        this.clearCues()
+        this.setCurrentCue(WordViewCue())
+        this.setAudioInitFailed(false)
     }
 }

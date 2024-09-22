@@ -23,7 +23,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
-import kotlin.concurrent.thread
 
 class AudioPlayer : MediaPlayer() {
     private val TAG = AudioPlayer::class.java.simpleName
@@ -34,14 +33,15 @@ class AudioPlayer : MediaPlayer() {
     private var positionChangeRunnable: Runnable? = null
 
     var onPositionChange: (Int) -> Unit = {}
+    var onPrepared: () -> Unit = {}
     var onInitializeFail: (Exception) -> Unit = {}
 
     init {
         setOnPreparedListener {
             Log.d(TAG, "Audio is prepared")
             state = AudioPlayerState.INITIALIZED
+            onPrepared()
         }
-
     }
 
     fun initialize(dataSource: String, onComplete: () -> Unit = {}) {
@@ -121,5 +121,9 @@ class AudioPlayer : MediaPlayer() {
             }
         }
         handler.post(positionChangeRunnable as Runnable)
+    }
+
+    fun getState(): AudioPlayerState {
+        return this.state
     }
 }
