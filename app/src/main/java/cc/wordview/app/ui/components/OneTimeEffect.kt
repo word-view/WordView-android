@@ -22,13 +22,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 
 /**
  * Runs only once per composition launching `block` and never run again in recompositions.
  */
 @Composable
 fun OneTimeEffect(block: () -> Unit) {
-    val ran by rememberSaveable { mutableStateOf(true) }
+    var ran by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(ran) { block() }
+    LaunchedEffect(ran) {
+        if (!ran) block()
+        ran = true
+    }
 }
