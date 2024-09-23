@@ -42,6 +42,12 @@ class AudioPlayer : MediaPlayer() {
             state = AudioPlayerState.INITIALIZED
             onPrepared()
         }
+
+        setScreenOnWhilePlaying(true)
+
+        setOnBufferingUpdateListener { _, percent ->
+            Log.d(TAG, "Buffering $percent%")
+        }
     }
 
     fun initialize(dataSource: String, onComplete: () -> Unit = {}) {

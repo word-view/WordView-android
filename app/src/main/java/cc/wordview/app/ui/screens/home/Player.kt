@@ -93,14 +93,13 @@ fun Player(
     navHostController: NavHostController,
     viewModel: PlayerViewModel = PlayerViewModel,
     requestHandler: PlayerRequestHandler = PlayerRequestHandler,
-    autoplay: Boolean = true
+    autoplay: Boolean = false
 ) {
     val TAG = "Player"
 
     val song by SongViewModel.video.collectAsStateWithLifecycle()
     val audioInitFailed by viewModel.audioInitFailed.collectAsStateWithLifecycle()
     val player by viewModel.player.collectAsStateWithLifecycle()
-    val lyrics by viewModel.lyrics.collectAsStateWithLifecycle()
     val cues by viewModel.cues.collectAsStateWithLifecycle()
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
@@ -127,7 +126,11 @@ fun Player(
     fun setup() {
         coroutineScope.launch {
             player.apply {
-                onPositionChange = { viewModel.setCurrentCue(lyrics.getCueAt(it)) }
+                onPositionChange = {
+                    // the use of `viewModel.lyrics` is because `lyrics.collectAsStateWithLifecycle()`
+                    // does not update here and end up using the old lyrics value which is empty.
+                    viewModel.setCurrentCue(viewModel.lyrics.value.getCueAt(it))
+                }
                 onInitializeFail = { viewModel.setAudioInitFailed(true) }
                 onPrepared = { audioReady = true }
 
@@ -162,6 +165,9 @@ fun Player(
                 endpoint = preferences["api_endpoint"] ?: "10.0.2.2"
 
                 onLyricsSucceed = {
+                    viewModel.lyricsParse(it)
+                    viewModel.setCues(viewModel.lyrics.value)
+
                     lyricsReady = true
 
                     viewModel.initParser(Language.JAPANESE)

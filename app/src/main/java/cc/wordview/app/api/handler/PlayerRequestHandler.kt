@@ -36,16 +36,10 @@ object PlayerRequestHandler {
     private val viewModel = PlayerViewModel
     private lateinit var queue: RequestQueue
 
-    var onLyricsSucceed: () -> Unit = {}
+    var onLyricsSucceed: (lyrics: String) -> Unit = {}
     var onDictionarySucceed: () -> Unit = {}
 
     var endpoint: String = "10.0.2.2"
-
-    val lyricsSucceed: (res: String) -> Unit = {
-        viewModel.lyricsParse(it)
-        viewModel.setCues(viewModel.lyrics.value)
-        onLyricsSucceed()
-    }
 
     val onGetDictionariesSucceed: (res: String) -> Unit = {
         PlayerViewModel.addDictionary("kanji", it)
@@ -61,11 +55,11 @@ object PlayerRequestHandler {
         onDictionarySucceed()
     }
 
-    private val wordFindHandler = Response({ lyricsSucceed(it) }) {
+    private val wordFindHandler = Response({ onLyricsSucceed(it) }) {
         Log.e(TAG, "Failed to find lyrics using WordFind", it)
     }
 
-    private var getLyricsHandler = Response({ lyricsSucceed(it) }) {
+    private var getLyricsHandler = Response({ onLyricsSucceed(it) }) {
         Log.e(TAG, "Failed to find lyrics", it)
         getLyricsWordFind(SongViewModel.video.value.searchQuery)
     }
