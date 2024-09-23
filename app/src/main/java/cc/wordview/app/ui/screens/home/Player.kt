@@ -53,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,6 +61,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
@@ -77,6 +81,7 @@ import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
+import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
@@ -100,9 +105,9 @@ fun Player(
     val song by SongViewModel.video.collectAsStateWithLifecycle()
     val audioInitFailed by viewModel.audioInitFailed.collectAsStateWithLifecycle()
     val player by viewModel.player.collectAsStateWithLifecycle()
-    val cues by viewModel.cues.collectAsStateWithLifecycle()
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
+    val finalized by viewModel.finalized.collectAsStateWithLifecycle()
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
 
@@ -135,7 +140,7 @@ fun Player(
                 onPrepared = { audioReady = true }
 
                 setOnCompletionListener {
-                    for (cue in cues) {
+                    for (cue in viewModel.cues.value) {
                         for (word in cue.words) {
                             if (getIconForWord(word.parent) != null) {
                                 WordReviseViewModel.appendWord(ReviseWord(word))
@@ -144,7 +149,7 @@ fun Player(
                     }
 
                     cleanup()
-                    navHostController.navigate(Screen.WordRevise.route)
+                    viewModel.finalize()
                 }
             }
 
@@ -193,12 +198,23 @@ fun Player(
         }
     }
 
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+    val insetsController = WindowCompat.getInsetsController(window, view)
+
     OneTimeEffect {
         context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        systemUiController.isSystemBarsVisible = false
-        systemUiController.systemBarsBehavior = 2
+
+        insetsController.apply {
+            hide(WindowInsetsCompat.Type.systemBars())
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
 
         setup()
+    }
+
+    LaunchedEffect(finalized) {
+        if (finalized) navHostController.navigate(Screen.WordRevise.route)
     }
 
     LaunchedEffect(audioReady, lyricsReady, dictionaryReady) {
@@ -211,12 +227,17 @@ fun Player(
         navHostController.goBack()
     }
 
+    KeepScreenOn()
+
     Scaffold {
         if (audioInitFailed) {
             ErrorScreen({ cleanup() }, navHostController)
         } else {
             AsyncComposable(condition = (audioReady && lyricsReady && dictionaryReady)) {
-                Box(Modifier.fillMaxSize().testTag("player-interface")) {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .testTag("player-interface")) {
                     AsyncImage(
                         model = song.cover,
                         contentDescription = "${song.title} cover",

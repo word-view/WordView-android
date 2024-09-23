@@ -38,6 +38,7 @@ object PlayerViewModel : ViewModel() {
     private val _player = MutableStateFlow(AudioPlayer())
     private val _currentCue = MutableStateFlow(WordViewCue())
     private val _audioInitFailed = MutableStateFlow(false)
+    private val _finalized = MutableStateFlow(false)
     private val _filterRomanizations = MutableStateFlow(true)
 
     val cues = _cues.asStateFlow()
@@ -48,6 +49,7 @@ object PlayerViewModel : ViewModel() {
     val currentCue = _currentCue.asStateFlow()
     val audioInitFailed = _audioInitFailed.asStateFlow()
     val filterRomanizations = _filterRomanizations.asStateFlow()
+    val finalized = _finalized.asStateFlow()
 
     fun setCues(cues: ArrayList<WordViewCue>) {
         _cues.update { cues }
@@ -91,10 +93,15 @@ object PlayerViewModel : ViewModel() {
         _audioInitFailed.update { failed }
     }
 
+    fun finalize() {
+        _finalized.update { true }
+    }
+
     fun reset() {
         this.player.value.stop()
         this.clearCues()
         this.setCurrentCue(WordViewCue())
         this.setAudioInitFailed(false)
+        _finalized.update { false }
     }
 }
