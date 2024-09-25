@@ -21,6 +21,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.util.Log
+import android.view.View
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -121,9 +123,12 @@ fun Player(
 
     val systemUiController = rememberSystemUiController()
 
+    val view = LocalView.current
+
     fun cleanup() {
         context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         systemUiController.isSystemBarsVisible = true
+        view.keepScreenOn = false
 
         viewModel.reset()
     }
@@ -198,17 +203,9 @@ fun Player(
         }
     }
 
-    val view = LocalView.current
-    val window = (view.context as Activity).window
-    val insetsController = WindowCompat.getInsetsController(window, view)
-
     OneTimeEffect {
         context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-
-        insetsController.apply {
-            hide(WindowInsetsCompat.Type.systemBars())
-            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
+        view.keepScreenOn = true
 
         setup()
     }
@@ -230,9 +227,7 @@ fun Player(
         navHostController.goBack()
     }
 
-    KeepScreenOn()
-
-    Scaffold {
+    Scaffold { innerPadding ->
         if (audioInitFailed) {
             ErrorScreen({ cleanup() }, navHostController)
         } else {
@@ -240,7 +235,8 @@ fun Player(
                 Box(
                     Modifier
                         .fillMaxSize()
-                        .testTag("player-interface")) {
+                        .testTag("player-interface")
+                ) {
                     AsyncImage(
                         model = song.cover,
                         contentDescription = "${song.title} cover",
@@ -261,7 +257,8 @@ fun Player(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(64.dp),
+                                .height(64.dp)
+                                .padding(innerPadding),
                             contentAlignment = Alignment.TopStart,
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -341,7 +338,9 @@ private fun ErrorScreen(cleanup: () -> Unit, navHostController: NavHostControlle
             fontWeight = FontWeight.SemiBold,
         )
         Spacer(Modifier.size(15.dp))
-        Button(modifier =  Modifier.testTag("error-back-button"), onClick = { cleanup(); navHostController.goBack() }) {
+        Button(
+            modifier = Modifier.testTag("error-back-button"),
+            onClick = { cleanup(); navHostController.goBack() }) {
             Text(text = "Go back to the home screen")
         }
     }
