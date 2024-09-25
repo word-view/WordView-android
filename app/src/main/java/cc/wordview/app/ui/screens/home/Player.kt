@@ -21,7 +21,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.util.Log
-import android.view.View
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -63,9 +62,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
@@ -83,7 +79,6 @@ import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
-import cc.wordview.app.ui.screens.util.KeepScreenOn
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
@@ -100,7 +95,7 @@ fun Player(
     navHostController: NavHostController,
     viewModel: PlayerViewModel = PlayerViewModel,
     requestHandler: PlayerRequestHandler = PlayerRequestHandler,
-    autoplay: Boolean = false
+    autoplay: Boolean = true
 ) {
     val TAG = "Player"
 
@@ -250,7 +245,13 @@ fun Player(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Bottom
                     ) {
-                        TextCue(modifier = Modifier.zIndex(1f).testTag("text-cue"), cue = currentCue)
+                        TextCue(
+                            modifier = Modifier
+                                .zIndex(1f)
+                                .padding(bottom = 6.dp)
+                                .testTag("text-cue"),
+                            cue = currentCue
+                        )
                     }
                     // Box Controls overlay
                     FadeOutBox(duration = 250, stagnationTime = 3000) {
