@@ -119,7 +119,6 @@ class AudioPlayer : MediaPlayer() {
     }
 
     private fun startPositionCheck() {
-        Log.d(TAG, "Starting position check")
         job = CoroutineScope(Dispatchers.IO).launch {
             while (isActive && isPlaying) {
                 onPositionChange(currentPosition)
@@ -129,7 +128,6 @@ class AudioPlayer : MediaPlayer() {
     }
 
     private fun stopPositionCheck() {
-        Log.d(TAG, " position check")
         job?.cancel()
         job = null
     }

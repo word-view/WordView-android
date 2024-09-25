@@ -214,7 +214,10 @@ fun Player(
     }
 
     LaunchedEffect(finalized) {
-        if (finalized) navHostController.navigate(Screen.WordRevise.route)
+        if (finalized) {
+            navHostController.navigate(Screen.WordRevise.route)
+            viewModel.unFinalize()
+        }
     }
 
     LaunchedEffect(audioReady, lyricsReady, dictionaryReady) {

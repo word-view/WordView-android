@@ -97,11 +97,14 @@ object PlayerViewModel : ViewModel() {
         _finalized.update { true }
     }
 
+    fun unFinalize() {
+        _finalized.update { false }
+    }
+
     fun reset() {
         this.player.value.stop()
         this.clearCues()
         this.setCurrentCue(WordViewCue())
         this.setAudioInitFailed(false)
-        _finalized.update { false }
     }
 }
