@@ -75,6 +75,12 @@ object PlayerRequestHandler {
     fun getLyricsWordFind(searchQuery: String) {
         Log.d(TAG, "Searching for \"$searchQuery\" using WordFind")
 
+        if (searchQuery == "") {
+            Log.i(TAG, "Ignoring lyrics search since the query is empty")
+            return
+        }
+
+
         val url = "http://$endpoint:8080/api/v1/music/lyrics/find?title=${URLEncoder.encode(searchQuery)}"
 
         val stringRequest = StringRequest(
