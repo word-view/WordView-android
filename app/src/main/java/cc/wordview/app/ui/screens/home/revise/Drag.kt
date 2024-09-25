@@ -109,18 +109,21 @@ fun Drag(
 
     fun onDrop(y: Float) {
         coroutineScope.launch {
+            delay(500)
+
             if (y < -450) {
                 if (currentWord.word == topWord) correct()
                 else wrong()
+
+                viewModel.setScreen(ReviseScreen.Presenter.route)
             }
 
             if (y > 450) {
                 if (currentWord.word == downWord) correct()
                 else wrong()
-            }
 
-            delay(500)
-            viewModel.setScreen(ReviseScreen.Presenter.route)
+                viewModel.setScreen(ReviseScreen.Presenter.route)
+            }
         }
     }
 
