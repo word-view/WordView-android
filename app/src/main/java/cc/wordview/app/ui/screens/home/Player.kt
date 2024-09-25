@@ -250,7 +250,7 @@ fun Player(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Bottom
                     ) {
-                        TextCue(modifier = Modifier.zIndex(1f), cue = currentCue)
+                        TextCue(modifier = Modifier.zIndex(1f).testTag("text-cue"), cue = currentCue)
                     }
                     // Box Controls overlay
                     FadeOutBox(duration = 250, stagnationTime = 3000) {

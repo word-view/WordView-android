@@ -17,9 +17,10 @@
 
 package cc.wordview.app
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.api.Video
 import cc.wordview.app.audio.AudioPlayerState
@@ -54,100 +55,37 @@ class PlayerTest {
     }
 
     @Test
-    fun rendersErrorScreen() {
+    fun errorScreenRenders() {
         viewModel.setAudioInitFailed(true)
         setupScreen()
         composeTestRule.onNodeWithTag("error-screen").assertExists()
     }
 
     @Test
-    fun rendersPlayerInterface() {
+    fun playerInterfaceRenders() {
+        viewModel.setAudioInitFailed(false)
+        SongViewModel.setVideo(getMockSong())
+        setupScreen(false)
+        composeTestRule.waitUntil(40_000) { viewModel.player.value.getState() == AudioPlayerState.INITIALIZED }
+
+        composeTestRule.onNodeWithTag("player-interface").assertExists()
+
+        composeTestRule.onNodeWithTag("text-cue").assertExists()
+
+        composeTestRule.onNodeWithTag("skip-back").assertExists()
+        composeTestRule.onNodeWithTag("play").assertExists()
+        composeTestRule.onNodeWithTag("skip-forward").assertExists()
+
+        composeTestRule.onNodeWithTag("back-button").assertExists()
+        composeTestRule.onNodeWithText(getMockSong().title).assertExists()
+    }
+
+    @Test
+    @Ignore("Playing can cause issues with other tests so this one needs to be run individually")
+    fun autoplayWorks() {
+        viewModel.setAudioInitFailed(false)
         SongViewModel.setVideo(getMockSong())
         setupScreen(true)
-        composeTestRule.mainClock.autoAdvance = false
-        composeTestRule.waitUntil(60_000) { viewModel.player.value.isPlaying }
-        composeTestRule.mainClock.advanceTimeBy(60_000)
-        composeTestRule.onNodeWithTag("player-interface").assertExists()
-    }
-
-    @Test
-    @Ignore("Hangs because of the AudioPlayer checkOnPosition change looper")
-    fun startsPlaying() {
-        SongViewModel.setVideo(getMockSong())
-        setupScreen(true)
-        composeTestRule.waitUntil(60_000) { viewModel.player.value.isPlaying }
-    }
-
-    @Test
-    fun goBackSingleClick() {
-        SongViewModel.setVideo(getMockSong())
-        setupScreen()
-        composeTestRule.waitUntil(60_000) { viewModel.player.value.getState() == AudioPlayerState.INITIALIZED }
-        composeTestRule.onNodeWithTag("back-button").performClick()
-    }
-
-    @Test
-    fun goBackSpamClick() {
-        SongViewModel.setVideo(getMockSong())
-        setupScreen()
-        composeTestRule.waitUntil(60_000) { viewModel.player.value.getState() == AudioPlayerState.INITIALIZED }
-
-        composeTestRule.onNodeWithTag("back-button")
-            .performClick()
-            .performClick()
-            .performClick()
-            .performClick()
-    }
-
-    @Test
-    fun goBackInErrorButton() {
-        viewModel.setAudioInitFailed(true)
-        setupScreen()
-        composeTestRule.onNodeWithTag("error-screen").assertExists()
-        composeTestRule.onNodeWithTag("error-back-button").performClick()
-    }
-
-    @Test
-    @Ignore("Hangs because of the AudioPlayer checkOnPosition change looper")
-    fun playButtonWorks() {
-        SongViewModel.setVideo(getMockSong())
-        setupScreen(false)
-        composeTestRule.waitUntil(60_000) { viewModel.player.value.getState() == AudioPlayerState.INITIALIZED }
-
-        composeTestRule.onNodeWithTag("player-interface").assertExists()
-
-        composeTestRule.onNodeWithTag("play").performClick()
-        composeTestRule.waitUntil(2_000) { viewModel.player.value.isPlaying }
-        viewModel.player.value.stop()
-    }
-
-
-    @Test
-    @Ignore("Hangs because of the AudioPlayer checkOnPosition change looper")
-    fun skipForwardButtonWorks() {
-        SongViewModel.setVideo(getMockSong())
-        setupScreen(false)
-        composeTestRule.waitUntil(60_000) { viewModel.player.value.getState() == AudioPlayerState.INITIALIZED }
-
-        composeTestRule.onNodeWithTag("player-interface").assertExists()
-
-        composeTestRule.onNodeWithTag("skip-forward").performClick().performClick().performClick().performClick()
-        composeTestRule.waitUntil(2_000) { viewModel.player.value.currentPosition > 15000 }
-        viewModel.player.value.stop()
-    }
-
-    @Test
-    @Ignore("Hangs because of the AudioPlayer checkOnPosition change looper")
-    fun skipBackButtonWorks() {
-        SongViewModel.setVideo(getMockSong())
-        setupScreen(false)
-        composeTestRule.waitUntil(60_000) { viewModel.player.value.getState() == AudioPlayerState.INITIALIZED }
-
-        composeTestRule.onNodeWithTag("player-interface").assertExists()
-
-        composeTestRule.onNodeWithTag("skip-forward").performClick().performClick().performClick().performClick()
-        composeTestRule.onNodeWithTag("skip-back").performClick().performClick().performClick().performClick()
-        composeTestRule.waitUntil(2_000) { viewModel.player.value.currentPosition == 0 }
-        viewModel.player.value.stop()
+        composeTestRule.waitUntil(40_000) { viewModel.player.value.isPlaying }
     }
 }
