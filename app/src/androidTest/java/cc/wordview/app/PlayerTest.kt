@@ -17,7 +17,6 @@
 
 package cc.wordview.app
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -26,6 +25,7 @@ import cc.wordview.app.api.Video
 import cc.wordview.app.audio.AudioPlayerState
 import cc.wordview.app.extractor.DownloaderImpl
 import cc.wordview.app.ui.screens.home.Player
+import cc.wordview.app.ui.screens.home.PlayerStatus
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Ignore
@@ -56,14 +56,13 @@ class PlayerTest {
 
     @Test
     fun errorScreenRenders() {
-        viewModel.setAudioInitFailed(true)
+        viewModel.setPlayerStatus(PlayerStatus.ERROR)
         setupScreen()
         composeTestRule.onNodeWithTag("error-screen").assertExists()
     }
 
     @Test
     fun playerInterfaceRenders() {
-        viewModel.setAudioInitFailed(false)
         SongViewModel.setVideo(getMockSong())
         setupScreen(false)
         composeTestRule.waitUntil(40_000) { viewModel.player.value.getState() == AudioPlayerState.INITIALIZED }
@@ -83,7 +82,6 @@ class PlayerTest {
     @Test
     @Ignore("Playing can cause issues with other tests so this one needs to be run individually")
     fun autoplayWorks() {
-        viewModel.setAudioInitFailed(false)
         SongViewModel.setVideo(getMockSong())
         setupScreen(true)
         composeTestRule.waitUntil(40_000) { viewModel.player.value.isPlaying }
