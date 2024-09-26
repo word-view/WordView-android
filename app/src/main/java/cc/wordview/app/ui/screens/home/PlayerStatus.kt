@@ -15,24 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.components
+package cc.wordview.app.ui.screens.home
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-
-/**
- * Runs only once per composition launching `block` and never executing again.
- */
-@Composable
-fun OneTimeEffect(block: () -> Unit) {
-    var ran by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(ran) {
-        if (!ran) block()
-        ran = true
-    }
+enum class PlayerStatus {
+    ERROR, LOADING, READY
 }

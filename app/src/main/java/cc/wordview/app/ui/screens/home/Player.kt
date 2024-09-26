@@ -20,7 +20,6 @@ package cc.wordview.app.ui.screens.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -45,16 +44,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -66,143 +61,46 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.api.handler.PlayerRequestHandler
 import cc.wordview.app.extensions.goBack
-import cc.wordview.app.extractor.getStreamFrom
-import cc.wordview.app.extractor.getSubtitleFor
-import cc.wordview.app.subtitle.getIconForWord
-import cc.wordview.app.ui.components.AsyncComposable
+import cc.wordview.app.ui.components.Loader
 import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
-import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
-import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
-import cc.wordview.gengolex.Language
 import coil.compose.AsyncImage
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
 fun Player(
     navHostController: NavHostController,
     viewModel: PlayerViewModel = PlayerViewModel,
-    requestHandler: PlayerRequestHandler = PlayerRequestHandler,
     autoplay: Boolean = true
 ) {
-    val TAG = "Player"
-
     val song by SongViewModel.video.collectAsStateWithLifecycle()
-    val audioInitFailed by viewModel.audioInitFailed.collectAsStateWithLifecycle()
     val player by viewModel.player.collectAsStateWithLifecycle()
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
+    val status by viewModel.playerStatus.collectAsStateWithLifecycle()
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
 
-    val coroutineScope = rememberCoroutineScope()
-
-    var audioReady by rememberSaveable { mutableStateOf(false) }
-    var lyricsReady by rememberSaveable { mutableStateOf(false) }
-    var dictionaryReady by rememberSaveable { mutableStateOf(false) }
-
     val context = LocalContext.current as Activity
 
-    val systemUiController = rememberSystemUiController()
-
-    val view = LocalView.current
+    val playerState = remember { PlayerState(preferences) }
 
     fun cleanup() {
         context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        systemUiController.isSystemBarsVisible = true
-        view.keepScreenOn = false
-
         viewModel.reset()
-    }
-
-    fun setup() {
-        coroutineScope.launch {
-            player.apply {
-                onPositionChange = {
-                    // the use of `viewModel.lyrics` is because `lyrics.collectAsStateWithLifecycle()`
-                    // does not update here and end up using the old lyrics value which is empty.
-                    viewModel.setCurrentCue(viewModel.lyrics.value.getCueAt(it))
-                }
-                onInitializeFail = { viewModel.setAudioInitFailed(true) }
-                onPrepared = { audioReady = true }
-
-                setOnCompletionListener {
-                    for (cue in viewModel.cues.value) {
-                        for (word in cue.words) {
-                            if (getIconForWord(word.parent) != null) {
-                                WordReviseViewModel.appendWord(ReviseWord(word))
-                            }
-                        }
-                    }
-
-                    cleanup()
-                    viewModel.finalize()
-                }
-            }
-
-            withContext(Dispatchers.IO) {
-                val stream = getStreamFrom(song.id)
-
-                if (stream == null) {
-                    Log.e(TAG, "Stream url is null")
-                    viewModel.setAudioInitFailed(true)
-                } else {
-                    player.initialize(stream)
-                }
-            }
-        }
-
-        coroutineScope.launch {
-            requestHandler.apply {
-                endpoint = preferences["api_endpoint"] ?: "10.0.2.2"
-
-                onLyricsSucceed = {
-                    viewModel.lyricsParse(it)
-                    viewModel.setCues(viewModel.lyrics.value)
-
-                    lyricsReady = true
-
-                    viewModel.initParser(Language.JAPANESE)
-                    requestHandler.getDictionary("kanji")
-                }
-                onDictionarySucceed = { dictionaryReady = true }
-
-                init(context)
-            }
-
-            val filter = preferences["filter_romanizations"] ?: true
-            viewModel.setFilterRomanizations(filter)
-
-            withContext(Dispatchers.IO) {
-                val url = getSubtitleFor(song.id, "ja")
-
-                if (!url.isNullOrEmpty()) {
-                    requestHandler.getLyrics(url)
-                } else {
-                    requestHandler.getLyricsWordFind(song.searchQuery)
-                }
-            }
-        }
     }
 
     OneTimeEffect {
         context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        view.keepScreenOn = true
-
-        setup()
+        playerState.setup({ cleanup() }, context)
     }
 
     LaunchedEffect(finalized) {
@@ -212,21 +110,18 @@ fun Player(
         }
     }
 
-    LaunchedEffect(audioReady, lyricsReady, dictionaryReady) {
-        if (audioReady && lyricsReady && dictionaryReady && !audioInitFailed && autoplay)
-            player.togglePlay()
-    }
-
     BackHandler {
         cleanup()
         navHostController.goBack()
     }
 
     Scaffold { innerPadding ->
-        if (audioInitFailed) {
-            ErrorScreen({ cleanup() }, navHostController)
-        } else {
-            AsyncComposable(condition = (audioReady && lyricsReady && dictionaryReady)) {
+        when (status) {
+            PlayerStatus.ERROR -> ErrorScreen({ cleanup() }, navHostController)
+            PlayerStatus.LOADING -> Loader()
+            PlayerStatus.READY -> {
+                OneTimeEffect { if (autoplay) player.togglePlay() }
+
                 Box(
                     Modifier
                         .fillMaxSize()

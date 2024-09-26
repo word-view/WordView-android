@@ -59,7 +59,7 @@ import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.Video
 import cc.wordview.app.extractor.search
-import cc.wordview.app.ui.components.AsyncComposable
+import cc.wordview.app.ui.components.Loader
 import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.screens.home.model.SearchViewModel
 import cc.wordview.app.ui.screens.util.Screen
@@ -119,7 +119,7 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
         // the scaffold (https://issuetracker.google.com/issues/206249038#comment9)
         LaunchedEffect(Unit) { if (results.isEmpty()) focusRequester.requestFocus() }
 
-        AsyncComposable(
+        Loader(
             modifier = Modifier.padding(innerPadding),
             condition = !waitingForResponse
         ) {

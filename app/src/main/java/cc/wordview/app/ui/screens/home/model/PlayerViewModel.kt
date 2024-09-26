@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.home.model
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -24,6 +25,7 @@ import androidx.lifecycle.ViewModel
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
+import cc.wordview.app.ui.screens.home.PlayerStatus
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,25 +33,27 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 object PlayerViewModel : ViewModel() {
+    private val TAG = PlayerViewModel::class.java.simpleName
+
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
     private val _lyrics = MutableStateFlow(Lyrics())
     private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
     private val _player = MutableStateFlow(AudioPlayer())
     private val _currentCue = MutableStateFlow(WordViewCue())
-    private val _audioInitFailed = MutableStateFlow(false)
     private val _finalized = MutableStateFlow(false)
+    private val _playerStatus = MutableStateFlow(PlayerStatus.LOADING)
     private val _filterRomanizations = MutableStateFlow(true)
 
     val cues = _cues.asStateFlow()
     val playIcon = _playIcon.asStateFlow()
     val lyrics = _lyrics.asStateFlow()
     val parser = _parser.asStateFlow()
-    val player  = _player.asStateFlow()
+    val player = _player.asStateFlow()
     val currentCue = _currentCue.asStateFlow()
-    val audioInitFailed = _audioInitFailed.asStateFlow()
     val filterRomanizations = _filterRomanizations.asStateFlow()
     val finalized = _finalized.asStateFlow()
+    val playerStatus = _playerStatus.asStateFlow()
 
     fun setCues(cues: ArrayList<WordViewCue>) {
         _cues.update { cues }
@@ -89,10 +93,6 @@ object PlayerViewModel : ViewModel() {
         _filterRomanizations.update { filter }
     }
 
-    fun setAudioInitFailed(failed: Boolean) {
-        _audioInitFailed.update { failed }
-    }
-
     fun finalize() {
         _finalized.update { true }
     }
@@ -101,10 +101,19 @@ object PlayerViewModel : ViewModel() {
         _finalized.update { false }
     }
 
+    fun setPlayerStatus(playerStatus: PlayerStatus) {
+        _playerStatus.update { playerStatus }
+    }
+
     fun reset() {
         this.player.value.stop()
+        this.setPlayerStatus(PlayerStatus.LOADING)
         this.clearCues()
         this.setCurrentCue(WordViewCue())
-        this.setAudioInitFailed(false)
+
+        Log.v(
+            TAG,
+            "reset: playerStatus=${playerStatus.value} cues.size=${cues.value.size} currentCue.text=${currentCue.value.text}"
+        )
     }
 }

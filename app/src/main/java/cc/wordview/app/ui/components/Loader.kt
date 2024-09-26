@@ -25,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -36,7 +35,7 @@ import androidx.core.graphics.ColorUtils
  * A composable that renders a CircularProgressIndicator while a condition is not fulfilled yet.
  * The modifier parameter will only apply to the Box that encapsulates the CircularProgressIndicator.
  */
-fun AsyncComposable(modifier: Modifier = Modifier, condition: Boolean, composable: @Composable () -> Unit) {
+fun Loader(modifier: Modifier = Modifier, condition: Boolean = false, composable: @Composable () -> Unit = {}) {
     if (!condition) {
         Box(modifier = modifier.fillMaxSize().testTag("async-composable-progress"), contentAlignment = Alignment.Center) {
             val inverseSurfaceDarker = ColorUtils.blendARGB(
