@@ -20,30 +20,32 @@ package cc.wordview.app
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.api.Video
-import cc.wordview.app.subtitle.WordViewCue
+import cc.wordview.app.audio.AudioPlayerState
+import cc.wordview.app.extractor.DownloaderImpl
 import cc.wordview.app.ui.screens.home.Player
+import cc.wordview.app.ui.screens.home.PlayerStatus
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
-import cc.wordview.app.ui.theme.WordViewTheme
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
-import java.util.ArrayList
+import org.schabi.newpipe.extractor.NewPipe
 
-@Ignore
 class PlayerTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private fun setupScreen() {
+    private val viewModel = PlayerViewModel
+
+    private fun setupScreen(autoplay: Boolean = false) {
+        DownloaderImpl.init(null)
+        NewPipe.init(DownloaderImpl.getInstance())
+
         composeTestRule.setContent {
-            WordViewTheme {
-                ProvidePreferenceLocals {
-                    Player(rememberNavController(), autoplay = false)
-                }
+            ProvidePreferenceLocals {
+                Player(navHostController = rememberNavController(), autoplay = autoplay)
             }
         }
     }
@@ -53,80 +55,35 @@ class PlayerTest {
     }
 
     @Test
-    fun renders() {
-        SongViewModel.setVideo(getMockSong())
+    fun errorScreenRenders() {
+        viewModel.setPlayerStatus(PlayerStatus.ERROR)
         setupScreen()
-        composeTestRule.waitUntil(15_000) { PlayerViewModel.lyrics.value.size > 0 }
-        composeTestRule.onNodeWithTag("back-button").assertExists()
-        composeTestRule.onNodeWithText("No Title").assertExists()
-        composeTestRule.onNodeWithTag("play").assertExists()
+        composeTestRule.onNodeWithTag("error-screen").assertExists()
+    }
+
+    @Test
+    fun playerInterfaceRenders() {
+        SongViewModel.setVideo(getMockSong())
+        setupScreen(false)
+        composeTestRule.waitUntil(40_000) { viewModel.player.value.getState() == AudioPlayerState.INITIALIZED }
+
+        composeTestRule.onNodeWithTag("player-interface").assertExists()
+
+        composeTestRule.onNodeWithTag("text-cue").assertExists()
+
         composeTestRule.onNodeWithTag("skip-back").assertExists()
+        composeTestRule.onNodeWithTag("play").assertExists()
         composeTestRule.onNodeWithTag("skip-forward").assertExists()
+
+        composeTestRule.onNodeWithTag("back-button").assertExists()
+        composeTestRule.onNodeWithText(getMockSong().title).assertExists()
     }
 
     @Test
-    fun performGoBack() {
+    @Ignore("Playing can cause issues with other tests so this one needs to be run individually")
+    fun autoplayWorks() {
         SongViewModel.setVideo(getMockSong())
-        setupScreen()
-        composeTestRule.waitUntil(15_000) { PlayerViewModel.lyrics.value.size > 0 }
-        composeTestRule.onNodeWithTag("back-button").performClick()
-    }
-
-    @Test
-    fun loaderWhenNoLyrics() {
-        PlayerViewModel.setCues(arrayListOf())
-        setupScreen()
-        composeTestRule.onNodeWithTag("async-composable-progress").assertExists()
-    }
-
-    @Test
-    fun lyricsRenderCorrectly() {
-        val mockLyrics = ArrayList<WordViewCue>()
-
-        for (i in 1..20) {
-            mockLyrics.add(WordViewCue("$i hello world", 1000 * i, 2000 * i))
-        }
-
-        PlayerViewModel.setCues(mockLyrics)
-
-        setupScreen()
-
-        for (cue in PlayerViewModel.lyrics.value) {
-            PlayerViewModel.setCurrentCue(cue)
-            composeTestRule.onNodeWithText(cue.text).assertExists()
-        }
-    }
-
-    @Test
-    @Ignore("Works individually but hangs when it is run along with other tests")
-    fun playButtonWorks() {
-        SongViewModel.setVideo(getMockSong())
-        setupScreen()
-        composeTestRule.waitUntil(60_000) { PlayerViewModel.lyrics.value.size > 0 }
-        composeTestRule.onNodeWithTag("play").performClick()
-        composeTestRule.waitUntil(10_000) { PlayerViewModel.player.value.currentPosition != 0 }
-    }
-
-    @Test
-    @Ignore("Works individually but hangs when it is run along with other tests")
-    fun skipForwardButtonWorks() {
-        SongViewModel.setVideo(getMockSong())
-        setupScreen()
-        composeTestRule.waitUntil(60_000) { PlayerViewModel.lyrics.value.size > 0 }
-        composeTestRule.onNodeWithTag("skip-forward").performClick().performClick().performClick()
-        composeTestRule.onNodeWithTag("play").performClick()
-        composeTestRule.waitUntil(10_000) { PlayerViewModel.player.value.currentPosition > 15000 }
-    }
-
-    @Test
-    @Ignore("Works individually but hangs when it is run along with other tests")
-    fun skipBackButtonWorks() {
-        SongViewModel.setVideo(getMockSong())
-        setupScreen()
-        composeTestRule.waitUntil(60_000) { PlayerViewModel.lyrics.value.size > 0 }
-        composeTestRule.onNodeWithTag("skip-forward").performClick().performClick().performClick()
-        composeTestRule.onNodeWithTag("skip-back").performClick().performClick().performClick()
-        composeTestRule.onNodeWithTag("play").performClick()
-        composeTestRule.waitUntil(10_000) { PlayerViewModel.player.value.currentPosition < 15000 }
+        setupScreen(true)
+        composeTestRule.waitUntil(40_000) { viewModel.player.value.isPlaying }
     }
 }

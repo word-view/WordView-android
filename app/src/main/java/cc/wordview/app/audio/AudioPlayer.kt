@@ -19,29 +19,36 @@ package cc.wordview.app.audio
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
-import kotlin.concurrent.thread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 class AudioPlayer : MediaPlayer() {
     private val TAG = AudioPlayer::class.java.simpleName
 
-    private val handler = Handler(Looper.getMainLooper())
     private var state = AudioPlayerState.STALE
 
-    private var positionChangeRunnable: Runnable? = null
+    private var job: Job? = null
 
     var onPositionChange: (Int) -> Unit = {}
+    var onPrepared: () -> Unit = {}
     var onInitializeFail: (Exception) -> Unit = {}
 
     init {
         setOnPreparedListener {
             Log.d(TAG, "Audio is prepared")
             state = AudioPlayerState.INITIALIZED
+            onPrepared()
         }
 
+        setOnBufferingUpdateListener { _, percent ->
+            Log.d(TAG, "Buffering $percent%")
+        }
     }
 
     fun initialize(dataSource: String, onComplete: () -> Unit = {}) {
@@ -73,7 +80,7 @@ class AudioPlayer : MediaPlayer() {
         if (state == AudioPlayerState.INITIALIZED) super.stop()
         PlayerViewModel.playIconPause()
 
-        positionChangeRunnable?.let { handler.removeCallbacks(it) }
+        stopPositionCheck()
         this.reset()
     }
 
@@ -82,12 +89,12 @@ class AudioPlayer : MediaPlayer() {
 
         try {
             if (this.isPlaying) {
-                positionChangeRunnable?.let { handler.removeCallbacks(it) }
                 pause()
+                stopPositionCheck()
                 PlayerViewModel.playIconPause()
             } else {
-                checkOnPositionChange()
                 start()
+                startPositionCheck()
                 PlayerViewModel.playIconPlay()
             }
         } catch (e: IllegalStateException) {
@@ -111,15 +118,21 @@ class AudioPlayer : MediaPlayer() {
         } else seekTo(position)
     }
 
-    private fun checkOnPositionChange() {
-        positionChangeRunnable = object : Runnable {
-            override fun run() {
-                if (isPlaying) {
-                    onPositionChange(currentPosition)
-                    handler.postDelayed(this, 1)
-                }
+    private fun startPositionCheck() {
+        job = CoroutineScope(Dispatchers.IO).launch {
+            while (isActive && isPlaying) {
+                onPositionChange(currentPosition)
+                delay(1L)
             }
         }
-        handler.post(positionChangeRunnable as Runnable)
+    }
+
+    private fun stopPositionCheck() {
+        job?.cancel()
+        job = null
+    }
+
+    fun getState(): AudioPlayerState {
+        return this.state
     }
 }
