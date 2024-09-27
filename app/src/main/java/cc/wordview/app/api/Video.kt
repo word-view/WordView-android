@@ -22,7 +22,4 @@ class Video(
     var title: String,
     var artist: String,
     val cover: String,
-    var searchQuery: String = ""
-) {
-    constructor() : this("", "", "", "")
-}
+)
