@@ -18,11 +18,8 @@
 package cc.wordview.app.ui.screens.home
 
 import android.content.Context
-import android.util.Log
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.handler.PlayerRequestHandler
-import cc.wordview.app.extractor.getStreamFrom
-import cc.wordview.app.extractor.getSubtitleFor
 import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
