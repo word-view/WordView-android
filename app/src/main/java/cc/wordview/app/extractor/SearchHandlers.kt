@@ -18,17 +18,19 @@
 package cc.wordview.app.extractor
 
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.StreamingService
 import org.schabi.newpipe.extractor.search.SearchInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import java.net.UnknownHostException
-import kotlin.concurrent.thread
 
 var YTService: StreamingService = NewPipe.getService(0);
 
 fun search(query: String, onError: () -> Unit,  onRequestCompleted: (items: List<StreamInfoItem>) -> Unit) {
-    thread {
+    CoroutineScope(Dispatchers.IO).launch {
         try {
             val search = SearchInfo.getInfo(YTService, YTService.searchQHFactory.fromQuery(query))
 
@@ -43,6 +45,5 @@ fun search(query: String, onError: () -> Unit,  onRequestCompleted: (items: List
             Log.e("SearchHandlers", "$e", e)
             onError()
         }
-
     }
 }
