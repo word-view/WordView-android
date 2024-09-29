@@ -156,14 +156,7 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
                     for (result in results) {
                         Spacer(Modifier.size(12.dp))
                         ResultItem(result = result) {
-                            SongViewModel.setVideo(
-                                Video(
-                                    result.id,
-                                    result.title,
-                                    result.channel,
-                                    "https://img.youtube.com/vi/${result.id}/hq720.jpg"
-                                )
-                            )
+                            SongViewModel.setVideo(result.id)
                             navHostController.navigate(Screen.Player.route)
                         }
                     }

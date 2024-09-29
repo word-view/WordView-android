@@ -18,11 +18,8 @@
 package cc.wordview.app.ui.screens.home
 
 import android.content.Context
-import android.util.Log
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.api.handler.PlayerRequestHandler
-import cc.wordview.app.extractor.getStreamFrom
-import cc.wordview.app.extractor.getSubtitleFor
 import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
@@ -52,7 +49,6 @@ class PlayerState(private val preferences: Preferences) {
     private val viewModel = PlayerViewModel
     private val requestHandler = PlayerRequestHandler
 
-    private val song = SongViewModel.video.value
     private val player = viewModel.player.value
 
     private val _audioReady = MutableStateFlow(false)
@@ -99,14 +95,7 @@ class PlayerState(private val preferences: Preferences) {
                 }
             }
 
-            val stream = getStreamFrom(song.id)
-
-            if (stream == null) {
-                Log.e(TAG, "Stream url is null")
-                viewModel.setPlayerStatus(PlayerStatus.ERROR)
-            } else {
-                player.initialize(stream)
-            }
+            player.initialize(SongViewModel.videoStream.value.getStreamURL())
         }
 
         playerStateCoroutine.launch {
@@ -142,12 +131,12 @@ class PlayerState(private val preferences: Preferences) {
             val filter = preferences["filter_romanizations"] ?: true
             viewModel.setFilterRomanizations(filter)
 
-            val url = getSubtitleFor(song.id, "ja")
+            val url = SongViewModel.videoStream.value.getSubtitleURL("ja")
 
-            if (!url.isNullOrEmpty()) {
+            if (url != "") {
                 requestHandler.getLyricsYoutube(url)
             } else {
-                requestHandler.getLyricsWordView(song.searchQuery)
+                requestHandler.getLyricsWordView(SongViewModel.videoStream.value.searchQuery)
             }
         }
     }

@@ -70,7 +70,7 @@ object PlayerRequestHandler {
             url,
             Response({ onLyricsSucceed(it) }, {
                 Log.e(TAG, "getLyricsYoutube:", it)
-                getLyricsWordView(SongViewModel.video.value.searchQuery)
+                getLyricsWordView(SongViewModel.videoStream.value.searchQuery)
             })
         )
         queue.add(lyricsRequest)

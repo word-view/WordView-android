@@ -17,43 +17,26 @@
 
 package cc.wordview.app
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import cc.wordview.app.api.Video
+import cc.wordview.app.extractor.VideoStream
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 object SongViewModel : ViewModel() {
     private val TAG = SongViewModel::class.java.simpleName
-    private val _video = MutableStateFlow(Video())
 
-    val video: StateFlow<Video> = _video.asStateFlow()
+    private val _videoId = MutableStateFlow("")
+    private val _videoStream = MutableStateFlow(VideoStream())
 
-    fun setVideo(vid: Video) {
-        // For now doing this is ok but as the filter grows
-        // a less repetitive solution should be created
-        val artistClean = vid.artist.lowercase()
-            .replace("official", "")
-            .replace("channel", "")
+    val videoStream = _videoStream.asStateFlow()
+    val videoId = _videoId.asStateFlow()
 
-        val titleClean = vid.title.lowercase()
-            .replace("\\[[^\\[]*\\]", "")
-            .replace("[", "")
-            .replace("]", "")
-            .replace("mv", "")
-            .replace("music video", "")
-            .replace(
-                "歌ってみた",
-                ""
-            )
+    fun setVideo(id: String) {
+        _videoId.update { id }
+    }
 
-        vid.searchQuery = "$titleClean $artistClean"
-
-        _video.update { oldValue ->
-            Log.d(TAG, "Updating working video from '${oldValue.title}' to '${vid.title}'")
-            vid
-        }
+    fun setVideoStream(videoStream: VideoStream) {
+        _videoStream.update { videoStream }
     }
 }

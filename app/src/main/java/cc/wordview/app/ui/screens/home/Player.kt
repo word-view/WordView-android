@@ -62,6 +62,7 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.ui.components.Loader
 import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.components.OneTimeEffect
@@ -71,6 +72,10 @@ import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
@@ -80,7 +85,8 @@ fun Player(
     viewModel: PlayerViewModel = PlayerViewModel,
     autoplay: Boolean = true
 ) {
-    val song by SongViewModel.video.collectAsStateWithLifecycle()
+    val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
+    val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
     val player by viewModel.player.collectAsStateWithLifecycle()
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
@@ -99,8 +105,14 @@ fun Player(
     }
 
     OneTimeEffect {
-        context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        playerState.setup({ cleanup() }, context)
+        CoroutineScope(Dispatchers.IO).launch {
+            context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+
+            SongViewModel.setVideoStream(VideoStream())
+            SongViewModel.videoStream.value.init(videoId)
+
+            playerState.setup({ cleanup() }, context)
+        }
     }
 
     LaunchedEffect(finalized) {
@@ -128,8 +140,8 @@ fun Player(
                         .testTag("player-interface")
                 ) {
                     AsyncImage(
-                        model = song.cover,
-                        contentDescription = "${song.title} cover",
+                        model = videoStream.getHQThumbnail(),
+                        contentDescription = "${videoStream.getTitle()} cover",
                         modifier = Modifier
                             .fillMaxSize()
                             .alpha(0.15f),
@@ -168,7 +180,7 @@ fun Player(
                                     )
                                 }
                                 Text(
-                                    text = song.title,
+                                    text = videoStream.info.name,
                                     fontSize = 18.sp
                                 )
                             }

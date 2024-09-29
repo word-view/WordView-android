@@ -87,7 +87,7 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
                             containerColor = MaterialTheme.colorScheme.background,
                         ),
                         onClick = {
-                            SongViewModel.setVideo(video)
+                            SongViewModel.setVideo(video.id)
                             navHostController.navigate(Screen.Player.route)
                         }
                     ) {
