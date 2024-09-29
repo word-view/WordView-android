@@ -37,6 +37,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,7 +58,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.api.Video
 import cc.wordview.app.extractor.search
 import cc.wordview.app.ui.components.Loader
 import cc.wordview.app.ui.components.ResultItem
@@ -87,32 +87,50 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            SearchBar(modifier = Modifier
-                .focusRequester(focusRequester)
-                .fillMaxWidth(0.97F)
-                .testTag("search-bar"),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = null
+            SearchBar(
+                inputField = {
+                    SearchBarDefaults.InputField(
+                        query = searchText,
+                        onQueryChange = { viewModel.setQuery(it) },
+                        onSearch = {
+                            waitingForResponse = true
+                            viewModel.setSearching(false)
+
+                            search(it, onError = { onError() }) { r ->
+                                viewModel.setSearchResults(r)
+
+                                errored = false
+                                waitingForResponse = false
+                            }
+                        },
+                        expanded = searching,
+                        onExpandedChange = { viewModel.setSearching(it) },
+                        enabled = true,
+                        placeholder = { Text("Search for music, artists, albums...") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Filled.Search,
+                                contentDescription = null
+                            )
+                        },
+                        trailingIcon = null,
+                        interactionSource = null,
                     )
                 },
-                placeholder = { Text("Search for music, artists, albums...") },
-                query = searchText,
-                onQueryChange = { viewModel.setQuery(it) },
-                onSearch = {
-                    waitingForResponse = true
-                    viewModel.setSearching(false)
+                expanded = searching,
+                onExpandedChange = { viewModel.setSearching(it) },
+                modifier = Modifier
+                    .focusRequester(focusRequester)
+                    .fillMaxWidth(0.97F)
+                    .testTag("search-bar"),
+                shape = SearchBarDefaults.inputFieldShape,
+                colors = SearchBarDefaults.colors(),
+                tonalElevation = SearchBarDefaults.TonalElevation,
+                shadowElevation = SearchBarDefaults.ShadowElevation,
+                windowInsets = SearchBarDefaults.windowInsets,
+                ) {
 
-                    search(it, onError = { onError() }) { r ->
-                        viewModel.setSearchResults(r)
-
-                        errored = false
-                        waitingForResponse = false
-                    }
-                },
-                active = searching,
-                onActiveChange = { viewModel.setSearching(it) }) {}
+            }
         }
     }) { innerPadding ->
         // For tests to work, the launched effect has to be inside
