@@ -39,6 +39,10 @@ class PlayerTest {
 
     private val viewModel = PlayerViewModel
 
+    companion object {
+        var mockSongId = "LfephiFN76E"
+    }
+
     private fun setupScreen(autoplay: Boolean = false) {
         DownloaderImpl.init(null)
         NewPipe.init(DownloaderImpl.getInstance())
@@ -50,10 +54,6 @@ class PlayerTest {
         }
     }
 
-    private fun getMockSong(): Video {
-        return Video("LfephiFN76E", "No Title", "REOL", "")
-    }
-
     @Test
     fun errorScreenRenders() {
         viewModel.setPlayerStatus(PlayerStatus.ERROR)
@@ -63,7 +63,7 @@ class PlayerTest {
 
     @Test
     fun playerInterfaceRenders() {
-        SongViewModel.setVideo(getMockSong())
+        SongViewModel.setVideo(mockSongId)
         setupScreen(false)
         composeTestRule.waitUntil(40_000) { viewModel.player.value.getState() == AudioPlayerState.INITIALIZED }
 
@@ -76,13 +76,12 @@ class PlayerTest {
         composeTestRule.onNodeWithTag("skip-forward").assertExists()
 
         composeTestRule.onNodeWithTag("back-button").assertExists()
-        composeTestRule.onNodeWithText(getMockSong().title).assertExists()
     }
 
     @Test
     @Ignore("Playing can cause issues with other tests so this one needs to be run individually")
     fun autoplayWorks() {
-        SongViewModel.setVideo(getMockSong())
+        SongViewModel.setVideo(mockSongId)
         setupScreen(true)
         composeTestRule.waitUntil(40_000) { viewModel.player.value.isPlaying }
     }
