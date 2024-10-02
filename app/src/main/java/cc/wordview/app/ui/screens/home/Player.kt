@@ -21,23 +21,19 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -52,15 +48,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extractor.VideoStream
@@ -70,10 +62,10 @@ import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
+import cc.wordview.app.ui.screens.home.player.ErrorScreen
 import cc.wordview.app.ui.screens.home.player.PlayerState
 import cc.wordview.app.ui.screens.home.player.PlayerStatus
 import cc.wordview.app.ui.screens.util.Screen
-import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -129,7 +121,11 @@ fun Player(
         when (status) {
             PlayerStatus.ERROR -> ErrorScreen({ cleanup() }, navHostController)
             PlayerStatus.LOADING -> Loader()
-            PlayerStatus.READY -> PlayerContent(innerPadding, autoplay, navHostController, { cleanup() })
+            PlayerStatus.READY -> PlayerContent(
+                innerPadding,
+                autoplay,
+                navHostController,
+                { cleanup() })
         }
     }
 }
@@ -232,36 +228,6 @@ private fun PlayerContent(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun ErrorScreen(cleanup: () -> Unit, navHostController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .testTag("error-screen"),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            modifier = Modifier.size(180.dp),
-            painter = painterResource(id = R.drawable.radio),
-            contentDescription = null
-        )
-        Spacer(Modifier.size(8.dp))
-        Text(
-            text = "An error has occurred \nand the audio could not be played.",
-            textAlign = TextAlign.Center,
-            style = Typography.bodyLarge,
-            fontWeight = FontWeight.SemiBold,
-        )
-        Spacer(Modifier.size(15.dp))
-        Button(
-            modifier = Modifier.testTag("error-back-button"),
-            onClick = { cleanup(); navHostController.goBack() }) {
-            Text(text = "Go back to the home screen")
         }
     }
 }
