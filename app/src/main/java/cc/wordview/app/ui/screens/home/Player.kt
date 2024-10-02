@@ -25,6 +25,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -87,10 +88,6 @@ fun Player(
     autoplay: Boolean = true
 ) {
     val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
-    val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
-    val player by viewModel.player.collectAsStateWithLifecycle()
-    val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
-    val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
     val status by viewModel.playerStatus.collectAsStateWithLifecycle()
 
@@ -132,92 +129,106 @@ fun Player(
         when (status) {
             PlayerStatus.ERROR -> ErrorScreen({ cleanup() }, navHostController)
             PlayerStatus.LOADING -> Loader()
-            PlayerStatus.READY -> {
-                OneTimeEffect { if (autoplay) player.togglePlay() }
+            PlayerStatus.READY -> PlayerContent(innerPadding, autoplay, navHostController, { cleanup() })
+        }
+    }
+}
 
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .testTag("player-interface")
-                ) {
-                    AsyncImage(
-                        model = videoStream.getHQThumbnail(),
-                        contentDescription = "${videoStream.getTitle()} cover",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .alpha(0.15f),
-                        contentScale = ContentScale.FillWidth,
-                    )
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Bottom
+@Composable
+private fun PlayerContent(
+    innerPadding: PaddingValues,
+    autoplay: Boolean,
+    navHostController: NavHostController,
+    cleanup: () -> Unit,
+    viewModel: PlayerViewModel = PlayerViewModel
+) {
+    val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
+    val player by viewModel.player.collectAsStateWithLifecycle()
+    val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
+    val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
+
+    OneTimeEffect { if (autoplay) player.togglePlay() }
+
+    Box(
+        Modifier
+            .fillMaxSize()
+            .testTag("player-interface")
+    ) {
+        AsyncImage(
+            model = videoStream.getHQThumbnail(),
+            contentDescription = "${videoStream.getTitle()} cover",
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.15f),
+            contentScale = ContentScale.FillWidth,
+        )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            TextCue(
+                modifier = Modifier
+                    .zIndex(1f)
+                    .padding(bottom = 6.dp)
+                    .testTag("text-cue"),
+                cue = currentCue
+            )
+        }
+        // Box Controls overlay
+        FadeOutBox(duration = 250, stagnationTime = 3000) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(innerPadding),
+                contentAlignment = Alignment.TopStart,
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(
+                        onClick = { cleanup(); navHostController.goBack(); },
+                        modifier = Modifier.testTag("back-button"),
                     ) {
-                        TextCue(
-                            modifier = Modifier
-                                .zIndex(1f)
-                                .padding(bottom = 6.dp)
-                                .testTag("text-cue"),
-                            cue = currentCue
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
                         )
                     }
-                    // Box Controls overlay
-                    FadeOutBox(duration = 250, stagnationTime = 3000) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(64.dp)
-                                .padding(innerPadding),
-                            contentAlignment = Alignment.TopStart,
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                IconButton(
-                                    onClick = { cleanup(); navHostController.goBack(); },
-                                    modifier = Modifier.testTag("back-button"),
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowBack,
-                                        contentDescription = "Back"
-                                    )
-                                }
-                                Text(
-                                    text = videoStream.info.name,
-                                    fontSize = 18.sp
-                                )
-                            }
-                        }
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Row(
-                                Modifier.fillMaxWidth(0.5f),
-                                horizontalArrangement = Arrangement.SpaceEvenly,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                PlayerButton(
-                                    icon = Icons.Filled.SkipPrevious,
-                                    size = 72.dp,
-                                    modifier = Modifier.testTag("skip-back")
-                                ) {
-                                    player.skipBackward()
-                                }
-                                PlayerButton(
-                                    icon = playIcon,
-                                    size = 80.dp,
-                                    modifier = Modifier.testTag("play")
-                                ) {
-                                    player.togglePlay()
-                                }
-                                PlayerButton(
-                                    icon = Icons.Filled.SkipNext,
-                                    size = 72.dp,
-                                    modifier = Modifier.testTag("skip-forward")
-                                ) {
-                                    player.skipForward()
-                                }
-                            }
-                        }
+                    Text(
+                        text = videoStream.info.name,
+                        fontSize = 18.sp
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    Modifier.fillMaxWidth(0.5f),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    PlayerButton(
+                        icon = Icons.Filled.SkipPrevious,
+                        size = 72.dp,
+                        modifier = Modifier.testTag("skip-back")
+                    ) {
+                        player.skipBackward()
+                    }
+                    PlayerButton(
+                        icon = playIcon,
+                        size = 80.dp,
+                        modifier = Modifier.testTag("play")
+                    ) {
+                        player.togglePlay()
+                    }
+                    PlayerButton(
+                        icon = Icons.Filled.SkipNext,
+                        size = 72.dp,
+                        modifier = Modifier.testTag("skip-forward")
+                    ) {
+                        player.skipForward()
                     }
                 }
             }
