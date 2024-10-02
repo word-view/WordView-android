@@ -15,8 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home
+package cc.wordview.app.ui.screens.home.player
 
-enum class PlayerStatus {
-    ERROR, LOADING, READY
-}
+class LyricsResponse(
+    val lyrics: String,
+    val dictionary: String
+)

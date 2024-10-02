@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModel
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
-import cc.wordview.app.ui.screens.home.PlayerStatus
+import cc.wordview.app.ui.screens.home.player.PlayerStatus
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import kotlinx.coroutines.flow.MutableStateFlow
