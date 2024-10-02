@@ -15,22 +15,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home
+package cc.wordview.app.ui.screens.home.player
 
 import android.content.Context
+import android.util.Log
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.api.Video
 import cc.wordview.app.api.handler.PlayerRequestHandler
 import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
 import cc.wordview.gengolex.Language
+import com.google.gson.Gson
+import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.Preferences
+import kotlin.reflect.typeOf
 
 /**
  * Manages the state and logic for the player screen.
@@ -103,16 +109,18 @@ class PlayerState(private val preferences: Preferences) {
                 endpoint = preferences["api_endpoint"] ?: "10.0.2.2"
 
                 onLyricsSucceed = {
-                    viewModel.lyricsParse(it)
+                    val jsonObject = JsonParser.parseString(it).asJsonObject
+
+                    val lyrics = jsonObject.get("lyrics").asString
+                    val dictionary = jsonObject.getAsJsonArray("dictionary").toString()
+
+                    viewModel.lyricsParse(lyrics)
                     viewModel.setCues(viewModel.lyrics.value)
 
                     _lyricsReady.update { true }
 
                     viewModel.initParser(Language.JAPANESE)
-                    requestHandler.getDictionary("kanji")
-                }
-                onDictionarySucceed = {
-                    viewModel.addDictionary("kanji", it)
+                    viewModel.addDictionary("kanji", dictionary)
 
                     for (cue in viewModel.lyrics.value) {
                         val wordsFound = viewModel.parser.value.findWords(cue.text)
@@ -131,13 +139,9 @@ class PlayerState(private val preferences: Preferences) {
             val filter = preferences["filter_romanizations"] ?: true
             viewModel.setFilterRomanizations(filter)
 
-            val url = SongViewModel.videoStream.value.getSubtitleURL("ja")
+            val video = SongViewModel.videoStream.value
 
-            if (url != "") {
-                requestHandler.getLyricsYoutube(url)
-            } else {
-                requestHandler.getLyricsWordView(SongViewModel.videoStream.value.searchQuery)
-            }
+            requestHandler.getLyrics(video.info.id, "ja", video.searchQuery)
         }
     }
 }

@@ -19,13 +19,11 @@ package cc.wordview.app
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.api.Video
 import cc.wordview.app.audio.AudioPlayerState
 import cc.wordview.app.extractor.DownloaderImpl
 import cc.wordview.app.ui.screens.home.Player
-import cc.wordview.app.ui.screens.home.PlayerStatus
+import cc.wordview.app.ui.screens.home.player.PlayerStatus
 import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Ignore
