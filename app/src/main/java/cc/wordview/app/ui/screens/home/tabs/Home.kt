@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home
+package cc.wordview.app.ui.screens.home.tabs
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,11 +44,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.screens.home.tabs.BottomNavigationItem
-import cc.wordview.app.ui.screens.home.tabs.ExploreTab
-import cc.wordview.app.ui.screens.home.tabs.LearnTab
-import cc.wordview.app.ui.screens.home.tabs.ProfileTab
-import cc.wordview.app.ui.screens.home.tabs.Tabs
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.redhatFamily
 

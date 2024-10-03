@@ -24,7 +24,7 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.screens.home.Home
+import cc.wordview.app.ui.screens.home.tabs.Home
 import cc.wordview.app.ui.screens.home.tabs.LearnTab
 import cc.wordview.app.ui.screens.home.tabs.Tabs
 import cc.wordview.app.ui.theme.WordViewTheme
