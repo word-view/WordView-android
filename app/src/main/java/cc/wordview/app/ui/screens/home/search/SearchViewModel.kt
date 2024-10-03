@@ -15,25 +15,41 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home.model
+package cc.wordview.app.ui.screens.home.search
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import cc.wordview.app.api.VideoSearchResult
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
-import kotlin.time.Duration.Companion.milliseconds
+import javax.inject.Inject
 
-object SearchViewModel : ViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
+    private val searchRepository: SearchRepository
+) : ViewModel() {
     private val _searching = MutableStateFlow(false)
     private val _query = MutableStateFlow("")
     private val _searchResults = MutableStateFlow(ArrayList<VideoSearchResult>())
+    private val _state = MutableStateFlow(SearchState.NONE)
 
-    val searching: StateFlow<Boolean> = _searching.asStateFlow()
-    val query: StateFlow<String> = _query.asStateFlow()
-    val searchResults: StateFlow<ArrayList<VideoSearchResult>> = _searchResults.asStateFlow()
+    val searching = _searching.asStateFlow()
+    val query = _query.asStateFlow()
+    val searchResults = _searchResults.asStateFlow()
+    val state = _state.asStateFlow()
+
+    fun setState(value: SearchState) {
+        _state.update { value }
+    }
 
     fun setSearching(value: Boolean) {
         _searching.update { value }
@@ -43,7 +59,22 @@ object SearchViewModel : ViewModel() {
         _query.update { query }
     }
 
-    fun setSearchResults(resultList: List<StreamInfoItem>) {
+    fun search(query: String, onSuccess: () -> Unit, onError: () -> Unit) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    val results = searchRepository.search(query)
+                    setSearchResults(results)
+                    onSuccess()
+                } catch (e: Throwable) {
+                    Log.e("AA", "AAA", e)
+                    onError()
+                }
+            }
+        }
+    }
+
+    private fun setSearchResults(resultList: List<StreamInfoItem>) {
         val parsed = ArrayList<VideoSearchResult>()
 
         for (item in resultList) {

@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home
+package cc.wordview.app.ui.screens.home.search
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -40,11 +40,8 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -54,35 +51,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.extractor.search
 import cc.wordview.app.ui.components.Loader
+import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ResultItem
-import cc.wordview.app.ui.screens.home.model.SearchViewModel
 import cc.wordview.app.ui.screens.util.Screen
 import cc.wordview.app.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Search(navHostController: NavHostController, viewModel: SearchViewModel = SearchViewModel) {
-    val searchText by viewModel.query.collectAsStateWithLifecycle()
+fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hiltViewModel()) {
+    val query by viewModel.query.collectAsStateWithLifecycle()
     val results by viewModel.searchResults.collectAsStateWithLifecycle()
     val searching by viewModel.searching.collectAsStateWithLifecycle()
-
-    var waitingForResponse by remember { mutableStateOf(false) }
-
-    var errored by remember { mutableStateOf(false) }
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
 
     val darkTheme = isSystemInDarkTheme()
 
-    fun onError() {
-        errored = true
-        waitingForResponse = false
+    fun search(query: String) {
+        viewModel.setState(SearchState.LOADING)
+        viewModel.setSearching(false)
+
+        viewModel.search(
+            query,
+            onSuccess = { viewModel.setState(SearchState.COMPLETE) },
+            onError = { viewModel.setState(SearchState.ERROR) }
+        )
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
@@ -90,19 +90,9 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
             SearchBar(
                 inputField = {
                     SearchBarDefaults.InputField(
-                        query = searchText,
+                        query = query,
                         onQueryChange = { viewModel.setQuery(it) },
-                        onSearch = {
-                            waitingForResponse = true
-                            viewModel.setSearching(false)
-
-                            search(it, onError = { onError() }) { r ->
-                                viewModel.setSearchResults(r)
-
-                                errored = false
-                                waitingForResponse = false
-                            }
-                        },
+                        onSearch = { search(it) },
                         expanded = searching,
                         onExpandedChange = { viewModel.setSearching(it) },
                         enabled = true,
@@ -113,8 +103,6 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
                                 contentDescription = null
                             )
                         },
-                        trailingIcon = null,
-                        interactionSource = null,
                     )
                 },
                 expanded = searching,
@@ -123,25 +111,20 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
                     .focusRequester(focusRequester)
                     .fillMaxWidth(0.97F)
                     .testTag("search-bar"),
-                shape = SearchBarDefaults.inputFieldShape,
-                colors = SearchBarDefaults.colors(),
-                tonalElevation = SearchBarDefaults.TonalElevation,
-                shadowElevation = SearchBarDefaults.ShadowElevation,
-                windowInsets = SearchBarDefaults.windowInsets,
-                ) {
+            ) {
 
             }
         }
     }) { innerPadding ->
         // For tests to work, the launched effect has to be inside
         // the scaffold (https://issuetracker.google.com/issues/206249038#comment9)
-        LaunchedEffect(Unit) { if (results.isEmpty()) focusRequester.requestFocus() }
+        OneTimeEffect { if (results.isEmpty()) focusRequester.requestFocus() }
 
-        Loader(
-            modifier = Modifier.padding(innerPadding),
-            condition = !waitingForResponse
-        ) {
-            if (errored) {
+        when (state) {
+            SearchState.NONE -> {}
+            SearchState.LOADING -> Loader()
+
+            SearchState.ERROR -> {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -152,7 +135,7 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
                             .fillMaxWidth()
                             .aspectRatio(1f),
                         painter = painterResource(id = if (darkTheme) R.drawable.nonet else R.drawable.nonet_dark),
-                        contentDescription = ""
+                        contentDescription = null
                     )
                     Spacer(Modifier.size(15.dp))
                     Text(
@@ -163,7 +146,9 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = Se
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
-            } else {
+            }
+
+            SearchState.COMPLETE -> {
                 Column(
                     Modifier
                         .fillMaxSize()

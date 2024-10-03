@@ -23,11 +23,11 @@ import cc.wordview.app.ui.screens.LanguagePicker
 import cc.wordview.app.ui.screens.Login
 import cc.wordview.app.ui.screens.home.Settings
 import cc.wordview.app.ui.screens.Welcome
-import cc.wordview.app.ui.screens.home.Home
+import cc.wordview.app.ui.screens.home.tabs.Home
 import cc.wordview.app.ui.screens.home.Player
 import cc.wordview.app.ui.screens.home.ReviseResults
-import cc.wordview.app.ui.screens.home.Search
 import cc.wordview.app.ui.screens.home.WordRevise
+import cc.wordview.app.ui.screens.home.search.Search
 
 sealed class Screen(val route: String) {
     @Composable
