@@ -22,7 +22,6 @@ import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.extractor.text.SubtitleParser
 import androidx.media3.extractor.text.webvtt.WebvttParser
-import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import kotlin.time.Duration.Companion.milliseconds
 
 
@@ -30,9 +29,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class Lyrics : ArrayList<WordViewCue>() {
     private val TAG = Lyrics::class.java.simpleName
 
-    fun parse(str: String) {
-        val filterRomanizations = PlayerViewModel.filterRomanizations.value
-
+    fun parse(filterRomanizations: Boolean, str: String) {
         if (filterRomanizations)
             Log.i(TAG, "Romanizations will be filtered out")
 

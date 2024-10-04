@@ -20,13 +20,13 @@ package cc.wordview.app.audio
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.util.Log
-import cc.wordview.app.ui.screens.home.model.PlayerViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 
 class AudioPlayer : MediaPlayer() {
     private val TAG = AudioPlayer::class.java.simpleName
@@ -69,7 +69,7 @@ class AudioPlayer : MediaPlayer() {
                 )
                 setDataSource(dataSource)
             }
-            prepare()
+            thread { prepare() }
         } catch (e: Exception) {
             Log.e(TAG, e.message, e)
             onInitializeFail(e)
@@ -78,7 +78,6 @@ class AudioPlayer : MediaPlayer() {
 
     override fun stop() {
         if (state == AudioPlayerState.INITIALIZED) super.stop()
-        PlayerViewModel.playIconPause()
 
         stopPositionCheck()
         this.reset()
@@ -91,11 +90,9 @@ class AudioPlayer : MediaPlayer() {
             if (this.isPlaying) {
                 pause()
                 stopPositionCheck()
-                PlayerViewModel.playIconPause()
             } else {
                 start()
                 startPositionCheck()
-                PlayerViewModel.playIconPlay()
             }
         } catch (e: IllegalStateException) {
             e.message?.let { Log.w(TAG, it) }

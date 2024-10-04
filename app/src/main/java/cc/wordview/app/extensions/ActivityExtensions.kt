@@ -15,9 +15,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home.player
+package cc.wordview.app.extensions
 
-class LyricsResponse(
-    val lyrics: String,
-    val dictionary: String
-)
+import android.app.Activity
+import android.content.pm.ActivityInfo
+
+fun Activity.setOrientationSensorLandscape() {
+    this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+}
+
+fun Activity.setOrientationUnspecified() {
+    this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+}
