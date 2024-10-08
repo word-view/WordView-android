@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import cc.wordview.app.ui.components.LanguageFlagButton
-import cc.wordview.app.ui.screens.util.Screen
+import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 

@@ -26,7 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.extractor.DownloaderImpl
-import cc.wordview.app.ui.screens.util.Screen
+import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.WordViewTheme
 import dagger.hilt.android.AndroidEntryPoint
 import me.zhanghai.compose.preference.ProvidePreferenceLocals

@@ -21,9 +21,9 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.screens.home.results.ReviseResults
-import cc.wordview.app.ui.screens.home.results.ReviseResultsViewModel
-import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
+import cc.wordview.app.ui.screens.results.ReviseResults
+import cc.wordview.app.ui.screens.results.ReviseResultsViewModel
+import cc.wordview.app.ui.screens.revise.components.ReviseWord
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
 import org.junit.Rule

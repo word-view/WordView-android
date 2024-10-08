@@ -20,10 +20,10 @@ package cc.wordview.app.home.revise
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import cc.wordview.app.ui.screens.home.revise.WordReviseViewModel
-import cc.wordview.app.ui.screens.home.revise.components.Answer
-import cc.wordview.app.ui.screens.home.revise.Presenter
-import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
+import cc.wordview.app.ui.screens.revise.WordReviseViewModel
+import cc.wordview.app.ui.screens.revise.components.Answer
+import cc.wordview.app.ui.screens.revise.Presenter
+import cc.wordview.app.ui.screens.revise.components.ReviseWord
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
