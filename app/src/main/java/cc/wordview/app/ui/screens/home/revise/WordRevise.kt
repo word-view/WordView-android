@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.ui.components.BackTopAppBar
+import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.screens.home.results.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.revise.components.ReviseScreen
 import cc.wordview.app.ui.screens.home.revise.components.ReviseTimer
@@ -54,22 +55,17 @@ fun WordRevise(
     navHostController: NavHostController,
     viewModel: WordReviseViewModel = WordReviseViewModel
 ) {
-    val initialized by viewModel.initialized.collectAsStateWithLifecycle()
     val timerFinished by viewModel.timerFinished.collectAsStateWithLifecycle()
     val lessonTime by viewModel.formattedTime.collectAsStateWithLifecycle()
     val currentScreen by viewModel.screen.collectAsStateWithLifecycle()
 
     val activity = LocalContext.current as Activity
 
-    LaunchedEffect(Unit) {
-        if (!initialized) {
-            viewModel.initialize()
+    OneTimeEffect {
+        viewModel.nextWord()
+        viewModel.setScreen(ReviseScreen.getRandomScreen().route)
 
-            viewModel.nextWord()
-            viewModel.setScreen(ReviseScreen.getRandomScreen().route)
-
-            ReviseTimer.start()
-        }
+        ReviseTimer.start()
     }
 
     LaunchedEffect(timerFinished) {

@@ -20,7 +20,7 @@ package cc.wordview.app.ui.screens.home.revise
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import cc.wordview.app.ui.screens.home.model.InitializeViewModel
+import androidx.lifecycle.ViewModel
 import cc.wordview.app.ui.screens.home.revise.components.Answer
 import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.util.Locale
 
-object WordReviseViewModel : InitializeViewModel() {
+object WordReviseViewModel : ViewModel() {
     private val TAG = WordReviseViewModel::class.java.simpleName
 
     private val _currentWord = MutableStateFlow(ReviseWord())
