@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home
+package cc.wordview.app.ui.screens.home.revise
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -43,8 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.ui.components.BackTopAppBar
-import cc.wordview.app.ui.screens.home.model.ReviseResultsViewModel
-import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.results.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.home.revise.components.ReviseScreen
 import cc.wordview.app.ui.screens.home.revise.components.ReviseTimer
 import cc.wordview.app.ui.screens.util.Screen

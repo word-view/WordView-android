@@ -24,8 +24,8 @@ import cc.wordview.app.ui.screens.Login
 import cc.wordview.app.ui.screens.home.Settings
 import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.screens.home.tabs.Home
-import cc.wordview.app.ui.screens.home.ReviseResults
-import cc.wordview.app.ui.screens.home.WordRevise
+import cc.wordview.app.ui.screens.home.results.ReviseResults
+import cc.wordview.app.ui.screens.home.revise.WordRevise
 import cc.wordview.app.ui.screens.home.player.Player
 import cc.wordview.app.ui.screens.home.search.Search
 

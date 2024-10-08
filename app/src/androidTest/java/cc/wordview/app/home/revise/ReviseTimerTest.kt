@@ -19,7 +19,7 @@ package cc.wordview.app.home.revise
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.test.junit4.createComposeRule
-import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.components.ReviseTimer
 import org.junit.Rule
 import org.junit.Test

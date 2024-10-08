@@ -29,7 +29,7 @@ import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.subtitle.getIconForWord
-import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.components.ReviseWord
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser

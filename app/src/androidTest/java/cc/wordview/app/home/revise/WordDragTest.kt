@@ -26,8 +26,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.subtitle.initializeIcons
-import cc.wordview.app.ui.screens.home.ReviseResults
-import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.results.ReviseResults
+import cc.wordview.app.ui.screens.home.revise.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.Drag
 import cc.wordview.app.ui.screens.home.revise.components.ReviseScreen
 import cc.wordview.app.ui.screens.home.revise.components.ReviseWord

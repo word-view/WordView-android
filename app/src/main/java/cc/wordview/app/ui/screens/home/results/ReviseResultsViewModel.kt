@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home.model
+package cc.wordview.app.ui.screens.home.results
 
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.ui.screens.home.revise.components.ReviseWord

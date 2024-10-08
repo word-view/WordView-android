@@ -20,7 +20,7 @@ package cc.wordview.app.home.revise
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.components.Answer
 import cc.wordview.app.ui.screens.home.revise.Presenter
 import cc.wordview.app.ui.screens.home.revise.components.ReviseWord

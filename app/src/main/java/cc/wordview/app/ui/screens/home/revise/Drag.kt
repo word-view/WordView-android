@@ -45,7 +45,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.dragGestures
 import cc.wordview.app.subtitle.getIconForWord
-import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
 import cc.wordview.app.ui.screens.home.revise.components.Answer
 import cc.wordview.app.ui.screens.home.revise.components.DragMode
 import cc.wordview.app.ui.screens.home.revise.components.ReviseScreen

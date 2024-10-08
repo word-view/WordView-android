@@ -20,7 +20,7 @@ package cc.wordview.app.ui.screens.home.revise.components
 import android.annotation.SuppressLint
 import android.os.CountDownTimer
 import android.util.Log
-import cc.wordview.app.ui.screens.home.model.WordReviseViewModel
+import cc.wordview.app.ui.screens.home.revise.WordReviseViewModel
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
