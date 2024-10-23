@@ -53,7 +53,6 @@ import cc.wordview.app.ui.screens.components.Screen
 @Composable
 fun WordRevise(
     navHostController: NavHostController,
-    viewModel: WordReviseViewModel = WordReviseViewModel
 ) {
     val timerFinished by WordReviseViewModel.timerFinished.collectAsStateWithLifecycle()
     val lessonTime by WordReviseViewModel.formattedTime.collectAsStateWithLifecycle()
