@@ -17,19 +17,32 @@
 
 package cc.wordview.app.ui.screens.revise.model
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import cc.wordview.gengolex.languages.Word
+import androidx.lifecycle.viewModelScope
+import cc.wordview.app.ui.screens.revise.WordReviseViewModel
+import cc.wordview.app.ui.screens.revise.components.ReviseScreen
+import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import me.zhanghai.compose.preference.Preferences
+import javax.inject.Inject
 
-object TranslateViewModel : ViewModel() {
+@HiltViewModel
+class TranslateViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
+    private val translateRepository: TranslateRepository
+) : ViewModel() {
     private val _phrase = MutableStateFlow("")
 
-    private val _answerWordPool = mutableStateListOf<Word>()
-    private val _wordPool = mutableStateListOf<Word>()
-    private val _originalPoolOrder = mutableStateListOf<Word>()
+    private val _answerWordPool = mutableStateListOf<String>()
+    private val _wordPool = mutableStateListOf<String>()
+    private val _originalPoolOrder = mutableStateListOf<String>()
     private val _wrongOrderedWords = mutableStateListOf<Int>()
 
     val phrase = _phrase.asStateFlow()
@@ -38,27 +51,52 @@ object TranslateViewModel : ViewModel() {
     val originalPoolOrder get() = _originalPoolOrder
     val wrongOrderedWords get() = _wrongOrderedWords
 
-    fun setPhrase(phrase: String) {
-       _phrase.update { phrase }
+    fun getPhrase(
+        preferences: Preferences,
+        context: Context,
+        phraseLang: String,
+        wordsLang: String,
+        keyword: String
+    ) {
+        viewModelScope.launch {
+            translateRepository.init(context)
+            translateRepository.endpoint = preferences["api_endpoint"] ?: "10.0.2.2"
+            translateRepository.onGetPhraseFail = {
+                WordReviseViewModel.setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
+                cleanup()
+            }
+            translateRepository.onGetPhraseSuccess = {
+                val phrase = Gson().fromJson(it, Phrase::class.java)
+
+                setPhrase(phrase.phrase)
+                appendWords(phrase.words)
+            }
+            translateRepository.getPhrase(phraseLang, wordsLang, keyword)
+        }
     }
 
-    fun appendWords(words: ArrayList<Word>) {
+    private fun setPhrase(phrase: String) {
+        _phrase.update { phrase }
+    }
+
+    private fun appendWords(words: List<String>) {
         wordPool.addAll(words.shuffled())
         originalPoolOrder.addAll(words)
     }
 
-    fun addToAnswer(word: Word) {
+    fun addToAnswer(word: String) {
         answerWordPool.add(word)
         wordPool.remove(word)
     }
 
-    fun removeFromAnswer(word: Word) {
+    fun removeFromAnswer(word: String) {
         wordPool.add(word)
         answerWordPool.remove(word)
     }
 
     fun cleanup() {
         _phrase.update { "" }
+
         _answerWordPool.removeAll(_answerWordPool)
         _wordPool.removeAll(_wordPool)
         _originalPoolOrder.removeAll(_originalPoolOrder)

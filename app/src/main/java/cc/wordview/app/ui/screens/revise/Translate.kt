@@ -48,17 +48,21 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.screens.revise.components.Answer
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
+import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = TranslateViewModel) {
+fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltViewModel()) {
     val phrase by viewModel.phrase.collectAsStateWithLifecycle()
 
     val currentWord by WordReviseViewModel.currentWord.collectAsStateWithLifecycle()
@@ -68,8 +72,20 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = Trans
     val originalPoolOrder = viewModel.originalPoolOrder
     val wrongOrderedWords = viewModel.wrongOrderedWords
 
-
     var checked by rememberSaveable { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
+
+    OneTimeEffect {
+        viewModel.getPhrase(
+            preferences,
+            context,
+            "en",
+            "ja",
+            WordReviseViewModel.currentWord.value.word.word
+        )
+    }
 
     fun compare() {
         checked = true
@@ -85,7 +101,7 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = Trans
 
         if (wrongOrderedWords.size > 0) {
             WordReviseViewModel.setAnswer(Answer.WRONG)
-           currentWord.misses++
+            currentWord.misses++
         } else {
             WordReviseViewModel.setAnswer(Answer.CORRECT)
             currentWord.corrects++
@@ -119,7 +135,7 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = Trans
         verticalArrangement = Arrangement.Center,
     ) {
         FlowRow(Modifier.padding(horizontal = 5.dp)) {
-            answerWordPool.forEachIndexed { index, value ->
+            answerWordPool.forEachIndexed { index, word ->
                 Card(
                     shape = DefaultRoundedCornerShape,
                     modifier = Modifier
@@ -130,10 +146,10 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = Trans
                             if (wrongOrderedWords.contains(index)) MaterialTheme.colorScheme.error else Color.Transparent,
                             DefaultRoundedCornerShape
                         ),
-                    onClick = { viewModel.removeFromAnswer(value) }
+                    onClick = { viewModel.removeFromAnswer(word) }
                 ) {
                     Text(
-                        text = value.word,
+                        text = word,
                         modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp),
                         style = Typography.titleLarge,
                         softWrap = false
@@ -162,13 +178,13 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = Trans
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp, vertical = 10.dp)
                     ) {
-                        originalPoolOrder.forEachIndexed { _, value ->
+                        originalPoolOrder.forEachIndexed { _, word ->
                             Surface(
                                 modifier = Modifier.padding(5.dp),
                                 shape = DefaultRoundedCornerShape
                             ) {
                                 Text(
-                                    text = value.word,
+                                    text = word,
                                     modifier = Modifier.padding(
                                         horizontal = 15.dp,
                                         vertical = 10.dp
@@ -196,18 +212,18 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = Trans
             modifier = Modifier.padding(bottom = 15.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            wordPool.forEachIndexed { _, value ->
+            wordPool.forEachIndexed { _, word ->
                 Card(
                     shape = DefaultRoundedCornerShape,
                     modifier = Modifier
                         .padding(bottom = 20.dp)
                         .padding(horizontal = 5.dp),
                     onClick = {
-                        viewModel.addToAnswer(value)
+                        viewModel.addToAnswer(word)
                     }
                 ) {
                     Text(
-                        text = value.word,
+                        text = word,
                         modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp),
                         style = Typography.titleLarge,
                         softWrap = false
@@ -236,8 +252,8 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = Trans
             }
             Button(
                 onClick = {
-                    viewModel.cleanup()
                     WordReviseViewModel.setScreen(ReviseScreen.Presenter.route)
+                    viewModel.cleanup()
                 },
                 modifier = Modifier
                     .height(60.dp)

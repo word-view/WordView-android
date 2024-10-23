@@ -17,38 +17,51 @@
 
 package cc.wordview.app.ui.screens.revise.components
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import cc.wordview.app.ui.screens.revise.Drag
 import cc.wordview.app.ui.screens.revise.Presenter
+import cc.wordview.app.ui.screens.revise.Translate
 
 sealed class ReviseScreen(val route: String) {
     @Composable
-    open fun Composable(navHostController: NavHostController) {}
+    open fun Composable(navHostController: NavHostController, innerPadding: PaddingValues) {
+    }
 
     data object Presenter : ReviseScreen("presenter") {
         @Composable
-        override fun Composable(navHostController: NavHostController) {
+        override fun Composable(navHostController: NavHostController, innerPadding: PaddingValues) {
             Presenter()
         }
     }
 
     data object IconDrag : ReviseScreen("icon-drag") {
         @Composable
-        override fun Composable(navHostController: NavHostController) {
+        override fun Composable(navHostController: NavHostController, innerPadding: PaddingValues) {
             Drag(navHostController, mode = DragMode.ICON)
         }
     }
 
     data object WordDrag : ReviseScreen("word-drag") {
         @Composable
-        override fun Composable(navHostController: NavHostController) {
+        override fun Composable(navHostController: NavHostController, innerPadding: PaddingValues) {
             Drag(navHostController, mode = DragMode.WORD)
         }
     }
 
+    data object Translate : ReviseScreen("translate") {
+        @Composable
+        override fun Composable(navHostController: NavHostController, innerPadding: PaddingValues) {
+            Translate(innerPadding = innerPadding)
+        }
+    }
+
     companion object {
-        val screens = listOf(Presenter, IconDrag, WordDrag)
+        // Translate is repeated because IconDrag and WordDrag are the same exercise
+        // but occupies 2/3 of the probability, making it more common than the translate
+        // exercise when it should be a 50/50 chance.
+        val screens = listOf(Presenter, IconDrag, WordDrag, Translate, Translate)
 
         fun getByRoute(route: String): ReviseScreen? {
             for (screen in screens) {
@@ -60,6 +73,11 @@ sealed class ReviseScreen(val route: String) {
 
         fun getRandomScreen(): ReviseScreen {
             return screens.filter { s -> s.route != Presenter.route }.random()
+        }
+
+        fun getRandomScreen(toFilter: ReviseScreen): ReviseScreen {
+            return screens.filter { s -> s.route != Presenter.route }
+                .filter { s -> s.route != toFilter.route }.random()
         }
     }
 }

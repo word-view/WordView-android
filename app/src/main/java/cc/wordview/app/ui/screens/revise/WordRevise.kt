@@ -64,7 +64,6 @@ fun WordRevise(
     OneTimeEffect {
         WordReviseViewModel.nextWord()
         WordReviseViewModel.setScreen(ReviseScreen.getRandomScreen().route)
-
         ReviseTimer.start()
     }
 
@@ -102,9 +101,9 @@ fun WordRevise(
                 Icon(imageVector = Icons.Filled.Timelapse, contentDescription = "timer")
             }
         }) { leave() }
-    }) {
+    }) { innerPadding ->
         Box(Modifier.fillMaxSize()) {
-            ReviseScreen.getByRoute(currentScreen)?.Composable(navHostController)
+            ReviseScreen.getByRoute(currentScreen)?.Composable(navHostController, innerPadding)
         }
     }
 }

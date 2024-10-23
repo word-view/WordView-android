@@ -15,23 +15,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.player
+package cc.wordview.app.ui.screens.revise.model
 
 import android.util.Log
 import cc.wordview.app.api.ApiRequestRepository
 import cc.wordview.app.api.Response
 import com.android.volley.DefaultRetryPolicy
+import java.net.URLEncoder
 import javax.inject.Inject
 
-class PlayerRepository @Inject constructor() : ApiRequestRepository() {
+class TranslateRepository @Inject constructor() : ApiRequestRepository() {
     private val TAG = this::class.java.simpleName
 
-    var onGetLyricsSuccess: (String) -> Unit = {}
+    var onGetPhraseSuccess: (String) -> Unit = {}
+    var onGetPhraseFail: () -> Unit = {}
 
-    fun getLyrics(id: String, lang: String, query: String) {
-        val url = "http://$endpoint:8080/api/v1/lyrics?id=$id&lang=$lang&query=$query"
+    fun getPhrase(phraseLang: String, wordsLang: String, keyword: String) {
+        val url =
+            "http://$endpoint:8080/api/v1/lesson/phrase?phraseLang=$phraseLang&wordsLang=$wordsLang&keyword=${URLEncoder.encode(keyword)}"
 
-        val response = Response({ onGetLyricsSuccess(it) }, { Log.e(TAG, "getLyrics: ", it) })
+        val response = Response({ onGetPhraseSuccess(it) },
+            { Log.e(TAG, "getPhrase: ", it); onGetPhraseFail() })
 
         val request = jsonRequest(url, response)
 
