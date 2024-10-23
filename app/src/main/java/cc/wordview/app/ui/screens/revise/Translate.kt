@@ -245,7 +245,7 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
                     .height(60.dp)
                     .width(220.dp)
                     .padding(bottom = 10.dp),
-                enabled = (viewModel.wordPool.isEmpty() && viewModel.answerWordPool.isNotEmpty() && !checked),
+                enabled = viewModel.wordPool.isEmpty() && viewModel.answerWordPool.isNotEmpty() && !checked,
                 shape = DefaultRoundedCornerShape
             ) {
                 Text(text = "Check")
