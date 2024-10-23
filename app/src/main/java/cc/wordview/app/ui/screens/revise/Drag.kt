@@ -58,7 +58,6 @@ import kotlin.math.roundToInt
 @Composable
 fun Drag(
     navHostController: NavHostController,
-    viewModel: WordReviseViewModel = WordReviseViewModel,
     dragViewModel: DragViewModel = DragViewModel,
     mode: DragMode? = null
 ) {

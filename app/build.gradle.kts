@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.compose.preference)
     implementation(libs.androidx.lifecycle.runtime.compose.android)
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.accompanist.flowlayout)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.android.compiler)

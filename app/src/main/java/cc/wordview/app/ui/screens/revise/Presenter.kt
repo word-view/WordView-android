@@ -56,7 +56,7 @@ import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun Presenter(viewModel: WordReviseViewModel = WordReviseViewModel) {
+fun Presenter() {
     initializeIcons()
 
     val answerStatus by WordReviseViewModel.answerStatus.collectAsStateWithLifecycle()

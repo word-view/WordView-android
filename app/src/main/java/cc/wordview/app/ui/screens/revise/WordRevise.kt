@@ -53,7 +53,6 @@ import cc.wordview.app.ui.screens.components.Screen
 @Composable
 fun WordRevise(
     navHostController: NavHostController,
-    viewModel: WordReviseViewModel = WordReviseViewModel
 ) {
     val timerFinished by WordReviseViewModel.timerFinished.collectAsStateWithLifecycle()
     val lessonTime by WordReviseViewModel.formattedTime.collectAsStateWithLifecycle()
@@ -64,7 +63,6 @@ fun WordRevise(
     OneTimeEffect {
         WordReviseViewModel.nextWord()
         WordReviseViewModel.setScreen(ReviseScreen.getRandomScreen().route)
-
         ReviseTimer.start()
     }
 
@@ -102,9 +100,9 @@ fun WordRevise(
                 Icon(imageVector = Icons.Filled.Timelapse, contentDescription = "timer")
             }
         }) { leave() }
-    }) {
+    }) { innerPadding ->
         Box(Modifier.fillMaxSize()) {
-            ReviseScreen.getByRoute(currentScreen)?.Composable(navHostController)
+            ReviseScreen.getByRoute(currentScreen)?.Composable(navHostController, innerPadding)
         }
     }
 }
