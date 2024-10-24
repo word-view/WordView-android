@@ -69,13 +69,13 @@ fun Home(navHostController: NavHostController) {
                 )
             },
             actions = {
-                IconButton(onClick = { navHostController.navigate(Screen.Search.route) }) {
+                IconButton(modifier = Modifier.testTag("search"),onClick = { navHostController.navigate(Screen.Search.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Search,
                         contentDescription = "Search"
                     )
                 }
-                IconButton(onClick = { navHostController.navigate(Screen.Settings.route) }) {
+                IconButton(modifier = Modifier.testTag("settings"), onClick = { navHostController.navigate(Screen.Settings.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Settings,
                         contentDescription = "Settings"

@@ -15,10 +15,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.search
+package cc.wordview.app.ui.screens.components
 
-import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import cc.wordview.app.ui.screens.search.SearchRepository
+import cc.wordview.app.ui.screens.search.SearchRepositoryImpl
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-interface SearchRepository {
-    fun search(query: String): List<StreamInfoItem>
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+
+    @Singleton
+    @Binds
+    internal abstract fun bindSearchRepository(searchRepositoryImpl: SearchRepositoryImpl): SearchRepository
 }
