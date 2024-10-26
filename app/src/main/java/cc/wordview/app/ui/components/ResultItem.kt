@@ -39,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -52,6 +53,7 @@ import kotlin.time.Duration.Companion.seconds
 fun ResultItem(result: VideoSearchResult, onClick: () -> Unit) {
     Card(
         modifier = Modifier
+            .testTag("result-item")
             .fillMaxWidth()
             .height(80.dp),
         colors = CardDefaults.cardColors(

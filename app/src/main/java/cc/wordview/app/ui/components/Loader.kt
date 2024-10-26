@@ -37,7 +37,7 @@ import androidx.core.graphics.ColorUtils
  */
 fun Loader(modifier: Modifier = Modifier, condition: Boolean = false, composable: @Composable () -> Unit = {}) {
     if (!condition) {
-        Box(modifier = modifier.fillMaxSize().testTag("async-composable-progress"), contentAlignment = Alignment.Center) {
+        Box(modifier = modifier.fillMaxSize().testTag("loader"), contentAlignment = Alignment.Center) {
             val inverseSurfaceDarker = ColorUtils.blendARGB(
                 MaterialTheme.colorScheme.inverseSurface.toArgb(),
                 MaterialTheme.colorScheme.background.toArgb(),

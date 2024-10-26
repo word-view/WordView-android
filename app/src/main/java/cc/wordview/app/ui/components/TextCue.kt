@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.sp
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.subtitle.getIconForWord
@@ -67,7 +68,7 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                             }
                             Text(
                                 modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.primaryContainer),
+                                    .background(MaterialTheme.colorScheme.primaryContainer).testTag("text-cue-plain"),
                                 text = word.word,
                                 fontSize = 32.sp,
                                 color = MaterialTheme.colorScheme.inverseSurface
@@ -81,6 +82,7 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
 
                 if (!foundWord) {
                     Text(
+                        modifier = Modifier.testTag("text-cue-word"),
                         text = text[currentIndex].toString(),
                         fontSize = 32.sp,
                         color = MaterialTheme.colorScheme.inverseSurface

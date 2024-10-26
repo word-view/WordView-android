@@ -19,6 +19,7 @@ package cc.wordview.app
 
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.extractor.VideoStream
+import cc.wordview.app.extractor.VideoStreamInterface
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -27,7 +28,7 @@ object SongViewModel : ViewModel() {
     private val TAG = SongViewModel::class.java.simpleName
 
     private val _videoId = MutableStateFlow("")
-    private val _videoStream = MutableStateFlow(VideoStream())
+    private val _videoStream = MutableStateFlow<VideoStreamInterface>(VideoStream())
 
     val videoStream = _videoStream.asStateFlow()
     val videoId = _videoId.asStateFlow()
@@ -36,7 +37,7 @@ object SongViewModel : ViewModel() {
         _videoId.update { id }
     }
 
-    fun setVideoStream(videoStream: VideoStream) {
+    fun setVideoStream(videoStream: VideoStreamInterface) {
         _videoStream.update { videoStream }
     }
 }

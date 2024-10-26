@@ -90,6 +90,7 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
             SearchBar(
                 inputField = {
                     SearchBarDefaults.InputField(
+                        modifier = Modifier.testTag("search-input-field"),
                         query = query,
                         onQueryChange = { viewModel.setQuery(it) },
                         onSearch = { search(it) },
@@ -126,7 +127,7 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
 
             SearchState.ERROR -> {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().testTag("error"),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {

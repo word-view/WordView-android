@@ -17,21 +17,8 @@
 
 package cc.wordview.app.ui.screens.search
 
-import cc.wordview.app.extractor.VideoStream.Companion.YTService
-import org.schabi.newpipe.extractor.search.SearchInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
-import javax.inject.Inject
 
-class SearchRepository @Inject constructor() {
-    fun search(query: String): List<StreamInfoItem> {
-        val search = SearchInfo.getInfo(YTService, YTService.searchQHFactory.fromQuery(query))
-
-        val items = ArrayList<StreamInfoItem>()
-
-        for (item in search.relatedItems) {
-            if (item is StreamInfoItem) items.add(item)
-        }
-
-        return items
-    }
+interface SearchRepository {
+    fun search(query: String): List<StreamInfoItem>
 }

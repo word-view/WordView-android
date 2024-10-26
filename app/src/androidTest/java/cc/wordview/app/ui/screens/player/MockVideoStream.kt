@@ -17,26 +17,24 @@
 
 package cc.wordview.app.ui.screens.player
 
-import android.content.Context
-import cc.wordview.app.api.JsonAcceptingRequest
-import cc.wordview.app.api.Response
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
+import cc.wordview.app.extractor.VideoStreamInterface
+import org.schabi.newpipe.extractor.stream.StreamInfo
+import org.schabi.newpipe.extractor.stream.StreamType
 
-interface PlayerRepository {
-    var onGetLyricsSuccess: (String) -> Unit
+class MockVideoStream : VideoStreamInterface {
+    override var info: StreamInfo =
+        StreamInfo(0, "", "", StreamType.VIDEO_STREAM, "", "Gran Vals - Francisco Tárrega", 0)
 
-    var endpoint: String
+    override var searchQuery: String = ""
+    var url = "http://10.0.2.2:8080/public/gran_vals_tarrega.mp3"
 
-    fun getLyrics(id: String, lang: String, query: String)
+    override fun init(id: String) {}
 
-    fun init(context: Context)
+    override fun getStreamURL(): String {
+        return url
+    }
 
-    fun jsonRequest(url: String, handler: Response): StringRequest {
-        return JsonAcceptingRequest(
-            Request.Method.GET,
-            url,
-            { handler.onSuccessResponse(it) },
-            { handler.onErrorResponse(it) })
+    override fun getHQThumbnail(): String {
+        return ""
     }
 }

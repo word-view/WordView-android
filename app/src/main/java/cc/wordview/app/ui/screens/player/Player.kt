@@ -90,10 +90,9 @@ fun Player(
     OneTimeEffect {
         activity.setOrientationSensorLandscape()
         CoroutineScope(Dispatchers.IO).launch {
-            SongViewModel.setVideoStream(VideoStream())
             SongViewModel.videoStream.value.init(videoId)
 
-            viewModel.initAudio(videoStream)
+            viewModel.initAudio(videoStream.getStreamURL())
             viewModel.getLyrics(preferences, context, videoId, "ja", videoStream.searchQuery)
         }
     }
@@ -101,6 +100,7 @@ fun Player(
     LaunchedEffect(finalized) {
         if (finalized) {
             activity.setOrientationUnspecified()
+            SongViewModel.setVideoStream(VideoStream())
             player.stop()
             navHostController.navigate(Screen.WordRevise.route)
         }
@@ -108,6 +108,7 @@ fun Player(
 
     fun back() {
         activity.setOrientationUnspecified()
+        SongViewModel.setVideoStream(VideoStream())
         player.stop()
         navHostController.goBack()
     }
@@ -186,18 +187,21 @@ fun Player(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 PlayerButton(
+                                    modifier = Modifier.testTag("skip-back"),
                                     icon = Icons.Filled.SkipPrevious,
                                     size = 72.dp,
                                 ) {
                                     player.skipBackward()
                                 }
                                 PlayerButton(
+                                    modifier = Modifier.testTag("toggle-play"),
                                     icon = playIcon,
                                     size = 80.dp,
                                 ) {
                                     viewModel.togglePlay()
                                 }
                                 PlayerButton(
+                                    modifier = Modifier.testTag("skip-forward"),
                                     icon = Icons.Filled.SkipNext,
                                     size = 72.dp,
                                 ) {

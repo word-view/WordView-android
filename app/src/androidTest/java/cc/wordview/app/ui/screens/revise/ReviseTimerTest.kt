@@ -15,11 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.home.revise
+package cc.wordview.app.ui.screens.revise
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.test.junit4.createComposeRule
-import cc.wordview.app.ui.screens.revise.WordReviseViewModel
 import cc.wordview.app.ui.screens.revise.components.ReviseTimer
 import org.junit.Rule
 import org.junit.Test

@@ -15,28 +15,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.player
+package cc.wordview.app
 
+import android.app.Application
 import android.content.Context
-import cc.wordview.app.api.JsonAcceptingRequest
-import cc.wordview.app.api.Response
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
+import androidx.test.runner.AndroidJUnitRunner
+import dagger.hilt.android.testing.HiltTestApplication
 
-interface PlayerRepository {
-    var onGetLyricsSuccess: (String) -> Unit
-
-    var endpoint: String
-
-    fun getLyrics(id: String, lang: String, query: String)
-
-    fun init(context: Context)
-
-    fun jsonRequest(url: String, handler: Response): StringRequest {
-        return JsonAcceptingRequest(
-            Request.Method.GET,
-            url,
-            { handler.onSuccessResponse(it) },
-            { handler.onErrorResponse(it) })
+class HiltTestRunner : AndroidJUnitRunner() {
+     override fun newApplication(cl: ClassLoader?, name: String?, context: Context?): Application {
+        return super.newApplication(cl, HiltTestApplication::class.java.name, context)
     }
 }

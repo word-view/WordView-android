@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app
+package cc.wordview.app.ui.screens.home
 
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.click
@@ -24,9 +24,6 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.screens.home.Home
-import cc.wordview.app.ui.screens.home.LearnTab
-import cc.wordview.app.ui.screens.home.Tabs
 import cc.wordview.app.ui.theme.WordViewTheme
 import org.junit.Rule
 import org.junit.Test
@@ -68,5 +65,4 @@ class HomeTest {
         composeTestRule.onNodeWithTag("$tabRoute-tab").assertExists()
         composeTestRule.onNodeWithTag("$tabRoute-tab").performTouchInput { click() }
     }
-
 }

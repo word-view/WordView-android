@@ -15,28 +15,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.player
+package cc.wordview.app.ui.screens.search
 
-import android.content.Context
-import cc.wordview.app.api.JsonAcceptingRequest
-import cc.wordview.app.api.Response
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
+import cc.wordview.app.extractor.VideoStream.Companion.YTService
+import org.schabi.newpipe.extractor.search.SearchInfo
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import javax.inject.Inject
 
-interface PlayerRepository {
-    var onGetLyricsSuccess: (String) -> Unit
+class SearchRepositoryImpl @Inject constructor() : SearchRepository {
+    override fun search(query: String): List<StreamInfoItem> {
+        val search = SearchInfo.getInfo(YTService, YTService.searchQHFactory.fromQuery(query))
 
-    var endpoint: String
+        val items = ArrayList<StreamInfoItem>()
 
-    fun getLyrics(id: String, lang: String, query: String)
+        for (item in search.relatedItems) {
+            if (item is StreamInfoItem) items.add(item)
+        }
 
-    fun init(context: Context)
-
-    fun jsonRequest(url: String, handler: Response): StringRequest {
-        return JsonAcceptingRequest(
-            Request.Method.GET,
-            url,
-            { handler.onSuccessResponse(it) },
-            { handler.onErrorResponse(it) })
+        return items
     }
 }
