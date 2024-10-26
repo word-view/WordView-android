@@ -18,6 +18,8 @@
 package cc.wordview.app
 
 import cc.wordview.app.ui.screens.components.RepositoryModule
+import cc.wordview.app.ui.screens.player.MockPlayerRepositoryImpl
+import cc.wordview.app.ui.screens.player.PlayerRepository
 import cc.wordview.app.ui.screens.search.MockSearchRepositoryImpl
 import cc.wordview.app.ui.screens.search.SearchRepository
 import dagger.hilt.components.SingletonComponent
@@ -33,4 +35,8 @@ abstract class RepositoryTestModule {
     @Singleton
     @Binds
     abstract fun bindsMockSearchRepository(mockSearchRepositoryImpl: MockSearchRepositoryImpl): SearchRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindsMockPlayerRepository(mockPlayerRepositoryImpl: MockPlayerRepositoryImpl): PlayerRepository
 }

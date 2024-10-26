@@ -15,28 +15,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.player
+package cc.wordview.app.extractor
 
-import android.content.Context
-import cc.wordview.app.api.JsonAcceptingRequest
-import cc.wordview.app.api.Response
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
+import org.schabi.newpipe.extractor.stream.StreamInfo
 
-interface PlayerRepository {
-    var onGetLyricsSuccess: (String) -> Unit
+interface VideoStreamInterface {
+    var info: StreamInfo
+    var searchQuery: String
 
-    var endpoint: String
-
-    fun getLyrics(id: String, lang: String, query: String)
-
-    fun init(context: Context)
-
-    fun jsonRequest(url: String, handler: Response): StringRequest {
-        return JsonAcceptingRequest(
-            Request.Method.GET,
-            url,
-            { handler.onSuccessResponse(it) },
-            { handler.onErrorResponse(it) })
-    }
+    fun init(id: String)
+    fun getStreamURL(): String
+    fun getHQThumbnail(): String
 }

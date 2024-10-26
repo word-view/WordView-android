@@ -25,7 +25,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.audio.AudioPlayer
-import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.subtitle.getIconForWord
@@ -121,7 +120,7 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    fun initAudio(videoStream: VideoStream) {
+    fun initAudio(videoStreamUrl: String) {
         viewModelScope.launch {
             player.value.apply {
                 onPositionChange = { setCurrentCue(lyrics.value.getCueAt(it)) }
@@ -142,7 +141,7 @@ class PlayerViewModel @Inject constructor(
                     _finalized.update { true }
                 }
 
-                initialize(videoStream.getStreamURL())
+                initialize(videoStreamUrl)
             }
         }
     }

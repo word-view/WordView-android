@@ -17,6 +17,8 @@
 
 package cc.wordview.app.ui.screens.components
 
+import cc.wordview.app.ui.screens.player.PlayerRepository
+import cc.wordview.app.ui.screens.player.PlayerRepositoryImpl
 import cc.wordview.app.ui.screens.search.SearchRepository
 import cc.wordview.app.ui.screens.search.SearchRepositoryImpl
 import dagger.Binds
@@ -32,4 +34,8 @@ abstract class RepositoryModule {
     @Singleton
     @Binds
     internal abstract fun bindSearchRepository(searchRepositoryImpl: SearchRepositoryImpl): SearchRepository
+
+    @Singleton
+    @Binds
+    internal abstract fun bindPlayerRepository(playerRepositoryImpl: PlayerRepositoryImpl): PlayerRepository
 }
