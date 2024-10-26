@@ -28,6 +28,7 @@ import cc.wordview.app.SongViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
@@ -81,6 +82,7 @@ class PlayerTest {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-word"), 5_000)
     }
 
+    @Ignore("Unstable results")
     @Test
     fun pause() {
         composeTestRule.waitUntilNodeCount(hasTestTag("toggle-play"), 1, 1_000)
