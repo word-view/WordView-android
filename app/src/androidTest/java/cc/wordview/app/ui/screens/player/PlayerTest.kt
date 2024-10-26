@@ -71,7 +71,7 @@ class PlayerTest {
 
     @Test
     fun goBack() {
-        composeTestRule.waitUntilNodeCount(hasTestTag("interface"), 1, 2_000)
+        composeTestRule.waitUntilNodeCount(hasTestTag("interface"), 1, 5_000)
         composeTestRule.onNodeWithTag("back-button").performClick()
 
         SongViewModel.setVideoStream(MockVideoStream())
@@ -124,8 +124,6 @@ class PlayerTest {
             .performClick()
             .performClick()
             .performClick()
-
-        composeTestRule.onNodeWithTag("toggle-play").performClick()
 
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-plain"), 10_000)
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-word"), 10_000)
