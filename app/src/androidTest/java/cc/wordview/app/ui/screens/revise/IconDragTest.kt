@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.home.revise
+package cc.wordview.app.ui.screens.revise
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -26,8 +26,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.results.ReviseResults
-import cc.wordview.app.ui.screens.revise.WordReviseViewModel
-import cc.wordview.app.ui.screens.revise.Drag
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
 import cc.wordview.app.ui.screens.revise.components.DragMode
