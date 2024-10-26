@@ -10,6 +10,8 @@ desugar_jdk_libs_nio = "2.1.2"
 gengolex = "2.1-SNAPSHOT"
 gson = "2.11.0"
 hiltAndroid = "2.51.1"
+hiltAndroidTesting = "2.44"
+hiltAndroidCompiler = "2.44"
 hiltNavigationCompose = "1.0.0-alpha03"
 junitJupiter = "5.10.3"
 kotlin = "1.9.0"
@@ -47,6 +49,8 @@ gengolex = { module = "cc.wordview.gengolex:Gengolex", version.ref = "gengolex" 
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
+hilt-android-compiler-v244 = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
