@@ -10,9 +10,7 @@ desugar_jdk_libs_nio = "2.1.2"
 gengolex = "2.1-SNAPSHOT"
 gson = "2.11.0"
 hiltAndroid = "2.51.1"
-hiltAndroidTesting = "2.44"
-hiltAndroidCompiler = "2.44"
-hiltNavigationCompose = "1.0.0-alpha03"
+hiltNavigationCompose = "1.2.0"
 junitJupiter = "5.10.3"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -21,17 +19,17 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 compose-preference = "1.1.1"
 lifecycleRuntimeKtx = "2.8.6"
-activityCompose = "1.9.2"
-composeBom = "2024.09.02"
-materialIconsExtended = "1.7.2"
+activityCompose = "1.9.3"
+composeBom = "2024.10.00"
+materialIconsExtended = "1.7.4"
 media3Extractor = "1.4.1"
-navigationRuntimeKtx = "2.8.1"
-navigationCompose = "2.8.1"
+navigationRuntimeKtx = "2.8.3"
+navigationCompose = "2.8.3"
 media3Common = "1.4.1"
 lifecycleRuntimeComposeAndroid = "2.8.6"
 newpipeextractor = "0.24.2"
-uiTestJunit4 = "1.7.2"
-uiTestManifest = "1.7.2"
+uiTestJunit4 = "1.7.4"
+uiTestManifest = "1.7.4"
 volley = "1.2.1"
 
 [libraries]
@@ -49,8 +47,8 @@ gengolex = { module = "cc.wordview.gengolex:Gengolex", version.ref = "gengolex" 
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
-hilt-android-compiler-v244 = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
-hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting" }
+hilt-android-compiler-v244 = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
