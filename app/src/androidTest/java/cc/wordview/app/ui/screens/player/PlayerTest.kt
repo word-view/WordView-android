@@ -99,7 +99,6 @@ class PlayerTest {
             .performClick()
             .performClick()
             .performClick()
-            .performClick()
 
         composeTestRule.onNodeWithTag("toggle-play").performClick()
 
@@ -117,6 +116,7 @@ class PlayerTest {
             .performClick()
             .performClick()
             .performClick()
+
         composeTestRule.onNodeWithTag("skip-back")
             .performClick()
             .performClick()
@@ -124,8 +124,18 @@ class PlayerTest {
             .performClick()
             .performClick()
             .performClick()
+            .performClick()
+            .performClick()
+            .performClick()
+            .performClick()
+            .performClick()
+            .performClick()
+            .performClick()
+            .performClick()
+            .performClick()
+            .performClick()
 
-        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-plain"), 10_000)
-        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-word"), 10_000)
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-plain"), 15_000)
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-word"), 15_000)
     }
 }

@@ -92,7 +92,7 @@ fun Player(
         CoroutineScope(Dispatchers.IO).launch {
             SongViewModel.videoStream.value.init(videoId)
 
-            viewModel.initAudio(videoStream.getStreamURL())
+            viewModel.initAudio(videoStream.getStreamURL(), context)
             viewModel.getLyrics(preferences, context, videoId, "ja", videoStream.searchQuery)
         }
     }
@@ -125,7 +125,7 @@ fun Player(
             PlayerStatus.LOADING -> Loader()
 
             PlayerStatus.READY -> {
-                OneTimeEffect { if (autoplay) viewModel.togglePlay() }
+                OneTimeEffect { if (autoplay) player.play() }
 
                 Box(
                     modifier = Modifier
@@ -191,14 +191,14 @@ fun Player(
                                     icon = Icons.Filled.SkipPrevious,
                                     size = 72.dp,
                                 ) {
-                                    player.skipBackward()
+                                    player.skipBack()
                                 }
                                 PlayerButton(
                                     modifier = Modifier.testTag("toggle-play"),
                                     icon = playIcon,
                                     size = 80.dp,
                                 ) {
-                                    viewModel.togglePlay()
+                                    player.play()
                                 }
                                 PlayerButton(
                                     modifier = Modifier.testTag("skip-forward"),

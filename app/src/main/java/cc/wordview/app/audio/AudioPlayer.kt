@@ -17,21 +17,25 @@
 
 package cc.wordview.app.audio
 
-import android.media.AudioAttributes
-import android.media.MediaPlayer
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlin.concurrent.thread
+import kotlinx.coroutines.withContext
 
-class AudioPlayer : MediaPlayer() {
-    private val TAG = AudioPlayer::class.java.simpleName
+class AudioPlayer {
+    private val TAG = this::class.java.simpleName
 
-    private var state = AudioPlayerState.STALE
+    private lateinit var player: ExoPlayer
 
     private var job: Job? = null
 
@@ -39,87 +43,65 @@ class AudioPlayer : MediaPlayer() {
     var onPrepared: () -> Unit = {}
     var onInitializeFail: (Exception) -> Unit = {}
 
-    init {
-        setOnPreparedListener {
-            Log.d(TAG, "Audio is prepared")
-            state = AudioPlayerState.INITIALIZED
-            onPrepared()
-        }
-
-        setOnBufferingUpdateListener { _, percent ->
-            Log.d(TAG, "Buffering $percent%")
-        }
-    }
-
-    fun initialize(dataSource: String, onComplete: () -> Unit = {}) {
-        Log.d(TAG, "Initializing MediaPlayer with dataSource: $dataSource")
-
-        if (state == AudioPlayerState.INITIALIZED) {
-            state = AudioPlayerState.STALE
-            reset()
-        }
+    fun initialize(url: String, context: Context, listener: AudioPlayerListener) {
+        Log.i(TAG, "Streaming from $url")
 
         try {
-            this.apply {
-                setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-                )
-                setDataSource(dataSource)
-            }
-            thread { prepare() }
+            player = ExoPlayer.Builder(context).setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+                    .setUsage(C.USAGE_MEDIA)
+                    .build(), true
+            ).build()
+
+            listener.onBuffering = { stopPositionCheck() }
+            listener.onReady = { startPositionCheck() }
+
+            player.addListener(listener)
+
+            val mediaItem = MediaItem.fromUri(Uri.parse(url))
+
+            player.setMediaItem(mediaItem)
+            player.prepare()
+            onPrepared()
         } catch (e: Exception) {
-            Log.e(TAG, e.message, e)
+            Log.e(TAG, "Failed to initialize player", e)
             onInitializeFail(e)
         }
     }
 
-    override fun stop() {
-        if (state == AudioPlayerState.INITIALIZED) super.stop()
+    fun stop() {}
 
-        stopPositionCheck()
-        this.reset()
-    }
-
-    fun togglePlay() {
-        if (state == AudioPlayerState.STALE) return
-
-        try {
-            if (this.isPlaying) {
-                pause()
+    fun play() {
+        when (player.isPlaying) {
+            true -> {
+                player.pause()
                 stopPositionCheck()
-            } else {
-                start()
+            }
+            false -> {
+                player.play()
                 startPositionCheck()
             }
-        } catch (e: IllegalStateException) {
-            e.message?.let { Log.w(TAG, it) }
         }
     }
 
     fun skipForward() {
-        val position = currentPosition + 5000
-
-        if (position > duration) {
-            seekTo(duration)
-        } else seekTo(position)
+        player.seekForward()
     }
 
-    fun skipBackward() {
-        val position = currentPosition - 5000
-
-        if (position < 0) {
-            seekTo(0)
-        } else seekTo(position)
+    fun skipBack() {
+        player.seekBack()
     }
+
 
     private fun startPositionCheck() {
-        job = CoroutineScope(Dispatchers.IO).launch {
-            while (isActive && isPlaying) {
-                onPositionChange(currentPosition)
-                delay(1L)
+        job = CoroutineScope(Dispatchers.Main).launch {
+            while (isActive && player.isPlaying) {
+                val position = player.currentPosition.toInt()
+                withContext(Dispatchers.IO) {
+                    onPositionChange(position)
+                    delay(1L)
+                }
             }
         }
     }
@@ -127,9 +109,5 @@ class AudioPlayer : MediaPlayer() {
     private fun stopPositionCheck() {
         job?.cancel()
         job = null
-    }
-
-    fun getState(): AudioPlayerState {
-        return this.state
     }
 }

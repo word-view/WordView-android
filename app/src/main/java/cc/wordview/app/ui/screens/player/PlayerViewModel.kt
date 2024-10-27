@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.audio.AudioPlayerListener
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
@@ -120,14 +121,17 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    fun initAudio(videoStreamUrl: String) {
+    fun initAudio(videoStreamUrl: String, context: Context) {
         viewModelScope.launch {
-            player.value.apply {
-                onPositionChange = { setCurrentCue(lyrics.value.getCueAt(it)) }
-                onInitializeFail = { setPlayerStatus(PlayerStatus.ERROR) }
-                onPrepared = { _audioReady.update { true } }
+            val listener = AudioPlayerListener()
 
-                setOnCompletionListener {
+            listener.apply {
+                onTogglePlay = {
+                    if (it) playIconPlay()
+                    else playIconPause()
+                }
+
+                onPlaybackEnd = {
                     player.value.stop()
 
                     for (cue in cues.value) {
@@ -140,19 +144,15 @@ class PlayerViewModel @Inject constructor(
 
                     _finalized.update { true }
                 }
-
-                initialize(videoStreamUrl)
             }
-        }
-    }
 
-    fun togglePlay() {
-        player.value.togglePlay()
+            player.value.apply {
+                onPositionChange = { setCurrentCue(lyrics.value.getCueAt(it)) }
+                onInitializeFail = { setPlayerStatus(PlayerStatus.ERROR) }
+                onPrepared = { _audioReady.update { true } }
 
-        if (player.value.isPlaying) {
-            playIconPlay()
-        } else {
-            playIconPause()
+                initialize(videoStreamUrl, context, listener)
+            }
         }
     }
 
