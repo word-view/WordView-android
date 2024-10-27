@@ -70,7 +70,9 @@ class AudioPlayer {
         }
     }
 
-    fun stop() {}
+    fun stop() {
+        player.stop()
+    }
 
     fun play() {
         when (player.isPlaying) {
