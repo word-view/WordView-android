@@ -60,6 +60,7 @@ import cc.wordview.app.ui.components.Loader
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.TextCue
+import cc.wordview.app.ui.screens.components.KeepScreenOn
 import cc.wordview.app.ui.screens.components.Screen
 import coil.compose.AsyncImage
 import kotlinx.coroutines.CoroutineScope
@@ -114,6 +115,8 @@ fun Player(
     }
 
     BackHandler { back() }
+
+    KeepScreenOn()
 
     Scaffold { innerPadding ->
         when (status) {
