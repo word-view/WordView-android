@@ -24,7 +24,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
 open class ApiRequestRepository {
-    var endpoint: String = "10.0.2.2"
+    var endpoint: String = "http://10.0.2.2:8080"
 
     protected lateinit var queue: RequestQueue
 

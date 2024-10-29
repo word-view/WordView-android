@@ -28,7 +28,7 @@ import javax.inject.Inject
 class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     private val TAG = this::class.java.simpleName
 
-    override var endpoint = "10.0.2.2"
+    override var endpoint = "http://10.0.2.2:8080"
     override var onGetLyricsSuccess: (String) -> Unit = {}
 
     private lateinit var queue: RequestQueue
@@ -38,7 +38,7 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     }
 
     override fun getLyrics(id: String, lang: String, query: String) {
-        val url = "http://$endpoint:8080/api/v1/lyrics?id=$id&lang=$lang&query=$query"
+        val url = "$endpoint/api/v1/lyrics?id=$id&lang=$lang&query=$query"
 
         val response = Response({ onGetLyricsSuccess(it) }, { Log.e(TAG, "getLyrics: ", it) })
 

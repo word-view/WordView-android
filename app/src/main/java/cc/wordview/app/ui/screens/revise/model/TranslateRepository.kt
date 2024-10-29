@@ -32,7 +32,7 @@ class TranslateRepository @Inject constructor() : ApiRequestRepository() {
 
     fun getPhrase(phraseLang: String, wordsLang: String, keyword: String) {
         val url =
-            "http://$endpoint:8080/api/v1/lesson/phrase?phraseLang=$phraseLang&wordsLang=$wordsLang&keyword=${URLEncoder.encode(keyword)}"
+            "$endpoint/api/v1/lesson/phrase?phraseLang=$phraseLang&wordsLang=$wordsLang&keyword=${URLEncoder.encode(keyword)}"
 
         val response = Response({ onGetPhraseSuccess(it) },
             { Log.e(TAG, "getPhrase: ", it); onGetPhraseFail() })
