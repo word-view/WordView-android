@@ -28,17 +28,20 @@ import cc.wordview.app.audio.AudioPlayerListener
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
-import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.ui.screens.revise.WordReviseViewModel
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
+import coil.ImageLoader
+import coil.request.ImageRequest
 import com.google.gson.JsonParser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.zhanghai.compose.preference.Preferences
 import javax.inject.Inject
 
@@ -47,6 +50,8 @@ class PlayerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val playerRepository: PlayerRepository
 ) : ViewModel() {
+    private val TAG = WordReviseViewModel::class.java.simpleName
+
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
     private val _lyrics = MutableStateFlow(Lyrics())
@@ -111,6 +116,7 @@ class PlayerViewModel @Inject constructor(
 
                     for (word in wordsFound) {
                         cue.words.add(word)
+                        preloadImage(word.parent, playerRepository.endpoint, context)
                     }
                 }
 
@@ -118,6 +124,21 @@ class PlayerViewModel @Inject constructor(
             }
 
             playerRepository.getLyrics(id, lang, query)
+        }
+    }
+
+    private fun preloadImage(parent: String, endpoint: String, context: Context) {
+        viewModelScope.launch {
+            val loader = ImageLoader(context)
+
+            withContext(Dispatchers.IO) {
+                val request = ImageRequest.Builder(context)
+                    .data("$endpoint/api/v1/image?parent=$parent")
+                    .allowHardware(false)
+                    .build()
+
+                loader.execute(request)
+            }
         }
     }
 
@@ -136,9 +157,7 @@ class PlayerViewModel @Inject constructor(
 
                     for (cue in cues.value) {
                         for (word in cue.words) {
-                            if (getIconForWord(word.parent) != null) {
-                                WordReviseViewModel.appendWord(ReviseWord(word))
-                            }
+                            WordReviseViewModel.appendWord(ReviseWord(word))
                         }
                     }
 
