@@ -82,6 +82,7 @@ class SearchViewModel @Inject constructor(
                 id = getIdFromUrl(item.url),
                 title = item.name,
                 channel = item.uploaderName,
+                thumbnails = item.thumbnails,
                 channelIsVerified = item.isUploaderVerified,
                 duration = item.duration,
             ))

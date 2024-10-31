@@ -17,11 +17,13 @@
 
 package cc.wordview.app.api
 
+import org.schabi.newpipe.extractor.Image
+
 class VideoSearchResult(
     var id: String = "",
     var title: String = "",
     var channel: String = "",
     var duration: Long = 0,
+    var thumbnails: List<Image>,
     var channelIsVerified: Boolean = false,
-    var categories: Array<String> = arrayOf(),
 )
