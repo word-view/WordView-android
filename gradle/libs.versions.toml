@@ -27,7 +27,8 @@ navigationRuntimeKtx = "2.8.3"
 navigationCompose = "2.8.3"
 media3Common = "1.4.1"
 lifecycleRuntimeComposeAndroid = "2.8.6"
-newpipeextractor = "0.24.2"
+# WORKAROUND: v0.24.2 can't be resolved by jitpack -> use git commit hash instead
+newpipeextractor = "176da72cb4c3ec4679211339b0e59f6b01bf2f52"
 uiTestJunit4 = "1.7.4"
 uiTestManifest = "1.7.4"
 volley = "1.2.1"
@@ -71,7 +72,7 @@ androidx-media3-common = { group = "androidx.media3", name = "media3-common", ve
 androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 compose-preference = { module = "me.zhanghai.compose.preference:library", version.ref = "compose-preference" }
-newpipeextractor = { module = "com.github.TeamNewPipe:NewPipeExtractor", version.ref = "newpipeextractor" }
+newpipeextractor = { module = "com.github.TeamNewPipe.NewPipeExtractor:NewPipeExtractor", version.ref = "newpipeextractor" }
 tools-desugar_jdk_libs_nio = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "desugar_jdk_libs_nio" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
 ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestManifest" }

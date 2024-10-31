@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.screens.results
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,24 +31,28 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import cc.wordview.app.subtitle.getIconForWord
-import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.Typography
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @Composable
 fun ReviseResults(
     navHostController: NavHostController,
     viewModel: ReviseResultsViewModel = ReviseResultsViewModel
 ) {
-    initializeIcons()
+    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
+    val endpoint = remember { preferences["api_endpoint"] ?: "10.0.2.2" }
 
     val words by ReviseResultsViewModel.words.collectAsStateWithLifecycle()
 
@@ -90,13 +93,14 @@ fun ReviseResults(
 
                 for (word in words) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        getIconForWord(word.word.parent)?.let {
-                            Image(
-                                modifier = Modifier.size(80.dp),
-                                painter = it,
-                                contentDescription = null
-                            )
-                        }
+                        AsyncImage(
+                            modifier = Modifier
+                                .size(80.dp),
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data("$endpoint/api/v1/image?parent=${word.word.parent}")
+                                .build(),
+                            contentDescription = null
+                        )
 
                         Spacer(Modifier.size(12.dp))
 

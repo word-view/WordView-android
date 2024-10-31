@@ -20,7 +20,6 @@ package cc.wordview.app.ui.screens.revise
 import androidx.compose.animation.core.EaseInOutExpo
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,26 +44,26 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.subtitle.getIconForWord
-import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.revise.components.Answer
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
 import cc.wordview.app.ui.theme.Typography
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
+import me.zhanghai.compose.preference.LocalPreferenceFlow
 import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun Presenter() {
-    initializeIcons()
-
     val answerStatus by WordReviseViewModel.answerStatus.collectAsStateWithLifecycle()
     val current by WordReviseViewModel.currentWord.collectAsStateWithLifecycle()
 
-    val iconPainter = getIconForWord(current.word.parent)
-
     var visible by remember { mutableStateOf(false) }
+
+    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
+    val endpoint = remember { preferences["api_endpoint"] ?: "10.0.2.2" }
 
     val context = LocalContext.current
 
@@ -136,15 +135,14 @@ fun Presenter() {
             }
 
             Answer.NONE -> {
-                iconPainter?.let {
-                    Image(
-                        modifier = Modifier
-                            .size(130.dp)
-                            .testTag("word"),
-                        painter = iconPainter,
-                        contentDescription = current.word.word
-                    )
-                }
+                AsyncImage(
+                    modifier = Modifier
+                        .size(130.dp),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data("$endpoint/api/v1/image?parent=${current.word.parent}")
+                        .build(),
+                    contentDescription = null
+                )
                 Text(
                     text = current.word.word,
                     textAlign = TextAlign.Center,

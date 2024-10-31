@@ -26,21 +26,27 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.subtitle.WordViewCue
-import cc.wordview.app.subtitle.getIconForWord
-import cc.wordview.app.subtitle.initializeIcons
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @Composable
 fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
-    initializeIcons()
+    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
+    val endpoint = remember { preferences["api_endpoint"] ?: "10.0.2.2" }
 
     Column(Modifier.wrapContentWidth(Alignment.Start)) {
         Row(
@@ -55,22 +61,25 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
 
                 for (word in cue.words) {
                     if (text.startsWith(word.word, currentIndex)) {
-                        Column(modifier = Modifier.width(IntrinsicSize.Max), horizontalAlignment = Alignment.CenterHorizontally) {
-                            getIconForWord(word.parent)?.let {
-                                Icon(
-                                    painter = it,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .aspectRatio(1f),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.inverseSurface
-                                )
-                            }
+                        Column(
+                            modifier = Modifier.width(IntrinsicSize.Max),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .aspectRatio(1f),
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data("$endpoint/api/v1/image?parent=${word.parent}")
+                                    .build(),
+                                contentDescription = null
+                            )
                             Text(
                                 modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.primaryContainer).testTag("text-cue-plain"),
+                                    .background(MaterialTheme.colorScheme.primaryContainer)
+                                    .testTag("text-cue-plain"),
                                 text = word.word,
-                                fontSize = 32.sp,
+                                fontSize = getFontSize(text.length),
                                 color = MaterialTheme.colorScheme.inverseSurface
                             )
                         }
@@ -84,12 +93,24 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                     Text(
                         modifier = Modifier.testTag("text-cue-word"),
                         text = text[currentIndex].toString(),
-                        fontSize = 32.sp,
+                        fontSize = getFontSize(text.length),
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                     currentIndex++
                 }
             }
         }
+    }
+}
+
+fun getFontSize(cueSize: Int): TextUnit {
+    return if (cueSize <= 8) {
+        44.sp
+    } else if (cueSize <= 12) {
+        42.sp
+    } else if (cueSize <= 18) {
+        40.sp
+    } else {
+        32.sp
     }
 }

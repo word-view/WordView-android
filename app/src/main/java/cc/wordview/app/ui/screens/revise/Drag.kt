@@ -19,7 +19,6 @@ package cc.wordview.app.ui.screens.revise
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +36,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
@@ -44,15 +44,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.dragGestures
-import cc.wordview.app.subtitle.getIconForWord
 import cc.wordview.app.ui.screens.revise.components.Answer
 import cc.wordview.app.ui.screens.revise.components.DragMode
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
 import cc.wordview.app.ui.screens.revise.model.DragViewModel
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.languages.Word
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import me.zhanghai.compose.preference.LocalPreferenceFlow
 import kotlin.math.roundToInt
 
 @Composable
@@ -68,6 +70,9 @@ fun Drag(
     var dragMode by remember { mutableStateOf(DragMode.random()) }
 
     val coroutineScope = rememberCoroutineScope()
+
+    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
+    val endpoint = remember { preferences["api_endpoint"] ?: "10.0.2.2" }
 
     val animatedOffsetX by animateFloatAsState(
         targetValue = if (isDragging) offsetX else 0f,
@@ -135,7 +140,7 @@ fun Drag(
         topWord?.let {
             when (dragMode) {
                 DragMode.ICON -> Text(word = it, testTag = "top-word")
-                DragMode.WORD -> Icon(word = it, testTag = "top-word")
+                DragMode.WORD -> Icon(word = it, testTag = "top-word", endpoint = endpoint)
             }
         }
 
@@ -164,7 +169,7 @@ fun Drag(
         ) {
             currentWord.word.let {
                 when (dragMode) {
-                    DragMode.ICON -> Icon(word = it, testTag = "current")
+                    DragMode.ICON -> Icon(word = it, testTag = "current", endpoint = endpoint)
                     DragMode.WORD -> Text(word = it, testTag = "current")
                 }
             }
@@ -173,7 +178,7 @@ fun Drag(
         downWord?.let {
             when (dragMode) {
                 DragMode.ICON -> Text(word = it, testTag = "down-word")
-                DragMode.WORD -> Icon(word = it, testTag = "down-word")
+                DragMode.WORD -> Icon(word = it, testTag = "down-word", endpoint = endpoint)
             }
         }
     }
@@ -190,14 +195,14 @@ fun Text(word: Word, testTag: String) {
 }
 
 @Composable
-fun Icon(word: Word, testTag: String) {
-    getIconForWord(word.parent)?.let { icon ->
-        Image(
-            modifier = Modifier
-                .size(130.dp)
-                .testTag(testTag),
-            painter = icon,
-            contentDescription = word.word
-        )
-    }
+fun Icon(word: Word, testTag: String, endpoint: String) {
+    AsyncImage(
+        modifier = Modifier
+            .size(130.dp)
+            .testTag(testTag),
+        model = ImageRequest.Builder(LocalContext.current)
+            .data("$endpoint/api/v1/image?parent=${word.parent}")
+            .build(),
+        contentDescription = null
+    )
 }
