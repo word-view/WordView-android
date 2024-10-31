@@ -59,6 +59,7 @@ fun ResultItem(result: VideoSearchResult, onClick: () -> Unit) {
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
+        shape = RoundedCornerShape(0.dp),
         onClick = onClick
     ) {
         Row {
