@@ -24,7 +24,8 @@ import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor() : SearchRepository {
     override fun search(query: String): List<StreamInfoItem> {
-        val search = SearchInfo.getInfo(YTService, YTService.searchQHFactory.fromQuery(query))
+        val queryHandler = YTService.searchQHFactory.fromQuery(query, listOf("music_songs"), "")
+        val search = SearchInfo.getInfo(YTService, queryHandler)
 
         val items = ArrayList<StreamInfoItem>()
 
