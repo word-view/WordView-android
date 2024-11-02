@@ -20,6 +20,7 @@ package cc.wordview.app.ui.screens.player
 import android.content.Context
 import android.util.Log
 import cc.wordview.app.api.Response
+import cc.wordview.app.extractor.VideoStreamInterface
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
@@ -37,8 +38,9 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
         queue = Volley.newRequestQueue(context)
     }
 
-    override fun getLyrics(id: String, lang: String, query: String) {
-        val url = "$endpoint/api/v1/lyrics?id=$id&lang=$lang&query=$query"
+    override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
+        val url =
+            "$endpoint/api/v1/lyrics?id=$id&lang=$lang&trackName=${video.cleanTrackName}&artistName=${video.cleanArtistName}"
 
         val response = Response({ onGetLyricsSuccess(it) }, { Log.e(TAG, "getLyrics: ", it) })
 

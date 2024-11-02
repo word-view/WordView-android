@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.audio.AudioPlayerListener
 import cc.wordview.app.audio.AudioPlayer
+import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.screens.revise.WordReviseViewModel
@@ -92,7 +93,7 @@ class PlayerViewModel @Inject constructor(
         context: Context,
         id: String,
         lang: String,
-        query: String
+        video: VideoStreamInterface
     ) {
         viewModelScope.launch {
             playerRepository.init(context)
@@ -123,7 +124,7 @@ class PlayerViewModel @Inject constructor(
                 _dictionaryReady.update { true }
             }
 
-            playerRepository.getLyrics(id, lang, query)
+            playerRepository.getLyrics(id, lang, video)
         }
     }
 

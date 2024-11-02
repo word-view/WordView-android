@@ -94,7 +94,7 @@ fun Player(
             SongViewModel.videoStream.value.init(videoId)
 
             viewModel.initAudio(videoStream.getStreamURL(), context)
-            viewModel.getLyrics(preferences, context, videoId, "ja", videoStream.searchQuery)
+            viewModel.getLyrics(preferences, context, videoId, "ja", videoStream)
         }
     }
 

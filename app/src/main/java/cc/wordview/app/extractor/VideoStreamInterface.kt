@@ -21,7 +21,8 @@ import org.schabi.newpipe.extractor.stream.StreamInfo
 
 interface VideoStreamInterface {
     var info: StreamInfo
-    var searchQuery: String
+    var cleanArtistName: String
+    var cleanTrackName: String
 
     fun init(id: String)
     fun getStreamURL(): String

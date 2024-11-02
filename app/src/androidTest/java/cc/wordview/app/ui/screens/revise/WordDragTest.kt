@@ -25,7 +25,6 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.subtitle.initializeIcons
 import cc.wordview.app.ui.screens.results.ReviseResults
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
@@ -58,8 +57,6 @@ class WordDragTest {
 
         composeTestRule.setContent {
             val navController = rememberNavController()
-
-            initializeIcons()
 
             WordViewTheme {
                 ProvidePreferenceLocals {

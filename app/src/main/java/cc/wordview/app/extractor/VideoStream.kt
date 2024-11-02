@@ -26,7 +26,8 @@ class VideoStream : VideoStreamInterface {
     override var info: StreamInfo =
         StreamInfo(0, "", "", StreamType.VIDEO_STREAM, "", "", 0)
 
-    override var searchQuery = ""
+    override var cleanArtistName = ""
+    override var cleanTrackName = ""
 
     override fun init(id: String) {
         info = StreamInfo.getInfo(YTService, "https://youtube.com/watch?v=$id")
@@ -36,9 +37,12 @@ class VideoStream : VideoStreamInterface {
         val artistClean = info.uploaderName.lowercase()
             .replace("official", "")
             .replace("channel", "")
+            .replace("-.*$".toRegex(), "")
+            .trim()
 
         val titleClean = info.name.lowercase()
             .replace("\\[[^\\[]*\\]", "")
+            .replace("-.*$".toRegex(), "")
             .replace("[", "")
             .replace("]", "")
             .replace("mv", "")
@@ -48,7 +52,8 @@ class VideoStream : VideoStreamInterface {
                 ""
             )
 
-        searchQuery = "$titleClean $artistClean"
+        cleanArtistName = artistClean
+        cleanTrackName = titleClean
     }
 
     override fun getStreamURL(): String {

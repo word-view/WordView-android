@@ -20,6 +20,7 @@ package cc.wordview.app.ui.screens.player
 import android.content.Context
 import cc.wordview.app.api.JsonAcceptingRequest
 import cc.wordview.app.api.Response
+import cc.wordview.app.extractor.VideoStreamInterface
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 
@@ -28,7 +29,7 @@ interface PlayerRepository {
 
     var endpoint: String
 
-    fun getLyrics(id: String, lang: String, query: String)
+    fun getLyrics(id: String, lang: String, video: VideoStreamInterface)
 
     fun init(context: Context)
 
