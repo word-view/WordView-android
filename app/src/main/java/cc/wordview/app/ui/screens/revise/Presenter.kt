@@ -136,8 +136,7 @@ fun Presenter() {
 
             Answer.NONE -> {
                 AsyncImage(
-                    modifier = Modifier
-                        .size(130.dp),
+                    modifier = Modifier.size(130.dp).testTag("word"),
                     model = ImageRequest.Builder(LocalContext.current)
                         .data("$endpoint/api/v1/image?parent=${current.word.parent}")
                         .build(),

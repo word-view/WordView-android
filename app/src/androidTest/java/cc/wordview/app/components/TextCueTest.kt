@@ -23,6 +23,7 @@ import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule
 import org.junit.Test
 
@@ -33,7 +34,9 @@ class TextCueTest {
     private fun setup(text: String = "") {
         composeTestRule.setContent {
             WordViewTheme {
-                TextCue(cue = WordViewCue(text = text))
+                ProvidePreferenceLocals {
+                    TextCue(cue = WordViewCue(text = text))
+                }
             }
         }
     }
@@ -41,7 +44,9 @@ class TextCueTest {
     private fun setup(cue: WordViewCue) {
         composeTestRule.setContent {
             WordViewTheme {
-                TextCue(cue)
+                ProvidePreferenceLocals {
+                    TextCue(cue)
+                }
             }
         }
     }

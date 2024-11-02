@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule
 import org.junit.Test
 
@@ -36,7 +37,9 @@ class ReviseResultsTest {
     private fun setupScreen() {
         composeTestRule.setContent {
             WordViewTheme {
-                ReviseResults(navHostController = rememberNavController())
+                ProvidePreferenceLocals {
+                    ReviseResults(navHostController = rememberNavController())
+                }
             }
         }
     }
