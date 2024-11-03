@@ -31,10 +31,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -68,6 +70,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Player(
     navHostController: NavHostController,
@@ -160,7 +163,7 @@ fun Player(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(64.dp)
+                                .height(TopAppBarDefaults.TopAppBarExpandedHeight.times(2))
                                 .padding(innerPadding),
                             contentAlignment = Alignment.TopStart,
                         ) {
