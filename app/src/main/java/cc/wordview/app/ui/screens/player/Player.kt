@@ -57,6 +57,7 @@ import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.extractor.VideoStream
+import cc.wordview.app.ui.components.FadeInAsyncImage
 import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.components.Loader
 import cc.wordview.app.ui.components.OneTimeEffect
@@ -138,14 +139,7 @@ fun Player(
                         .fillMaxSize()
                         .testTag("interface")
                 ) {
-                    AsyncImage(
-                        model = videoStream.getHQThumbnail(),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .alpha(0.15f),
-                        contentScale = ContentScale.FillWidth
-                    )
+                    FadeInAsyncImage(videoStream.getHQThumbnail())
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -154,12 +148,12 @@ fun Player(
                         TextCue(
                             modifier = Modifier
                                 .zIndex(1f)
-                                .padding(bottom = 6.dp)
+                                .padding(bottom = innerPadding.calculateBottomPadding() + 6.dp)
                                 .testTag("text-cue"),
                             cue = currentCue
                         )
                     }
-                    FadeOutBox(duration = 250, stagnationTime = 3000) {
+                    FadeOutBox(duration = 250, stagnationTime = 5000) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()

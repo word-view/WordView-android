@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.components
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
@@ -29,8 +30,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+
 @Composable
-fun WVIconButton(modifier: Modifier = Modifier, onClick: () -> Unit, enabled: Boolean = true, imageVector: ImageVector, size: Dp, colors: ButtonColors = ButtonDefaults.buttonColors()) {
+fun WVIconButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    imageVector: ImageVector,
+    size: Dp,
+    colors: ButtonColors = ButtonDefaults.buttonColors()
+) {
     Button(
         onClick = onClick,
         modifier = modifier.size(size),
@@ -38,10 +47,12 @@ fun WVIconButton(modifier: Modifier = Modifier, onClick: () -> Unit, enabled: Bo
         enabled = enabled,
         shape = CircleShape,
     ) {
-        Icon(
-            imageVector = imageVector,
-            modifier = Modifier.size(60.dp),
-            contentDescription = ""
-        )
+        Crossfade(targetState = imageVector, label = "a") {
+            Icon(
+                imageVector = it,
+                modifier = Modifier.size(60.dp),
+                contentDescription = ""
+            )
+        }
     }
 }
