@@ -39,7 +39,7 @@ class AudioPlayer {
 
     private var job: Job? = null
 
-    var onPositionChange: (Int) -> Unit = {}
+    var onPositionChange: (Int, Int) -> Unit = { position: Int, bufferedPercentage: Int -> }
     var onPrepared: () -> Unit = {}
     var onInitializeFail: (Exception) -> Unit = {}
 
@@ -95,14 +95,18 @@ class AudioPlayer {
         player.seekBack()
     }
 
+    fun getDuration(): Long {
+        return player.duration
+    }
 
     private fun startPositionCheck() {
         job = CoroutineScope(Dispatchers.Main).launch {
             while (isActive && player.isPlaying) {
                 val position = player.currentPosition.toInt()
+                val bufferedPercentage = player.bufferedPercentage
                 withContext(Dispatchers.IO) {
-                    onPositionChange(position)
-                    delay(1L)
+                    onPositionChange(position, bufferedPercentage)
+                    delay(25L)
                 }
             }
         }

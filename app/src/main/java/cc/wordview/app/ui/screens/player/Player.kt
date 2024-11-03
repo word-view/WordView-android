@@ -42,8 +42,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -62,10 +60,10 @@ import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.components.Loader
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
+import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.components.KeepScreenOn
 import cc.wordview.app.ui.screens.components.Screen
-import coil.compose.AsyncImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -86,6 +84,9 @@ fun Player(
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
+
+    val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
+    val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
 
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
@@ -177,9 +178,10 @@ fun Player(
                                 )
                             }
                         }
-                        Box(
+                        Column(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Row(
                                 Modifier.fillMaxWidth(0.5f),
@@ -208,6 +210,7 @@ fun Player(
                                     player.skipForward()
                                 }
                             }
+                            Seekbar(currentPosition, player.getDuration(), bufferedPercentage)
                         }
                     }
                 }
