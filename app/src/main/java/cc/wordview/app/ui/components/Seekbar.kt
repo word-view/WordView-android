@@ -42,23 +42,15 @@ import cc.wordview.app.ui.theme.Typography
 fun Seekbar(
     currentPosition: Long,
     duration: Long,
-    @IntRange(from = 0, to = 100) bufferingProgress: Int
+    @IntRange(from = 0, to = 100) bufferingProgress: Int,
 ) {
     val progress = duration.percentageOf(currentPosition)
 
     Column(Modifier.testTag("seekbar")) {
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 72.dp)
-                .padding(bottom = 5.dp),
-            text = "${formatTime(currentPosition)} / ${formatTime(duration)}",
-            style = Typography.labelMedium,
-            fontSize = 14.sp
-        )
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(4.dp)
+                .height(2.dp)
                 .padding(horizontal = 64.dp)
                 .background(color = MaterialTheme.colorScheme.surfaceVariant)
                 .alpha(0.75f)
@@ -79,6 +71,14 @@ fun Seekbar(
                     .testTag("progress-line")
             )
         }
+        Text(
+            modifier = Modifier
+                .padding(horizontal = 72.dp)
+                .padding(top = 5.dp),
+            text = "${formatTime(currentPosition)} / ${formatTime(duration)}",
+            style = Typography.labelMedium,
+            fontSize = 14.sp
+        )
     }
 }
 
