@@ -51,7 +51,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.extensions.enterImmersiveMode
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.extensions.leaveImmersiveMode
 import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.extractor.VideoStream
@@ -64,10 +66,12 @@ import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.components.KeepScreenOn
 import cc.wordview.app.ui.screens.components.Screen
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.LocalPreferenceFlow
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,6 +97,8 @@ fun Player(
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
 
+    val systemUiController = rememberSystemUiController()
+
     OneTimeEffect {
         activity.setOrientationSensorLandscape()
         CoroutineScope(Dispatchers.IO).launch {
@@ -108,6 +114,7 @@ fun Player(
             activity.setOrientationUnspecified()
             SongViewModel.setVideoStream(VideoStream())
             player.stop()
+            systemUiController.leaveImmersiveMode()
             navHostController.navigate(Screen.WordRevise.route)
         }
     }
@@ -116,6 +123,7 @@ fun Player(
         activity.setOrientationUnspecified()
         SongViewModel.setVideoStream(VideoStream())
         player.stop()
+        systemUiController.leaveImmersiveMode()
         navHostController.goBack()
     }
 
@@ -133,7 +141,12 @@ fun Player(
             PlayerStatus.LOADING -> Loader()
 
             PlayerStatus.READY -> {
-                OneTimeEffect { if (autoplay) player.play() }
+                OneTimeEffect {
+                    if (autoplay) player.play()
+                    // For some reason putting this inside the outer OneTimeEffect
+                    // doest work on some API levels so this needs to be here
+                    systemUiController.enterImmersiveMode()
+                }
 
                 Box(
                     modifier = Modifier
