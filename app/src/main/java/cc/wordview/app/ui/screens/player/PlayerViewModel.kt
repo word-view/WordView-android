@@ -62,6 +62,13 @@ class PlayerViewModel @Inject constructor(
     private val _playerStatus = MutableStateFlow(PlayerStatus.LOADING)
     private val _finalized = MutableStateFlow(false)
 
+    // Seekbar states
+    private val _currentPosition = MutableStateFlow(0L)
+    private val _bufferedPercentage = MutableStateFlow(0)
+
+    val currentPosition = _currentPosition.asStateFlow()
+    val bufferedPercentage = _bufferedPercentage.asStateFlow()
+
     // Local states
     private val _lyricsReady = MutableStateFlow(false)
     private val _dictionaryReady = MutableStateFlow(false)
@@ -167,7 +174,11 @@ class PlayerViewModel @Inject constructor(
             }
 
             player.value.apply {
-                onPositionChange = { setCurrentCue(lyrics.value.getCueAt(it)) }
+                onPositionChange = { pos, bufferedPercentage ->
+                    setCurrentCue(lyrics.value.getCueAt(pos))
+                    _currentPosition.update { pos.toLong() }
+                    _bufferedPercentage.update { bufferedPercentage }
+                }
                 onInitializeFail = { setPlayerStatus(PlayerStatus.ERROR) }
                 onPrepared = { _audioReady.update { true } }
 

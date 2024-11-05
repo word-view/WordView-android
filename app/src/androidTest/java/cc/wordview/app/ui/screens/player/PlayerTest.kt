@@ -64,6 +64,9 @@ class PlayerTest {
         composeTestRule.onNodeWithTag("skip-back").assertExists()
         composeTestRule.onNodeWithTag("toggle-play").assertExists()
         composeTestRule.onNodeWithTag("skip-forward").assertExists()
+        composeTestRule.onNodeWithTag("seekbar", useUnmergedTree = true).assertExists()
+        composeTestRule.onNodeWithTag("progress-line", useUnmergedTree = true).assertExists()
+        composeTestRule.onNodeWithTag("buffer-line", useUnmergedTree = true).assertExists()
 
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-plain"), 5_000)
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-word"), 5_000)

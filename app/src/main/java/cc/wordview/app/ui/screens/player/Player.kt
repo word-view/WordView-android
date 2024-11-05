@@ -42,8 +42,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -53,7 +51,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.extensions.enterImmersiveMode
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.extensions.leaveImmersiveMode
 import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.extractor.VideoStream
@@ -62,14 +62,16 @@ import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.components.Loader
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
+import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.components.KeepScreenOn
 import cc.wordview.app.ui.screens.components.Screen
-import coil.compose.AsyncImage
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.LocalPreferenceFlow
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,10 +89,15 @@ fun Player(
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
 
+    val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
+    val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
+
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
+
+    val systemUiController = rememberSystemUiController()
 
     OneTimeEffect {
         activity.setOrientationSensorLandscape()
@@ -107,6 +114,7 @@ fun Player(
             activity.setOrientationUnspecified()
             SongViewModel.setVideoStream(VideoStream())
             player.stop()
+            systemUiController.leaveImmersiveMode()
             navHostController.navigate(Screen.WordRevise.route)
         }
     }
@@ -115,6 +123,7 @@ fun Player(
         activity.setOrientationUnspecified()
         SongViewModel.setVideoStream(VideoStream())
         player.stop()
+        systemUiController.leaveImmersiveMode()
         navHostController.goBack()
     }
 
@@ -132,7 +141,12 @@ fun Player(
             PlayerStatus.LOADING -> Loader()
 
             PlayerStatus.READY -> {
-                OneTimeEffect { if (autoplay) player.play() }
+                OneTimeEffect {
+                    if (autoplay) player.play()
+                    // For some reason putting this inside the outer OneTimeEffect
+                    // doest work on some API levels so this needs to be here
+                    systemUiController.enterImmersiveMode()
+                }
 
                 Box(
                     modifier = Modifier
@@ -177,9 +191,10 @@ fun Player(
                                 )
                             }
                         }
-                        Box(
+                        Column(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Row(
                                 Modifier.fillMaxWidth(0.5f),
@@ -208,6 +223,7 @@ fun Player(
                                     player.skipForward()
                                 }
                             }
+                            Seekbar(currentPosition, player.getDuration(), bufferedPercentage)
                         }
                     }
                 }

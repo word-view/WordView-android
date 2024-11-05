@@ -31,7 +31,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -44,8 +43,6 @@ fun FadeOutBox(
 ) {
     var visible by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
-
-    val systemUiController = rememberSystemUiController()
 
     val fade by animateFloatAsState(
         if (visible) 1f else 0f,
@@ -65,10 +62,6 @@ fun FadeOutBox(
             delay(stagnationTime.toLong() - 1000)
             visible = false
         }
-    }
-
-    LaunchedEffect(visible) {
-        systemUiController.isStatusBarVisible = visible
     }
 
     Box(modifier = modifier
