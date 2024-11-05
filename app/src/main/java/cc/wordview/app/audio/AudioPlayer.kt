@@ -71,7 +71,11 @@ class AudioPlayer {
     }
 
     fun stop() {
-        player.stop()
+        try {
+            player.stop()
+        } catch (e: UninitializedPropertyAccessException) {
+            Log.w(TAG, "Called stop too early (ignoring): ${e.message}")
+        }
     }
 
     fun play() {
