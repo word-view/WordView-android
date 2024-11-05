@@ -7,7 +7,7 @@ coilCompose = "2.6.0"
 composefadingedges = "1.0.4"
 composeResources = "1.0.0-alpha01"
 desugar_jdk_libs_nio = "2.1.2"
-gengolex = "2.1-SNAPSHOT"
+gengolex = "2.1.0"
 gson = "2.11.0"
 hiltAndroid = "2.51.1"
 hiltNavigationCompose = "1.2.0"
@@ -47,7 +47,7 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose"
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 compose-resources = { module = "com.github.ygorluizfrazao:compose-resources", version.ref = "composeResources" }
 composefadingedges = { module = "com.github.GIGAMOLE:ComposeFadingEdges", version.ref = "composefadingedges" }
-gengolex = { module = "cc.wordview.gengolex:Gengolex", version.ref = "gengolex" }
+gengolex = { module = "com.github.word-view:Gengolex", version.ref = "gengolex" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
