@@ -40,13 +40,14 @@ import cc.wordview.app.ui.theme.Typography
 
 @Composable
 fun Seekbar(
+    modifier: Modifier = Modifier,
     currentPosition: Long,
     duration: Long,
     @IntRange(from = 0, to = 100) bufferingProgress: Int,
 ) {
     val progress = duration.percentageOf(currentPosition)
 
-    Column(Modifier.testTag("seekbar")) {
+    Column(modifier.testTag("seekbar")) {
         Box(
             Modifier
                 .fillMaxWidth()

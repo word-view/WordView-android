@@ -195,10 +195,9 @@ fun Player(
                                 )
                             }
                         }
-                        Column(
+                        Box(
                             modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                            contentAlignment = Alignment.Center
                         ) {
                             Row(
                                 Modifier.fillMaxWidth(0.5f),
@@ -227,7 +226,7 @@ fun Player(
                                     player.skipForward()
                                 }
                             }
-                            Seekbar(currentPosition, player.getDuration(), bufferedPercentage)
+                            Seekbar(Modifier.padding(top = 110.dp), currentPosition, player.getDuration(), bufferedPercentage)
                         }
                     }
                 }
