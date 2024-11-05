@@ -58,16 +58,14 @@ class WordDragTest {
         composeTestRule.setContent {
             val navController = rememberNavController()
 
-            WordViewTheme {
-                ProvidePreferenceLocals {
-                    NavHost(navController = navController, startDestination = "word-drag") {
-                        composable("word-drag") {
-                            Drag(navController, mode = DragMode.WORD)
-                        }
+            ProvidePreferenceLocals {
+                NavHost(navController = navController, startDestination = "word-drag") {
+                    composable("word-drag") {
+                        Drag(navController, mode = DragMode.WORD)
+                    }
 
-                        composable(Screen.ReviseResults.route) {
-                            ReviseResults(navController)
-                        }
+                    composable(Screen.ReviseResults.route) {
+                        ReviseResults(navController)
                     }
                 }
             }

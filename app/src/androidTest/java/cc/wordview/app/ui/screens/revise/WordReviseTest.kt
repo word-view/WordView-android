@@ -45,15 +45,13 @@ class WordReviseTest {
         viewModel.appendWord(ReviseWord(Word("5", "5")))
 
         composeTestRule.setContent {
-            WordViewTheme {
-                val navController = rememberNavController()
-                NavHost(navController , startDestination = "word-revise") {
-                    composable(Screen.WordRevise.route) {
-                        WordRevise(navController)
-                    }
-
-                    composable("home") { Box {} }
+            val navController = rememberNavController()
+            NavHost(navController, startDestination = "word-revise") {
+                composable(Screen.WordRevise.route) {
+                    WordRevise(navController)
                 }
+
+                composable("home") { Box {} }
             }
         }
     }

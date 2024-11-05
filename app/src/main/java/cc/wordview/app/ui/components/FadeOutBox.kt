@@ -31,6 +31,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import cc.wordview.app.extensions.alpha
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -66,6 +69,8 @@ fun FadeOutBox(
 
     Box(modifier = modifier
         .alpha(fade)
+        .testTag("fade-box")
+        .semantics { alpha = fade }
         .clickable(
             indication = null,
             interactionSource = remember { MutableInteractionSource() }) { visible = !visible }) {

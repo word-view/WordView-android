@@ -88,6 +88,7 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
+    androidTestImplementation("org.mockito:mockito-android:5.14.2")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

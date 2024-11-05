@@ -33,9 +33,7 @@ class SeekbarTest {
 
     private fun setup(currentPosition: Long, duration: Long, bufferingProgress: Int) {
         composeTestRule.setContent {
-            WordViewTheme {
-                Seekbar(currentPosition, duration, bufferingProgress)
-            }
+            Seekbar(currentPosition, duration, bufferingProgress)
         }
     }
 

@@ -36,10 +36,8 @@ class ReviseResultsTest {
 
     private fun setupScreen() {
         composeTestRule.setContent {
-            WordViewTheme {
-                ProvidePreferenceLocals {
-                    ReviseResults(navHostController = rememberNavController())
-                }
+            ProvidePreferenceLocals {
+                ReviseResults(navHostController = rememberNavController())
             }
         }
     }

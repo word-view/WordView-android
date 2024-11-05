@@ -43,10 +43,8 @@ class TextCueTest {
 
     private fun setup(cue: WordViewCue) {
         composeTestRule.setContent {
-            WordViewTheme {
-                ProvidePreferenceLocals {
-                    TextCue(cue)
-                }
+            ProvidePreferenceLocals {
+                TextCue(cue)
             }
         }
     }
@@ -60,16 +58,48 @@ class TextCueTest {
     }
 
     @Test
-    fun dictionaryWordRenders() {
+    fun dictionaryMultipleWordsEnglish() {
+        val words = arrayListOf(
+            Word("world", "world"),
+            Word("programmed", "programmed"),
+            Word("work", "work"),
+            Word("feel", "feel"),
+        )
+
         setup(
             WordViewCue(
-                "Hello World",
+                "Hello, world programmed to work and not to feel",
                 0,
                 0,
-                arrayListOf(Word("hello", "Hello"))
+                words
             )
         )
 
-        composeTestRule.onNodeWithText("Hello").assertExists()
+        for (word in words) {
+            composeTestRule.onNodeWithText(word.word).assertExists()
+        }
+    }
+
+    @Test
+    fun dictionaryMultipleWordsJapanese() {
+        val words = arrayListOf(
+            Word("hajimari", "始まり"),
+            Word("rain", "雨"),
+            Word("aruitanda", "歩いたんだ"),
+            Word("kumori", "曇り"),
+        )
+
+        setup(
+            WordViewCue(
+                "始まりはそうだ 曇りのち雨 歩いたんだ、ここ",
+                0,
+                0,
+                words,
+            )
+        )
+
+        for (word in words) {
+            composeTestRule.onNodeWithText(word.word).assertExists()
+        }
     }
 }

@@ -88,7 +88,7 @@ fun ResultItem(result: VideoSearchResult, onClick: () -> Unit) {
                 )
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     if (result.channelIsVerified) {
-                        Icon(imageVector = Icons.Filled.Verified, modifier = Modifier.size(12.dp), contentDescription = "")
+                        Icon(imageVector = Icons.Filled.Verified, modifier = Modifier.size(12.dp), contentDescription = "Verified")
                         Spacer(Modifier.size(2.dp))
                     }
 

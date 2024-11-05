@@ -34,26 +34,22 @@ class HomeTest {
 
     @Test
     fun learnTabRendersByItself() {
-       composeTestRule.setContent {
-           val mockNavController = rememberNavController()
-           val mockNavHostController = rememberNavController()
+        composeTestRule.setContent {
+            val mockNavController = rememberNavController()
+            val mockNavHostController = rememberNavController()
 
-           WordViewTheme {
-               LearnTab(navController = mockNavController, navHostController = mockNavHostController)
-           }
-       }
+            LearnTab(navController = mockNavController, navHostController = mockNavHostController)
+        }
 
         composeTestRule.onAllNodesWithTag("song-card").assertCountEquals(3)
     }
-    
+
     @Test
     fun navigateBetweenTabs() {
-        composeTestRule.setContent { 
+        composeTestRule.setContent {
             val mockNavController = rememberNavController()
-            
-            WordViewTheme {
-                Home(navHostController = mockNavController)
-            }
+
+            Home(navHostController = mockNavController)
         }
 
         performTabTest(Tabs.Profile.route)

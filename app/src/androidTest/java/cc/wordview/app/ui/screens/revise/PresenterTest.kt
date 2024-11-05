@@ -37,10 +37,8 @@ class PresenterTest {
     private fun setupScreen(autoAdvance: Boolean = true) {
         composeTestRule.mainClock.autoAdvance = autoAdvance
         composeTestRule.setContent {
-            WordViewTheme {
-                ProvidePreferenceLocals {
-                    Presenter()
-                }
+            ProvidePreferenceLocals {
+                Presenter()
             }
         }
     }

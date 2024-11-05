@@ -57,16 +57,14 @@ class IconDragTest {
         composeTestRule.setContent {
             val navController = rememberNavController()
 
-            WordViewTheme {
-                ProvidePreferenceLocals {
-                    NavHost(navController = navController, startDestination = "icon-drag") {
-                        composable("icon-drag") {
-                            Drag(navController, mode = DragMode.ICON)
-                        }
+            ProvidePreferenceLocals {
+                NavHost(navController = navController, startDestination = "icon-drag") {
+                    composable("icon-drag") {
+                        Drag(navController, mode = DragMode.ICON)
+                    }
 
-                        composable(Screen.ReviseResults.route) {
-                            ReviseResults(navController)
-                        }
+                    composable(Screen.ReviseResults.route) {
+                        ReviseResults(navController)
                     }
                 }
             }
