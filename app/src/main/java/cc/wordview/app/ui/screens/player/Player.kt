@@ -57,9 +57,9 @@ import cc.wordview.app.extensions.leaveImmersiveMode
 import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.extractor.VideoStream
+import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FadeInAsyncImage
 import cc.wordview.app.ui.components.FadeOutBox
-import cc.wordview.app.ui.components.Loader
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.Seekbar
@@ -138,7 +138,11 @@ fun Player(
                 navHostController
             )
 
-            PlayerStatus.LOADING -> Loader()
+            PlayerStatus.LOADING -> {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(64.dp)
+                }
+            }
 
             PlayerStatus.READY -> {
                 OneTimeEffect {

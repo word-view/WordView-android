@@ -20,6 +20,7 @@ package cc.wordview.app.ui.screens.search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -56,7 +57,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.ui.components.Loader
+import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.screens.components.Screen
@@ -123,7 +124,11 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
 
         when (state) {
             SearchState.NONE -> {}
-            SearchState.LOADING -> Loader()
+            SearchState.LOADING -> {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(64.dp)
+                }
+            }
 
             SearchState.ERROR -> {
                 Column(
