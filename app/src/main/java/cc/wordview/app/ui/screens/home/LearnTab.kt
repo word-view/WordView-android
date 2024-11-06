@@ -18,42 +18,30 @@
 package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.audio.Video
+import cc.wordview.app.ui.components.SongCard
 import cc.wordview.app.ui.screens.components.Screen
-import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
-import cc.wordview.app.ui.theme.Typography
-import coil.compose.AsyncImage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -78,61 +66,21 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
             .fillMaxSize()
             .padding(PaddingValues(start = 6.dp))
     ) {
-        LazyRow(modifier = Modifier.fillMaxWidth(), state = rememberLazyListState()) {
+        LazyRow(modifier = Modifier.fillMaxWidth(), state = rememberLazyListState(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             for (video in videos) {
                 item {
-                    Card(
+                    SongCard(
                         modifier = Modifier.testTag("song-card"),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.background,
-                        ),
-                        onClick = {
-                            SongViewModel.setVideo(video.id)
-                            navHostController.navigate(Screen.Player.route)
-                        }
+                        thumbnail = video.cover,
+                        artist = video.artist,
+                        trackName = video.title
                     ) {
-                        Column(
-                            modifier = Modifier.padding(10.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            if (video.id != "") {
-                                Surface(
-                                    modifier = Modifier.size(120.dp),
-                                    shape = DefaultRoundedCornerShape
-                                ) {
-                                    AsyncImage(
-                                        model = video.cover,
-                                        placeholder = painterResource(id = R.drawable.radio),
-                                        error = painterResource(id = R.drawable.radio),
-                                        contentDescription = "${video.title} cover",
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentScale = ContentScale.FillHeight,
-                                    )
-                                }
-                                Column(
-                                    Modifier
-                                        .width(120.dp)
-                                        .padding(top = 5.dp)
-                                ) {
-                                    Text(
-                                        text = video.title,
-                                        style = Typography.labelMedium,
-                                        textAlign = TextAlign.Left,
-                                        modifier = Modifier.fillMaxWidth(),
-                                    )
-                                    Text(
-                                        text = video.artist,
-                                        style = Typography.labelSmall,
-                                        textAlign = TextAlign.Left,
-                                        modifier = Modifier.fillMaxWidth(),
-                                        color = MaterialTheme.colorScheme.inverseSurface
-                                    )
-                                }
-                            }
-                        }
+                        SongViewModel.setVideo(video.id)
+                        navHostController.navigate(Screen.Player.route)
                     }
                 }
             }
+            item { Spacer(Modifier.size(64.dp)) }
         }
     }
 }
