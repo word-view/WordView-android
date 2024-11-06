@@ -33,7 +33,7 @@ class SeekbarTest {
 
     private fun setup(currentPosition: Long, duration: Long, bufferingProgress: Int) {
         composeTestRule.setContent {
-            Seekbar(currentPosition, duration, bufferingProgress)
+            Seekbar(currentPosition = currentPosition, duration = duration, bufferingProgress = bufferingProgress)
         }
     }
 
