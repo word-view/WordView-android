@@ -79,7 +79,7 @@ fun Settings(navController: NavHostController) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 listPreference(
                     key = "api_endpoint",
-                    defaultValue = "10.0.2.2",
+                    defaultValue = "http://10.0.2.2:8080",
                     values = listOf(
                         "http://10.0.2.2:8080",
                         "http://192.168.1.100:8080",
