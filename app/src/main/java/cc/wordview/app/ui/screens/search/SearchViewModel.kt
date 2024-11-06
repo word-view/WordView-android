@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import cc.wordview.app.api.VideoSearchResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -64,8 +65,10 @@ class SearchViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 try {
                     val results = searchRepository.search(query)
-                    setSearchResults(results)
                     onSuccess()
+                    // if the search results are instantly populated the animation won't work
+                    delay(50L)
+                    setSearchResults(results)
                 } catch (e: Throwable) {
                     Log.e("AA", "AAA", e)
                     onError()

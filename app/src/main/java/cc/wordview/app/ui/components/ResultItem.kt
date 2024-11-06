@@ -50,9 +50,9 @@ import coil.compose.AsyncImage
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun ResultItem(result: VideoSearchResult, onClick: () -> Unit) {
+fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick: () -> Unit) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .testTag("result-item")
             .fillMaxWidth()
             .height(80.dp),

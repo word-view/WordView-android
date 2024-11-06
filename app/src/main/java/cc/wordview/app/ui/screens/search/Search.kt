@@ -17,6 +17,9 @@
 
 package cc.wordview.app.ui.screens.search
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +32,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -62,6 +67,7 @@ import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.Typography
+import com.gigamole.composefadingedges.verticalFadingEdges
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,7 +138,9 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
 
             SearchState.ERROR -> {
                 Column(
-                    modifier = Modifier.fillMaxSize().testTag("error"),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag("error"),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -155,17 +163,25 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
             }
 
             SearchState.COMPLETE -> {
-                Column(
+                LazyColumn(
                     Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .verticalFadingEdges(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    for (result in results) {
-                        Spacer(Modifier.size(12.dp))
-                        ResultItem(result = result) {
-                            SongViewModel.setVideo(result.id)
+                    var i = 0
+
+                    items(results, key = { it.id }) {
+                        i += 1
+                        Spacer(Modifier.size(16.dp))
+                        ResultItem(
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = tween(durationMillis = i * 250),
+                                placementSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioMediumBouncy)
+                            ), result = it
+                        ) {
+                            SongViewModel.setVideo(it.id)
                             navHostController.navigate(Screen.Player.route)
                         }
                     }
