@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +28,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,20 +68,28 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
             .fillMaxSize()
             .padding(PaddingValues(start = 6.dp))
     ) {
-        LazyRow(modifier = Modifier.fillMaxWidth(), state = rememberLazyListState(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            for (video in videos) {
-                item {
-                    SongCard(
-                        modifier = Modifier.testTag("song-card"),
-                        thumbnail = video.cover,
-                        artist = video.artist,
-                        trackName = video.title
-                    ) {
-                        SongViewModel.setVideo(video.id)
-                        navHostController.navigate(Screen.Player.route)
-                    }
+        var i = 0
+
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            state = rememberLazyListState(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(videos, key = { it.id }) {
+                i += 1
+                SongCard(
+                    modifier = Modifier
+                        .testTag("song-card")
+                        .animateItem(fadeInSpec = tween(durationMillis = i * 500)),
+                    thumbnail = it.cover,
+                    artist = it.artist,
+                    trackName = it.title
+                ) {
+                    SongViewModel.setVideo(it.id)
+                    navHostController.navigate(Screen.Player.route)
                 }
             }
+
             item { Spacer(Modifier.size(64.dp)) }
         }
     }
