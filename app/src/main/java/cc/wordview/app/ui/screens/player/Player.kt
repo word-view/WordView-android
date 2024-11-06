@@ -42,6 +42,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -88,6 +89,7 @@ fun Player(
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
+    val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
 
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
@@ -171,6 +173,11 @@ fun Player(
                             cue = currentCue
                         )
                     }
+
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        if (isBuffering) CircularProgressIndicator(64.dp)
+                    }
+
                     FadeOutBox(duration = 250, stagnationTime = 5000) {
                         Box(
                             modifier = Modifier
@@ -212,7 +219,9 @@ fun Player(
                                     player.skipBack()
                                 }
                                 PlayerButton(
-                                    modifier = Modifier.testTag("toggle-play"),
+                                    modifier = Modifier
+                                        .testTag("toggle-play")
+                                        .alpha(if (isBuffering) 0.0f else 1.0f),
                                     icon = playIcon,
                                     size = 80.dp,
                                 ) {
@@ -226,7 +235,12 @@ fun Player(
                                     player.skipForward()
                                 }
                             }
-                            Seekbar(Modifier.padding(top = 110.dp), currentPosition, player.getDuration(), bufferedPercentage)
+                            Seekbar(
+                                Modifier.padding(top = 110.dp),
+                                currentPosition,
+                                player.getDuration(),
+                                bufferedPercentage
+                            )
                         }
                     }
                 }

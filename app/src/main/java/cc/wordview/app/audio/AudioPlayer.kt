@@ -17,12 +17,14 @@
 
 package cc.wordview.app.audio
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +45,16 @@ class AudioPlayer {
     var onPrepared: () -> Unit = {}
     var onInitializeFail: (Exception) -> Unit = {}
 
+    private val internalListener = object : Player.Listener {
+        @SuppressLint("SwitchIntDef")
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            when (playbackState) {
+                Player.STATE_BUFFERING -> stopPositionCheck()
+                Player.STATE_READY -> startPositionCheck()
+            }
+        }
+    }
+
     fun initialize(url: String, context: Context, listener: AudioPlayerListener) {
         Log.i(TAG, "Streaming from $url")
 
@@ -54,9 +66,7 @@ class AudioPlayer {
                     .build(), true
             ).build()
 
-            listener.onBuffering = { stopPositionCheck() }
-            listener.onReady = { startPositionCheck() }
-
+            player.addListener(internalListener)
             player.addListener(listener)
 
             val mediaItem = MediaItem.fromUri(Uri.parse(url))

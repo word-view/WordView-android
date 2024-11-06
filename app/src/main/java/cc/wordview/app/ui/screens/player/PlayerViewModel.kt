@@ -61,6 +61,7 @@ class PlayerViewModel @Inject constructor(
     private val _currentCue = MutableStateFlow(WordViewCue())
     private val _playerStatus = MutableStateFlow(PlayerStatus.LOADING)
     private val _finalized = MutableStateFlow(false)
+    private val _isBuffering = MutableStateFlow(false)
 
     // Seekbar states
     private val _currentPosition = MutableStateFlow(0L)
@@ -77,11 +78,13 @@ class PlayerViewModel @Inject constructor(
     private val cues = _cues.asStateFlow()
     private val lyrics = _lyrics.asStateFlow()
     private val parser = _parser.asStateFlow()
+
     val playIcon = _playIcon.asStateFlow()
     val player = _player.asStateFlow()
     val currentCue = _currentCue.asStateFlow()
     val playerStatus = _playerStatus.asStateFlow()
     val finalized = _finalized.asStateFlow()
+    val isBuffering = _isBuffering.asStateFlow()
 
     private fun checkValuesReady() {
         if (_audioReady.value && _lyricsReady.value && _dictionaryReady.value) {
@@ -155,6 +158,9 @@ class PlayerViewModel @Inject constructor(
             val listener = AudioPlayerListener()
 
             listener.apply {
+                onBuffering = { _isBuffering.update { true } }
+                onReady = { _isBuffering.update { false } }
+
                 onTogglePlay = {
                     if (it) playIconPlay()
                     else playIconPause()
