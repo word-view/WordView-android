@@ -17,9 +17,12 @@
 
 package cc.wordview.app.audio
 
+import cc.wordview.gengolex.Language
+
 data class Video(
     val id: String = "",
     val title: String = "",
     val artist: String = "",
     val cover: String = "",
+    val language: Language? = null,
 )

@@ -51,7 +51,7 @@ class PlayerTest {
 
         SongViewModel.setVideoStream(MockVideoStream())
 
-        composeTestRule.onNodeWithText("It's raining after all").performClick()
+        composeTestRule.onNodeWithText("Aquarela").performClick()
     }
 
     @Test
@@ -79,7 +79,7 @@ class PlayerTest {
 
         SongViewModel.setVideoStream(MockVideoStream())
 
-        composeTestRule.onNodeWithText("It's raining after all").performClick()
+        composeTestRule.onNodeWithText("Aquarela").performClick()
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("interface"), 5_000)
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-plain"), 5_000)
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-word"), 5_000)

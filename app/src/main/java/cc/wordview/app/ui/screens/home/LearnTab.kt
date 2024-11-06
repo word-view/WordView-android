@@ -20,7 +20,7 @@ package cc.wordview.app.ui.screens.home
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,44 +39,72 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.audio.Video
 import cc.wordview.app.ui.components.SongCard
 import cc.wordview.app.ui.screens.components.Screen
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import cc.wordview.app.ui.theme.Typography
+import cc.wordview.gengolex.Language
+import com.gigamole.composefadingedges.horizontalFadingEdges
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun LearnTab(navController: NavHostController, navHostController: NavHostController) {
-    var videos by remember { mutableStateOf(ArrayList<Video>()) }
+    var editorsPick by remember { mutableStateOf(ArrayList<Video>()) }
 
     LaunchedEffect(Unit) {
-        val typeToken = object : TypeToken<ArrayList<Video>>() {}.type
-
-        val parsed = Gson().fromJson<ArrayList<Video>>(
-            "[{\"id\":\"D0ehC_8sQuU\",\"title\":\"It's raining after all\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/D0ehC_8sQuU/0.jpg\"}, {\"id\":\"vcw5THyM7Jo\",\"title\":\"If there was an endpoint\",\"artist\":\"TUYU\",\"cover\":\"https://img.youtube.com/vi/vcw5THyM7Jo/0.jpg\"}, {\"id\":\"gqiRJn7me-s\",\"title\":\"君に最後の口づけを\",\"artist\":\"majiko\",\"cover\":\"https://img.youtube.com/vi/gqiRJn7me-s/0.jpg\"}]",
-            typeToken
+        editorsPick = arrayListOf(
+            Video(
+                "ZnUEeXpxBJ0",
+                "Aquarela",
+                "Toquinho",
+                "https://i.ytimg.com/vi_webp/ZnUEeXpxBJ0/maxresdefault.webp",
+                Language.PORTUGUESE
+            ),
+            Video(
+                "ZpT9VCUS54s",
+                "Suisei no parade",
+                "majiko",
+                "https://i.ytimg.com/vi_webp/ZpT9VCUS54s/maxresdefault.webp",
+                Language.JAPANESE
+            ),
+            Video(
+                "HCTunqv1Xt4",
+                "When I'm Sixty Four",
+                "The Beatles",
+                "https://i.ytimg.com/vi_webp/HCTunqv1Xt4/maxresdefault.webp",
+                Language.ENGLISH
+            )
         )
-
-        videos = parsed
     }
 
-    Box(
+    Column(
         Modifier
             .fillMaxSize()
-            .padding(PaddingValues(start = 6.dp))
+            .padding(PaddingValues(top = 17.dp))
     ) {
-        var i = 0
-
+        Text(
+            text = "Editor's pick",
+            textAlign = TextAlign.Center,
+            style = Typography.titleLarge,
+            fontWeight = FontWeight.Normal,
+            modifier = Modifier.padding(start = 17.dp)
+        )
         LazyRow(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalFadingEdges(),
             state = rememberLazyListState(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(videos, key = { it.id }) {
+            item { Spacer(Modifier.size(6.dp)) }
+
+            var i = 0
+            items(editorsPick, key = { it.id }) {
                 i += 1
                 SongCard(
                     modifier = Modifier
@@ -83,14 +112,15 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
                         .animateItem(fadeInSpec = tween(durationMillis = i * 500)),
                     thumbnail = it.cover,
                     artist = it.artist,
-                    trackName = it.title
+                    trackName = it.title,
+                    language = it.language
                 ) {
                     SongViewModel.setVideo(it.id)
                     navHostController.navigate(Screen.Player.route)
                 }
             }
 
-            item { Spacer(Modifier.size(64.dp)) }
+            item { Spacer(Modifier.size(128.dp)) }
         }
     }
 }

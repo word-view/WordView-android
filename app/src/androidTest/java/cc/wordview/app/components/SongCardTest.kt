@@ -28,6 +28,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.ui.components.SongCard
+import cc.wordview.gengolex.Language
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
@@ -37,9 +38,20 @@ class SongCardTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private fun setup(artist: String, trackName: String, onClick: Runnable) {
+    private fun setup(
+        artist: String,
+        trackName: String,
+        language: Language? = null,
+        onClick: Runnable
+    ) {
         composeTestRule.setContent {
-            SongCard(modifier = Modifier.testTag("song-card"), thumbnail = "", artist = artist, trackName = trackName) { onClick.run() }
+            SongCard(
+                modifier = Modifier.testTag("song-card"),
+                thumbnail = "",
+                artist = artist,
+                trackName = trackName,
+                language = language
+            ) { onClick.run() }
         }
     }
 
@@ -58,7 +70,8 @@ class SongCardTest {
             trackName = "Test Track",
             onClick = {})
 
-        composeTestRule.onNodeWithText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut accumsan arcu ut fermentum viverra. Nulla et nulla ante. Donec vitae sem ac arcu maximus viverra vel vel neque").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut accumsan arcu ut fermentum viverra. Nulla et nulla ante. Donec vitae sem ac arcu maximus viverra vel vel neque")
+            .assertIsDisplayed()
         composeTestRule.onNodeWithTag("song-card").assertWidthIsEqualTo(140.dp)
     }
 
@@ -69,7 +82,8 @@ class SongCardTest {
             artist = "Test Artist",
             onClick = {})
 
-        composeTestRule.onNodeWithText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut accumsan arcu ut fermentum viverra. Nulla et nulla ante. Donec vitae sem ac arcu maximus viverra vel vel neque").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut accumsan arcu ut fermentum viverra. Nulla et nulla ante. Donec vitae sem ac arcu maximus viverra vel vel neque")
+            .assertIsDisplayed()
         composeTestRule.onNodeWithTag("song-card").assertWidthIsEqualTo(140.dp)
     }
 
@@ -79,5 +93,26 @@ class SongCardTest {
         setup(artist = "Test Artist", trackName = "Test Track", onClick = onClickMock)
         composeTestRule.onNode(hasClickAction()).performClick()
         verify(onClickMock).run()
+    }
+
+    @Test
+    fun displaysPortugueseCountryFlag() {
+        setup(artist = "Test Artist", trackName = "Test Track", language = Language.PORTUGUESE, onClick = {})
+
+        composeTestRule.onNodeWithTag("${Language.PORTUGUESE} icon", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun displaysJapaneseCountryFlag() {
+        setup(artist = "Test Artist", trackName = "Test Track", language = Language.JAPANESE, onClick = {})
+
+        composeTestRule.onNodeWithTag("${Language.JAPANESE} icon", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun displaysEnglishCountryFlag() {
+        setup(artist = "Test Artist", trackName = "Test Track", language = Language.ENGLISH, onClick = {})
+
+        composeTestRule.onNodeWithTag("${Language.ENGLISH} icon", useUnmergedTree = true).assertIsDisplayed()
     }
 }
