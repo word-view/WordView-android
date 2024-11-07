@@ -52,7 +52,7 @@ fun ReviseResults(
     viewModel: ReviseResultsViewModel = ReviseResultsViewModel
 ) {
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences["api_endpoint"] ?: "10.0.2.2" }
+    val endpoint = remember { preferences["api_endpoint"] ?: "http://10.0.2.2" }
 
     val words by ReviseResultsViewModel.words.collectAsStateWithLifecycle()
 

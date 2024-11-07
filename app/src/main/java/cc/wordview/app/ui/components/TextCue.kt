@@ -46,7 +46,7 @@ import me.zhanghai.compose.preference.LocalPreferenceFlow
 @Composable
 fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences["api_endpoint"] ?: "10.0.2.2" }
+    val endpoint = remember { preferences["api_endpoint"] ?: "http://10.0.0.2" }
 
     Column(Modifier.wrapContentWidth(Alignment.Start)) {
         Row(

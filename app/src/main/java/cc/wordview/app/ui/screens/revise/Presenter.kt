@@ -63,7 +63,7 @@ fun Presenter() {
     var visible by remember { mutableStateOf(false) }
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences["api_endpoint"] ?: "10.0.2.2" }
+    val endpoint = remember { preferences["api_endpoint"] ?: "http://10.0.0.2" }
 
     val context = LocalContext.current
 

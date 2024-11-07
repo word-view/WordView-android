@@ -60,7 +60,7 @@ class TranslateViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             translateRepository.init(context)
-            translateRepository.endpoint = preferences["api_endpoint"] ?: "10.0.2.2"
+            translateRepository.endpoint = preferences["api_endpoint"] ?: "http://10.0.2.2"
             translateRepository.onGetPhraseFail = {
                 WordReviseViewModel.setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
                 cleanup()

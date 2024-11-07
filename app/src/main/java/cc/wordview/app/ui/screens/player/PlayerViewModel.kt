@@ -107,7 +107,7 @@ class PlayerViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             playerRepository.init(context)
-            playerRepository.endpoint = preferences["api_endpoint"] ?: "10.0.2.2"
+            playerRepository.endpoint = preferences["api_endpoint"] ?: "http://10.0.0.2"
             playerRepository.onGetLyricsSuccess = {
                 val jsonObject = JsonParser.parseString(it).asJsonObject
 
