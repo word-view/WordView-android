@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.player
 
 import android.app.Activity
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -67,6 +68,7 @@ import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.screens.components.KeepScreenOn
 import cc.wordview.app.ui.screens.components.Screen
+import cc.wordview.gengolex.Language
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -102,12 +104,17 @@ fun Player(
     val systemUiController = rememberSystemUiController()
 
     OneTimeEffect {
+        val tag = preferences["language"] ?: "ja"
+        val lang = Language.byTag(tag)
+
+        Log.i("Player", "Chosen language is ${lang.name}")
+
         activity.setOrientationSensorLandscape()
         CoroutineScope(Dispatchers.IO).launch {
             SongViewModel.videoStream.value.init(videoId)
 
             viewModel.initAudio(videoStream.getStreamURL(), context)
-            viewModel.getLyrics(preferences, context, videoId, "ja", videoStream)
+            viewModel.getLyrics(preferences, context, videoId, lang, videoStream)
         }
     }
 

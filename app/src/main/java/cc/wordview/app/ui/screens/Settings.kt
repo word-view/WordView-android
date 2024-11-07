@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.NetworkPing
 import androidx.compose.material.icons.outlined.ShortText
+import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,7 +37,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -74,7 +74,6 @@ fun Settings(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            contentAlignment = Alignment.Center
         ) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 listPreference(
@@ -95,8 +94,27 @@ fun Settings(navController: NavHostController) {
                     },
                     type = ListPreferenceType.ALERT_DIALOG
                 )
+                listPreference(
+                    key = "language",
+                    defaultValue = "ja",
+                    values = listOf(
+                        "pt",
+                        "ja",
+                        "en"
+                    ),
+                    title = { Text(text = "Learning language") },
+                    summary = { Text(text = "The language that you want to learn: $it") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Translate,
+                            contentDescription = null
+                        )
+                    },
+                    type = ListPreferenceType.ALERT_DIALOG
+                )
                 switchPreference(
                     key = "filter_romanizations",
+                    enabled = { preferences.get<String>("language") == "ja" },
                     defaultValue = true,
                     title = { Text(text = "Filter romanizations") },
                     icon = {

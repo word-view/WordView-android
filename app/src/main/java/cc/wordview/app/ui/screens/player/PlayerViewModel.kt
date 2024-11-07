@@ -102,7 +102,7 @@ class PlayerViewModel @Inject constructor(
         preferences: Preferences,
         context: Context,
         id: String,
-        lang: String,
+        lang: Language,
         video: VideoStreamInterface
     ) {
         viewModelScope.launch {
@@ -119,8 +119,8 @@ class PlayerViewModel @Inject constructor(
 
                 _lyricsReady.update { true }
 
-                initParser(Language.JAPANESE)
-                addDictionary("kanji", dictionary)
+                initParser(lang)
+                addDictionary(lang.dictionaryName, dictionary)
 
                 for (cue in lyrics.value) {
                     val wordsFound = parser.value.findWords(cue.text)
@@ -134,7 +134,7 @@ class PlayerViewModel @Inject constructor(
                 _dictionaryReady.update { true }
             }
 
-            playerRepository.getLyrics(id, lang, video)
+            playerRepository.getLyrics(id, lang.tag, video)
         }
     }
 
