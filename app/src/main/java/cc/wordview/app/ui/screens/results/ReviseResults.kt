@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
 import cc.wordview.app.ui.screens.components.Screen
@@ -52,7 +53,7 @@ fun ReviseResults(
     viewModel: ReviseResultsViewModel = ReviseResultsViewModel
 ) {
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences["api_endpoint"] ?: "http://10.0.2.2" }
+    val endpoint = remember { preferences.getOrDefault<String>("api_endpoint") }
 
     val words by ReviseResultsViewModel.words.collectAsStateWithLifecycle()
 

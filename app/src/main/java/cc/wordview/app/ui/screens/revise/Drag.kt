@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.dragGestures
+import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.ui.screens.revise.components.Answer
 import cc.wordview.app.ui.screens.revise.components.DragMode
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
@@ -72,7 +73,7 @@ fun Drag(
     val coroutineScope = rememberCoroutineScope()
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences["api_endpoint"] ?: "http://10.0.2.2" }
+    val endpoint = remember { preferences.getOrDefault<String>("api_endpoint") }
 
     val animatedOffsetX by animateFloatAsState(
         targetValue = if (isDragging) offsetX else 0f,

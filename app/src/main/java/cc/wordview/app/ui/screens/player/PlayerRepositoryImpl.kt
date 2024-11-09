@@ -29,7 +29,7 @@ import javax.inject.Inject
 class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     private val TAG = this::class.java.simpleName
 
-    override var endpoint = "http://10.0.2.2:8080"
+    override lateinit var endpoint: String
     override var onGetLyricsSuccess: (String) -> Unit = {}
 
     private lateinit var queue: RequestQueue

@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Carpenter
 import androidx.compose.material.icons.outlined.NetworkPing
 import androidx.compose.material.icons.outlined.ShortText
 import androidx.compose.material.icons.outlined.Translate
@@ -40,11 +41,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.goBack
 import me.zhanghai.compose.preference.ListPreferenceType
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.switchPreference
+
+val defaultSettings = hashMapOf(
+    "api_endpoint" to "http://10.0.2.2:8080",
+    "language" to "ja",
+    "composer_mode" to false,
+    "filter_romanizations" to true
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +123,7 @@ fun Settings(navController: NavHostController) {
                 )
                 switchPreference(
                     key = "filter_romanizations",
-                    enabled = { preferences.get<String>("language") == "ja" },
+                    enabled = { preferences.getOrDefault<String>("language") == "ja" },
                     defaultValue = true,
                     title = { Text(text = "Filter romanizations") },
                     icon = {

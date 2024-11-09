@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.ui.screens.revise.components.Answer
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
 import cc.wordview.app.ui.theme.Typography
@@ -63,7 +64,7 @@ fun Presenter() {
     var visible by remember { mutableStateOf(false) }
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences["api_endpoint"] ?: "http://10.0.0.2" }
+    val endpoint = remember { preferences.getOrDefault<String>("api_endpoint") }
 
     val context = LocalContext.current
 

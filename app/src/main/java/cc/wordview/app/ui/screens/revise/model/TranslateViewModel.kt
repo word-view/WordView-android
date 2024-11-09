@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.ui.screens.revise.WordReviseViewModel
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
 import com.google.gson.Gson
@@ -60,7 +61,7 @@ class TranslateViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             translateRepository.init(context)
-            translateRepository.endpoint = preferences["api_endpoint"] ?: "http://10.0.2.2"
+            translateRepository.endpoint = preferences.getOrDefault("api_endpoint")
             translateRepository.onGetPhraseFail = {
                 WordReviseViewModel.setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
                 cleanup()

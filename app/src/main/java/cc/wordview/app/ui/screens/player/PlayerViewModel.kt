@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.audio.AudioPlayerListener
 import cc.wordview.app.audio.AudioPlayer
+import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
@@ -107,7 +108,7 @@ class PlayerViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             playerRepository.init(context)
-            playerRepository.endpoint = preferences["api_endpoint"] ?: "http://10.0.0.2"
+            playerRepository.endpoint = preferences.getOrDefault("api_endpoint")
             playerRepository.onGetLyricsSuccess = {
                 val jsonObject = JsonParser.parseString(it).asJsonObject
 

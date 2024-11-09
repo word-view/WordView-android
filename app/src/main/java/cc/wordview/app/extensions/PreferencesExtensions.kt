@@ -15,28 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.api
+package cc.wordview.app.extensions
 
-import android.content.Context
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
+import cc.wordview.app.ui.screens.defaultSettings
+import me.zhanghai.compose.preference.Preferences
 
-open class ApiRequestRepository {
-    lateinit var endpoint: String
-
-    protected lateinit var queue: RequestQueue
-
-    fun init(context: Context) {
-        queue = Volley.newRequestQueue(context)
-    }
-
-    protected fun jsonRequest(url: String, handler: Response): StringRequest {
-        return JsonAcceptingRequest(
-            Request.Method.GET,
-            url,
-            { handler.onSuccessResponse(it) },
-            { handler.onErrorResponse(it) })
-    }
+fun <T> Preferences.getOrDefault(key: String): T {
+    return this.get<T>(key) ?: defaultSettings[key] as? T
+    ?: throw IllegalArgumentException("Type mismatch for key '$key'")
 }

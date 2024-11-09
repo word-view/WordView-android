@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.subtitle.WordViewCue
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -46,7 +47,7 @@ import me.zhanghai.compose.preference.LocalPreferenceFlow
 @Composable
 fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences["api_endpoint"] ?: "http://10.0.0.2" }
+    val endpoint = remember { preferences.getOrDefault<String>("api_endpoint") }
 
     Column(Modifier.wrapContentWidth(Alignment.Start)) {
         Row(
