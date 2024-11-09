@@ -45,13 +45,12 @@ import me.zhanghai.compose.preference.LocalPreferenceFlow
 @Composable
 fun Seekbar(
     modifier: Modifier = Modifier,
+    composerMode: Boolean = false,
     currentPosition: Long,
     duration: Long,
     @IntRange(from = 0, to = 100) bufferingProgress: Int,
 ) {
     val progress = duration.percentageOf(currentPosition)
-
-    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
 
     Column(modifier.testTag("seekbar")) {
         Box(
@@ -86,7 +85,7 @@ fun Seekbar(
             style = Typography.labelMedium,
             fontSize = 14.sp
         )
-        if (preferences.getOrDefault("composer_mode")) {
+        if (composerMode) {
             Text(
                 modifier = Modifier
                     .padding(horizontal = 72.dp)

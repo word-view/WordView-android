@@ -247,6 +247,7 @@ fun Player(
                             }
                             Seekbar(
                                 Modifier.padding(top = 110.dp),
+                                composerMode,
                                 currentPosition,
                                 player.getDuration(),
                                 bufferedPercentage
