@@ -12,4 +12,8 @@
     <string name="settings">Configurações</string>
     <string name="api_endpoint">Endpoint da API</string>
     <string name="search_for_music_artists_albums">Pesquise por músicas, artistas, álbuns…</string>
+    <string name="translate_the_phrase_bellow_using_the_words_at_the_bottom">Traduza a frase usando as palavras abaixo</string>
+    <string name="check">Comparar</string>
+    <string name="proceed">Prosseguir</string>
+    <string name="correct_answer">Resposta correta</string>
 </resources>

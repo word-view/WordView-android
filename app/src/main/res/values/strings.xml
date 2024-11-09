@@ -13,4 +13,8 @@
     <string name="settings">Settings</string>
     <string name="api_endpoint">API endpoint</string>
     <string name="search_for_music_artists_albums">Search for music, artists, albums…</string>
+    <string name="translate_the_phrase_bellow_using_the_words_at_the_bottom">Translate the phrase bellow using the words at the bottom:</string>
+    <string name="check">Check</string>
+    <string name="proceed">Proceed</string>
+    <string name="correct_answer">Correct answer</string>
 </resources>
