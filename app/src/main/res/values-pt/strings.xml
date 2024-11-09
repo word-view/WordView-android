@@ -11,5 +11,5 @@
     <string name="attempts_to_remove_romanizations_from_lyrics_of_non_alphabetic_languages">Tenta filtrar romanizações de idiomas não alfabéticos</string>
     <string name="settings">Configurações</string>
     <string name="api_endpoint">Endpoint da API</string>
-    <string name="search_for_music_artists_albums">Pesquise por músicas, artistas ou álbuns…</string>
+    <string name="search_for_music_artists_albums">Pesquise por músicas, artistas, álbuns…</string>
 </resources>
