@@ -24,24 +24,20 @@ import androidx.compose.material.icons.filled.Map
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class BottomNavigationItem(
-    val label : String = "",
     val icon : ImageVector = Icons.Filled.Home,
     val route : String = ""
 ) {
     fun bottomNavigationItems() : List<BottomNavigationItem> {
         return listOf(
             BottomNavigationItem(
-                label = "Learn",
                 icon = Icons.Filled.Home,
                 route = Tabs.Learn.route
             ),
             BottomNavigationItem(
-                label = "Explore",
                 icon = Icons.Filled.Map,
                 route = Tabs.Explore.route
             ),
             BottomNavigationItem(
-                label = "Profile",
                 icon = Icons.Filled.AccountCircle,
                 route = Tabs.Profile.route
             ),

@@ -39,8 +39,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.R
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.goBack
 import me.zhanghai.compose.preference.ListPreferenceType
@@ -67,7 +69,7 @@ fun Settings(navController: NavHostController) {
                 titleContentColor = LocalContentColor.current
             ),
             title = {
-                Text("Settings")
+                Text(stringResource(R.string.settings))
             },
             navigationIcon = {
                 IconButton(onClick = { navController.goBack() }) {
@@ -93,7 +95,7 @@ fun Settings(navController: NavHostController) {
                         "http://192.168.1.100:8080",
                         "https://api.wordview.cc"
                     ),
-                    title = { Text(text = "API endpoint") },
+                    title = { Text(text = stringResource(R.string.api_endpoint)) },
                     summary = { Text(text = it) },
                     icon = {
                         Icon(
@@ -111,8 +113,15 @@ fun Settings(navController: NavHostController) {
                         "ja",
                         "en"
                     ),
-                    title = { Text(text = "Learning language") },
-                    summary = { Text(text = "The language that you want to learn: $it") },
+                    title = { Text(text = stringResource(R.string.learning_language)) },
+                    summary = {
+                        Text(
+                            text = stringResource(
+                                R.string.the_language_that_you_want_to_learn,
+                                it
+                            )
+                        )
+                    },
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Translate,
@@ -124,27 +133,27 @@ fun Settings(navController: NavHostController) {
                 switchPreference(
                     key = "composer_mode",
                     defaultValue = false,
-                    title = { Text(text = "Composer Mode") },
+                    title = { Text(text = stringResource(R.string.composer_mode)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.Carpenter,
                             contentDescription = null
                         )
                     },
-                    summary = { Text(text = "Provides more information in the player that helps writing lyrics") }
+                    summary = { Text(text = stringResource(R.string.provides_more_information_in_the_player_that_helps_writing_lyrics)) }
                 )
                 switchPreference(
                     key = "filter_romanizations",
                     enabled = { preferences.getOrDefault<String>("language") == "ja" },
                     defaultValue = true,
-                    title = { Text(text = "Filter romanizations") },
+                    title = { Text(text = stringResource(R.string.filter_romanizations)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.ShortText,
                             contentDescription = null
                         )
                     },
-                    summary = { Text(text = "Attempts to remove romanizations from lyrics of non alphabetic languages") }
+                    summary = { Text(text = stringResource(R.string.attempts_to_remove_romanizations_from_lyrics_of_non_alphabetic_languages)) }
                 )
             }
         }

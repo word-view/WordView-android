@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -44,6 +45,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.R
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.redhatFamily
 
@@ -69,13 +71,17 @@ fun Home(navHostController: NavHostController) {
                 )
             },
             actions = {
-                IconButton(modifier = Modifier.testTag("search"),onClick = { navHostController.navigate(Screen.Search.route) }) {
+                IconButton(
+                    modifier = Modifier.testTag("search"),
+                    onClick = { navHostController.navigate(Screen.Search.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Search,
                         contentDescription = "Search"
                     )
                 }
-                IconButton(modifier = Modifier.testTag("settings"), onClick = { navHostController.navigate(Screen.Settings.route) }) {
+                IconButton(
+                    modifier = Modifier.testTag("settings"),
+                    onClick = { navHostController.navigate(Screen.Settings.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Settings,
                         contentDescription = "Settings"
@@ -90,12 +96,19 @@ fun Home(navHostController: NavHostController) {
                     modifier = Modifier.testTag("${navigationItem.route}-tab"),
                     selected = navigationItem.route == currentDestination?.route,
                     label = {
-                        Text(navigationItem.label)
+                        Text(
+                            when (navigationItem.route) {
+                                Tabs.Learn.route -> stringResource(R.string.learn)
+                                Tabs.Explore.route -> stringResource(R.string.explore)
+                                Tabs.Profile.route -> stringResource(R.string.profile)
+                                else -> ""
+                            }
+                        )
                     },
                     icon = {
                         Icon(
                             navigationItem.icon,
-                            contentDescription = navigationItem.label
+                            contentDescription = null
                         )
                     },
                     onClick = {
