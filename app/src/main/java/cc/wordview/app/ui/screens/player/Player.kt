@@ -41,6 +41,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -54,6 +55,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.enterImmersiveMode
+import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.leaveImmersiveMode
 import cc.wordview.app.extensions.setOrientationSensorLandscape
@@ -100,6 +102,7 @@ fun Player(
     val context = LocalContext.current
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
+    val composerMode = remember { preferences.getOrDefault<Boolean>("composer_mode") }
 
     val systemUiController = rememberSystemUiController()
 
@@ -185,7 +188,7 @@ fun Player(
                         if (isBuffering) CircularProgressIndicator(64.dp)
                     }
 
-                    FadeOutBox(duration = 250, stagnationTime = 5000) {
+                    FadeOutBox(duration = 250, stagnationTime = if (composerMode) 60000 else 5000) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()

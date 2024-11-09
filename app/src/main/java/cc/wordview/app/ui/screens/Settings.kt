@@ -122,6 +122,18 @@ fun Settings(navController: NavHostController) {
                     type = ListPreferenceType.ALERT_DIALOG
                 )
                 switchPreference(
+                    key = "composer_mode",
+                    defaultValue = false,
+                    title = { Text(text = "Composer Mode") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Carpenter,
+                            contentDescription = null
+                        )
+                    },
+                    summary = { Text(text = "Provides more information in the player that helps writing lyrics") }
+                )
+                switchPreference(
                     key = "filter_romanizations",
                     enabled = { preferences.getOrDefault<String>("language") == "ja" },
                     defaultValue = true,

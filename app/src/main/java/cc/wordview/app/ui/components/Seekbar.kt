@@ -29,14 +29,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.extensions.fillMaxWidth
+import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.percentageOf
 import cc.wordview.app.ui.theme.Typography
+import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @Composable
 fun Seekbar(
@@ -46,6 +50,8 @@ fun Seekbar(
     @IntRange(from = 0, to = 100) bufferingProgress: Int,
 ) {
     val progress = duration.percentageOf(currentPosition)
+
+    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
 
     Column(modifier.testTag("seekbar")) {
         Box(
@@ -80,7 +86,26 @@ fun Seekbar(
             style = Typography.labelMedium,
             fontSize = 14.sp
         )
+        if (preferences.getOrDefault("composer_mode")) {
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = 72.dp)
+                    .padding(top = 5.dp),
+                text = formatTimeComposerMode(currentPosition),
+                style = Typography.labelMedium,
+                fontSize = 14.sp
+            )
+        }
     }
+}
+
+fun formatTimeComposerMode(milliseconds: Long): String {
+    val totalSeconds = milliseconds / 1000
+    val minutes = (totalSeconds / 60).toInt()
+    val seconds = (totalSeconds % 60).toInt()
+    val millis = (milliseconds % 1000).toInt()
+
+    return "%02d:%02d:%02d.%03d".format(minutes, seconds, millis / 100, millis % 1000)
 }
 
 @SuppressLint("DefaultLocale")
