@@ -1,3 +1,24 @@
 <resources>
-    <string name="app_name">WordView</string>
+    <string name="app_name" translatable="false">WordView</string>
+    <string name="editors_pick">Editor\'s picks</string>
+    <string name="learn">Learn</string>
+    <string name="explore">Explore</string>
+    <string name="profile">Profile</string>
+    <string name="learning_language">Learning language</string>
+    <string name="the_language_that_you_want_to_learn">The language that you want to learn: %1$s</string>
+    <string name="composer_mode">Composer Mode</string>
+    <string name="provides_more_information_in_the_player_that_helps_writing_lyrics">Provides advanced information in the player</string>
+    <string name="filter_romanizations">Filter romanizations</string>
+    <string name="attempts_to_remove_romanizations_from_lyrics_of_non_alphabetic_languages">Attempts to remove romanizations from lyrics of non alphabetic languages</string>
+    <string name="settings">Settings</string>
+    <string name="api_endpoint">API endpoint</string>
+    <string name="search_for_music_artists_albums">Search for music, artists, albums…</string>
+    <string name="translate_the_phrase_bellow_using_the_words_at_the_bottom">Translate the phrase bellow using the words at the bottom:</string>
+    <string name="check">Check</string>
+    <string name="proceed">Proceed</string>
+    <string name="correct_answer">Correct answer</string>
+    <string name="answer_precision">%1$s%% answer precision</string>
+    <string name="correct">Correct: %1$s</string>
+    <string name="misses">Misses: %1$s</string>
+    <string name="words_revised">Words revised</string>
 </resources>

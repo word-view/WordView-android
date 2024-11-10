@@ -1,0 +1,23 @@
+<resources>
+    <string name="editors_pick">Escolha do editor</string>
+    <string name="learn">Aprender</string>
+    <string name="explore">Explorar</string>
+    <string name="profile">Perfil</string>
+    <string name="learning_language">Idioma</string>
+    <string name="the_language_that_you_want_to_learn">O idioma que você quer aprender: %1$s</string>
+    <string name="composer_mode">Modo composer</string>
+    <string name="provides_more_information_in_the_player_that_helps_writing_lyrics">Ativa a visualização de informações avançadas no player</string>
+    <string name="filter_romanizations">Filtrar romanizações</string>
+    <string name="attempts_to_remove_romanizations_from_lyrics_of_non_alphabetic_languages">Tenta filtrar romanizações de idiomas não alfabéticos</string>
+    <string name="settings">Configurações</string>
+    <string name="api_endpoint">Endpoint da API</string>
+    <string name="search_for_music_artists_albums">Pesquise por músicas, artistas, álbuns…</string>
+    <string name="translate_the_phrase_bellow_using_the_words_at_the_bottom">Traduza a frase usando as palavras abaixo</string>
+    <string name="check">Comparar</string>
+    <string name="proceed">Prosseguir</string>
+    <string name="correct_answer">Resposta correta</string>
+    <string name="answer_precision">Taxa de acerto de %1$s%%</string>
+    <string name="correct">Acertos: %1$s</string>
+    <string name="misses">Erros: %1$s</string>
+    <string name="words_revised">Palavras revisadas</string>
+</resources>

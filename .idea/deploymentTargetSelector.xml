@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-10-31T12:04:31.413850306Z">
+        <DropdownSelection timestamp="2024-11-06T10:54:53.447935104Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=8e160bdb" />
@@ -14,6 +14,18 @@
         <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="PlayerTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="SeekbarTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="renders()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="positionsZero()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="progress1()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

@@ -50,9 +50,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cc.wordview.app.R
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.screens.revise.components.Answer
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
@@ -115,7 +117,7 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
             .testTag("explanation")
     ) {
         Text(
-            text = "Translate the phrase bellow using the words at the bottom:",
+            text = stringResource(R.string.translate_the_phrase_bellow_using_the_words_at_the_bottom),
             modifier = Modifier.padding(horizontal = 20.dp),
             style = Typography.titleMedium
         )
@@ -169,7 +171,7 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
             ) {
                 Column {
                     Text(
-                        text = "Correct answer",
+                        text = stringResource(R.string.correct_answer),
                         modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
                         style = Typography.titleLarge
                     )
@@ -248,7 +250,7 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
                 enabled = viewModel.wordPool.isEmpty() && viewModel.answerWordPool.isNotEmpty() && !checked,
                 shape = DefaultRoundedCornerShape
             ) {
-                Text(text = "Check")
+                Text(text = stringResource(R.string.check))
             }
             Button(
                 onClick = {
@@ -261,7 +263,7 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
                 enabled = checked,
                 shape = DefaultRoundedCornerShape,
             ) {
-                Text(text = "Proceed")
+                Text(text = stringResource(R.string.proceed))
                 Spacer(Modifier.size(10.dp))
                 androidx.compose.material3.Icon(
                     imageVector = Icons.Filled.ArrowForwardIos,

@@ -39,10 +39,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.audio.Video
 import cc.wordview.app.ui.components.SongCard
@@ -88,7 +90,7 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
             .padding(PaddingValues(top = 17.dp))
     ) {
         Text(
-            text = "Editor's pick",
+            text = stringResource(R.string.editors_pick),
             textAlign = TextAlign.Center,
             style = Typography.titleLarge,
             fontWeight = FontWeight.Normal,
