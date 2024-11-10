@@ -35,8 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.subtitle.WordViewCue
@@ -48,6 +46,7 @@ import me.zhanghai.compose.preference.LocalPreferenceFlow
 fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
     val endpoint = remember { preferences.getOrDefault<String>("api_endpoint") }
+    val langtag = remember { preferences.getOrDefault<String>("language") }
 
     Column(Modifier.wrapContentWidth(Alignment.Start)) {
         Row(
@@ -80,7 +79,7 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                                     .background(MaterialTheme.colorScheme.primaryContainer)
                                     .testTag("text-cue-plain"),
                                 text = word.word,
-                                fontSize = getFontSize(text.length),
+                                fontSize = getFontSize(text, langtag),
                                 color = MaterialTheme.colorScheme.inverseSurface
                             )
                         }
@@ -94,24 +93,12 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                     Text(
                         modifier = Modifier.testTag("text-cue-word"),
                         text = text[currentIndex].toString(),
-                        fontSize = getFontSize(text.length),
+                        fontSize = getFontSize(text, langtag),
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                     currentIndex++
                 }
             }
         }
-    }
-}
-
-fun getFontSize(cueSize: Int): TextUnit {
-    return if (cueSize <= 8) {
-        44.sp
-    } else if (cueSize <= 12) {
-        42.sp
-    } else if (cueSize <= 18) {
-        40.sp
-    } else {
-        32.sp
     }
 }
