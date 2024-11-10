@@ -16,4 +16,8 @@
     <string name="check">Comparar</string>
     <string name="proceed">Prosseguir</string>
     <string name="correct_answer">Resposta correta</string>
+    <string name="answer_precision">Taxa de acerto de %1$s</string>
+    <string name="correct">Acertos: %1$s</string>
+    <string name="misses">Erros: %1$s</string>
+    <string name="words_revised">Palavras revisadas</string>
 </resources>

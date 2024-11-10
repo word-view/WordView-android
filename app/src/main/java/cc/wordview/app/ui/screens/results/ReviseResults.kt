@@ -35,9 +35,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.R
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
@@ -84,9 +86,12 @@ fun ReviseResults(
                     .padding(horizontal = 20.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                Text(text = "Words revised", style = Typography.headlineMedium)
+                Text(text = stringResource(R.string.words_revised), style = Typography.headlineMedium)
                 Text(
-                    text = "${calculateCorrectnessRate(words)}% answer precision",
+                    text = stringResource(
+                        R.string.answer_precision,
+                        calculateCorrectnessRate(words)
+                    ) + "%",
                     style = Typography.titleMedium
                 )
 
@@ -108,8 +113,8 @@ fun ReviseResults(
                         Column {
                             Text(text = word.word.word, style = Typography.titleLarge)
                             Spacer(Modifier.size(4.dp))
-                            Text(text = "Correct: ${word.corrects}", style = Typography.titleSmall)
-                            Text(text = "Misses: ${word.misses}", style = Typography.titleSmall)
+                            Text(text = stringResource(R.string.correct, word.corrects), style = Typography.titleSmall)
+                            Text(text = stringResource(R.string.misses, word.misses), style = Typography.titleSmall)
                         }
                     }
                     Spacer(Modifier.size(24.dp))

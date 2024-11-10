@@ -17,4 +17,8 @@
     <string name="check">Check</string>
     <string name="proceed">Proceed</string>
     <string name="correct_answer">Correct answer</string>
+    <string name="answer_precision">%1$s% answer precision</string>
+    <string name="correct">Correct: %1$s</string>
+    <string name="misses">Misses: %1$s</string>
+    <string name="words_revised">Words revised</string>
 </resources>
