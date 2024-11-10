@@ -91,7 +91,7 @@ fun ReviseResults(
                     text = stringResource(
                         R.string.answer_precision,
                         calculateCorrectnessRate(words)
-                    ) + "%",
+                    ),
                     style = Typography.titleMedium
                 )
 
