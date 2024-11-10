@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -189,14 +190,16 @@ fun Player(
                     }
 
                     FadeOutBox(duration = 250, stagnationTime = if (composerMode) 60000 else 5000) {
+                        val topbarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
+
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(TopAppBarDefaults.TopAppBarExpandedHeight.times(2))
+                                .height(topbarHeight)
                                 .padding(innerPadding),
                             contentAlignment = Alignment.TopStart,
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(modifier = Modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
                                 IconButton(
                                     onClick = { back() },
                                     modifier = Modifier.testTag("back-button"),
@@ -212,6 +215,13 @@ fun Player(
                                 )
                             }
                         }
+                        Seekbar(
+                            Modifier.padding(top = topbarHeight),
+                            composerMode,
+                            currentPosition,
+                            player.getDuration(),
+                            bufferedPercentage
+                        )
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
@@ -245,13 +255,6 @@ fun Player(
                                     player.skipForward()
                                 }
                             }
-                            Seekbar(
-                                Modifier.padding(top = 110.dp),
-                                composerMode,
-                                currentPosition,
-                                player.getDuration(),
-                                bufferedPercentage
-                            )
                         }
                     }
                 }

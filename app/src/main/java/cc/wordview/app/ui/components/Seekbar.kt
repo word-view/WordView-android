@@ -26,21 +26,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.extensions.fillMaxWidth
-import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.percentageOf
 import cc.wordview.app.ui.theme.Typography
-import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @Composable
 fun Seekbar(
@@ -56,8 +54,7 @@ fun Seekbar(
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(2.dp)
-                .padding(horizontal = 64.dp)
+                .height(2.5.dp)
                 .background(color = MaterialTheme.colorScheme.surfaceVariant)
                 .alpha(0.75f)
         ) {
@@ -77,34 +74,47 @@ fun Seekbar(
                     .testTag("progress-line")
             )
         }
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 72.dp)
-                .padding(top = 5.dp),
-            text = "${formatTime(currentPosition)} / ${formatTime(duration)}",
-            style = Typography.labelMedium,
-            fontSize = 14.sp
-        )
-        if (composerMode) {
+        Box(
+            Modifier
+                .padding(horizontal = 36.dp)
+                .padding(top = 8.dp)
+                .background(MaterialTheme.colorScheme.background, RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center
+        ) {
             Text(
-                modifier = Modifier
-                    .padding(horizontal = 72.dp)
-                    .padding(top = 5.dp),
-                text = formatTimeComposerMode(currentPosition),
+                modifier = Modifier.padding(4.dp).padding(horizontal = 8.dp),
+                text = "${formatTime(currentPosition)} / ${formatTime(duration)}",
                 style = Typography.labelMedium,
                 fontSize = 14.sp
             )
+        }
+        if (composerMode) {
+            Box(
+                Modifier
+                    .padding(horizontal = 36.dp)
+                    .padding(top = 8.dp)
+                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    modifier = Modifier.padding(4.dp).padding(horizontal = 8.dp),
+                    text = formatTimeComposerMode(currentPosition),
+                    style = Typography.labelMedium,
+                    fontSize = 14.sp
+                )
+            }
         }
     }
 }
 
 fun formatTimeComposerMode(milliseconds: Long): String {
     val totalSeconds = milliseconds / 1000
-    val minutes = (totalSeconds / 60).toInt()
+    val hours = (totalSeconds / 3600).toInt()
+    val minutes = ((totalSeconds % 3600) / 60).toInt()
     val seconds = (totalSeconds % 60).toInt()
     val millis = (milliseconds % 1000).toInt()
 
-    return "%02d:%02d:%02d.%03d".format(minutes, seconds, millis / 100, millis % 1000)
+    return "%02d:%02d:%02d.%d".format(hours, minutes, seconds, millis)
 }
 
 @SuppressLint("DefaultLocale")
