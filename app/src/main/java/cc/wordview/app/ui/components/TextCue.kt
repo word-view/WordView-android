@@ -65,18 +65,25 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                             modifier = Modifier.width(IntrinsicSize.Max),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .aspectRatio(1f),
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data("$endpoint/api/v1/image?parent=${word.parent}")
-                                    .build(),
-                                contentDescription = null
-                            )
+                            if (word.representable) {
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(1f),
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data("$endpoint/api/v1/image?parent=${word.parent}")
+                                        .build(),
+                                    contentDescription = null
+                                )
+                            }
                             Text(
                                 modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.primaryContainer)
+                                    .background(
+                                        if (word.representable)
+                                            MaterialTheme.colorScheme.primaryContainer
+                                        else
+                                            MaterialTheme.colorScheme.secondaryContainer
+                                    )
                                     .testTag("text-cue-plain"),
                                 text = word.word,
                                 fontSize = getFontSize(text, langtag),
