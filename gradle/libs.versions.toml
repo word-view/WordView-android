@@ -28,7 +28,7 @@ navigationCompose = "2.8.3"
 media3Common = "1.4.1"
 lifecycleRuntimeComposeAndroid = "2.8.7"
 # WORKAROUND: v0.24.2 can't be resolved by jitpack -> use git commit hash instead
-newpipeextractor = "176da72cb4c3ec4679211339b0e59f6b01bf2f52"
+newpipeextractor = "176da72cb4"
 uiTestJunit4 = "1.7.5"
 uiTestManifest = "1.7.5"
 volley = "1.2.1"
