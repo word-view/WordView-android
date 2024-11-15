@@ -76,17 +76,8 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
 
     var checked by rememberSaveable { mutableStateOf(false) }
 
-    val context = LocalContext.current
-    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-
     OneTimeEffect {
-        viewModel.getPhrase(
-            preferences,
-            context,
-            "en",
-            "ja",
-            WordReviseViewModel.currentWord.value.word.word
-        )
+        viewModel.getPhrase(WordReviseViewModel.currentWord.value.word.word)
     }
 
     fun compare() {

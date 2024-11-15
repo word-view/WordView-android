@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.revise.model
 
-import android.util.Log
 import cc.wordview.app.api.ApiRequestRepository
 import cc.wordview.app.api.Response
 import com.android.volley.DefaultRetryPolicy
@@ -34,8 +33,7 @@ class TranslateRepository @Inject constructor() : ApiRequestRepository() {
         val url =
             "$endpoint/api/v1/lesson/phrase?phraseLang=$phraseLang&wordsLang=$wordsLang&keyword=${URLEncoder.encode(keyword)}"
 
-        val response = Response({ onGetPhraseSuccess(it) },
-            { Log.e(TAG, "getPhrase: ", it); onGetPhraseFail() })
+        val response = Response({ onGetPhraseSuccess(it) }, { onGetPhraseFail() })
 
         val request = jsonRequest(url, response)
 

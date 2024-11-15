@@ -17,28 +17,21 @@
 
 package cc.wordview.app.ui.screens.revise.model
 
-import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.ui.screens.revise.WordReviseViewModel
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import me.zhanghai.compose.preference.Preferences
 import javax.inject.Inject
 
 @HiltViewModel
-class TranslateViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-    private val translateRepository: TranslateRepository
-) : ViewModel() {
+class TranslateViewModel @Inject constructor() : ViewModel() {
     private val _phrase = MutableStateFlow("")
 
     private val _answerWordPool = mutableStateListOf<String>()
@@ -52,27 +45,20 @@ class TranslateViewModel @Inject constructor(
     val originalPoolOrder get() = _originalPoolOrder
     val wrongOrderedWords get() = _wrongOrderedWords
 
-    fun getPhrase(
-        preferences: Preferences,
-        context: Context,
-        phraseLang: String,
-        wordsLang: String,
-        keyword: String
-    ) {
+    fun getPhrase(keyword: String) {
         viewModelScope.launch {
-            translateRepository.init(context)
-            translateRepository.endpoint = preferences.getOrDefault("api_endpoint")
-            translateRepository.onGetPhraseFail = {
+            for (phrase in phraseList) {
+                if (phrase.words.contains(keyword)) {
+                    setPhrase(phrase.phrase)
+                    appendWords(phrase.words)
+                }
+            }
+
+            if (_phrase.value == "") {
+                Log.i("TranslateViewModel", "No phrase found for keyword=$keyword (Skipping)")
                 WordReviseViewModel.setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
                 cleanup()
             }
-            translateRepository.onGetPhraseSuccess = {
-                val phrase = Gson().fromJson(it, Phrase::class.java)
-
-                setPhrase(phrase.phrase)
-                appendWords(phrase.words)
-            }
-            translateRepository.getPhrase(phraseLang, wordsLang, keyword)
         }
     }
 

@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.player
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -32,10 +33,14 @@ import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.screens.revise.WordReviseViewModel
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
+import cc.wordview.app.ui.screens.revise.model.Phrase
+import cc.wordview.app.ui.screens.revise.model.TranslateRepository
+import cc.wordview.app.ui.screens.revise.model.phraseList
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import coil.ImageLoader
 import coil.request.ImageRequest
+import com.google.gson.Gson
 import com.google.gson.JsonParser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +55,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val playerRepository: PlayerRepository
+    private val playerRepository: PlayerRepository,
+    private val translateRepository: TranslateRepository,
 ) : ViewModel() {
     private val TAG = WordReviseViewModel::class.java.simpleName
 
@@ -129,6 +135,13 @@ class PlayerViewModel @Inject constructor(
                     for (word in wordsFound) {
                         cue.words.add(word)
                         preloadImage(word.parent, playerRepository.endpoint, context)
+                        preloadPhrases(
+                            context,
+                            preferences,
+                            "en",
+                            preferences.getOrDefault("language"),
+                            word.word
+                        )
                     }
                 }
 
@@ -136,6 +149,29 @@ class PlayerViewModel @Inject constructor(
             }
 
             playerRepository.getLyrics(id, lang.tag, video)
+        }
+    }
+
+    private fun preloadPhrases(
+        context: Context,
+        preferences: Preferences,
+        phraseLang: String,
+        wordsLang: String,
+        keyword: String
+    ) {
+        viewModelScope.launch {
+            translateRepository.init(context)
+            translateRepository.endpoint = preferences.getOrDefault("api_endpoint")
+
+            translateRepository.onGetPhraseSuccess = {
+                val phrase = Gson().fromJson(it, Phrase::class.java)
+
+                if (!phraseList.contains(phrase)) {
+                    Log.i(TAG, "Preloading phrase '${phrase.phrase}'")
+                    phraseList.add(phrase)
+                }
+            }
+            translateRepository.getPhrase(phraseLang, wordsLang, keyword)
         }
     }
 
