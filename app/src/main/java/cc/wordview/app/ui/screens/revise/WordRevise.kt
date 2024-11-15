@@ -21,6 +21,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -101,8 +103,10 @@ fun WordRevise(
             }
         }) { leave() }
     }) { innerPadding ->
-        Box(Modifier.fillMaxSize()) {
-            ReviseScreen.getByRoute(currentScreen)?.Composable(navHostController, innerPadding)
+        Crossfade(targetState = currentScreen, animationSpec = tween(250)) {
+            Box(Modifier.fillMaxSize()) {
+                ReviseScreen.getByRoute(it)?.Composable(navHostController, innerPadding)
+            }
         }
     }
 }
