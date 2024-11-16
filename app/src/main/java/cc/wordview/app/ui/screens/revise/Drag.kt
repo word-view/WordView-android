@@ -85,8 +85,8 @@ fun Drag(
         animationSpec = spring(dampingRatio = 0.5f, stiffness = 300f),
     )
 
-    val currentWord by WordReviseViewModel.currentWord.collectAsStateWithLifecycle()
-    val words by WordReviseViewModel.wordsToRevise.collectAsStateWithLifecycle()
+    val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
+    val words by LessonViewModel.wordsToRevise.collectAsStateWithLifecycle()
     val topWord by dragViewModel.topWord.collectAsStateWithLifecycle()
     val downWord by dragViewModel.downWord.collectAsStateWithLifecycle()
 
@@ -102,12 +102,12 @@ fun Drag(
     }
 
     fun correct() {
-        WordReviseViewModel.setAnswer(Answer.CORRECT)
+        LessonViewModel.setAnswer(Answer.CORRECT)
         currentWord.corrects++
     }
 
     fun wrong() {
-        WordReviseViewModel.setAnswer(Answer.WRONG)
+        LessonViewModel.setAnswer(Answer.WRONG)
         currentWord.misses++
     }
 
@@ -119,14 +119,14 @@ fun Drag(
                 if (currentWord.word == topWord) correct()
                 else wrong()
 
-                WordReviseViewModel.setScreen(ReviseScreen.Presenter.route)
+                LessonViewModel.setScreen(ReviseScreen.Presenter.route)
             }
 
             if (y > 450) {
                 if (currentWord.word == downWord) correct()
                 else wrong()
 
-                WordReviseViewModel.setScreen(ReviseScreen.Presenter.route)
+                LessonViewModel.setScreen(ReviseScreen.Presenter.route)
             }
         }
     }

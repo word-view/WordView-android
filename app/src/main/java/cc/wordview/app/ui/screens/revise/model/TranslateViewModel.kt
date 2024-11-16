@@ -21,7 +21,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cc.wordview.app.ui.screens.revise.WordReviseViewModel
+import cc.wordview.app.ui.screens.revise.LessonViewModel
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,7 +56,7 @@ class TranslateViewModel @Inject constructor() : ViewModel() {
 
             if (_phrase.value == "") {
                 Log.i("TranslateViewModel", "No phrase found for keyword=$keyword (Skipping)")
-                WordReviseViewModel.setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
+                LessonViewModel.setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
                 cleanup()
             }
         }

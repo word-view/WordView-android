@@ -25,8 +25,8 @@ import cc.wordview.app.ui.screens.Settings
 import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.screens.home.Home
 import cc.wordview.app.ui.screens.results.ReviseResults
-import cc.wordview.app.ui.screens.revise.WordRevise
 import cc.wordview.app.ui.screens.player.Player
+import cc.wordview.app.ui.screens.revise.Lesson
 import cc.wordview.app.ui.screens.search.Search
 
 sealed class Screen(val route: String) {
@@ -84,7 +84,7 @@ sealed class Screen(val route: String) {
     data object WordRevise : Screen("word-revise") {
         @Composable
         override fun Composable(navHostController: NavHostController) {
-            WordRevise(navHostController)
+            Lesson(navHostController)
         }
     }
 

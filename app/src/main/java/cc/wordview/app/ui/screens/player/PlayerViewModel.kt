@@ -31,7 +31,7 @@ import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
-import cc.wordview.app.ui.screens.revise.WordReviseViewModel
+import cc.wordview.app.ui.screens.revise.LessonViewModel
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
 import cc.wordview.app.ui.screens.revise.model.Phrase
 import cc.wordview.app.ui.screens.revise.model.TranslateRepository
@@ -58,7 +58,7 @@ class PlayerViewModel @Inject constructor(
     private val playerRepository: PlayerRepository,
     private val translateRepository: TranslateRepository,
 ) : ViewModel() {
-    private val TAG = WordReviseViewModel::class.java.simpleName
+    private val TAG = this::class.java.simpleName
 
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
@@ -208,7 +208,15 @@ class PlayerViewModel @Inject constructor(
 
                     for (cue in cues.value) {
                         for (word in cue.words) {
-                            WordReviseViewModel.appendWord(ReviseWord(word))
+                            val reviseWord = ReviseWord(word)
+
+                            for (phrase in phraseList) {
+                                if (phrase.words.contains(word.word)) {
+                                    reviseWord.hasPhrase = true
+                                }
+                            }
+
+                            LessonViewModel.appendWord(reviseWord)
                         }
                     }
 

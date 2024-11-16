@@ -22,4 +22,5 @@ import cc.wordview.gengolex.languages.Word
 class ReviseWord(var word: Word = Word("", "")) {
     var misses = 0
     var corrects = 0
+    var hasPhrase = false
 }

@@ -20,13 +20,13 @@ package cc.wordview.app.ui.screens.revise.components
 import android.annotation.SuppressLint
 import android.os.CountDownTimer
 import android.util.Log
-import cc.wordview.app.ui.screens.revise.WordReviseViewModel
+import cc.wordview.app.ui.screens.revise.LessonViewModel
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
 object ReviseTimer {
     private val TAG = ReviseTimer::class.java.simpleName
-    private val viewModel = WordReviseViewModel
+    private val viewModel = LessonViewModel
 
     var timeRemaining = 300000L
 

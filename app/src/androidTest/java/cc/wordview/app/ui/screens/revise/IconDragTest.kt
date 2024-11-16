@@ -30,7 +30,6 @@ import cc.wordview.app.ui.screens.revise.components.ReviseWord
 import cc.wordview.app.ui.screens.revise.components.DragMode
 import cc.wordview.app.ui.screens.revise.model.DragViewModel
 import cc.wordview.app.ui.screens.components.Screen
-import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Assert.assertTrue
@@ -41,7 +40,7 @@ class IconDragTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val viewModel = WordReviseViewModel
+    private val viewModel = LessonViewModel
 
     private fun setupScreen(autoAdvance: Boolean = true, appendWords: Boolean = false) {
         composeTestRule.mainClock.autoAdvance = autoAdvance
@@ -97,7 +96,7 @@ class IconDragTest {
             moveBy(Offset(0f, 500f))
             up()
         }
-        composeTestRule.waitUntil(10_000) { viewModel.screen.value == ReviseScreen.Presenter.route }
+        composeTestRule.waitUntil(10_000) { viewModel.currentScreen.value == ReviseScreen.Presenter.route }
     }
 
     @Test
@@ -109,6 +108,6 @@ class IconDragTest {
             moveBy(Offset(0f, -500f))
             up()
         }
-        composeTestRule.waitUntil(10_000) { viewModel.screen.value == ReviseScreen.Presenter.route }
+        composeTestRule.waitUntil(10_000) { viewModel.currentScreen.value == ReviseScreen.Presenter.route }
     }
 }

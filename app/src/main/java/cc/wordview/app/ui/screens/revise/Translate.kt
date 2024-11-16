@@ -48,7 +48,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -60,14 +59,13 @@ import cc.wordview.app.ui.screens.revise.components.Answer
 import cc.wordview.app.ui.screens.revise.components.ReviseScreen
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
-import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltViewModel()) {
     val phrase by viewModel.phrase.collectAsStateWithLifecycle()
 
-    val currentWord by WordReviseViewModel.currentWord.collectAsStateWithLifecycle()
+    val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
 
     val answerWordPool = viewModel.answerWordPool
     val wordPool = viewModel.wordPool
@@ -77,7 +75,7 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
     var checked by rememberSaveable { mutableStateOf(false) }
 
     OneTimeEffect {
-        viewModel.getPhrase(WordReviseViewModel.currentWord.value.word.word)
+        viewModel.getPhrase(LessonViewModel.currentWord.value.word.word)
     }
 
     fun compare() {
@@ -93,10 +91,10 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
         }
 
         if (wrongOrderedWords.size > 0) {
-            WordReviseViewModel.setAnswer(Answer.WRONG)
+            LessonViewModel.setAnswer(Answer.WRONG)
             currentWord.misses++
         } else {
-            WordReviseViewModel.setAnswer(Answer.CORRECT)
+            LessonViewModel.setAnswer(Answer.CORRECT)
             currentWord.corrects++
         }
     }
@@ -245,7 +243,7 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
             }
             Button(
                 onClick = {
-                    WordReviseViewModel.setScreen(ReviseScreen.Presenter.route)
+                    LessonViewModel.setScreen(ReviseScreen.Presenter.route)
                     viewModel.cleanup()
                 },
                 modifier = Modifier

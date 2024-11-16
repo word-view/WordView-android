@@ -18,31 +18,32 @@
 package cc.wordview.app.ui.screens.revise
 
 import android.content.Context
-import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.ui.screens.revise.components.Answer
+import cc.wordview.app.ui.screens.revise.components.ReviseScreen
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
+import cc.wordview.gengolex.Language
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.util.Locale
 
-object WordReviseViewModel : ViewModel() {
-    private val TAG = WordReviseViewModel::class.java.simpleName
+object LessonViewModel : ViewModel() {
+    private val TAG = this::class.java.simpleName
 
     private val _currentWord = MutableStateFlow(ReviseWord())
-    private val _screen = MutableStateFlow("")
+    private val _currentScreen = MutableStateFlow("")
     private val _wordsToRevise = MutableStateFlow<ArrayList<ReviseWord>>(arrayListOf())
     private val _answerStatus = MutableStateFlow(Answer.NONE)
-    private val _formattedTime = MutableStateFlow("")
+    private val _timer = MutableStateFlow("")
     private val _timerFinished = MutableStateFlow(false)
 
     val currentWord = _currentWord.asStateFlow()
-    val screen = _screen.asStateFlow()
-    val wordsToRevise = _wordsToRevise.asStateFlow()
+    val currentScreen = _currentScreen.asStateFlow()
     val answerStatus = _answerStatus.asStateFlow()
-    val formattedTime = _formattedTime.asStateFlow()
+    val wordsToRevise = _wordsToRevise.asStateFlow()
+    val timer = _timer.asStateFlow()
     val timerFinished = _timerFinished.asStateFlow()
 
     fun nextWord(answer: Answer = Answer.NONE) {
@@ -69,62 +70,50 @@ object WordReviseViewModel : ViewModel() {
         }
 
         setWord(_wordsToRevise.value.first())
-    }
 
-    fun setWord(word: ReviseWord) {
-        _currentWord.update {
-            Log.d(TAG, "Updating word from '${it.word.word}' to '${word.word.word}'")
-            word
+        if (currentWord.value.hasPhrase) {
+            setScreen(ReviseScreen.getRandomScreen().route)
+        } else {
+            Log.i(TAG, "Word '${currentWord.value.word.word}' has no phrase")
+            setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
         }
     }
 
-    fun cleanWords() {
-        _wordsToRevise.update { arrayListOf() }
-    }
+    fun appendWord(word: ReviseWord) {
+        for (wordd in _wordsToRevise.value) {
+            if (wordd.word.word == word.word.word) return
+        }
 
-    fun setScreen(screen: String) {
-        _screen.update { screen }
-    }
-
-    fun setFormattedTime(time: String) {
-        _formattedTime.update { time }
+        Log.i(TAG, "Appending the word '${word.word.word}' to be revised")
+        _wordsToRevise.update { old -> (old + word) as ArrayList<ReviseWord> }
     }
 
     fun setAnswer(answer: Answer) {
         _answerStatus.update { answer }
     }
 
-    fun appendWord(word: ReviseWord) {
-        for (wordd in _wordsToRevise.value) {
-            if (wordd.word.word == word.word.word) {
-                Log.d(TAG, "Not appending word '${word.word.word}' because it is already in")
-                return
-            }
-        }
-
-        Log.d(TAG, "Appending the word '${word.word.word}' to be revised")
-        _wordsToRevise.update { old -> (old + word) as ArrayList<ReviseWord> }
+    fun setScreen(screen: String) {
+        _currentScreen.update { screen }
     }
 
-    fun ttsSpeak(context: Context, message: String, locale: Locale) {
-        var tts: TextToSpeech? = null
-        tts = TextToSpeech(context) {
-            if (it == TextToSpeech.SUCCESS) {
-                tts?.let { textToSpeech ->
-                    textToSpeech.language = locale
-                    textToSpeech.setSpeechRate(1.0f)
-                    textToSpeech.speak(
-                        message,
-                        TextToSpeech.QUEUE_ADD,
-                        null,
-                        null
-                    )
-                }
-            }
+    fun setWord(word: ReviseWord) {
+        _currentWord.update {
+            Log.d(TAG, "setWord: previous=${it.word.word} new=${word.word.word}")
+            word
         }
+    }
+
+    fun setFormattedTime(time: String) {
+        _timer.update { time }
     }
 
     fun finishTimer() {
         _timerFinished.update { true }
     }
+
+    fun cleanWords() {
+        _wordsToRevise.update { arrayListOf() }
+    }
+
+    fun ttsSpeak(context: Context, word: String, locale: Locale) {}
 }

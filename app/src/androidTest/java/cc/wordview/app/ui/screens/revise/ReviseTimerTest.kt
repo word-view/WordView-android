@@ -27,7 +27,7 @@ class ReviseTimerTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val viewModel = WordReviseViewModel
+    private val viewModel = LessonViewModel
 
     private fun setup(autoAdvance: Boolean = true, timeRemaining: Long = 1000L) {
         composeTestRule.mainClock.autoAdvance = autoAdvance
@@ -48,6 +48,6 @@ class ReviseTimerTest {
     @Test
     fun ticksUpdateFormattedTime() {
         setup(true, 30_000)
-        composeTestRule.waitUntil(5_000) { viewModel.formattedTime.value == "0:29" }
+        composeTestRule.waitUntil(5_000) { viewModel.timer.value == "0:29" }
     }
 }

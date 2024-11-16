@@ -26,16 +26,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
 import cc.wordview.app.ui.screens.components.Screen
-import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
 import org.junit.Rule
 import org.junit.Test
 
-class WordReviseTest {
+class LessonTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val viewModel = WordReviseViewModel
+    private val viewModel = LessonViewModel
 
     private fun setupScreen() {
         viewModel.appendWord(ReviseWord(Word("1", "1")))
@@ -48,7 +47,7 @@ class WordReviseTest {
             val navController = rememberNavController()
             NavHost(navController, startDestination = "word-revise") {
                 composable(Screen.WordRevise.route) {
-                    WordRevise(navController)
+                    Lesson(navController)
                 }
 
                 composable("home") { Box {} }

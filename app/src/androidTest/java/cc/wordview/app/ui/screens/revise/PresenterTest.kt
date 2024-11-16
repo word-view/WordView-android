@@ -22,7 +22,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ui.screens.revise.components.Answer
 import cc.wordview.app.ui.screens.revise.components.ReviseWord
-import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.languages.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule
@@ -32,7 +31,7 @@ class PresenterTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val viewModel = WordReviseViewModel
+    private val viewModel = LessonViewModel
 
     private fun setupScreen(autoAdvance: Boolean = true) {
         composeTestRule.mainClock.autoAdvance = autoAdvance

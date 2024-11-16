@@ -58,8 +58,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun Presenter() {
-    val answerStatus by WordReviseViewModel.answerStatus.collectAsStateWithLifecycle()
-    val current by WordReviseViewModel.currentWord.collectAsStateWithLifecycle()
+    val answerStatus by LessonViewModel.answerStatus.collectAsStateWithLifecycle()
+    val current by LessonViewModel.currentWord.collectAsStateWithLifecycle()
 
     var visible by remember { mutableStateOf(false) }
 
@@ -86,17 +86,16 @@ fun Presenter() {
                 if (answerStatus != Answer.NONE) {
                     val answerToNextWord = answerStatus
 
-                    WordReviseViewModel.setAnswer(Answer.NONE)
+                    LessonViewModel.setAnswer(Answer.NONE)
                     visible = true
 
-                    WordReviseViewModel.ttsSpeak(context, current.word.word, Locale.JAPANESE)
+                    LessonViewModel.ttsSpeak(context, current.word.word, Locale.JAPANESE)
 
                     delay(3000.milliseconds)
                     visible = false
                     delay(500.milliseconds)
 
-                    WordReviseViewModel.nextWord(answerToNextWord)
-                    WordReviseViewModel.setScreen(ReviseScreen.getRandomScreen().route)
+                    LessonViewModel.nextWord(answerToNextWord)
                 }
             }
         }
