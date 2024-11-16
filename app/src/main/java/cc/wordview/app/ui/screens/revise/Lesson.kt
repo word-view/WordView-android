@@ -37,6 +37,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -47,6 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.components.BackTopAppBar
+import cc.wordview.app.ui.components.LessonQuitDialog
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.screens.results.ReviseResultsViewModel
@@ -64,6 +69,8 @@ fun Lesson(
     val timer by viewModel.timer.collectAsStateWithLifecycle()
 
     val activity = LocalContext.current as Activity
+
+    var openQuitConfirm by remember { mutableStateOf(false) }
 
     OneTimeEffect {
         viewModel.nextWord()
@@ -91,8 +98,23 @@ fun Lesson(
         navHostController.navigate(Screen.Home.route)
     }
 
+    if (openQuitConfirm) {
+        ReviseTimer.pause()
+        LessonQuitDialog(
+            onDismiss = {
+                openQuitConfirm = false
+                ReviseTimer.start()
+            },
+            onConfirm = {
+                // if we don't close here it will appear at the home for a brief period
+                openQuitConfirm = false
+                leave()
+            }
+        )
+    }
+
     Scaffold(topBar = {
-        BackHandler { leave() }
+        BackHandler { openQuitConfirm = true }
         BackTopAppBar(title = {
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -106,7 +128,7 @@ fun Lesson(
                     contentDescription = "timer"
                 )
             }
-        }) { leave() }
+        }) { openQuitConfirm = true }
     }) { innerPadding ->
         Crossfade(
             targetState = currentScreen,

@@ -65,5 +65,6 @@ class LessonTest {
     fun performGoBack() {
         setupScreen()
         composeTestRule.onNodeWithTag("back-button").performClick()
+        composeTestRule.onNodeWithTag("lesson-quit-alert-dialog").assertExists()
     }
 }
