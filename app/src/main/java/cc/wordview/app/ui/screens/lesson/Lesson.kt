@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise
+package cc.wordview.app.ui.screens.lesson
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -39,24 +39,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.LessonQuitDialog
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.screens.results.ReviseResultsViewModel
-import cc.wordview.app.ui.screens.revise.components.ReviseScreen
-import cc.wordview.app.ui.screens.revise.components.ReviseTimer
+import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
+import cc.wordview.app.ui.screens.lesson.components.ReviseTimer
 
 @SuppressLint("SourceLockedOrientationActivity")
 @Composable

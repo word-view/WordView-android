@@ -26,7 +26,7 @@ import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.screens.home.Home
 import cc.wordview.app.ui.screens.results.ReviseResults
 import cc.wordview.app.ui.screens.player.Player
-import cc.wordview.app.ui.screens.revise.Lesson
+import cc.wordview.app.ui.screens.lesson.Lesson
 import cc.wordview.app.ui.screens.search.Search
 
 sealed class Screen(val route: String) {

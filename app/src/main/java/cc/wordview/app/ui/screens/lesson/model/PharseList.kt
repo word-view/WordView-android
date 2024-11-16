@@ -15,26 +15,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise.model
+package cc.wordview.app.ui.screens.lesson.model
 
-import androidx.lifecycle.ViewModel
-import cc.wordview.gengolex.languages.Word
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-
-object DragViewModel : ViewModel() {
-    private val _topWord = MutableStateFlow<Word?>(null)
-    private val _downWord = MutableStateFlow<Word?>(null)
-
-    var topWord = _topWord.asStateFlow()
-    val downWord = _downWord.asStateFlow()
-
-    fun setTopWord(word: Word) {
-        _topWord.update { word }
-    }
-
-    fun setDownWord(word: Word) {
-        _downWord.update { word }
-    }
-}
+val phraseList = ArrayList<Phrase>()

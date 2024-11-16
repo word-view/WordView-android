@@ -15,20 +15,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise
+package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.screens.results.ReviseResults
-import cc.wordview.app.ui.screens.revise.components.ReviseScreen
-import cc.wordview.app.ui.screens.revise.components.ReviseWord
-import cc.wordview.app.ui.screens.revise.components.DragMode
-import cc.wordview.app.ui.screens.revise.model.DragViewModel
+import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
+import cc.wordview.app.ui.screens.lesson.components.ReviseWord
+import cc.wordview.app.ui.screens.lesson.components.DragMode
+import cc.wordview.app.ui.screens.lesson.model.DragViewModel
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.gengolex.languages.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -36,7 +37,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
-class IconDragTest {
+class WordDragTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -57,9 +58,9 @@ class IconDragTest {
             val navController = rememberNavController()
 
             ProvidePreferenceLocals {
-                NavHost(navController = navController, startDestination = "icon-drag") {
-                    composable("icon-drag") {
-                        Drag(navController, mode = DragMode.ICON)
+                NavHost(navController = navController, startDestination = "word-drag") {
+                    composable("word-drag") {
+                        Drag(navController, mode = DragMode.WORD)
                     }
 
                     composable(Screen.ReviseResults.route) {
@@ -76,9 +77,9 @@ class IconDragTest {
 
         composeTestRule.onNodeWithTag("root").assertExists()
         composeTestRule.onNodeWithTag("drag").assertExists()
+        composeTestRule.onNodeWithText("lágrima").assertExists()
         composeTestRule.onNodeWithTag("top-word").assertExists()
         composeTestRule.onNodeWithTag("down-word").assertExists()
-
     }
 
     @Test

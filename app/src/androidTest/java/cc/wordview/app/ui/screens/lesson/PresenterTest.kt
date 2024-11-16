@@ -15,13 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise
+package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import cc.wordview.app.ui.screens.revise.components.Answer
-import cc.wordview.app.ui.screens.revise.components.ReviseWord
+import cc.wordview.app.ui.screens.lesson.components.Answer
+import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.gengolex.languages.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule

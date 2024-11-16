@@ -15,8 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise.components
+package cc.wordview.app.ui.screens.lesson.model
 
-enum class Answer {
-    CORRECT, WRONG, NONE
-}
+data class Phrase(
+    val phrase: String,
+    val words: List<String>,
+)

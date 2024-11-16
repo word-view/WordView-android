@@ -15,28 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise.components
+package cc.wordview.app.ui.screens.lesson.components
 
-import kotlin.random.Random
+import cc.wordview.gengolex.languages.Word
 
-/**
- * All the modes that the `Drag` screen can be in.
- */
-enum class DragMode {
-    /**
-     * Means that the middle object should be a Icon
-     */
-    ICON,
-
-    /**
-     * Means that the middle object should e a Word
-     */
-    WORD;
-
-    companion object {
-        fun random(): DragMode {
-            val values = enumValues<DragMode>()
-            return values[Random.nextInt(values.size)]
-        }
-    }
+class ReviseWord(var word: Word = Word("", "")) {
+    var misses = 0
+    var corrects = 0
+    var hasPhrase = false
 }

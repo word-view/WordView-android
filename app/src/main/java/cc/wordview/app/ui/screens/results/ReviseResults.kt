@@ -42,7 +42,7 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.ui.components.BackTopAppBar
-import cc.wordview.app.ui.screens.revise.components.ReviseWord
+import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage

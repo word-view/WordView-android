@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise.components
+package cc.wordview.app.ui.screens.lesson.components
 
 import android.annotation.SuppressLint
 import android.os.CountDownTimer
 import android.util.Log
-import cc.wordview.app.ui.screens.revise.LessonViewModel
+import cc.wordview.app.ui.screens.lesson.LessonViewModel
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 

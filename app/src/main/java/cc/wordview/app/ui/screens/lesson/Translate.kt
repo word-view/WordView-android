@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise
+package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +41,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import cc.wordview.app.ui.screens.revise.model.TranslateViewModel
+import cc.wordview.app.ui.screens.lesson.model.TranslateViewModel
 import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -55,8 +55,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.ui.components.OneTimeEffect
-import cc.wordview.app.ui.screens.revise.components.Answer
-import cc.wordview.app.ui.screens.revise.components.ReviseScreen
+import cc.wordview.app.ui.screens.lesson.components.Answer
+import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 

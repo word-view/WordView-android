@@ -15,15 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise
+package cc.wordview.app.ui.screens.lesson
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import cc.wordview.app.ui.screens.revise.components.Answer
-import cc.wordview.app.ui.screens.revise.components.ReviseScreen
-import cc.wordview.app.ui.screens.revise.components.ReviseWord
-import cc.wordview.gengolex.Language
+import cc.wordview.app.ui.screens.lesson.components.Answer
+import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
+import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

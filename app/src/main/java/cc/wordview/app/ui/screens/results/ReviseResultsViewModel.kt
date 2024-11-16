@@ -18,7 +18,7 @@
 package cc.wordview.app.ui.screens.results
 
 import androidx.lifecycle.ViewModel
-import cc.wordview.app.ui.screens.revise.components.ReviseWord
+import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

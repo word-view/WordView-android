@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise
+package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -45,10 +45,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.dragGestures
 import cc.wordview.app.extensions.getOrDefault
-import cc.wordview.app.ui.screens.revise.components.Answer
-import cc.wordview.app.ui.screens.revise.components.DragMode
-import cc.wordview.app.ui.screens.revise.components.ReviseScreen
-import cc.wordview.app.ui.screens.revise.model.DragViewModel
+import cc.wordview.app.ui.screens.lesson.components.Answer
+import cc.wordview.app.ui.screens.lesson.components.DragMode
+import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
+import cc.wordview.app.ui.screens.lesson.model.DragViewModel
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.languages.Word
 import coil.compose.AsyncImage

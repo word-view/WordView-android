@@ -15,14 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise.components
+package cc.wordview.app.ui.screens.lesson.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import cc.wordview.app.ui.screens.revise.Drag
-import cc.wordview.app.ui.screens.revise.Presenter
-import cc.wordview.app.ui.screens.revise.Translate
+import cc.wordview.app.ui.screens.lesson.Drag
+import cc.wordview.app.ui.screens.lesson.Presenter
+import cc.wordview.app.ui.screens.lesson.Translate
 
 sealed class ReviseScreen(val route: String) {
     @Composable

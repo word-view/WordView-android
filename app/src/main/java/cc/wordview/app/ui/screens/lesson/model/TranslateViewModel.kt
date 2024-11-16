@@ -15,14 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise.model
+package cc.wordview.app.ui.screens.lesson.model
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cc.wordview.app.ui.screens.revise.LessonViewModel
-import cc.wordview.app.ui.screens.revise.components.ReviseScreen
+import cc.wordview.app.ui.screens.lesson.LessonViewModel
+import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

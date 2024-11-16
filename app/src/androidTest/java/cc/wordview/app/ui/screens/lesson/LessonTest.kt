@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise
+package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -24,7 +24,7 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.screens.revise.components.ReviseWord
+import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.gengolex.languages.Word
 import org.junit.Rule

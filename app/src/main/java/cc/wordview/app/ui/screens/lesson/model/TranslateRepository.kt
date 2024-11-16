@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.revise.model
+package cc.wordview.app.ui.screens.lesson.model
 
 import cc.wordview.app.api.ApiRequestRepository
 import cc.wordview.app.api.Response

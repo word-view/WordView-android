@@ -31,11 +31,11 @@ import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
-import cc.wordview.app.ui.screens.revise.LessonViewModel
-import cc.wordview.app.ui.screens.revise.components.ReviseWord
-import cc.wordview.app.ui.screens.revise.model.Phrase
-import cc.wordview.app.ui.screens.revise.model.TranslateRepository
-import cc.wordview.app.ui.screens.revise.model.phraseList
+import cc.wordview.app.ui.screens.lesson.LessonViewModel
+import cc.wordview.app.ui.screens.lesson.components.ReviseWord
+import cc.wordview.app.ui.screens.lesson.model.Phrase
+import cc.wordview.app.ui.screens.lesson.model.TranslateRepository
+import cc.wordview.app.ui.screens.lesson.model.phraseList
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import coil.ImageLoader
