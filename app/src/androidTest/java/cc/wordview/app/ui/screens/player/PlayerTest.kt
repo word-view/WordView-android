@@ -58,7 +58,8 @@ class PlayerTest {
     fun renders() {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("interface"), 5_000)
 
-        composeTestRule.onNodeWithText("Gran Vals - Francisco Tárrega").assertExists()
+        composeTestRule.onNodeWithText("Gran Vals").assertExists()
+        composeTestRule.onNodeWithText("Francisco Tárrega").assertExists()
         composeTestRule.onNodeWithTag("back-button").assertExists()
 
         composeTestRule.onNodeWithTag("skip-back").assertExists()

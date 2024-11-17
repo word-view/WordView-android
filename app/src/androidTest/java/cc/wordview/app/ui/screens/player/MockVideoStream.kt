@@ -23,12 +23,14 @@ import org.schabi.newpipe.extractor.stream.StreamType
 
 class MockVideoStream : VideoStreamInterface {
     override var info: StreamInfo =
-        StreamInfo(0, "", "", StreamType.VIDEO_STREAM, "", "Gran Vals - Francisco Tárrega", 0)
+        StreamInfo(0, "", "", StreamType.VIDEO_STREAM, "", "Gran Vals", 0)
 
     override var cleanArtistName = ""
     override var cleanTrackName = ""
 
     var url = "http://10.0.2.2:8080/public/gran_vals_tarrega.mp3"
+
+    init { info.uploaderName = "Francisco Tárrega" }
 
     override fun init(id: String) {}
 

@@ -203,7 +203,10 @@ fun Player(
                                 .padding(innerPadding),
                             contentAlignment = Alignment.TopStart,
                         ) {
-                            Row(modifier = Modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier.fillMaxHeight(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 IconButton(
                                     onClick = { back() },
                                     modifier = Modifier.testTag("back-button"),
@@ -213,10 +216,17 @@ fun Player(
                                         contentDescription = "Back"
                                     )
                                 }
-                                Text(
-                                    text = videoStream.info.name,
-                                    fontSize = 18.sp
-                                )
+                                Column {
+                                    Text(
+                                        text = videoStream.info.name,
+                                        fontSize = 18.sp
+                                    )
+                                    Text(
+                                        // dirty inline replace but it wont be a issue i think
+                                        text = videoStream.info.uploaderName.replace("- Topic", ""),
+                                        fontSize = 12.sp
+                                    )
+                                }
                             }
                         }
                         Seekbar(
