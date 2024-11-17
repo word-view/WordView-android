@@ -20,5 +20,10 @@ package cc.wordview.app.extensions
 import androidx.navigation.NavHostController
 
 fun NavHostController.goBack() {
-    if (previousBackStackEntry != null) popBackStack()
+    val canGoBack = previousBackStackEntry != null &&
+            currentBackStackEntry?.destination?.route != graph.startDestinationRoute
+
+    if (canGoBack) {
+        popBackStack()
+    }
 }
