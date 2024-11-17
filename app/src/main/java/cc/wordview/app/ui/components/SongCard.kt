@@ -20,6 +20,7 @@ package cc.wordview.app.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -91,7 +92,7 @@ fun SongCard(
                     AsyncImage(
                         model = thumbnail,
                         placeholder = null,
-                        error = painterResource(id = R.drawable.nonet_dark),
+                        error = painterResource(id = if (isSystemInDarkTheme()) R.drawable.nonet else R.drawable.nonet_dark),
                         contentDescription = "$trackName Cover",
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.FillHeight,

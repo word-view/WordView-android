@@ -17,8 +17,9 @@
 
 package cc.wordview.app.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,11 +40,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.ui.theme.Typography
@@ -70,10 +73,15 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
                     .padding(8.dp),
                 shape = RoundedCornerShape(5.dp)
             ) {
+                Box(
+                    Modifier
+                        .zIndex(-1f)
+                        .alpha(0.1f)
+                        .background(MaterialTheme.colorScheme.onBackground)
+                )
                 AsyncImage(
                     model = result.thumbnails.first().url,
-                    placeholder = painterResource(id = R.drawable.radio),
-                    error = painterResource(id = R.drawable.radio),
+                    error = painterResource(id = if (isSystemInDarkTheme()) R.drawable.nonet else R.drawable.nonet_dark),
                     contentDescription = "${result.title} cover",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillHeight,
@@ -89,7 +97,11 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
                 )
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     if (result.channelIsVerified) {
-                        Icon(imageVector = Icons.Filled.Verified, modifier = Modifier.size(12.dp), contentDescription = "Verified")
+                        Icon(
+                            imageVector = Icons.Filled.Verified,
+                            modifier = Modifier.size(12.dp),
+                            contentDescription = "Verified"
+                        )
                         Spacer(Modifier.size(2.dp))
                     }
 
