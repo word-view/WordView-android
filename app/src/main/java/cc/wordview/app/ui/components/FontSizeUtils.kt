@@ -26,7 +26,7 @@ fun getFontSize(cueText: String, langTag: String): TextUnit {
     val cueSize = cueText.length
 
     return when (language) {
-        Language.JAPANESE -> calculateFontSize(cueSize, maxSize = 44.sp, minSize = 32.sp, maxCueSize = 24)
+        Language.JAPANESE -> calculateFontSize(cueSize, maxSize = 52.sp, minSize = 32.sp, maxCueSize = 24)
         else -> calculateFontSize(cueSize, maxSize = 44.sp, minSize = 24.sp, maxCueSize = 60)
     }
 }

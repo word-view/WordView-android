@@ -51,13 +51,13 @@ class FontSizeUtilsTest {
     @Test
     fun sizeCorrectJapanese_ShortText() {
         val size = getFontSize("こんにちは", "ja")
-        assertEquals(41.5.sp, size)
+        assertEquals(47.833332.sp, size)
     }
 
     @Test
     fun sizeCorrectJapanese_MediumText() {
         val size = getFontSize("これは中くらいの長さのテキストです", "ja")
-        assertEquals(35.5.sp, size)
+        assertEquals(37.833336.sp, size)
     }
 
     @Test
