@@ -27,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import cc.wordview.app.R
 
 @Preview
 @Composable
@@ -37,15 +39,15 @@ fun NotEnoughWordsDialog(onConfirm: () -> Unit = {}) {
             Icon(Icons.Filled.Translate, contentDescription = null)
         },
         title = {
-            Text(text = "Not enough words")
+            Text(text = stringResource(R.string.not_enough_words))
         },
         text = {
-            Text(text = "There were not enough words in the song to create a lesson.")
+            Text(text = stringResource(R.string.there_were_not_enough_words_in_the_song_to_create_a_lesson))
         },
         onDismissRequest = { onConfirm() },
         confirmButton = {
             TextButton(onClick = { onConfirm() }) {
-                Text("Go back")
+                Text(stringResource(R.string.go_back))
             }
         },
         dismissButton = {}

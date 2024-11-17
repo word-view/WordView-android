@@ -27,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import cc.wordview.app.R
 
 @Preview
 @Composable
@@ -37,20 +39,20 @@ fun LessonQuitDialog(onDismiss: () -> Unit = {}, onConfirm: () -> Unit = {}) {
             Icon(Icons.Filled.ExitToApp, contentDescription = null)
         },
         title = {
-            Text(text = "Finish lesson?")
+            Text(text = stringResource(R.string.finish_lesson))
         },
         text = {
-            Text(text = "Your progress will be lost. Your timer will be paused and recovered in the next lesson.")
+            Text(text = stringResource(R.string.your_progress_will_be_lost_your_timer_will_be_paused_and_recovered_in_the_next_lesson))
         },
         onDismissRequest = { onDismiss() },
         confirmButton = {
             TextButton(onClick = { onConfirm() }) {
-                Text("Finish")
+                Text(stringResource(R.string.finish))
             }
         },
         dismissButton = {
             TextButton(onClick = { onDismiss() }) {
-                Text("Dismiss")
+                Text(stringResource(R.string.dismiss))
             }
         }
     )

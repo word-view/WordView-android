@@ -21,4 +21,11 @@
     <string name="correct">Correct: %1$s</string>
     <string name="misses">Misses: %1$s</string>
     <string name="words_revised">Words revised</string>
+    <string name="not_enough_words">Not enough words</string>
+    <string name="there_were_not_enough_words_in_the_song_to_create_a_lesson">There were not enough words in the song to create a lesson.</string>
+    <string name="go_back">Go back</string>
+    <string name="finish_lesson">Finish lesson?</string>
+    <string name="your_progress_will_be_lost_your_timer_will_be_paused_and_recovered_in_the_next_lesson">Your progress will be lost. Your timer will be paused and recovered in the next lesson.</string>
+    <string name="finish">Finish</string>
+    <string name="dismiss">Dismiss</string>
 </resources>
