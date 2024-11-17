@@ -142,4 +142,19 @@ class PlayerTest {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-plain"), 15_000)
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-word"), 15_000)
     }
+
+    @Test
+    fun noWordsDialogShows() {
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("skip-forward"), 2_000)
+        composeTestRule.onNodeWithTag("skip-forward")
+            .performClick().performClick().performClick().performClick().performClick()
+            .performClick().performClick().performClick().performClick().performClick()
+            .performClick().performClick()
+
+
+        composeTestRule.waitUntilAtLeastOneExists(
+            hasTestTag("not-enough-words-alert-dialog"),
+            15_000
+        )
+    }
 }
