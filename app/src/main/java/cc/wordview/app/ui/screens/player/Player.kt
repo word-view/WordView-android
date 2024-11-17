@@ -65,6 +65,7 @@ import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FadeInAsyncImage
 import cc.wordview.app.ui.components.FadeOutBox
+import cc.wordview.app.ui.components.NotEnoughWordsDialog
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.Seekbar
@@ -95,6 +96,7 @@ fun Player(
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
+    val notEnoughWords by viewModel.notEnoughWords.collectAsStateWithLifecycle()
 
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
@@ -143,6 +145,8 @@ fun Player(
     BackHandler { back() }
 
     KeepScreenOn()
+
+    if (notEnoughWords) NotEnoughWordsDialog { back() }
 
     Scaffold { innerPadding ->
         when (status) {

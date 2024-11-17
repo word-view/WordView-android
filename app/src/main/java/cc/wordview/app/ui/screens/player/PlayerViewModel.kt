@@ -69,6 +69,7 @@ class PlayerViewModel @Inject constructor(
     private val _playerStatus = MutableStateFlow(PlayerStatus.LOADING)
     private val _finalized = MutableStateFlow(false)
     private val _isBuffering = MutableStateFlow(false)
+    private val _notEnoughWords = MutableStateFlow(false)
 
     // Seekbar states
     private val _currentPosition = MutableStateFlow(0L)
@@ -92,6 +93,7 @@ class PlayerViewModel @Inject constructor(
     val playerStatus = _playerStatus.asStateFlow()
     val finalized = _finalized.asStateFlow()
     val isBuffering = _isBuffering.asStateFlow()
+    val notEnoughWords = _notEnoughWords.asStateFlow()
 
     private fun checkValuesReady() {
         if (_audioReady.value && _lyricsReady.value && _dictionaryReady.value) {
@@ -220,7 +222,9 @@ class PlayerViewModel @Inject constructor(
                         }
                     }
 
-                    _finalized.update { true }
+                    if (LessonViewModel.wordsToRevise.value.isEmpty() || LessonViewModel.wordsToRevise.value.size < 3) {
+                        _notEnoughWords.update { true }
+                    } else _finalized.update { true }
                 }
             }
 
