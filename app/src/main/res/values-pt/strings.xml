@@ -15,7 +15,10 @@
     <string name="translate_the_phrase_bellow_using_the_words_at_the_bottom">Traduza a frase usando as palavras abaixo</string>
     <string name="check">Comparar</string>
     <string name="proceed">Prosseguir</string>
-    <string name="correct_answer">Resposta correta</string>
+    <string name="correct_answer">Correto!</string>
+    <string name="wrong_answer">Errado!</string>
+    <string name="you_answered_correctly_click_proceed_to_continue_the_lesson">Você respondeu corretamente! Aperte em Prosseguir para continuar a aula.</string>
+    <string name="you_wrongly_translated_the_phrase_the_correct_order_is">Você errou! A ordem correta é:</string>
     <string name="answer_precision">Taxa de acerto de %1$s%%</string>
     <string name="correct">Acertos: %1$s</string>
     <string name="misses">Erros: %1$s</string>

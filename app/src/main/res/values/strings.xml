@@ -16,7 +16,10 @@
     <string name="translate_the_phrase_bellow_using_the_words_at_the_bottom">Translate the phrase bellow using the words at the bottom:</string>
     <string name="check">Check</string>
     <string name="proceed">Proceed</string>
-    <string name="correct_answer">Correct answer</string>
+    <string name="correct_answer">Correct!</string>
+    <string name="wrong_answer">Wrong!</string>
+    <string name="you_answered_correctly_click_proceed_to_continue_the_lesson">You answered correctly! Click proceed to continue the lesson.</string>
+    <string name="you_wrongly_translated_the_phrase_the_correct_order_is">You wrongly translated the phrase! The correct order is:</string>
     <string name="answer_precision">%1$s%% answer precision</string>
     <string name="correct">Correct: %1$s</string>
     <string name="misses">Misses: %1$s</string>

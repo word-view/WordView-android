@@ -17,8 +17,10 @@
 
 package cc.wordview.app.ui.screens.lesson
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -34,27 +36,27 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import cc.wordview.app.ui.screens.lesson.model.TranslateViewModel
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import cc.wordview.app.ui.screens.lesson.model.TranslateViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.ui.components.OneTimeEffect
+import cc.wordview.app.ui.components.TranslateResultContainer
+import cc.wordview.app.ui.components.WordCard
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
@@ -62,7 +64,12 @@ import cc.wordview.app.ui.theme.Typography
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltViewModel()) {
+fun Translate(
+    innerPadding: PaddingValues,
+    viewModel: TranslateViewModel = hiltViewModel()
+) {
+    var checked by rememberSaveable { mutableStateOf(false) }
+
     val phrase by viewModel.phrase.collectAsStateWithLifecycle()
 
     val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
@@ -72,13 +79,7 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
     val originalPoolOrder = viewModel.originalPoolOrder
     val wrongOrderedWords = viewModel.wrongOrderedWords
 
-    var checked by rememberSaveable { mutableStateOf(false) }
-
-    OneTimeEffect {
-        viewModel.getPhrase(LessonViewModel.currentWord.value.word.word)
-    }
-
-    fun compare() {
+    fun check() {
         checked = true
 
         for (origWord in originalPoolOrder) {
@@ -99,166 +100,119 @@ fun Translate(innerPadding: PaddingValues, viewModel: TranslateViewModel = hiltV
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .testTag("explanation")
-    ) {
-        Text(
-            text = stringResource(R.string.translate_the_phrase_bellow_using_the_words_at_the_bottom),
-            modifier = Modifier.padding(horizontal = 20.dp),
-            style = Typography.titleMedium
-        )
-        Spacer(Modifier.size(25.dp))
-        Text(
-            text = phrase,
-            modifier = Modifier.padding(horizontal = 20.dp),
-            style = Typography.titleLarge
-        )
+    OneTimeEffect {
+        viewModel.getPhrase(LessonViewModel.currentWord.value.word.word)
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
-            .testTag("answer-area"),
-        verticalArrangement = Arrangement.Center,
     ) {
-        FlowRow(Modifier.padding(horizontal = 5.dp)) {
-            answerWordPool.forEachIndexed { index, word ->
-                Card(
-                    shape = DefaultRoundedCornerShape,
-                    modifier = Modifier
-                        .padding(bottom = 20.dp)
-                        .padding(horizontal = 5.dp)
-                        .border(
-                            if (wrongOrderedWords.contains(index)) 2.dp else 0.dp,
-                            if (wrongOrderedWords.contains(index)) MaterialTheme.colorScheme.error else Color.Transparent,
-                            DefaultRoundedCornerShape
-                        ),
-                    onClick = { viewModel.removeFromAnswer(word) }
-                ) {
-                    Text(
+        Column(
+            Modifier
+                .align(Alignment.TopCenter)
+                .testTag("explanation")
+        ) {
+            Text(
+                text = stringResource(R.string.translate_the_phrase_bellow_using_the_words_at_the_bottom),
+                modifier = Modifier.padding(horizontal = 20.dp),
+                style = Typography.labelLarge
+            )
+            Text(
+                text = phrase,
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 10.dp),
+                style = Typography.titleLarge
+            )
+        }
+        Column(
+            Modifier
+                .align(Alignment.Center)
+                .testTag("answer-area")
+        ) {
+            FlowRow(Modifier.padding(horizontal = 5.dp)) {
+                answerWordPool.forEachIndexed { index, word ->
+                    WordCard(
+                        modifier = Modifier
+                            .testTag("$word-answer")
+                            .padding(bottom = 20.dp)
+                            .padding(horizontal = 5.dp)
+                            .border(
+                                if (wrongOrderedWords.contains(index)) 2.dp else 0.dp,
+                                if (wrongOrderedWords.contains(index)) MaterialTheme.colorScheme.error else Color.Transparent,
+                                DefaultRoundedCornerShape
+                            ),
                         text = word,
-                        modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp),
-                        style = Typography.titleLarge,
-                        softWrap = false
+                        onClick = { viewModel.removeFromAnswer(word) }
                     )
                 }
             }
+            HorizontalDivider(thickness = 2.dp)
+            AnimatedVisibility(checked) {
+                TranslateResultContainer(wrongOrderedWords.size <= 0, originalPoolOrder)
+            }
         }
-        HorizontalDivider(thickness = 2.dp)
-        if (checked) {
-            Surface(
+        Column(
+            Modifier
+                .align(Alignment.BottomCenter)
+                .testTag("word-pool"),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            FlowRow(
+                modifier = Modifier.padding(bottom = 15.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                wordPool.forEachIndexed { _, word ->
+                    WordCard(
+                        modifier = Modifier
+                            .padding(bottom = 20.dp)
+                            .padding(horizontal = 5.dp)
+                            .testTag("$word-wordpool"),
+                        text = word,
+                        onClick = { viewModel.addToAnswer(word) }
+                    )
+                }
+            }
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp)
-                    .padding(horizontal = 5.dp),
-                color = MaterialTheme.colorScheme.primaryContainer,
-                shape = DefaultRoundedCornerShape
+                    .padding(horizontal = 10.dp)
+                    .testTag("controls"),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text(
-                        text = stringResource(R.string.correct_answer),
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-                        style = Typography.titleLarge
-                    )
-                    FlowRow(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 10.dp, vertical = 10.dp)
-                    ) {
-                        originalPoolOrder.forEachIndexed { _, word ->
-                            Surface(
-                                modifier = Modifier.padding(5.dp),
-                                shape = DefaultRoundedCornerShape
-                            ) {
-                                Text(
-                                    text = word,
-                                    modifier = Modifier.padding(
-                                        horizontal = 15.dp,
-                                        vertical = 10.dp
-                                    ),
-                                    style = Typography.titleLarge,
-                                    softWrap = false
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .testTag("word-pool"),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
-    ) {
-        FlowRow(
-            modifier = Modifier.padding(bottom = 15.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            wordPool.forEachIndexed { _, word ->
-                Card(
-                    shape = DefaultRoundedCornerShape,
+                Button(
+                    onClick = { check() },
                     modifier = Modifier
-                        .padding(bottom = 20.dp)
-                        .padding(horizontal = 5.dp),
-                    onClick = {
-                        viewModel.addToAnswer(word)
-                    }
+                        .height(60.dp)
+                        .width(220.dp)
+                        .padding(bottom = 10.dp),
+                    enabled = viewModel.wordPool.isEmpty() && viewModel.answerWordPool.isNotEmpty() && !checked,
+                    shape = DefaultRoundedCornerShape
                 ) {
-                    Text(
-                        text = word,
-                        modifier = Modifier.padding(horizontal = 15.dp, vertical = 10.dp),
-                        style = Typography.titleLarge,
-                        softWrap = false
+                    Text(text = stringResource(R.string.check))
+                }
+                Button(
+                    onClick = {
+                        LessonViewModel.setScreen(ReviseScreen.Presenter.route)
+                        viewModel.cleanup()
+                    },
+                    modifier = Modifier
+                        .height(60.dp)
+                        .padding(bottom = 10.dp),
+                    enabled = checked,
+                    shape = DefaultRoundedCornerShape,
+                ) {
+                    Text(text = stringResource(R.string.proceed))
+                    Spacer(Modifier.size(10.dp))
+                    androidx.compose.material3.Icon(
+                        imageVector = Icons.Filled.ArrowForwardIos,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp)
                     )
                 }
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Button(
-                onClick = { compare() },
-                modifier = Modifier
-                    .height(60.dp)
-                    .width(220.dp)
-                    .padding(bottom = 10.dp),
-                enabled = viewModel.wordPool.isEmpty() && viewModel.answerWordPool.isNotEmpty() && !checked,
-                shape = DefaultRoundedCornerShape
-            ) {
-                Text(text = stringResource(R.string.check))
-            }
-            Button(
-                onClick = {
-                    LessonViewModel.setScreen(ReviseScreen.Presenter.route)
-                    viewModel.cleanup()
-                },
-                modifier = Modifier
-                    .height(60.dp)
-                    .padding(bottom = 10.dp),
-                enabled = checked,
-                shape = DefaultRoundedCornerShape,
-            ) {
-                Text(text = stringResource(R.string.proceed))
-                Spacer(Modifier.size(10.dp))
-                androidx.compose.material3.Icon(
-                    imageVector = Icons.Filled.ArrowForwardIos,
-                    contentDescription = null,
-                    modifier = Modifier.size(14.dp)
-                )
             }
         }
     }

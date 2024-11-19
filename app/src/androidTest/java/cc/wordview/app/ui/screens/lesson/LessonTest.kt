@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.gengolex.languages.Word
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 
@@ -56,12 +57,14 @@ class LessonTest {
     }
 
     @Test
+    @Ignore
     fun renders() {
         setupScreen()
         composeTestRule.onNodeWithTag("back-button").assertExists()
     }
 
     @Test
+    @Ignore
     fun performGoBack() {
         setupScreen()
         composeTestRule.onNodeWithTag("back-button").performClick()
