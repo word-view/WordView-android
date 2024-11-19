@@ -18,12 +18,13 @@
 package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material3.Button
@@ -62,10 +64,9 @@ import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Translate(
-    innerPadding: PaddingValues,
+    innerPadding: PaddingValues = PaddingValues(),
     viewModel: TranslateViewModel = hiltViewModel()
 ) {
     var checked by rememberSaveable { mutableStateOf(false) }
@@ -132,21 +133,31 @@ fun Translate(
                 .align(Alignment.Center)
                 .testTag("answer-area")
         ) {
-            FlowRow(Modifier.padding(horizontal = 5.dp)) {
-                answerWordPool.forEachIndexed { index, word ->
-                    WordCard(
-                        modifier = Modifier
-                            .testTag("$word-answer")
-                            .padding(bottom = 20.dp)
-                            .padding(horizontal = 5.dp)
-                            .border(
-                                if (wrongOrderedWords.contains(index)) 2.dp else 0.dp,
-                                if (wrongOrderedWords.contains(index)) MaterialTheme.colorScheme.error else Color.Transparent,
-                                DefaultRoundedCornerShape
-                            ),
-                        text = word,
-                        onClick = { viewModel.removeFromAnswer(word) }
-                    )
+            // if not animated the horizontal will just clip
+            AnimatedVisibility(answerWordPool.size > 0) {
+                LazyRow(Modifier.padding(horizontal = 5.dp).fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    answerWordPool.forEachIndexed { index, word ->
+                        item {
+                            WordCard(
+                                text = word,
+                                modifier = Modifier
+                                    .padding(bottom = 20.dp)
+                                    .padding(horizontal = 5.dp)
+                                    .border(
+                                        if (wrongOrderedWords.contains(index)) 2.dp else 0.dp,
+                                        if (wrongOrderedWords.contains(index)) MaterialTheme.colorScheme.error else Color.Transparent,
+                                        DefaultRoundedCornerShape
+                                    )
+                                    .animateItem(
+                                        fadeInSpec = tween(250),
+                                        fadeOutSpec = tween(250),
+                                        placementSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioMediumBouncy)
+                                    )
+                                    .testTag("$word-answer"),
+                                onClick = { viewModel.removeFromAnswer(word) }
+                            )
+                        }
+                    }
                 }
             }
             HorizontalDivider(thickness = 2.dp)
@@ -160,19 +171,26 @@ fun Translate(
                 .testTag("word-pool"),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            FlowRow(
-                modifier = Modifier.padding(bottom = 15.dp),
+            LazyRow(
+                modifier = Modifier.padding(bottom = 15.dp).fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 wordPool.forEachIndexed { _, word ->
-                    WordCard(
-                        modifier = Modifier
-                            .padding(bottom = 20.dp)
-                            .padding(horizontal = 5.dp)
-                            .testTag("$word-wordpool"),
-                        text = word,
-                        onClick = { viewModel.addToAnswer(word) }
-                    )
+                    item {
+                        WordCard(
+                            modifier = Modifier
+                                .padding(bottom = 20.dp)
+                                .padding(horizontal = 5.dp)
+                                .animateItem(
+                                    fadeInSpec = tween(250),
+                                    fadeOutSpec = tween(250),
+                                    placementSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioMediumBouncy)
+                                )
+                                .testTag("$word-wordpool"),
+                            text = word,
+                            onClick = { viewModel.addToAnswer(word) }
+                        )
+                    }
                 }
             }
             Row(
