@@ -17,6 +17,8 @@
 
 package cc.wordview.app.ui.screens.search
 
+import org.schabi.newpipe.extractor.Image
+import org.schabi.newpipe.extractor.Image.ResolutionLevel
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import org.schabi.newpipe.extractor.stream.StreamType
 import java.util.concurrent.TimeoutException
@@ -49,6 +51,14 @@ class MockSearchRepositoryImpl @Inject constructor() : SearchRepository {
         song.uploaderName = uploaderName
         song.isUploaderVerified = true
         song.duration = 300L
+        song.thumbnails = listOf(
+            Image(
+                "",
+                1,
+                1,
+                ResolutionLevel.LOW
+            )
+        )
 
         return song
     }
