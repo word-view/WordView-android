@@ -33,7 +33,10 @@ class Response(
     }
 
     fun onErrorResponse(error: VolleyError) {
-        Log.e(TAG, "Request Failed: ", error)
+        // Abstain from showing the exception when a 404 happens
+        if (error.networkResponse?.statusCode != 404)
+            Log.e(TAG, "Request failed: ", error)
+
         onError.invoke(error)
     }
 }
