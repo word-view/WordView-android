@@ -18,7 +18,9 @@
 package cc.wordview.app.extensions
 
 import androidx.annotation.IntRange
+import androidx.compose.foundation.gestures.PressGestureScope
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -31,7 +33,30 @@ fun Modifier.dragGestures(
     onDragCancel: () -> Unit,
     onDrag: (change: PointerInputChange, dragAmount: Offset) -> Unit
 ): Modifier {
-    return this.pointerInput(Unit) { detectDragGestures(onDragStart, onDragEnd, onDragCancel, onDrag) }
+    return this.pointerInput(Unit) {
+        detectDragGestures(
+            onDragStart,
+            onDragEnd,
+            onDragCancel,
+            onDrag
+        )
+    }
+}
+
+fun Modifier.detectTapGestures(
+    onDoubleTap: ((Offset) -> Unit)? = null,
+    onLongPress: ((Offset) -> Unit)? = null,
+    onPress: suspend PressGestureScope.(Offset) -> Unit = { },
+    onTap: ((Offset) -> Unit)? = null
+): Modifier {
+    return this.pointerInput(Unit) {
+        detectTapGestures(
+            onDoubleTap = onDoubleTap,
+            onLongPress = onLongPress,
+            onPress = onPress,
+            onTap = onTap
+        )
+    }
 }
 
 fun Modifier.fillMaxWidth(@IntRange(from = 0, to = 100) percentage: Int): Modifier {

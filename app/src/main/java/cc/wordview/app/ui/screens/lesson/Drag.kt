@@ -19,6 +19,8 @@ package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +38,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +47,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.extensions.detectTapGestures
 import cc.wordview.app.extensions.dragGestures
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.ui.screens.lesson.components.Answer
@@ -66,9 +71,14 @@ fun Drag(
 ) {
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
-
     var isDragging by remember { mutableStateOf(false) }
     var dragMode by remember { mutableStateOf(DragMode.random()) }
+    var isPressed by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isDragging || isPressed) 0.8f else 1f,
+        animationSpec = tween(durationMillis = 300)
+    )
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -150,6 +160,13 @@ fun Drag(
                 .offset {
                     IntOffset(animatedOffsetX.roundToInt(), animatedOffsetY.roundToInt())
                 }
+                .detectTapGestures(
+                    onPress = {
+                        isPressed = true // Shrink when pressed
+                        tryAwaitRelease()
+                        isPressed = false // Restore size when released
+                    }
+                )
                 .dragGestures(
                     onDragStart = { isDragging = true },
                     onDragEnd = {
@@ -166,6 +183,7 @@ fun Drag(
                         offsetX += dragAmount.x
                         offsetY += dragAmount.y
                     })
+                .scale(scale)
                 .testTag("drag")
         ) {
             currentWord.word.let {
