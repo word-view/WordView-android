@@ -70,6 +70,7 @@ class PlayerViewModel @Inject constructor(
     private val _finalized = MutableStateFlow(false)
     private val _isBuffering = MutableStateFlow(false)
     private val _notEnoughWords = MutableStateFlow(false)
+    private val _errorMessage = MutableStateFlow("")
 
     // Seekbar states
     private val _currentPosition = MutableStateFlow(0L)
@@ -94,6 +95,7 @@ class PlayerViewModel @Inject constructor(
     val finalized = _finalized.asStateFlow()
     val isBuffering = _isBuffering.asStateFlow()
     val notEnoughWords = _notEnoughWords.asStateFlow()
+    val errorMessage = _errorMessage.asStateFlow()
 
     private fun checkValuesReady() {
         if (_audioReady.value && _lyricsReady.value && _dictionaryReady.value) {
@@ -117,6 +119,11 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch {
             playerRepository.init(context)
             playerRepository.endpoint = preferences.getOrDefault("api_endpoint")
+            playerRepository.onGetLyricsFail = { mesg ->
+                Log.e(TAG, mesg)
+                _errorMessage.update { mesg }
+                setPlayerStatus(PlayerStatus.ERROR)
+            }
             playerRepository.onGetLyricsSuccess = {
                 val jsonObject = JsonParser.parseString(it).asJsonObject
 

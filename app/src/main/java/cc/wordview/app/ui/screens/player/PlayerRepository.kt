@@ -26,6 +26,7 @@ import com.android.volley.toolbox.StringRequest
 
 interface PlayerRepository {
     var onGetLyricsSuccess: (String) -> Unit
+    var onGetLyricsFail: (String) -> Unit
 
     var endpoint: String
 

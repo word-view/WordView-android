@@ -31,4 +31,5 @@
     <string name="your_progress_will_be_lost_your_timer_will_be_paused_and_recovered_in_the_next_lesson">Your progress will be lost. Your timer will be paused and recovered in the next lesson.</string>
     <string name="finish">Finish</string>
     <string name="dismiss">Dismiss</string>
+    <string name="an_error_has_occurred">"An error has occurred: "</string>
 </resources>

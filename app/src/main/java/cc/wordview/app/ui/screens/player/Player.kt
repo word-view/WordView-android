@@ -97,6 +97,7 @@ fun Player(
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
     val notEnoughWords by viewModel.notEnoughWords.collectAsStateWithLifecycle()
+    val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
 
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
@@ -150,10 +151,7 @@ fun Player(
 
     Scaffold { innerPadding ->
         when (status) {
-            PlayerStatus.ERROR -> ErrorScreen(
-                { activity.setOrientationUnspecified() },
-                navHostController
-            )
+            PlayerStatus.ERROR -> ErrorScreen(navHostController, errorMessage)
 
             PlayerStatus.LOADING -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

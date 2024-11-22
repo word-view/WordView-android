@@ -25,9 +25,10 @@
     <string name="words_revised">Palavras revisadas</string>
     <string name="not_enough_words">Palavras insuficientes</string>
     <string name="there_were_not_enough_words_in_the_song_to_create_a_lesson">A quantidade de palavras nesta música é insuficiente para criar uma aula.</string>
-    <string name="go_back">Retornar</string>
+    <string name="go_back">Voltar</string>
     <string name="finish_lesson">Interomper aula?</string>
     <string name="your_progress_will_be_lost_your_timer_will_be_paused_and_recovered_in_the_next_lesson">Seu progresso será perdido. O contador será pausado e será retomado na próxima aula.</string>
     <string name="finish">Interromper</string>
     <string name="dismiss">Cancelar</string>
+    <string name="an_error_has_occurred">"Ocorreu um erro: "</string>
 </resources>

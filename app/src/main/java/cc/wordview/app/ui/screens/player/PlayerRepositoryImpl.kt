@@ -31,6 +31,7 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
 
     override lateinit var endpoint: String
     override var onGetLyricsSuccess: (String) -> Unit = {}
+    override var onGetLyricsFail: (String) -> Unit = {}
 
     private lateinit var queue: RequestQueue
 
@@ -42,7 +43,21 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
         val url =
             "$endpoint/api/v1/lyrics?id=$id&lang=$lang&trackName=${video.cleanTrackName}&artistName=${video.cleanArtistName}"
 
-        val response = Response({ onGetLyricsSuccess(it) }, { Log.e(TAG, "getLyrics: ", it) })
+        val response = Response({ onGetLyricsSuccess(it) }, {
+            val statusCode = it.networkResponse?.statusCode
+            val responseData = it.networkResponse?.data?.let { String(it) } // Convert the response body to a string
+
+            var errorTitle: String? = null
+
+            if (responseData != null) {
+                val titleRegex = "<title>(.*?)</title>".toRegex(RegexOption.IGNORE_CASE)
+                val matchResult = titleRegex.find(responseData)
+                errorTitle = matchResult?.groups?.get(1)?.value
+            }
+
+            Log.e(TAG, "Request failed with status code $statusCode - $errorTitle")
+            onGetLyricsFail(it.message ?: "Request failed with status code $statusCode\n$errorTitle")
+        })
 
         val request = jsonRequest(url, response)
 

@@ -23,6 +23,7 @@ import javax.inject.Inject
 
 class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     override var onGetLyricsSuccess: (String) -> Unit = {}
+    override var onGetLyricsFail: (String) -> Unit = {}
 
     override var endpoint: String = ""
 

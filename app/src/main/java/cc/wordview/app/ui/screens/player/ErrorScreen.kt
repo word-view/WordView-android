@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.player
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,18 +29,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.ui.theme.Typography
 
 @Composable
-fun ErrorScreen(cleanup: () -> Unit, navHostController: NavHostController) {
+fun ErrorScreen(navHostController: NavHostController, message: String) {
+    val activity = LocalContext.current as Activity
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,16 +60,25 @@ fun ErrorScreen(cleanup: () -> Unit, navHostController: NavHostController) {
         )
         Spacer(Modifier.size(8.dp))
         Text(
-            text = "An error has occurred \nand the audio could not be played.",
+            text = stringResource(R.string.an_error_has_occurred),
             textAlign = TextAlign.Center,
             style = Typography.bodyLarge,
             fontWeight = FontWeight.SemiBold,
         )
+        Text(
+            text = message,
+            textAlign = TextAlign.Center,
+            style = Typography.bodySmall,
+            fontWeight = FontWeight.Light,
+        )
         Spacer(Modifier.size(15.dp))
         Button(
             modifier = Modifier.testTag("error-back-button"),
-            onClick = { cleanup(); navHostController.goBack() }) {
-            Text(text = "Go back to the home screen")
+            onClick = {
+                activity.setOrientationUnspecified()
+                navHostController.goBack()
+            }) {
+            Text(text = stringResource(R.string.go_back))
         }
     }
 }
