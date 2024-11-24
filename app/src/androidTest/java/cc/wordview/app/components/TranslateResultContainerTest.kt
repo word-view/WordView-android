@@ -61,7 +61,7 @@ class TranslateResultContainerTest {
             .assertExists()
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("You wrongly translated the phrase! The correct order is: ")
+        composeTestRule.onNodeWithText("You wrongly translated the phrase! The correct order is:")
             .assertExists()
             .assertIsDisplayed()
 

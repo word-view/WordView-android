@@ -19,6 +19,7 @@ package cc.wordview.app.ui.screens.player
 
 import android.content.Context
 import cc.wordview.app.extractor.VideoStreamInterface
+import com.android.volley.RequestQueue
 import javax.inject.Inject
 
 class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {
@@ -27,7 +28,7 @@ class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {
 
     override var endpoint: String = ""
 
-    override fun init(context: Context) {}
+    override lateinit var queue: RequestQueue
 
     override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
         onGetLyricsSuccess(

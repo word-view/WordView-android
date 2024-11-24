@@ -17,28 +17,12 @@
 
 package cc.wordview.app.ui.screens.player
 
-import android.content.Context
-import cc.wordview.app.api.JsonAcceptingRequest
-import cc.wordview.app.api.Response
+import cc.wordview.app.api.ApiRequestRepository
 import cc.wordview.app.extractor.VideoStreamInterface
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
 
-interface PlayerRepository {
+interface PlayerRepository : ApiRequestRepository {
     var onGetLyricsSuccess: (String) -> Unit
     var onGetLyricsFail: (String) -> Unit
 
-    var endpoint: String
-
     fun getLyrics(id: String, lang: String, video: VideoStreamInterface)
-
-    fun init(context: Context)
-
-    fun jsonRequest(url: String, handler: Response): StringRequest {
-        return JsonAcceptingRequest(
-            Request.Method.GET,
-            url,
-            { handler.onSuccessResponse(it) },
-            { handler.onErrorResponse(it) })
-    }
 }

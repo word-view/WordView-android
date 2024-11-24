@@ -29,15 +29,11 @@ import javax.inject.Inject
 class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     private val TAG = this::class.java.simpleName
 
-    override lateinit var endpoint: String
     override var onGetLyricsSuccess: (String) -> Unit = {}
     override var onGetLyricsFail: (String) -> Unit = {}
 
-    private lateinit var queue: RequestQueue
-
-    override fun init(context: Context) {
-        queue = Volley.newRequestQueue(context)
-    }
+    override lateinit var queue: RequestQueue
+    override lateinit var endpoint: String
 
     override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
         val url =

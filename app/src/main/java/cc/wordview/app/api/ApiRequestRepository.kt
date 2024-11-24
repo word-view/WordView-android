@@ -18,21 +18,23 @@
 package cc.wordview.app.api
 
 import android.content.Context
+import android.util.Log
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
-open class ApiRequestRepository {
-    lateinit var endpoint: String
-
-    protected lateinit var queue: RequestQueue
+interface ApiRequestRepository {
+    var endpoint: String
+    var queue: RequestQueue
 
     fun init(context: Context) {
         queue = Volley.newRequestQueue(context)
     }
 
-    protected fun jsonRequest(url: String, handler: Response): StringRequest {
+    fun jsonRequest(url: String, handler: Response): StringRequest {
+        Log.d(this::class.simpleName, "GET: $url")
+
         return JsonAcceptingRequest(
             Request.Method.GET,
             url,
