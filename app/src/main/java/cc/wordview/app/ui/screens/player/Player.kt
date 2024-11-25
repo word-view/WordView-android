@@ -98,7 +98,6 @@ fun Player(
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
     val notEnoughWords by viewModel.notEnoughWords.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
-
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
 
@@ -107,16 +106,17 @@ fun Player(
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
     val composerMode = remember { preferences.getOrDefault<Boolean>("composer_mode") }
+    val langTag = remember { preferences.getOrDefault<String>("language") }
 
     val systemUiController = rememberSystemUiController()
 
     OneTimeEffect {
-        val tag = preferences["language"] ?: "ja"
-        val lang = Language.byTag(tag)
+        val lang = Language.byTag(langTag)
 
         Log.i("Player", "Chosen language is ${lang.name}")
 
         activity.setOrientationSensorLandscape()
+
         CoroutineScope(Dispatchers.IO).launch {
             SongViewModel.videoStream.value.init(videoId)
 
