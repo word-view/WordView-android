@@ -63,11 +63,13 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             if (word.representable) {
-                                AsyncImage(
+                                val image = GlobalImageLoader.getCachedImage(word.parent)
+                                
+                                if (image != null) AsyncImage(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .aspectRatio(1f),
-                                    model = GlobalImageLoader.getCachedImage(word.parent)!!,
+                                    model = image,
                                     contentDescription = null
                                 )
                             }
