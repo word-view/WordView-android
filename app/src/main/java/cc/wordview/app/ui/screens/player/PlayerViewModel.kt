@@ -31,6 +31,7 @@ import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
+import cc.wordview.app.ui.components.GlobalImageLoader
 import cc.wordview.app.ui.screens.lesson.LessonViewModel
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.lesson.model.Phrase
@@ -38,7 +39,6 @@ import cc.wordview.app.ui.screens.lesson.model.TranslateRepository
 import cc.wordview.app.ui.screens.lesson.model.phraseList
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
-import coil.ImageLoader
 import coil.request.ImageRequest
 import com.google.gson.Gson
 import com.google.gson.JsonParser
@@ -79,15 +79,6 @@ class PlayerViewModel @Inject constructor(
     val currentPosition = _currentPosition.asStateFlow()
     val bufferedPercentage = _bufferedPercentage.asStateFlow()
 
-    // Local states
-    private val _lyricsReady = MutableStateFlow(false)
-    private val _dictionaryReady = MutableStateFlow(false)
-    private val _audioReady = MutableStateFlow(false)
-
-    private val cues = _cues.asStateFlow()
-    private val lyrics = _lyrics.asStateFlow()
-    private val parser = _parser.asStateFlow()
-
     val playIcon = _playIcon.asStateFlow()
     val player = _player.asStateFlow()
     val currentCue = _currentCue.asStateFlow()
@@ -97,16 +88,14 @@ class PlayerViewModel @Inject constructor(
     val notEnoughWords = _notEnoughWords.asStateFlow()
     val errorMessage = _errorMessage.asStateFlow()
 
-    private fun checkValuesReady() {
-        if (_audioReady.value && _lyricsReady.value && _dictionaryReady.value) {
-            setPlayerStatus(PlayerStatus.READY)
-        }
-    }
+    // tracks the steps to consider that the player is
+    // prepared to start playing (audio ready, lyrics ready, dictionary ready)
+    private val stepsReady = MutableStateFlow(0)
 
-    init {
-        viewModelScope.launch { _audioReady.collect { if (it) checkValuesReady() } }
-        viewModelScope.launch { _lyricsReady.collect { if (it) checkValuesReady() } }
-        viewModelScope.launch { _dictionaryReady.collect { if (it) checkValuesReady() } }
+    private fun computeAndCheckReadyness() {
+        stepsReady.update { it + 1 }
+        if (stepsReady.value == 3)
+            setPlayerStatus(PlayerStatus.READY)
     }
 
     fun getLyrics(
@@ -117,7 +106,9 @@ class PlayerViewModel @Inject constructor(
         video: VideoStreamInterface
     ) {
         viewModelScope.launch {
+            GlobalImageLoader.init(context)
             playerRepository.init(context)
+
             playerRepository.endpoint = preferences.getOrDefault("api_endpoint")
             playerRepository.onGetLyricsFail = { mesg ->
                 Log.e(TAG, mesg)
@@ -130,19 +121,18 @@ class PlayerViewModel @Inject constructor(
                 val lyricks = jsonObject.get("lyrics").asString
                 val dictionary = jsonObject.getAsJsonArray("dictionary").toString()
 
-                lyricsParse(preferences["filter_romanizations"] ?: true, lyricks)
-                setCues(lyrics.value)
+                lyricsParse(preferences.getOrDefault("filter_romanizations"), lyricks)
+                setCues(_lyrics.value)
 
-                _lyricsReady.update { true }
+                computeAndCheckReadyness()
 
                 initParser(lang)
                 addDictionary(lang.dictionaryName, dictionary)
 
-                for (cue in lyrics.value) {
-                    val wordsFound = parser.value.findWords(cue.text)
+                for (cue in _lyrics.value) {
+                    val wordsFound = _parser.value.findWords(cue.text)
 
                     for (word in wordsFound) {
-                        cue.words.add(word)
                         preloadImage(word.parent, playerRepository.endpoint, context)
                         preloadPhrases(
                             context,
@@ -151,10 +141,11 @@ class PlayerViewModel @Inject constructor(
                             preferences.getOrDefault("language"),
                             word.word
                         )
+                        cue.words.add(word)
                     }
                 }
 
-                _dictionaryReady.update { true }
+                computeAndCheckReadyness()
             }
 
             playerRepository.getLyrics(id, lang.tag, video)
@@ -171,7 +162,6 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch {
             translateRepository.init(context)
             translateRepository.endpoint = preferences.getOrDefault("api_endpoint")
-
             translateRepository.onGetPhraseSuccess = {
                 val phrase = Gson().fromJson(it, Phrase::class.java)
 
@@ -186,15 +176,14 @@ class PlayerViewModel @Inject constructor(
 
     private fun preloadImage(parent: String, endpoint: String, context: Context) {
         viewModelScope.launch {
-            val loader = ImageLoader(context)
-
             withContext(Dispatchers.IO) {
                 val request = ImageRequest.Builder(context)
                     .data("$endpoint/api/v1/image?parent=$parent")
-                    .allowHardware(false)
+                    .allowHardware(true)
+                    .memoryCacheKey(parent)
                     .build()
 
-                loader.execute(request)
+                GlobalImageLoader.enqueue(request)
             }
         }
     }
@@ -215,7 +204,7 @@ class PlayerViewModel @Inject constructor(
                 onPlaybackEnd = {
                     player.value.stop()
 
-                    for (cue in cues.value) {
+                    for (cue in _cues.value) {
                         for (word in cue.words) {
                             val reviseWord = ReviseWord(word)
 
@@ -237,12 +226,12 @@ class PlayerViewModel @Inject constructor(
 
             player.value.apply {
                 onPositionChange = { pos, bufferedPercentage ->
-                    setCurrentCue(lyrics.value.getCueAt(pos))
+                    setCurrentCue(_lyrics.value.getCueAt(pos))
                     _currentPosition.update { pos.toLong() }
                     _bufferedPercentage.update { bufferedPercentage }
                 }
                 onInitializeFail = { setPlayerStatus(PlayerStatus.ERROR) }
-                onPrepared = { _audioReady.update { true } }
+                onPrepared = { computeAndCheckReadyness() }
 
                 initialize(videoStreamUrl, context, listener)
             }

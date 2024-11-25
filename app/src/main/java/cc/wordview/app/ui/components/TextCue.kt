@@ -33,19 +33,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.subtitle.WordViewCue
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @Composable
 fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences.getOrDefault<String>("api_endpoint") }
     val langtag = remember { preferences.getOrDefault<String>("language") }
 
     Column(Modifier.wrapContentWidth(Alignment.Start)) {
@@ -70,9 +67,7 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .aspectRatio(1f),
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data("$endpoint/api/v1/image?parent=${word.parent}")
-                                        .build(),
+                                    model = GlobalImageLoader.getCachedImage(word.parent)!!,
                                     contentDescription = null
                                 )
                             }
