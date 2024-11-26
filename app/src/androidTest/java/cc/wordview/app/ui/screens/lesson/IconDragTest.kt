@@ -18,12 +18,14 @@
 package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.ui.components.GlobalImageLoader
 import cc.wordview.app.ui.screens.results.ReviseResults
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
@@ -31,6 +33,7 @@ import cc.wordview.app.ui.screens.lesson.components.DragMode
 import cc.wordview.app.ui.screens.lesson.model.DragViewModel
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.gengolex.languages.Word
+import coil.request.ImageRequest
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -55,6 +58,18 @@ class IconDragTest {
 
         composeTestRule.setContent {
             val navController = rememberNavController()
+
+            GlobalImageLoader.init(LocalContext.current)
+
+            for (word in viewModel.wordsToRevise.value) {
+                val request = ImageRequest.Builder(LocalContext.current)
+                    .data("http://10.0.2.2:8080/api/v1/image?parent=${word.word.parent}")
+                    .allowHardware(true)
+                    .memoryCacheKey(word.word.parent)
+                    .build()
+
+                GlobalImageLoader.enqueue(request)
+            }
 
             ProvidePreferenceLocals {
                 NavHost(navController = navController, startDestination = "icon-drag") {

@@ -212,11 +212,13 @@ fun Text(word: Word, testTag: String) {
 
 @Composable
 fun Icon(word: Word, testTag: String) {
+    val image = GlobalImageLoader.getCachedImage(word.parent)
+
     AsyncImage(
         modifier = Modifier
             .size(130.dp)
             .testTag(testTag),
-        model = GlobalImageLoader.getCachedImage(word.parent)!!,
+        model = image,
         contentDescription = null
     )
 }
