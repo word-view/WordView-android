@@ -22,16 +22,22 @@ import android.graphics.Bitmap
 import coil.ImageLoader
 import coil.memory.MemoryCache
 import coil.request.ImageRequest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object GlobalImageLoader {
     private lateinit var loader: ImageLoader
+    private val globalImageLoaderScope = CoroutineScope(Dispatchers.IO)
 
     fun init(context: Context) {
         loader = ImageLoader(context)
     }
 
-    fun enqueue(request: ImageRequest) {
-        loader.enqueue(request)
+    fun execute(request: ImageRequest) {
+        globalImageLoaderScope.launch {
+            loader.execute(request)
+        }
     }
 
     fun getCachedImage(key: String): Bitmap? {

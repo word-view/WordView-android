@@ -69,7 +69,7 @@ class WordDragTest {
                     .memoryCacheKey(word.word.parent)
                     .build()
 
-                GlobalImageLoader.enqueue(request)
+                GlobalImageLoader.execute(request)
             }
 
             ProvidePreferenceLocals {

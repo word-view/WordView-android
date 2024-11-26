@@ -183,7 +183,7 @@ class PlayerViewModel @Inject constructor(
                     .memoryCacheKey(parent)
                     .build()
 
-                GlobalImageLoader.enqueue(request)
+                GlobalImageLoader.execute(request)
             }
         }
     }
