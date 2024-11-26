@@ -186,4 +186,46 @@ class TranslateTest {
 
         composeTestRule.waitUntilAtLeastOneExists(hasText("Wrong!"), 2_000)
     }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun checkCorrectAnswerLockWords() {
+        composeTestRule.onNodeWithText("Check")
+            .assertHasClickAction()
+            .assertIsNotEnabled()
+
+        composeTestRule.onNodeWithText("O").performClick()
+        composeTestRule.onNodeWithText("céu").performClick()
+        composeTestRule.onNodeWithText("é").performClick()
+        composeTestRule.onNodeWithText("azul").performClick()
+
+        composeTestRule.onNodeWithText("Check").performClick()
+
+        composeTestRule.waitUntilAtLeastOneExists(hasText("Correct!"), 2_000)
+
+        composeTestRule.onNodeWithText("céu").performClick()
+        composeTestRule.onNodeWithTag("céu-wordpool")
+            .assertDoesNotExist()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun checkWrongAnswerLockWords() {
+        composeTestRule.onNodeWithText("Check")
+            .assertHasClickAction()
+            .assertIsNotEnabled()
+
+        composeTestRule.onNodeWithText("O").performClick()
+        composeTestRule.onNodeWithText("céu").performClick()
+        composeTestRule.onNodeWithText("azul").performClick()
+        composeTestRule.onNodeWithText("é").performClick()
+
+        composeTestRule.onNodeWithText("Check").performClick()
+
+        composeTestRule.waitUntilAtLeastOneExists(hasText("Wrong!"), 2_000)
+
+        composeTestRule.onNodeWithTag("céu-answer").performClick()
+        composeTestRule.onNodeWithTag("céu-wordpool")
+            .assertDoesNotExist()
+    }
 }

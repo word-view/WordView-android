@@ -154,7 +154,7 @@ fun Translate(
                                         placementSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioMediumBouncy)
                                     )
                                     .testTag("$word-answer"),
-                                onClick = { viewModel.removeFromAnswer(word) }
+                                onClick = { if (!checked) viewModel.removeFromAnswer(word) }
                             )
                         }
                     }
