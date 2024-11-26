@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.extensions.getOrDefault
+import cc.wordview.app.ui.components.GlobalImageLoader
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
@@ -134,11 +135,10 @@ fun Presenter() {
             }
 
             Answer.NONE -> {
-                AsyncImage(
+                val image = GlobalImageLoader.getCachedImage(current.word.parent)
+                if (image != null) AsyncImage(
                     modifier = Modifier.size(130.dp).testTag("word"),
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data("$endpoint/api/v1/image?parent=${current.word.parent}")
-                        .build(),
+                    model = image,
                     contentDescription = null
                 )
                 Text(
