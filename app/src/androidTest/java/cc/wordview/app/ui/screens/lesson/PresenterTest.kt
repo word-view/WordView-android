@@ -17,12 +17,16 @@
 
 package cc.wordview.app.ui.screens.lesson
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import cc.wordview.app.ui.components.GlobalImageLoader
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.gengolex.languages.Word
+import coil.request.ImageRequest
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule
 import org.junit.Test
@@ -35,8 +39,21 @@ class PresenterTest {
 
     private fun setupScreen(autoAdvance: Boolean = true) {
         composeTestRule.mainClock.autoAdvance = autoAdvance
+        viewModel.setWord(ReviseWord(Word("rain", "chuva")))
         composeTestRule.setContent {
             ProvidePreferenceLocals {
+                GlobalImageLoader.init(LocalContext.current)
+
+                val request = ImageRequest.Builder(LocalContext.current)
+                    .data("http://10.0.2.2:8080/api/v1/image?parent=rain")
+                    .allowHardware(true)
+                    .memoryCacheKey("rain")
+                    .build()
+
+                LaunchedEffect(Unit) {
+                    GlobalImageLoader.execute(request)
+                }
+
                 Presenter()
             }
         }
@@ -50,7 +67,6 @@ class PresenterTest {
 
     @Test
     fun answerCorrect() {
-        viewModel.setWord(ReviseWord(Word("rain", "chuva")))
         viewModel.setAnswer(Answer.CORRECT)
         setupScreen(false)
         composeTestRule.mainClock.advanceTimeBy(1000)
@@ -62,7 +78,6 @@ class PresenterTest {
 
     @Test
     fun answerWrong() {
-        viewModel.setWord(ReviseWord(Word("rain", "chuva")))
         viewModel.setAnswer(Answer.WRONG)
         setupScreen(false)
         composeTestRule.mainClock.advanceTimeBy(1000)
