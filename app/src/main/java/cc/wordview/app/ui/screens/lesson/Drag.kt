@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.detectTapGestures
@@ -181,6 +182,7 @@ fun Drag(
                         offsetY += dragAmount.y
                     })
                 .scale(scale)
+                .zIndex(10f)
                 .testTag("drag")
         ) {
             currentWord.word.let {
