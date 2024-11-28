@@ -48,6 +48,7 @@ import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.ui.components.GlobalImageLoader
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.theme.Typography
+import cc.wordview.gengolex.Language
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
@@ -64,7 +65,6 @@ fun Presenter() {
     var visible by remember { mutableStateOf(false) }
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences.getOrDefault<String>("api_endpoint") }
 
     val context = LocalContext.current
 
@@ -137,14 +137,20 @@ fun Presenter() {
             Answer.NONE -> {
                 val image = GlobalImageLoader.getCachedImage(current.word.parent)
                 if (image != null) AsyncImage(
-                    modifier = Modifier.size(130.dp).testTag("word"),
+                    modifier = Modifier
+                        .size(130.dp)
+                        .testTag("word"),
                     model = image,
                     contentDescription = null
                 )
+
+                val langTag = remember { preferences.getOrDefault<String>("language") }
+                val lang = remember { Language.byTag(langTag) }
+
                 Text(
                     text = current.word.word,
                     textAlign = TextAlign.Center,
-                    style = Typography.displayMedium,
+                    style = if (lang == Language.JAPANESE) Typography.displayLarge else Typography.displayMedium,
                 )
             }
         }
