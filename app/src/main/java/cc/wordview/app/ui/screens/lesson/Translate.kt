@@ -215,6 +215,7 @@ fun Translate(
                 Button(
                     onClick = {
                         LessonViewModel.setScreen(ReviseScreen.Presenter.route)
+                        checked = false
                         viewModel.cleanup()
                     },
                     modifier = Modifier
