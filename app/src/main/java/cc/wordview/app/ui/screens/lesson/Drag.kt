@@ -75,14 +75,11 @@ fun Drag(
     var isPressed by remember { mutableStateOf(false) }
 
     val scale by animateFloatAsState(
-        targetValue = if (isDragging || isPressed) 0.8f else 1f,
+        targetValue = if (isDragging || isPressed) 0.6f else 1f,
         animationSpec = tween(durationMillis = 300)
     )
 
     val coroutineScope = rememberCoroutineScope()
-
-    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences.getOrDefault<String>("api_endpoint") }
 
     val animatedOffsetX by animateFloatAsState(
         targetValue = if (isDragging) offsetX else 0f,
