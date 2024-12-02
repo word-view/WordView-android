@@ -46,16 +46,14 @@ class WordDragTest {
 
     private val viewModel = LessonViewModel
 
-    private fun setupScreen(autoAdvance: Boolean = true, appendWords: Boolean = false) {
+    private fun setupScreen(autoAdvance: Boolean = true) {
         composeTestRule.mainClock.autoAdvance = autoAdvance
 
-        if (appendWords) {
-            viewModel.appendWord(ReviseWord(Word("tear", "lágrima")))
-            viewModel.appendWord(ReviseWord(Word("rain", "chuva")))
-            viewModel.appendWord(ReviseWord(Word("voice", "voz")))
+        viewModel.appendWord(ReviseWord(Word("tear", "lágrima", representable = true)))
+        viewModel.appendWord(ReviseWord(Word("rain", "chuva", representable = true)))
+        viewModel.appendWord(ReviseWord(Word("umbrella", "guarda-chuva", representable = true)))
 
-            viewModel.setWord(ReviseWord(Word("tear", "lágrima")))
-        }
+        viewModel.setWord(ReviseWord(Word("tear", "lágrima", representable = true)))
 
         composeTestRule.setContent {
             val navController = rememberNavController()
@@ -88,7 +86,7 @@ class WordDragTest {
 
     @Test
     fun renders() {
-        setupScreen(appendWords = true)
+        setupScreen()
 
         composeTestRule.onNodeWithTag("root").assertExists()
         composeTestRule.onNodeWithTag("drag").assertExists()
@@ -99,13 +97,13 @@ class WordDragTest {
 
     @Test
     fun upAndDownNotEqual() {
-        setupScreen(appendWords = true)
+        setupScreen()
         assertTrue(DragViewModel.topWord.value != DragViewModel.downWord.value)
     }
 
     @Test
     fun dragUp() {
-        setupScreen(appendWords = true)
+        setupScreen()
 
         composeTestRule.onNodeWithTag("drag").performTouchInput {
             down(center)
@@ -117,7 +115,7 @@ class WordDragTest {
 
     @Test
     fun dragDown() {
-        setupScreen(appendWords = true)
+        setupScreen()
 
         composeTestRule.onNodeWithTag("drag").performTouchInput {
             down(center)

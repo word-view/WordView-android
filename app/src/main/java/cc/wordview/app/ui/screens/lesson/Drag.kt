@@ -97,7 +97,9 @@ fun Drag(
     val downWord by dragViewModel.downWord.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        val filteredWords = words.filter { w -> w.word.word != currentWord.word.word }
+        val filteredWords = words
+            .filter { w -> w.word.word != currentWord.word.word }
+            .filter { w -> w.word.representable }
 
         val alternatives = listOf(currentWord.word, filteredWords.random().word).shuffled()
 
