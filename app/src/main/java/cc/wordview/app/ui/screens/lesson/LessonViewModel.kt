@@ -74,7 +74,11 @@ object LessonViewModel : ViewModel() {
             setScreen(ReviseScreen.getRandomScreen().route)
         } else {
             Log.i(TAG, "Word '${currentWord.value.word.word}' has no phrase")
-            setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
+
+            if (!currentWord.value.word.representable) {
+                Log.i(TAG, "Word '${currentWord.value.word.word}' is not representable (skipping)")
+                nextWord(answer)
+            } else setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
         }
     }
 
