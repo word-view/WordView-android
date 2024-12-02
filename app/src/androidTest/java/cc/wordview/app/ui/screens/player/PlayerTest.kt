@@ -50,7 +50,6 @@ class PlayerTest {
         hiltRule.inject()
 
         SongViewModel.setVideoStream(MockVideoStream())
-
         composeTestRule.onNodeWithText("Aquarela").performClick()
     }
 
@@ -86,13 +85,12 @@ class PlayerTest {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-word"), 5_000)
     }
 
-    @Ignore("Unstable results")
     @Test
     fun pause() {
         composeTestRule.waitUntilNodeCount(hasTestTag("toggle-play"), 1, 1_000)
-        composeTestRule.onNodeWithTag("toggle-play").performClick()
-        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-plain"))
-        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-word"))
+        composeTestRule.onNodeWithTag("toggle-play").performClick().performClick()
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-plain"), 5_000)
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("text-cue-word"), 5_000)
     }
 
     @Test
