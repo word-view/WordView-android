@@ -106,7 +106,6 @@ class PlayerViewModel @Inject constructor(
         video: VideoStreamInterface
     ) {
         viewModelScope.launch {
-            GlobalImageLoader.init(context)
             playerRepository.init(context)
 
             playerRepository.endpoint = preferences.getOrDefault("api_endpoint")

@@ -17,6 +17,8 @@
 
 package cc.wordview.app.extractor
 
+import android.content.Context
+import android.graphics.Bitmap
 import org.schabi.newpipe.extractor.stream.StreamInfo
 
 interface VideoStreamInterface {
@@ -24,7 +26,7 @@ interface VideoStreamInterface {
     var cleanArtistName: String
     var cleanTrackName: String
 
-    fun init(id: String)
+    fun init(id: String, context: Context)
     fun getStreamURL(): String
-    fun getHQThumbnail(): String
+    fun getHQThumbnail(): Bitmap?
 }

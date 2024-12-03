@@ -65,6 +65,7 @@ import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FadeInAsyncImage
 import cc.wordview.app.ui.components.FadeOutBox
+import cc.wordview.app.ui.components.GlobalImageLoader
 import cc.wordview.app.ui.components.NotEnoughWordsDialog
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
@@ -118,7 +119,7 @@ fun Player(
         activity.setOrientationSensorLandscape()
 
         CoroutineScope(Dispatchers.IO).launch {
-            SongViewModel.videoStream.value.init(videoId)
+            SongViewModel.videoStream.value.init(videoId, context)
 
             viewModel.initAudio(videoStream.getStreamURL(), context)
             viewModel.getLyrics(preferences, context, videoId, lang, videoStream)

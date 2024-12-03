@@ -22,10 +22,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.extractor.DownloaderImpl
+import cc.wordview.app.ui.components.GlobalImageLoader
+import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.WordViewTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +45,12 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            val context = LocalContext.current
+
+            OneTimeEffect {
+                GlobalImageLoader.init(context)
+            }
+
             WordViewTheme {
                 ProvidePreferenceLocals {
                     Main()

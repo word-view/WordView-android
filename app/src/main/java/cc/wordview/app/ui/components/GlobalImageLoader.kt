@@ -26,6 +26,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * Globally handles the preloading of images
+ */
 object GlobalImageLoader {
     private lateinit var loader: ImageLoader
     private val globalImageLoaderScope = CoroutineScope(Dispatchers.IO)

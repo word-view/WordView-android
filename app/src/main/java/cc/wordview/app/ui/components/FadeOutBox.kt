@@ -62,7 +62,7 @@ fun FadeOutBox(
 
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            delay(stagnationTime.toLong() - 1000)
+            delay(500)
             visible = false
         }
     }

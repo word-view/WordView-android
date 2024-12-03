@@ -17,6 +17,8 @@
 
 package cc.wordview.app.ui.screens.player
 
+import android.content.Context
+import android.graphics.Bitmap
 import cc.wordview.app.extractor.VideoStreamInterface
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamType
@@ -32,13 +34,13 @@ class MockVideoStream : VideoStreamInterface {
 
     init { info.uploaderName = "Francisco Tárrega" }
 
-    override fun init(id: String) {}
+    override fun init(id: String, context: Context) {}
 
     override fun getStreamURL(): String {
         return url
     }
 
-    override fun getHQThumbnail(): String {
-        return ""
+    override fun getHQThumbnail(): Bitmap? {
+        return null
     }
 }

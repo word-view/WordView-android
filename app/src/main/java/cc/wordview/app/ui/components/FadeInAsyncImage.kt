@@ -17,7 +17,9 @@
 
 package cc.wordview.app.ui.components
 
+import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.EaseInExpo
 import androidx.compose.animation.core.EaseInOutExpo
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -38,10 +40,10 @@ import coil.compose.AsyncImage
  * A async image that gracefully fades in as the url changes.
  */
 @Composable
-fun FadeInAsyncImage(url: String) {
+fun FadeInAsyncImage(image: Bitmap?) {
     var isVisible by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(url) {
+    LaunchedEffect(image) {
         isVisible = false
         isVisible = true
     }
@@ -51,13 +53,13 @@ fun FadeInAsyncImage(url: String) {
         visible = isVisible,
         enter = fadeIn(
             animationSpec = tween(
-                durationMillis = 1100,
-                easing = EaseInOutExpo
+                durationMillis = 500,
+                easing = EaseInExpo
             )
         )
     ) {
         AsyncImage(
-            model = url,
+            model = image,
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()

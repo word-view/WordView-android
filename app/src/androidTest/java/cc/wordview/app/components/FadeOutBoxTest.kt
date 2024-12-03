@@ -63,7 +63,7 @@ class FadeOutBoxTest {
 
     @Test
     fun fadesOutAfterStagnationTime() {
-        composeTestRule.mainClock.advanceTimeBy(1200)
+        composeTestRule.mainClock.advanceTimeBy(250)
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("fade-box")

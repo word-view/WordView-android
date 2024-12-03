@@ -17,6 +17,14 @@
 
 package cc.wordview.app.extractor
 
+import android.content.Context
+import android.graphics.Bitmap
+import cc.wordview.app.ui.components.GlobalImageLoader
+import coil.request.ImageRequest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.StreamingService
 import org.schabi.newpipe.extractor.stream.StreamInfo
@@ -29,8 +37,19 @@ class VideoStream : VideoStreamInterface {
     override var cleanArtistName = ""
     override var cleanTrackName = ""
 
-    override fun init(id: String) {
+    override fun init(id: String, context: Context) {
         info = StreamInfo.getInfo(YTService, "https://youtube.com/watch?v=$id")
+
+        // Preload the background thumbnail
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = ImageRequest.Builder(context)
+                .data(info.thumbnails.last().url)
+                .allowHardware(true)
+                .memoryCacheKey("$id-background")
+                .build()
+
+            GlobalImageLoader.execute(request)
+        }
 
         // For now doing this is ok but as the filter grows
         // a less repetitive solution should be created
@@ -60,12 +79,8 @@ class VideoStream : VideoStreamInterface {
         return info.audioStreams[0].content
     }
 
-    override fun getHQThumbnail(): String {
-        return try {
-            info.thumbnails.last().url
-        } catch (e: Throwable) {
-            ""
-        }
+    override fun getHQThumbnail(): Bitmap? {
+        return GlobalImageLoader.getCachedImage("${info.id}-background")
     }
 
     companion object {
