@@ -17,21 +17,4 @@
 
 package cc.wordview.app.ui.screens.player
 
-import cc.wordview.app.extractor.VideoStreamInterface
-import com.android.volley.RequestQueue
-import javax.inject.Inject
-
-class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {
-    override var onGetLyricsSuccess: (String) -> Unit = {}
-    override var onGetLyricsFail: (String) -> Unit = {}
-
-    override var endpoint: String = ""
-
-    override lateinit var queue: RequestQueue
-
-    override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
-        if (mocklyrics == "fail_trigger") {
-            onGetLyricsFail(mocklyrics)
-        } else onGetLyricsSuccess(mocklyrics)
-    }
-}
+var mocklyrics = ""

@@ -43,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -132,7 +133,7 @@ fun Lesson(
             label = "Screen switch cross fade",
             animationSpec = tween(250)
         ) {
-            Box(Modifier.fillMaxSize()) {
+            Box(Modifier.fillMaxSize().testTag("lesson-exercise")) {
                 ReviseScreen.getByRoute(it)?.Composable(navHostController, innerPadding)
             }
         }
