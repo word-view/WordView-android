@@ -14,7 +14,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1.0"
 
         testInstrumentationRunner = "cc.wordview.app.HiltTestRunner"
         vectorDrawables {
@@ -25,10 +25,17 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            isDebuggable = true
+            defaultConfig.versionName += "-dev"
         }
     }
     compileOptions {
@@ -88,7 +95,7 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
-    androidTestImplementation("org.mockito:mockito-android:5.14.2")
+    androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
