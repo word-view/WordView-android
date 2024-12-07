@@ -99,43 +99,41 @@ class PlayerViewModel @Inject constructor(
         id: String,
         lang: Language,
         video: VideoStreamInterface
-    ) {
-        viewModelScope.launch {
-            playerRepository.init(context)
+    ) = viewModelScope.launch {
+        playerRepository.init(context)
 
-            playerRepository.onGetLyricsFail = {
-                _errorMessage.update { it }
-                setPlayerStatus(PlayerStatus.ERROR)
-            }
-            playerRepository.onGetLyricsSuccess = { lyrics, dictionary ->
-                parseLyrics(lyrics)
-                setCues(_lyrics.value)
-
-                computeAndCheckReadyness()
-
-                initParser(lang)
-                addDictionary(lang.dictionaryName, dictionary)
-
-                for (cue in _lyrics.value) {
-                    val wordsFound = _parser.value.findWords(cue.text)
-
-                    for (word in wordsFound) {
-                        preloadImage(word.parent, context)
-                        preloadPhrases(
-                            context,
-                            "en",
-                            preferences.getOrDefault("language"),
-                            word.word
-                        )
-                        cue.words.add(word)
-                    }
-                }
-
-                computeAndCheckReadyness()
-            }
-
-            playerRepository.getLyrics(id, lang.tag, video)
+        playerRepository.onGetLyricsFail = {
+            _errorMessage.update { it }
+            setPlayerStatus(PlayerStatus.ERROR)
         }
+        playerRepository.onGetLyricsSuccess = { lyrics, dictionary ->
+            parseLyrics(lyrics)
+            setCues(_lyrics.value)
+
+            computeAndCheckReadyness()
+
+            initParser(lang)
+            addDictionary(lang.dictionaryName, dictionary)
+
+            for (cue in _lyrics.value) {
+                val wordsFound = _parser.value.findWords(cue.text)
+
+                for (word in wordsFound) {
+                    preloadImage(word.parent, context)
+                    preloadPhrases(
+                        context,
+                        "en",
+                        preferences.getOrDefault("language"),
+                        word.word
+                    )
+                    cue.words.add(word)
+                }
+            }
+
+            computeAndCheckReadyness()
+        }
+
+        playerRepository.getLyrics(id, lang.tag, video)
     }
 
     private fun preloadPhrases(
@@ -143,79 +141,73 @@ class PlayerViewModel @Inject constructor(
         phraseLang: String,
         wordsLang: String,
         keyword: String
-    ) {
-        viewModelScope.launch {
-            translateRepository.init(context)
-            translateRepository.onGetPhraseSuccess = {
-                if (!phraseList.contains(it)) {
-                    phraseList.add(it)
-                }
+    ) = viewModelScope.launch {
+        translateRepository.init(context)
+        translateRepository.onGetPhraseSuccess = {
+            if (!phraseList.contains(it)) {
+                phraseList.add(it)
             }
-            translateRepository.getPhrase(phraseLang, wordsLang, keyword)
+        }
+        translateRepository.getPhrase(phraseLang, wordsLang, keyword)
+    }
+
+    private fun preloadImage(parent: String, context: Context) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val request = ImageRequest.Builder(context)
+                .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
+                .allowHardware(true)
+                .memoryCacheKey(parent)
+                .build()
+
+            GlobalImageLoader.execute(request)
         }
     }
 
-    private fun preloadImage(parent: String, context: Context) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val request = ImageRequest.Builder(context)
-                    .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
-                    .allowHardware(true)
-                    .memoryCacheKey(parent)
-                    .build()
+    fun initAudio(videoStreamUrl: String, context: Context) = viewModelScope.launch {
+        val listener = AudioPlayerListener()
 
-                GlobalImageLoader.execute(request)
+        listener.apply {
+            onBuffering = { _isBuffering.update { true } }
+            onReady = { _isBuffering.update { false } }
+
+            onTogglePlay = {
+                if (it) playIconPlay()
+                else playIconPause()
             }
-        }
-    }
 
-    fun initAudio(videoStreamUrl: String, context: Context) {
-        viewModelScope.launch {
-            val listener = AudioPlayerListener()
+            onPlaybackEnd = {
+                player.value.stop()
 
-            listener.apply {
-                onBuffering = { _isBuffering.update { true } }
-                onReady = { _isBuffering.update { false } }
+                for (cue in _cues.value) {
+                    for (word in cue.words) {
+                        val reviseWord = ReviseWord(word)
 
-                onTogglePlay = {
-                    if (it) playIconPlay()
-                    else playIconPause()
-                }
-
-                onPlaybackEnd = {
-                    player.value.stop()
-
-                    for (cue in _cues.value) {
-                        for (word in cue.words) {
-                            val reviseWord = ReviseWord(word)
-
-                            for (phrase in phraseList) {
-                                if (phrase.words.contains(word.word)) {
-                                    reviseWord.hasPhrase = true
-                                }
+                        for (phrase in phraseList) {
+                            if (phrase.words.contains(word.word)) {
+                                reviseWord.hasPhrase = true
                             }
-
-                            LessonViewModel.appendWord(reviseWord)
                         }
+
+                        LessonViewModel.appendWord(reviseWord)
                     }
-
-                    if (LessonViewModel.wordsToRevise.value.isEmpty() || LessonViewModel.wordsToRevise.value.size < 3) {
-                        _notEnoughWords.update { true }
-                    } else _finalized.update { true }
                 }
-            }
 
-            player.value.apply {
-                onPositionChange = { pos, bufferedPercentage ->
-                    setCurrentCue(_lyrics.value.getCueAt(pos))
-                    _currentPosition.update { pos.toLong() }
-                    _bufferedPercentage.update { bufferedPercentage }
-                }
-                onInitializeFail = { setPlayerStatus(PlayerStatus.ERROR) }
-                onPrepared = { computeAndCheckReadyness() }
-
-                initialize(videoStreamUrl, context, listener)
+                if (LessonViewModel.wordsToRevise.value.isEmpty() || LessonViewModel.wordsToRevise.value.size < 3) {
+                    _notEnoughWords.update { true }
+                } else _finalized.update { true }
             }
+        }
+
+        player.value.apply {
+            onPositionChange = { pos, bufferedPercentage ->
+                setCurrentCue(_lyrics.value.getCueAt(pos))
+                _currentPosition.update { pos.toLong() }
+                _bufferedPercentage.update { bufferedPercentage }
+            }
+            onInitializeFail = { setPlayerStatus(PlayerStatus.ERROR) }
+            onPrepared = { computeAndCheckReadyness() }
+
+            initialize(videoStreamUrl, context, listener)
         }
     }
 
