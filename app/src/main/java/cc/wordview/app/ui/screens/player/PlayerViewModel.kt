@@ -110,7 +110,7 @@ class PlayerViewModel @Inject constructor(
                 setPlayerStatus(PlayerStatus.ERROR)
             }
             playerRepository.onGetLyricsSuccess = { lyrics, dictionary ->
-                lyricsParse(preferences.getOrDefault("filter_romanizations"), lyrics)
+                parseLyrics(lyrics)
                 setCues(_lyrics.value)
 
                 computeAndCheckReadyness()
@@ -233,9 +233,9 @@ class PlayerViewModel @Inject constructor(
         _playIcon.update { Icons.Filled.Pause }
     }
 
-    private fun lyricsParse(filterRomanizations: Boolean, res: String) {
+    private fun parseLyrics(res: String) {
         val newLyrics = Lyrics()
-        newLyrics.parse(filterRomanizations, res)
+        newLyrics.parse(res)
         _lyrics.update { newLyrics }
     }
 

@@ -29,27 +29,14 @@ import kotlin.time.Duration.Companion.milliseconds
 class Lyrics : ArrayList<WordViewCue>() {
     private val TAG = Lyrics::class.java.simpleName
 
-    fun parse(filterRomanizations: Boolean, str: String) {
-        if (filterRomanizations)
-            Log.i(TAG, "Romanizations will be filtered out")
+    fun parse(str: String) {
 
         WebvttParser().parse(
             str.encodeToByteArray(),
             SubtitleParser.OutputOptions.allCues()
         ) { result ->
             if (result.cues.first().text?.isNotEmpty()!!) {
-                var text = result.cues.first().text.toString().trim()
-                val lineSplit = text.split("\n")
-
-                if (filterRomanizations && lineSplit.size > 1) {
-                    val regex = Regex("[a-zA-Z]")
-                    val matches = regex.findAll(lineSplit.last()).count()
-                    val ratio = matches.toFloat() / lineSplit.last().length
-
-                    if (ratio >= 0.7) {
-                        text = lineSplit.first()
-                    }
-                }
+                val text = result.cues.first().text.toString().trim()
 
                 this.add(
                     WordViewCue(

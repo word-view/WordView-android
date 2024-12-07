@@ -8,8 +8,6 @@
     <string name="the_language_that_you_want_to_learn">The language that you want to learn: %1$s</string>
     <string name="composer_mode">Composer Mode</string>
     <string name="provides_more_information_in_the_player_that_helps_writing_lyrics">Provides advanced information in the player</string>
-    <string name="filter_romanizations">Filter romanizations</string>
-    <string name="attempts_to_remove_romanizations_from_lyrics_of_non_alphabetic_languages">Attempts to remove romanizations from lyrics of non alphabetic languages</string>
     <string name="settings">Settings</string>
     <string name="api_endpoint">API endpoint</string>
     <string name="search_for_music_artists_albums">Search for music, artists, albums…</string>

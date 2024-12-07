@@ -25,7 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Carpenter
 import androidx.compose.material.icons.outlined.NetworkPing
-import androidx.compose.material.icons.outlined.ShortText
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,7 +43,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
-import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.goBack
 import me.zhanghai.compose.preference.ListPreferenceType
 import me.zhanghai.compose.preference.LocalPreferenceFlow
@@ -54,14 +52,11 @@ import me.zhanghai.compose.preference.switchPreference
 val defaultSettings = hashMapOf(
     "language" to "ja",
     "composer_mode" to false,
-    "filter_romanizations" to true
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(navController: NavHostController) {
-    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
@@ -137,19 +132,6 @@ fun Settings(navController: NavHostController) {
                         )
                     },
                     summary = { Text(text = stringResource(R.string.provides_more_information_in_the_player_that_helps_writing_lyrics)) }
-                )
-                switchPreference(
-                    key = "filter_romanizations",
-                    enabled = { preferences.getOrDefault<String>("language") == "ja" },
-                    defaultValue = true,
-                    title = { Text(text = stringResource(R.string.filter_romanizations)) },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.ShortText,
-                            contentDescription = null
-                        )
-                    },
-                    summary = { Text(text = stringResource(R.string.attempts_to_remove_romanizations_from_lyrics_of_non_alphabetic_languages)) }
                 )
             }
         }

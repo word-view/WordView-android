@@ -112,7 +112,7 @@ fun Player(
     OneTimeEffect {
         val lang = Language.byTag(langTag)
 
-        Log.i("Player", "Chosen language is ${lang.name}")
+        Log.i("Player", "Chosen language is ${lang.name.lowercase()}")
 
         activity.setOrientationSensorLandscape()
 
