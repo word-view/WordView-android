@@ -121,18 +121,21 @@ fun Settings(navController: NavHostController) {
                     },
                     type = ListPreferenceType.ALERT_DIALOG
                 )
-                switchPreference(
-                    key = "composer_mode",
-                    defaultValue = false,
-                    title = { Text(text = stringResource(R.string.composer_mode)) },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Carpenter,
-                            contentDescription = null
-                        )
-                    },
-                    summary = { Text(text = stringResource(R.string.provides_more_information_in_the_player_that_helps_writing_lyrics)) }
-                )
+                @Suppress("KotlinConstantConditions")
+                if (BuildConfig.BUILD_TYPE == "debug") {
+                    switchPreference(
+                        key = "composer_mode",
+                        defaultValue = false,
+                        title = { Text(text = stringResource(R.string.composer_mode)) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Carpenter,
+                                contentDescription = null
+                            )
+                        },
+                        summary = { Text(text = stringResource(R.string.provides_more_information_in_the_player_that_helps_writing_lyrics)) }
+                    )
+                }
             }
         }
     }
