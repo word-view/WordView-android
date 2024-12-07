@@ -60,8 +60,8 @@ class PlayerViewModel @Inject constructor(
 ) : ViewModel() {
     private val TAG = this::class.java.simpleName
 
-    private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
+    private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
     private val _lyrics = MutableStateFlow(Lyrics())
     private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
     private val _player = MutableStateFlow(AudioPlayer())
@@ -109,18 +109,12 @@ class PlayerViewModel @Inject constructor(
             playerRepository.init(context)
 
             playerRepository.endpoint = preferences.getOrDefault("api_endpoint")
-            playerRepository.onGetLyricsFail = { mesg ->
-                Log.e(TAG, mesg)
-                _errorMessage.update { mesg }
+            playerRepository.onGetLyricsFail = {
+                _errorMessage.update { it }
                 setPlayerStatus(PlayerStatus.ERROR)
             }
-            playerRepository.onGetLyricsSuccess = {
-                val jsonObject = JsonParser.parseString(it).asJsonObject
-
-                val lyricks = jsonObject.get("lyrics").asString
-                val dictionary = jsonObject.getAsJsonArray("dictionary").toString()
-
-                lyricsParse(preferences.getOrDefault("filter_romanizations"), lyricks)
+            playerRepository.onGetLyricsSuccess = { lyrics, dictionary ->
+                lyricsParse(preferences.getOrDefault("filter_romanizations"), lyrics)
                 setCues(_lyrics.value)
 
                 computeAndCheckReadyness()
@@ -162,11 +156,8 @@ class PlayerViewModel @Inject constructor(
             translateRepository.init(context)
             translateRepository.endpoint = preferences.getOrDefault("api_endpoint")
             translateRepository.onGetPhraseSuccess = {
-                val phrase = Gson().fromJson(it, Phrase::class.java)
-
-                if (!phraseList.contains(phrase)) {
-                    Log.i(TAG, "Preloading phrase '${phrase.phrase}'")
-                    phraseList.add(phrase)
+                if (!phraseList.contains(it)) {
+                    phraseList.add(it)
                 }
             }
             translateRepository.getPhrase(phraseLang, wordsLang, keyword)

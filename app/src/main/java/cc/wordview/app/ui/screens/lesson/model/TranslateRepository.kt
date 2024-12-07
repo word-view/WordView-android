@@ -17,39 +17,36 @@
 
 package cc.wordview.app.ui.screens.lesson.model
 
+import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.ApiRequestRepository
 import cc.wordview.app.api.Response
-import com.android.volley.DefaultRetryPolicy
+import cc.wordview.app.extensions.asURLEncoded
 import com.android.volley.RequestQueue
-import java.net.URLEncoder
+import com.google.gson.Gson
 import javax.inject.Inject
 
 class TranslateRepository @Inject constructor() : ApiRequestRepository {
-    var onGetPhraseSuccess: (String) -> Unit = {}
+    var onGetPhraseSuccess: (Phrase) -> Unit = {}
     var onGetPhraseFail: () -> Unit = {}
 
     override lateinit var endpoint: String
     override lateinit var queue: RequestQueue
 
     fun getPhrase(phraseLang: String, wordsLang: String, keyword: String) {
-        val url =
-            "$endpoint/api/v1/lesson/phrase?phraseLang=$phraseLang&wordsLang=$wordsLang&keyword=${
-                URLEncoder.encode(
-                    keyword
-                )
-            }"
+        val url = APIUrl("$endpoint/api/v1/lesson/phrase")
 
-        val response = Response({ onGetPhraseSuccess(it) }, { onGetPhraseFail() })
+        url.addRequestParam("phraseLang", phraseLang)
+        url.addRequestParam("wordsLang", wordsLang)
+        url.addRequestParam("keyword", keyword.asURLEncoded())
 
-        val request = jsonRequest(url, response)
+        val response = Response({
+            val phrase = Gson().fromJson(it, Phrase::class.java)
+            onGetPhraseSuccess(phrase)
+        }, { onGetPhraseFail() })
 
-        request.setRetryPolicy(
-            DefaultRetryPolicy(
-                20000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-            )
-        )
+        val request = jsonRequest(url.getURL(), response)
+
+        request.setRetryPolicy(highTimeoutRetryPolicy)
 
         queue.add(request)
     }

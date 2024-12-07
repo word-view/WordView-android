@@ -19,10 +19,20 @@ package cc.wordview.app.ui.screens.player
 
 import cc.wordview.app.api.ApiRequestRepository
 import cc.wordview.app.extractor.VideoStreamInterface
+import com.google.gson.JsonParser
 
 interface PlayerRepository : ApiRequestRepository {
-    var onGetLyricsSuccess: (String) -> Unit
+    var onGetLyricsSuccess: (String, String) -> Unit
     var onGetLyricsFail: (String) -> Unit
 
     fun getLyrics(id: String, lang: String, video: VideoStreamInterface)
+
+    fun parseLyricsAndDictionary(res: String): Pair<String, String> {
+        val jsonObject = JsonParser.parseString(res).asJsonObject
+
+        val lyrics = jsonObject.get("lyrics").asString
+        val dictionary = jsonObject.getAsJsonArray("dictionary").toString()
+
+        return lyrics to dictionary
+    }
 }

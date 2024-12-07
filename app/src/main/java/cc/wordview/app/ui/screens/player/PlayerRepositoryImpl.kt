@@ -17,54 +17,59 @@
 
 package cc.wordview.app.ui.screens.player
 
-import android.content.Context
 import android.util.Log
+import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.Response
+import cc.wordview.app.extensions.asURLEncoded
 import cc.wordview.app.extractor.VideoStreamInterface
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
-import com.android.volley.toolbox.Volley
 import javax.inject.Inject
 
 class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     private val TAG = this::class.java.simpleName
 
-    override var onGetLyricsSuccess: (String) -> Unit = {}
+    override var onGetLyricsSuccess: (String, String) -> Unit =
+        { lyrics: String, dictionary: String -> }
+
     override var onGetLyricsFail: (String) -> Unit = {}
 
     override lateinit var queue: RequestQueue
     override lateinit var endpoint: String
 
     override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
-        val url =
-            "$endpoint/api/v1/lyrics?id=$id&lang=$lang&trackName=${video.cleanTrackName}&artistName=${video.cleanArtistName}"
+        val url = APIUrl("$endpoint/api/v1/lyrics")
 
-        val response = Response({ onGetLyricsSuccess(it) }, {
+        url.addRequestParam("id", id)
+        url.addRequestParam("lang", lang)
+        url.addRequestParam("trackName", video.cleanTrackName.asURLEncoded())
+        url.addRequestParam("artistName", video.cleanArtistName.asURLEncoded())
+
+        val response = Response({
+            val (lyrics, dictionary) = parseLyricsAndDictionary(it)
+            onGetLyricsSuccess(lyrics, dictionary)
+        }, {
             val statusCode = it.networkResponse?.statusCode
-            val responseData = it.networkResponse?.data?.let { String(it) } // Convert the response body to a string
-
-            var errorTitle: String? = null
-
-            if (responseData != null) {
-                val titleRegex = "<title>(.*?)</title>".toRegex(RegexOption.IGNORE_CASE)
-                val matchResult = titleRegex.find(responseData)
-                errorTitle = matchResult?.groups?.get(1)?.value
-            }
+            val responseData = it.networkResponse?.data?.let { String(it) }
+            val errorTitle = scrapeErrorFromResponseData(responseData)
 
             Log.e(TAG, "Request failed with status code $statusCode - $errorTitle")
-            onGetLyricsFail(it.message ?: "Request failed with status code $statusCode\n$errorTitle")
+            onGetLyricsFail(
+                it.message ?: "Request failed with status code $statusCode\n$errorTitle"
+            )
         })
 
-        val request = jsonRequest(url, response)
+        val request = jsonRequest(url.getURL(), response)
 
-        request.setRetryPolicy(
-            DefaultRetryPolicy(
-                20000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-            )
-        )
+        request.setRetryPolicy(highTimeoutRetryPolicy)
 
         queue.add(request)
+    }
+
+    private fun scrapeErrorFromResponseData(responseData: String?): String? {
+        if (responseData != null) {
+            val titleRegex = "<title>(.*?)</title>".toRegex(RegexOption.IGNORE_CASE)
+            val matchResult = titleRegex.find(responseData)
+            return matchResult?.groups?.get(1)?.value
+        } else return null
     }
 }

@@ -19,10 +19,11 @@ package cc.wordview.app.ui.screens.player
 
 import cc.wordview.app.extractor.VideoStreamInterface
 import com.android.volley.RequestQueue
+import com.google.gson.JsonParser
 import javax.inject.Inject
 
 class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {
-    override var onGetLyricsSuccess: (String) -> Unit = {}
+    override var onGetLyricsSuccess: (String, String) -> Unit = { _: String, _: String -> }
     override var onGetLyricsFail: (String) -> Unit = {}
 
     override var endpoint: String = ""
@@ -32,6 +33,9 @@ class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
         if (mocklyrics == "fail_trigger") {
             onGetLyricsFail(mocklyrics)
-        } else onGetLyricsSuccess(mocklyrics)
+        } else {
+            val (lyrics, dictionary) = parseLyricsAndDictionary(mocklyrics)
+            onGetLyricsSuccess(lyrics, dictionary)
+        }
     }
 }

@@ -65,7 +65,6 @@ import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FadeInAsyncImage
 import cc.wordview.app.ui.components.FadeOutBox
-import cc.wordview.app.ui.components.GlobalImageLoader
 import cc.wordview.app.ui.components.NotEnoughWordsDialog
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
@@ -79,7 +78,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.LocalPreferenceFlow
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -152,14 +150,6 @@ fun Player(
 
     Scaffold { innerPadding ->
         when (status) {
-            PlayerStatus.ERROR -> ErrorScreen(navHostController, errorMessage)
-
-            PlayerStatus.LOADING -> {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(64.dp)
-                }
-            }
-
             PlayerStatus.READY -> {
                 OneTimeEffect {
                     if (autoplay) player.play()
@@ -270,6 +260,14 @@ fun Player(
                             }
                         }
                     }
+                }
+            }
+
+            PlayerStatus.ERROR -> ErrorScreen(navHostController, errorMessage)
+
+            PlayerStatus.LOADING -> {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(64.dp)
                 }
             }
         }
