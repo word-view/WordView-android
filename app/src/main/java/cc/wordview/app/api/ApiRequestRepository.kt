@@ -19,6 +19,7 @@ package cc.wordview.app.api
 
 import android.content.Context
 import android.util.Log
+import cc.wordview.app.BuildConfig
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
@@ -26,7 +27,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
 interface ApiRequestRepository {
-    var endpoint: String
+    val endpoint get() = BuildConfig.API_BASE_URL
     var queue: RequestQueue
 
     val highTimeoutRetryPolicy: DefaultRetryPolicy

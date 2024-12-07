@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.goBack
@@ -51,7 +52,6 @@ import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.switchPreference
 
 val defaultSettings = hashMapOf(
-    "api_endpoint" to "http://10.0.2.2:8080",
     "language" to "ja",
     "composer_mode" to false,
     "filter_romanizations" to true
@@ -89,12 +89,9 @@ fun Settings(navController: NavHostController) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 listPreference(
                     key = "api_endpoint",
-                    defaultValue = "http://10.0.2.2:8080",
-                    values = listOf(
-                        "http://10.0.2.2:8080",
-                        "http://192.168.1.100:8080",
-                        "https://api.wordview.cc"
-                    ),
+                    enabled = { false },
+                    defaultValue = BuildConfig.API_BASE_URL,
+                    values = listOf(),
                     title = { Text(text = stringResource(R.string.api_endpoint)) },
                     summary = { Text(text = it) },
                     icon = {
@@ -103,7 +100,6 @@ fun Settings(navController: NavHostController) {
                             contentDescription = null
                         )
                     },
-                    type = ListPreferenceType.ALERT_DIALOG
                 )
                 listPreference(
                     key = "language",

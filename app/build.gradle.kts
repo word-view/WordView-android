@@ -24,6 +24,7 @@ android {
 
     buildTypes {
         release {
+            buildConfigField("String", "API_BASE_URL", "\"https://api.wordview.cc\"")
             isMinifyEnabled = false
             isDebuggable = false
             proguardFiles(
@@ -32,6 +33,7 @@ android {
             )
         }
         debug {
+            buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8080\"")
             isMinifyEnabled = false
             isShrinkResources = false
             isDebuggable = true
@@ -49,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"

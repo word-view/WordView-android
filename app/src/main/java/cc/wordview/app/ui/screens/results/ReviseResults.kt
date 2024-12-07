@@ -39,23 +39,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
-import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.Typography
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @Composable
 fun ReviseResults(
     navHostController: NavHostController,
     viewModel: ReviseResultsViewModel = ReviseResultsViewModel
 ) {
-    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val endpoint = remember { preferences.getOrDefault<String>("api_endpoint") }
+    val endpoint = remember { BuildConfig.API_BASE_URL }
 
     val words by ReviseResultsViewModel.words.collectAsStateWithLifecycle()
 

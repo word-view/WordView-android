@@ -18,13 +18,13 @@
 package cc.wordview.app.ui.screens.player
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.BuildConfig
 import cc.wordview.app.audio.AudioPlayerListener
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.extensions.getOrDefault
@@ -34,14 +34,11 @@ import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.components.GlobalImageLoader
 import cc.wordview.app.ui.screens.lesson.LessonViewModel
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
-import cc.wordview.app.ui.screens.lesson.model.Phrase
 import cc.wordview.app.ui.screens.lesson.model.TranslateRepository
 import cc.wordview.app.ui.screens.lesson.model.phraseList
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import coil.request.ImageRequest
-import com.google.gson.Gson
-import com.google.gson.JsonParser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -108,7 +105,6 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch {
             playerRepository.init(context)
 
-            playerRepository.endpoint = preferences.getOrDefault("api_endpoint")
             playerRepository.onGetLyricsFail = {
                 _errorMessage.update { it }
                 setPlayerStatus(PlayerStatus.ERROR)
@@ -126,10 +122,9 @@ class PlayerViewModel @Inject constructor(
                     val wordsFound = _parser.value.findWords(cue.text)
 
                     for (word in wordsFound) {
-                        preloadImage(word.parent, playerRepository.endpoint, context)
+                        preloadImage(word.parent, context)
                         preloadPhrases(
                             context,
-                            preferences,
                             "en",
                             preferences.getOrDefault("language"),
                             word.word
@@ -147,14 +142,12 @@ class PlayerViewModel @Inject constructor(
 
     private fun preloadPhrases(
         context: Context,
-        preferences: Preferences,
         phraseLang: String,
         wordsLang: String,
         keyword: String
     ) {
         viewModelScope.launch {
             translateRepository.init(context)
-            translateRepository.endpoint = preferences.getOrDefault("api_endpoint")
             translateRepository.onGetPhraseSuccess = {
                 if (!phraseList.contains(it)) {
                     phraseList.add(it)
@@ -164,11 +157,11 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    private fun preloadImage(parent: String, endpoint: String, context: Context) {
+    private fun preloadImage(parent: String, context: Context) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val request = ImageRequest.Builder(context)
-                    .data("$endpoint/api/v1/image?parent=$parent")
+                    .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
                     .allowHardware(true)
                     .memoryCacheKey(parent)
                     .build()

@@ -29,12 +29,11 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     private val TAG = this::class.java.simpleName
 
     override var onGetLyricsSuccess: (String, String) -> Unit =
-        { lyrics: String, dictionary: String -> }
+        { _: String, _: String -> }
 
     override var onGetLyricsFail: (String) -> Unit = {}
 
     override lateinit var queue: RequestQueue
-    override lateinit var endpoint: String
 
     override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
         val url = APIUrl("$endpoint/api/v1/lyrics")

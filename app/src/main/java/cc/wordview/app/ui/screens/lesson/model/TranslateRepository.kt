@@ -29,7 +29,6 @@ class TranslateRepository @Inject constructor() : ApiRequestRepository {
     var onGetPhraseSuccess: (Phrase) -> Unit = {}
     var onGetPhraseFail: () -> Unit = {}
 
-    override lateinit var endpoint: String
     override lateinit var queue: RequestQueue
 
     fun getPhrase(phraseLang: String, wordsLang: String, keyword: String) {
