@@ -19,6 +19,7 @@ package cc.wordview.app.ui.screens.player
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -28,7 +29,6 @@ import cc.wordview.app.SongViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
@@ -201,5 +201,49 @@ class PlayerTest {
         enterPlayer()
 
         composeTestRule.waitUntilExactlyOneExists(hasTestTag("error-screen"), 3_000)
+    }
+
+    @Test
+    // BEWARE: this test takes about 2 minutes and 50 seconds
+    fun allLyricsAreRendering() {
+        // This one is stripped down to match the duration of the test song which is 2:55
+        setLyrics("{\"lyrics\":\"WEBVTT\n\n00:00:00.710 --> 00:00:06.270\n通り雨輝く路面\n\n00:00:06.270 --> 00:00:11.123\n要らなくなった傘が邪魔\n\n00:00:11.710 --> 00:00:17.190\n君の手に触れたいのに\n\n00:00:17.190 --> 00:00:22.766\n近付いたら壊れてしまいそう\n\n00:00:23.930 --> 00:00:32.880\n知らない花の種を蒔いた\n\n00:00:32.880 --> 00:00:38.070\nあの高架線茜に染まる\n\n00:00:38.070 --> 00:00:40.580\n向こうへ\n\n00:00:42.380 --> 00:00:47.930\n変わらないよこの想いは\n\n00:00:47.930 --> 00:00:53.330\n心が乱れても\n\n00:00:53.330 --> 00:00:58.740\n隠せないよこの痛みを\n\n00:00:58.740 --> 00:01:04.250\n月日が降り積もっても\n\n00:01:04.250 --> 00:01:09.720\n紙芝居はお終いだよ\n\n00:01:09.720 --> 00:01:15.030\n絵だけが残ったまま\n\n00:01:15.030 --> 00:01:20.490\n忘れないって\n\n00:01:20.490 --> 00:01:25.310\nだけ言って\n\n00:01:28.000 --> 00:01:33.530\n傾く影きらめく水面\n\n00:01:33.530 --> 00:01:38.970\n伸び過ぎた髪をマフラーにしまう\n\n00:01:38.970 --> 00:01:44.450\n君の目に映りたいのに\n\n00:01:44.450 --> 00:01:49.852\n気が付いたら逃げてしまうよ\n\n00:01:51.150 --> 00:02:00.060\n嫌いな色も好きになれた\n\n00:02:00.060 --> 00:02:05.270\nあの地平線陽炎に消える\n\n00:02:05.270 --> 00:02:08.700\n何処へ\n\n00:02:09.670 --> 00:02:15.140\n変わらないよこの願いは\n\n00:02:15.140 --> 00:02:20.490\n心が汚れても\n\n00:02:20.490 --> 00:02:25.950\n失くせないよこの悲しみは\n\n00:02:25.950 --> 00:02:31.400\n月日が入れ替わっても\n\n00:02:31.400 --> 00:02:36.860\n紙吹雪が街中を舞う\n\n00:02:36.860 --> 00:02:42.270\nパレードは続いたまま\n\n00:02:42.270 --> 00:02:47.720\n戻れないって\",\"dictionary\":[{\"parent\":\"umbrella\",\"word\":\"傘\",\"representable\":true,\"derivations\":null},{\"parent\":\"star\",\"word\":\"星\",\"representable\":true,\"derivations\":null},{\"parent\":\"paper\",\"word\":\"紙\",\"representable\":true,\"derivations\":null},{\"parent\":\"hand\",\"word\":\"手\",\"representable\":true,\"derivations\":[{\"parent\":\"glove\",\"word\":\"手袋\",\"representable\":true}]},{\"parent\":\"flower\",\"word\":\"花\",\"representable\":true,\"derivations\":null},{\"parent\":\"eye\",\"word\":\"目\",\"representable\":true,\"derivations\":null},{\"parent\":\"heart\",\"word\":\"心\",\"representable\":true,\"derivations\":null},{\"parent\":\"rain\",\"word\":\"雨\",\"representable\":true,\"derivations\":null}]}")
+        enterPlayer()
+
+        assertFullCueExists("通り雨輝く路面")
+        assertFullCueExists("要らなくなった傘が邪魔")
+        assertFullCueExists("君の手に触れたいのに")
+        assertFullCueExists("近付いたら壊れてしまいそう")
+        assertFullCueExists("知らない花の種を蒔いた")
+        assertFullCueExists("あの高架線茜に染まる")
+        assertFullCueExists("向こうへ")
+        assertFullCueExists("変わらないよこの想いは")
+        assertFullCueExists("心が乱れても")
+        assertFullCueExists("隠せないよこの痛みを")
+        assertFullCueExists("月日が降り積もっても")
+        assertFullCueExists("紙芝居はお終いだよ")
+        assertFullCueExists("絵だけが残ったまま")
+        assertFullCueExists("忘れないって")
+        assertFullCueExists("だけ言って")
+        assertFullCueExists("傾く影きらめく水面")
+        assertFullCueExists("伸び過ぎた髪をマフラーにしまう")
+        assertFullCueExists("君の目に映りたいのに")
+        assertFullCueExists("気が付いたら逃げてしまうよ")
+        assertFullCueExists("嫌いな色も好きになれた")
+        assertFullCueExists("あの地平線陽炎に消える")
+        assertFullCueExists("何処へ")
+        assertFullCueExists("変わらないよこの願いは")
+        assertFullCueExists("心が汚れても")
+        assertFullCueExists("失くせないよこの悲しみは")
+        assertFullCueExists("月日が入れ替わっても")
+        assertFullCueExists("紙吹雪が街中を舞う")
+        assertFullCueExists("パレードは続いたまま")
+        assertFullCueExists("戻れないって")
+    }
+
+    private fun assertFullCueExists(cue: String) {
+        for (char in cue) {
+            composeTestRule.waitUntilAtLeastOneExists(hasText(char.toString()), 10_000)
+        }
     }
 }

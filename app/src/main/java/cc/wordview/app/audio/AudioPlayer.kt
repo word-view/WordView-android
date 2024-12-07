@@ -20,6 +20,8 @@ package cc.wordview.app.audio
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
@@ -110,7 +112,17 @@ class AudioPlayer {
     }
 
     fun getDuration(): Long {
-        return player.duration
+        var duration = 0L
+
+        // For some reason the tests tend to call this from outside the Main thread, this
+        // ensures we are on the main thread to access player.duration
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            duration = player.duration
+        } else {
+            Handler(Looper.getMainLooper()).post { duration = player.duration }
+        }
+
+        return duration
     }
 
     private fun startPositionCheck() {
