@@ -24,16 +24,13 @@ import androidx.media3.extractor.text.SubtitleParser
 import androidx.media3.extractor.text.webvtt.WebvttParser
 import kotlin.time.Duration.Companion.milliseconds
 
-
 @OptIn(UnstableApi::class)
-class Lyrics : ArrayList<WordViewCue>() {
-    private val TAG = Lyrics::class.java.simpleName
+class Lyrics(vttLyrics: String) : ArrayList<WordViewCue>() {
+    private val TAG = this::class.java.simpleName
 
-    fun parse(str: String) {
-
-        WebvttParser().parse(
-            str.encodeToByteArray(),
-            SubtitleParser.OutputOptions.allCues()
+    init {
+        if (vttLyrics.isNotEmpty()) WebvttParser().parse(
+            vttLyrics.encodeToByteArray(), SubtitleParser.OutputOptions.allCues()
         ) { result ->
             if (result.cues.first().text?.isNotEmpty()!!) {
                 val text = result.cues.first().text.toString().trim()
@@ -52,8 +49,7 @@ class Lyrics : ArrayList<WordViewCue>() {
 
     fun getCueAt(position: Int): WordViewCue {
         for (cue in this) {
-            if (position >= cue.startTimeMs && position <= cue.endTimeMs)
-                return cue
+            if (position >= cue.startTimeMs && position <= cue.endTimeMs) return cue
         }
 
         // a empty cue used to ignore if no cue was found.
@@ -64,8 +60,7 @@ class Lyrics : ArrayList<WordViewCue>() {
         if (num == 0L) return 0
 
         val s = num.toString()
-        return (if ((s == null || s.length === 0)
-        ) null
+        return (if ((s == null || s.length === 0)) null
         else (s.substring(0, s.length - 3)))!!.toInt()
     }
 }

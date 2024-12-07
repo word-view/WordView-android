@@ -55,11 +55,9 @@ class PlayerViewModel @Inject constructor(
     private val playerRepository: PlayerRepository,
     private val translateRepository: TranslateRepository,
 ) : ViewModel() {
-    private val TAG = this::class.java.simpleName
-
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
-    private val _lyrics = MutableStateFlow(Lyrics())
+    private val _lyrics = MutableStateFlow(Lyrics(""))
     private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
     private val _player = MutableStateFlow(AudioPlayer())
     private val _currentCue = MutableStateFlow(WordViewCue())
@@ -233,10 +231,8 @@ class PlayerViewModel @Inject constructor(
         _playIcon.update { Icons.Filled.Pause }
     }
 
-    private fun parseLyrics(res: String) {
-        val newLyrics = Lyrics()
-        newLyrics.parse(res)
-        _lyrics.update { newLyrics }
+    private fun parseLyrics(lyrics: String) {
+        _lyrics.update { Lyrics(lyrics) }
     }
 
     private fun initParser(language: Language) {
