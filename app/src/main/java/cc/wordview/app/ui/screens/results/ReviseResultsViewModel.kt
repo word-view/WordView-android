@@ -29,19 +29,9 @@ object ReviseResultsViewModel : ViewModel() {
     private val _answeredWrong = MutableStateFlow(0)
 
     val words = _words.asStateFlow()
-    val answeredCorrectly = _answeredCorrectly.asStateFlow()
-    val answeredWrong = _answeredWrong.asStateFlow()
 
     fun setWords(words: List<ReviseWord>) {
         _words.update { words }
-    }
-
-    fun incrementCorrect() {
-        _answeredCorrectly.update { old -> old + 1 }
-    }
-
-    fun incrementWrong() {
-        _answeredWrong.update { old -> old + 1 }
     }
 
     fun reset() {

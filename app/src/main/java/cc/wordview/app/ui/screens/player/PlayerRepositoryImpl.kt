@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.player
 
-import android.util.Log
 import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.Response
 import cc.wordview.app.extensions.asURLEncoded
@@ -26,8 +25,6 @@ import com.android.volley.RequestQueue
 import javax.inject.Inject
 
 class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
-    private val TAG = this::class.java.simpleName
-
     override var onGetLyricsSuccess: (String, String) -> Unit =
         { _: String, _: String -> }
 
@@ -51,7 +48,6 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
             val responseData = it.networkResponse?.data?.let { String(it) }
             val errorTitle = scrapeErrorFromResponseData(responseData)
 
-            Log.e(TAG, "Request failed with status code $statusCode - $errorTitle")
             onGetLyricsFail(
                 it.message ?: "Request failed with status code $statusCode\n$errorTitle"
             )

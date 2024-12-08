@@ -83,8 +83,7 @@ import me.zhanghai.compose.preference.LocalPreferenceFlow
 @Composable
 fun Player(
     navHostController: NavHostController,
-    viewModel: PlayerViewModel = hiltViewModel(),
-    autoplay: Boolean = true
+    viewModel: PlayerViewModel = hiltViewModel()
 ) {
     val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
     val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
@@ -152,7 +151,7 @@ fun Player(
         when (status) {
             PlayerStatus.READY -> {
                 OneTimeEffect {
-                    if (autoplay) player.play()
+                    player.play()
                     // For some reason putting this inside the outer OneTimeEffect
                     // doest work on some API levels so this needs to be here
                     systemUiController.enterImmersiveMode()
