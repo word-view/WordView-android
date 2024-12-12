@@ -18,7 +18,7 @@
 package cc.wordview.app.ui.screens.player
 
 import cc.wordview.app.api.APIUrl
-import cc.wordview.app.api.Response
+import cc.wordview.app.api.request.LyricsRequest
 import cc.wordview.app.extensions.asURLEncoded
 import cc.wordview.app.extractor.VideoStreamInterface
 import com.android.volley.RequestQueue
@@ -40,31 +40,12 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
         url.addRequestParam("trackName", video.cleanTrackName.asURLEncoded())
         url.addRequestParam("artistName", video.cleanArtistName.asURLEncoded())
 
-        val response = Response({
-            val (lyrics, dictionary) = parseLyricsAndDictionary(it)
-            onGetLyricsSuccess(lyrics, dictionary)
-        }, {
-            val statusCode = it.networkResponse?.statusCode
-            val responseData = it.networkResponse?.data?.let { String(it) }
-            val errorTitle = scrapeErrorFromResponseData(responseData)
-
-            onGetLyricsFail(
-                it.message ?: "Request failed with status code $statusCode\n$errorTitle"
-            )
-        })
-
-        val request = jsonGetRequest(url.getURL(), response)
-
-        request.setRetryPolicy(highTimeoutRetryPolicy)
+        val request = LyricsRequest(
+            url.getURL(),
+            { lyrics, dictionary -> onGetLyricsSuccess(lyrics, dictionary) },
+            { onGetLyricsFail(it) }
+        )
 
         queue.add(request)
-    }
-
-    private fun scrapeErrorFromResponseData(responseData: String?): String? {
-        if (responseData != null) {
-            val titleRegex = "<title>(.*?)</title>".toRegex(RegexOption.IGNORE_CASE)
-            val matchResult = titleRegex.find(responseData)
-            return matchResult?.groups?.get(1)?.value
-        } else return null
     }
 }

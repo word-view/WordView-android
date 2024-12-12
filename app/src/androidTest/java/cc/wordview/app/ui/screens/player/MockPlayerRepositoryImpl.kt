@@ -19,7 +19,6 @@ package cc.wordview.app.ui.screens.player
 
 import cc.wordview.app.extractor.VideoStreamInterface
 import com.android.volley.RequestQueue
-import com.google.gson.JsonParser
 import javax.inject.Inject
 
 class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {

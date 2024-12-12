@@ -19,48 +19,14 @@ package cc.wordview.app.api
 
 import android.content.Context
 import cc.wordview.app.BuildConfig
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
 import com.android.volley.RequestQueue
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import org.json.JSONObject
-import timber.log.Timber
 
 interface ApiRequestRepository {
     val endpoint get() = BuildConfig.API_BASE_URL
     var queue: RequestQueue
 
-    val highTimeoutRetryPolicy: DefaultRetryPolicy
-        get() = DefaultRetryPolicy(
-            20000,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
-
     fun init(context: Context) {
         queue = Volley.newRequestQueue(context)
-    }
-
-    fun jsonGetRequest(url: String, handler: Response): StringRequest {
-        Timber.d("GET: $url")
-
-        return JsonAcceptingRequest(
-            Request.Method.GET,
-            url,
-            { handler.onSuccessResponse(it) },
-            { handler.onErrorResponse(it) })
-    }
-
-    fun jsonPostRequest(url: String, obj: JSONObject, handler: Response): JsonObjectRequest {
-        Timber.d("POST: $url")
-
-        return JsonObjectRequest(
-            Request.Method.POST,
-            url,
-            obj,
-            { handler.onSuccessResponse(it.toString()) },
-            { handler.onErrorResponse(it) })
     }
 }
