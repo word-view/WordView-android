@@ -23,8 +23,10 @@ import cc.wordview.app.BuildConfig
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import org.json.JSONObject
 
 interface ApiRequestRepository {
     val endpoint get() = BuildConfig.API_BASE_URL
@@ -41,13 +43,24 @@ interface ApiRequestRepository {
         queue = Volley.newRequestQueue(context)
     }
 
-    fun jsonRequest(url: String, handler: Response): StringRequest {
+    fun jsonGetRequest(url: String, handler: Response): StringRequest {
         Log.d(this::class.simpleName, "GET: $url")
 
         return JsonAcceptingRequest(
             Request.Method.GET,
             url,
             { handler.onSuccessResponse(it) },
+            { handler.onErrorResponse(it) })
+    }
+
+    fun jsonPostRequest(url: String, obj: JSONObject, handler: Response): JsonObjectRequest {
+        Log.d(this::class.simpleName, "POST: $url")
+
+        return JsonObjectRequest(
+            Request.Method.POST,
+            url,
+            obj,
+            { handler.onSuccessResponse(it.toString()) },
             { handler.onErrorResponse(it) })
     }
 }

@@ -17,33 +17,47 @@
 
 package cc.wordview.app.ui.screens.lesson.model
 
-import cc.wordview.app.api.APIUrl
+import android.util.Log
 import cc.wordview.app.api.ApiRequestRepository
 import cc.wordview.app.api.Response
-import cc.wordview.app.extensions.asURLEncoded
 import com.android.volley.RequestQueue
 import com.google.gson.Gson
+import com.google.gson.JsonParser
+import org.json.JSONArray
+import org.json.JSONObject
 import javax.inject.Inject
 
+
 class TranslateRepository @Inject constructor() : ApiRequestRepository {
-    var onGetPhraseSuccess: (Phrase) -> Unit = {}
+    var onGetPhraseSuccess: (List<Phrase>) -> Unit = {}
     var onGetPhraseFail: () -> Unit = {}
 
     override lateinit var queue: RequestQueue
 
-    fun getPhrase(phraseLang: String, wordsLang: String, keyword: String) {
-        val url = APIUrl("$endpoint/api/v1/lesson/phrase")
-
-        url.addRequestParam("phraseLang", phraseLang)
-        url.addRequestParam("wordsLang", wordsLang)
-        url.addRequestParam("keyword", keyword.asURLEncoded())
+    fun getPhrase(phraseLang: String, wordsLang: String, keywords: List<String>) {
+        val url = "$endpoint/api/v1/lesson/phrase"
 
         val response = Response({
-            val phrase = Gson().fromJson(it, Phrase::class.java)
-            onGetPhraseSuccess(phrase)
+            val phrases = ArrayList<Phrase>()
+
+            val jsonObject = JsonParser.parseString(it).asJsonObject
+            jsonObject.getAsJsonArray("phrases")
+                .forEach { e -> phrases.add(Gson().fromJson(e.asString, Phrase::class.java)) }
+
+            onGetPhraseSuccess(phrases)
         }, { onGetPhraseFail() })
 
-        val request = jsonRequest(url.getURL(), response)
+        val json = JSONObject()
+
+        json.put("phraseLang", phraseLang)
+        json.put("wordsLang", wordsLang)
+
+        val jsonArray = JSONArray()
+        for (word in keywords) jsonArray.put(word)
+
+        json.put("keywords", jsonArray)
+
+        val request = jsonPostRequest(url, json, response)
 
         request.setRetryPolicy(highTimeoutRetryPolicy)
 

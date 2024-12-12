@@ -53,7 +53,7 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
             )
         })
 
-        val request = jsonRequest(url.getURL(), response)
+        val request = jsonGetRequest(url.getURL(), response)
 
         request.setRetryPolicy(highTimeoutRetryPolicy)
 

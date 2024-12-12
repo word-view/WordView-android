@@ -87,7 +87,7 @@ class PlayerViewModel @Inject constructor(
     // prepared to start playing (audio ready, lyrics ready, dictionary ready)
     private val stepsReady = MutableStateFlow(0)
 
-    private fun computeAndCheckReadyness() {
+    private fun computeAndCheckReady() {
         stepsReady.update { it + 1 }
         if (stepsReady.value == 3)
             setPlayerStatus(PlayerStatus.READY)
@@ -110,27 +110,31 @@ class PlayerViewModel @Inject constructor(
             parseLyrics(lyrics)
             setCues(_lyrics.value)
 
-            computeAndCheckReadyness()
+            computeAndCheckReady()
 
             initParser(lang)
             addDictionary(lang.dictionaryName, dictionary)
+
+            val words = ArrayList<String>()
 
             for (cue in _lyrics.value) {
                 val wordsFound = _parser.value.findWords(cue.text)
 
                 for (word in wordsFound) {
                     preloadImage(word.parent, context)
-                    preloadPhrases(
-                        context,
-                        "en",
-                        preferences.getOrDefault("language"),
-                        word.word
-                    )
+                    words.add(word.word);
                     cue.words.add(word)
                 }
             }
 
-            computeAndCheckReadyness()
+            preloadPhrases(
+                context,
+                "en",
+                preferences.getOrDefault("language"),
+                words
+            )
+
+            computeAndCheckReady()
         }
 
         playerRepository.getLyrics(id, lang.tag, video)
@@ -140,15 +144,11 @@ class PlayerViewModel @Inject constructor(
         context: Context,
         phraseLang: String,
         wordsLang: String,
-        keyword: String
+        keywords: List<String>
     ) = viewModelScope.launch {
         translateRepository.init(context)
-        translateRepository.onGetPhraseSuccess = {
-            if (!phraseList.contains(it)) {
-                phraseList.add(it)
-            }
-        }
-        translateRepository.getPhrase(phraseLang, wordsLang, keyword)
+        translateRepository.onGetPhraseSuccess = { phraseList.addAll(it) }
+        translateRepository.getPhrase(phraseLang, wordsLang, keywords)
     }
 
     private fun preloadImage(parent: String, context: Context) = viewModelScope.launch {
@@ -205,7 +205,7 @@ class PlayerViewModel @Inject constructor(
                 _bufferedPercentage.update { bufferedPercentage }
             }
             onInitializeFail = { setPlayerStatus(PlayerStatus.ERROR) }
-            onPrepared = { computeAndCheckReadyness() }
+            onPrepared = { computeAndCheckReady() }
 
             initialize(videoStreamUrl, context, listener)
         }
