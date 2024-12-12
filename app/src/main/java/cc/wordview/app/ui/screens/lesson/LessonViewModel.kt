@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.screens.lesson
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
@@ -26,11 +25,10 @@ import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 import java.util.Locale
 
 object LessonViewModel : ViewModel() {
-    private val TAG = this::class.java.simpleName
-
     private val _currentWord = MutableStateFlow(ReviseWord())
     private val _currentScreen = MutableStateFlow("")
     private val _wordsToRevise = MutableStateFlow<ArrayList<ReviseWord>>(arrayListOf())
@@ -73,10 +71,10 @@ object LessonViewModel : ViewModel() {
         if (currentWord.value.hasPhrase) {
             setScreen(ReviseScreen.getRandomScreen().route)
         } else {
-            Log.i(TAG, "Word '${currentWord.value.word.word}' has no phrase")
+            Timber.i("Word '${currentWord.value.word.word}' has no phrase")
 
             if (!currentWord.value.word.representable) {
-                Log.i(TAG, "Word '${currentWord.value.word.word}' is not representable (skipping)")
+                Timber.i("Word '${currentWord.value.word.word}' is not representable (skipping)")
                 nextWord(answer)
             } else setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
         }
@@ -87,7 +85,7 @@ object LessonViewModel : ViewModel() {
             if (wordd.word.word == word.word.word) return
         }
 
-        Log.i(TAG, "Appending the word '${word.word.word}' to be revised")
+        Timber.i("Appending '${word.word.word}' to be revised")
         _wordsToRevise.update { old -> (old + word) as ArrayList<ReviseWord> }
     }
 
@@ -101,7 +99,7 @@ object LessonViewModel : ViewModel() {
 
     fun setWord(word: ReviseWord) {
         _currentWord.update {
-            Log.d(TAG, "setWord: previous=${it.word.word} new=${word.word.word}")
+            Timber.d("setWord: previous=${it.word.word} new=${word.word.word}")
             word
         }
     }

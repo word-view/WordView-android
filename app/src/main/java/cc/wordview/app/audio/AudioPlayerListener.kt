@@ -17,25 +17,23 @@
 
 package cc.wordview.app.audio
 
-import android.util.Log
 import androidx.media3.common.Player
+import timber.log.Timber
 
 class AudioPlayerListener : Player.Listener {
-    private val TAG = this::class.java.simpleName
-
     var onTogglePlay: (Boolean) -> Unit = {}
     var onPlaybackEnd = {}
     var onBuffering = {}
     var onReady = {}
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        Log.v(TAG, "isPlaying=$isPlaying")
+        Timber.v("isPlaying=$isPlaying")
 
         onTogglePlay(isPlaying)
     }
 
     override fun onPlaybackStateChanged(playbackState: Int) {
-        Log.v(TAG, "playbackState=$playbackState")
+        Timber.v("playbackState=$playbackState")
 
         when (playbackState) {
             Player.STATE_BUFFERING -> onBuffering()

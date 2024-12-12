@@ -18,7 +18,6 @@
 package cc.wordview.app.api
 
 import android.content.Context
-import android.util.Log
 import cc.wordview.app.BuildConfig
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
@@ -27,6 +26,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
+import timber.log.Timber
 
 interface ApiRequestRepository {
     val endpoint get() = BuildConfig.API_BASE_URL
@@ -44,7 +44,7 @@ interface ApiRequestRepository {
     }
 
     fun jsonGetRequest(url: String, handler: Response): StringRequest {
-        Log.d(this::class.simpleName, "GET: $url")
+        Timber.d("GET: $url")
 
         return JsonAcceptingRequest(
             Request.Method.GET,
@@ -54,7 +54,7 @@ interface ApiRequestRepository {
     }
 
     fun jsonPostRequest(url: String, obj: JSONObject, handler: Response): JsonObjectRequest {
-        Log.d(this::class.simpleName, "POST: $url")
+        Timber.d("POST: $url")
 
         return JsonObjectRequest(
             Request.Method.POST,

@@ -17,17 +17,15 @@
 
 package cc.wordview.app.subtitle
 
-import android.util.Log
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.extractor.text.SubtitleParser
 import androidx.media3.extractor.text.webvtt.WebvttParser
+import timber.log.Timber
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(UnstableApi::class)
 class Lyrics(vttLyrics: String) : ArrayList<WordViewCue>() {
-    private val TAG = this::class.java.simpleName
-
     init {
         if (vttLyrics.isNotEmpty()) WebvttParser().parse(
             vttLyrics.encodeToByteArray(), SubtitleParser.OutputOptions.allCues()
@@ -44,7 +42,7 @@ class Lyrics(vttLyrics: String) : ArrayList<WordViewCue>() {
                 )
             }
         }
-        Log.d(TAG, "Parsed ${this.size} cues")
+        Timber.d("Parsed ${this.size} cues")
     }
 
     fun getCueAt(position: Int): WordViewCue {

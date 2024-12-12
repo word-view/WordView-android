@@ -34,11 +34,15 @@ import cc.wordview.app.ui.theme.WordViewTheme
 import dagger.hilt.android.AndroidEntryPoint
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.schabi.newpipe.extractor.NewPipe
+import timber.log.Timber
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Timber.plant(Timber.DebugTree())
 
         DownloaderImpl.init(null)
         NewPipe.init(DownloaderImpl.getInstance())
@@ -47,9 +51,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
 
-            OneTimeEffect {
-                GlobalImageLoader.init(context)
-            }
+            OneTimeEffect { GlobalImageLoader.init(context) }
 
             WordViewTheme {
                 ProvidePreferenceLocals {

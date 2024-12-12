@@ -25,8 +25,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 object SongViewModel : ViewModel() {
-    private val TAG = SongViewModel::class.java.simpleName
-
     private val _videoId = MutableStateFlow("")
     private val _videoStream = MutableStateFlow<VideoStreamInterface>(VideoStream())
 

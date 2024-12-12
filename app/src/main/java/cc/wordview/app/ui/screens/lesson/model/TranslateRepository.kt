@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.lesson.model
 
-import android.util.Log
 import cc.wordview.app.api.ApiRequestRepository
 import cc.wordview.app.api.Response
 import com.android.volley.RequestQueue

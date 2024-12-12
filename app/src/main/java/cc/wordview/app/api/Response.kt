@@ -17,15 +17,13 @@
 
 package cc.wordview.app.api
 
-import android.util.Log
 import com.android.volley.VolleyError
+import timber.log.Timber
 
 class Response(
     private val onSuccess: (res: String) -> Unit,
     private val onError: (err: VolleyError) -> Unit
 ) {
-    private val TAG = Response::class.java.simpleName
-
     fun onSuccessResponse(response: String?) {
         if (response != null) {
             onSuccess.invoke(response)
@@ -35,7 +33,7 @@ class Response(
     fun onErrorResponse(error: VolleyError) {
         // Abstain from showing the exception when a 404 happens
         if (error.networkResponse?.statusCode != 404)
-            Log.e(TAG, "Request failed: ", error)
+            Timber.e("Request failed: ", error)
 
         onError.invoke(error)
     }

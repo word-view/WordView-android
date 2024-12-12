@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.search
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,6 +30,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -70,7 +70,7 @@ class SearchViewModel @Inject constructor(
                     delay(50L)
                     setSearchResults(results)
                 } catch (e: Throwable) {
-                    Log.e("AA", "AAA", e)
+                    Timber.e(e)
                     onError()
                 }
             }

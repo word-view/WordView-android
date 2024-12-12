@@ -22,7 +22,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -35,10 +34,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class AudioPlayer {
-    private val TAG = this::class.java.simpleName
-
     private lateinit var player: ExoPlayer
 
     private var job: Job? = null
@@ -58,7 +56,7 @@ class AudioPlayer {
     }
 
     fun initialize(url: String, context: Context, listener: AudioPlayerListener) {
-        Log.i(TAG, "Streaming from $url")
+        Timber.i("Streaming from $url")
 
         try {
             player = ExoPlayer.Builder(context).setAudioAttributes(
@@ -77,7 +75,7 @@ class AudioPlayer {
             player.prepare()
             onPrepared()
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize player", e)
+            Timber.e("Failed to initialize player", e)
             onInitializeFail(e)
         }
     }
@@ -86,7 +84,7 @@ class AudioPlayer {
         try {
             player.stop()
         } catch (e: UninitializedPropertyAccessException) {
-            Log.w(TAG, "Called stop too early (ignoring): ${e.message}")
+            Timber.w("Called stop too early (ignoring): ${e.message}")
         }
     }
 

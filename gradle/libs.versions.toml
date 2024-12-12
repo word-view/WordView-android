@@ -29,6 +29,7 @@ navigationCompose = "2.8.4"
 media3Common = "1.5.0"
 lifecycleRuntimeComposeAndroid = "2.8.7"
 newpipeextractor = "v0.24.3"
+timber = "5.0.1"
 uiTestJunit4 = "1.7.5"
 uiTestManifest = "1.7.5"
 volley = "1.2.1"
@@ -74,6 +75,7 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jun
 compose-preference = { module = "me.zhanghai.compose.preference:library", version.ref = "compose-preference" }
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 newpipeextractor = { module = "com.github.TeamNewPipe.NewPipeExtractor:NewPipeExtractor", version.ref = "newpipeextractor" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 tools-desugar_jdk_libs_nio = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "desugar_jdk_libs_nio" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
 ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestManifest" }

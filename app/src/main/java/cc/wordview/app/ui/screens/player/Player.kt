@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.screens.player
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -78,6 +77,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.LocalPreferenceFlow
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,7 +111,7 @@ fun Player(
     OneTimeEffect {
         val lang = Language.byTag(langTag)
 
-        Log.i("Player", "Chosen language is ${lang.name.lowercase()}")
+        Timber.i("Chosen language is ${lang.name.lowercase()}")
 
         activity.setOrientationSensorLandscape()
 

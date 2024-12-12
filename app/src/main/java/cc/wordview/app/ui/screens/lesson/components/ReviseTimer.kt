@@ -19,8 +19,8 @@ package cc.wordview.app.ui.screens.lesson.components
 
 import android.annotation.SuppressLint
 import android.os.CountDownTimer
-import android.util.Log
 import cc.wordview.app.ui.screens.lesson.LessonViewModel
+import timber.log.Timber
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
@@ -33,7 +33,7 @@ object ReviseTimer {
     private var timer: CountDownTimer? = null
 
     fun start() {
-        Log.i(TAG, "Initializing timer with ${formatMillisecondsToMS(timeRemaining)} left")
+        Timber.i("Initializing timer with ${formatMillisecondsToMS(timeRemaining)} left")
 
         timer = object : CountDownTimer(timeRemaining, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -43,7 +43,7 @@ object ReviseTimer {
             }
 
             override fun onFinish() {
-                Log.i(TAG, "Timer finished!")
+                Timber.i("Timer finished!")
                 viewModel.finishTimer()
             }
         }
@@ -56,7 +56,7 @@ object ReviseTimer {
     }
 
     fun pause() {
-        Log.i(TAG, "Pausing timer with ${formatMillisecondsToMS(timeRemaining)} left")
+        Timber.i("Pausing timer with ${formatMillisecondsToMS(timeRemaining)} left")
         timer?.cancel()
         timer = null
     }

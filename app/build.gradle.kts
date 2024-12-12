@@ -95,6 +95,7 @@ dependencies {
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.accompanist.flowlayout)
     implementation(libs.hilt.android)
+    implementation(libs.timber)
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
