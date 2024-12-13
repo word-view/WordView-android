@@ -55,6 +55,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.enterImmersiveMode
+import cc.wordview.app.extensions.getCleanUploaderName
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.leaveImmersiveMode
@@ -181,13 +182,11 @@ fun Player(
                         if (isBuffering) CircularProgressIndicator(64.dp)
                     }
 
-                    FadeOutBox(duration = 250, stagnationTime = if (composerMode) 60000 else 5000) {
-                        val topbarHeight = TopAppBarDefaults.TopAppBarExpandedHeight
-
+                    FadeOutBox(duration = 250, stagnationTime = if (composerMode) 5000 * 10 else 5000) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(topbarHeight)
+                                .height(TopAppBarDefaults.TopAppBarExpandedHeight)
                                 .padding(innerPadding),
                             contentAlignment = Alignment.TopStart,
                         ) {
@@ -210,15 +209,14 @@ fun Player(
                                         fontSize = 18.sp
                                     )
                                     Text(
-                                        // dirty inline replace but it wont be a issue i think
-                                        text = videoStream.info.uploaderName.replace("- Topic", ""),
+                                        text = videoStream.info.getCleanUploaderName(),
                                         fontSize = 12.sp
                                     )
                                 }
                             }
                         }
                         Seekbar(
-                            Modifier.padding(top = topbarHeight),
+                            Modifier.padding(top = TopAppBarDefaults.TopAppBarExpandedHeight),
                             composerMode,
                             currentPosition,
                             player.getDuration(),
@@ -237,25 +235,22 @@ fun Player(
                                     modifier = Modifier.testTag("skip-back"),
                                     icon = Icons.Filled.SkipPrevious,
                                     size = 72.dp,
-                                ) {
-                                    player.skipBack()
-                                }
+                                    onClick = { player.skipBack() }
+                                )
                                 PlayerButton(
                                     modifier = Modifier
                                         .testTag("toggle-play")
                                         .alpha(if (isBuffering) 0.0f else 1.0f),
                                     icon = playIcon,
                                     size = 80.dp,
-                                ) {
-                                    player.play()
-                                }
+                                    onClick = { player.play() }
+                                )
                                 PlayerButton(
                                     modifier = Modifier.testTag("skip-forward"),
                                     icon = Icons.Filled.SkipNext,
                                     size = 72.dp,
-                                ) {
-                                    player.skipForward()
-                                }
+                                    onClick = { player.skipForward() }
+                                )
                             }
                         }
                     }

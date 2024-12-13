@@ -71,10 +71,10 @@ object LessonViewModel : ViewModel() {
         if (currentWord.value.hasPhrase) {
             setScreen(ReviseScreen.getRandomScreen().route)
         } else {
-            Timber.i("Word '${currentWord.value.word.word}' has no phrase")
+            Timber.d("Word '${currentWord.value.word.word}' has no phrase")
 
             if (!currentWord.value.word.representable) {
-                Timber.i("Word '${currentWord.value.word.word}' is not representable (skipping)")
+                Timber.d("Word '${currentWord.value.word.word}' is not representable (skipping)")
                 nextWord(answer)
             } else setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
         }
@@ -85,7 +85,7 @@ object LessonViewModel : ViewModel() {
             if (wordd.word.word == word.word.word) return
         }
 
-        Timber.i("Appending '${word.word.word}' to be revised")
+        Timber.d("Appending '${word.word.word}' to be revised")
         _wordsToRevise.update { old -> (old + word) as ArrayList<ReviseWord> }
     }
 
@@ -99,7 +99,7 @@ object LessonViewModel : ViewModel() {
 
     fun setWord(word: ReviseWord) {
         _currentWord.update {
-            Timber.d("setWord: previous=${it.word.word} new=${word.word.word}")
+            Timber.v("setWord: previous=${it.word.word} new=${word.word.word}")
             word
         }
     }

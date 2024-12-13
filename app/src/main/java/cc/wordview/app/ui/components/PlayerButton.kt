@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PlayerButton(
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
     enabled: Boolean = true,
     icon: ImageVector,
-    size: Dp,
-    onClick: () -> Unit
+    size: Dp
 ) {
     Button(
         onClick = onClick,
