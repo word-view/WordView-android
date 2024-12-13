@@ -27,22 +27,24 @@ import kotlin.time.Duration.Companion.milliseconds
 @OptIn(UnstableApi::class)
 class Lyrics(vttLyrics: String) : ArrayList<WordViewCue>() {
     init {
-        if (vttLyrics.isNotEmpty()) WebvttParser().parse(
-            vttLyrics.encodeToByteArray(), SubtitleParser.OutputOptions.allCues()
-        ) { result ->
-            if (result.cues.first().text?.isNotEmpty()!!) {
-                val text = result.cues.first().text.toString().trim()
+        if (vttLyrics.isNotEmpty()) {
+            WebvttParser().parse(
+                vttLyrics.encodeToByteArray(), SubtitleParser.OutputOptions.allCues()
+            ) { result ->
+                if (result.cues.first().text?.isNotEmpty()!!) {
+                    val text = result.cues.first().text.toString().trim()
 
-                this.add(
-                    WordViewCue(
-                        text,
-                        normalize(result.startTimeUs.milliseconds.inWholeMilliseconds),
-                        normalize(result.endTimeUs.milliseconds.inWholeMilliseconds),
+                    this.add(
+                        WordViewCue(
+                            text,
+                            normalize(result.startTimeUs.milliseconds.inWholeMilliseconds),
+                            normalize(result.endTimeUs.milliseconds.inWholeMilliseconds),
+                        )
                     )
-                )
+                }
             }
+            Timber.d("Parsed ${this.size} cues")
         }
-        Timber.d("Parsed ${this.size} cues")
     }
 
     fun getCueAt(position: Int): WordViewCue {
