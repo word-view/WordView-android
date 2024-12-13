@@ -26,8 +26,8 @@ import javax.inject.Inject
 
 
 class TranslateRepository @Inject constructor() : ApiRequestRepository {
-    var onGetPhraseSuccess: (List<Phrase>) -> Unit = {}
-    var onGetPhraseFail: () -> Unit = {}
+    var onSucceed: (List<Phrase>) -> Unit = {}
+    var onFail: () -> Unit = {}
 
     override lateinit var queue: RequestQueue
 
@@ -43,7 +43,7 @@ class TranslateRepository @Inject constructor() : ApiRequestRepository {
             .put("wordsLang", wordsLang)
             .put("keywords", jsonArray)
 
-        val request = PhraseRequest(url, json, { onGetPhraseSuccess(it) }, { onGetPhraseFail() })
+        val request = PhraseRequest(url, json, { onSucceed(it) }, { onFail() })
 
         queue.add(request)
     }

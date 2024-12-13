@@ -102,11 +102,11 @@ class PlayerViewModel @Inject constructor(
     ) = viewModelScope.launch {
         playerRepository.init(context)
 
-        playerRepository.onGetLyricsFail = {
+        playerRepository.onFail = {
             _errorMessage.update { it }
             setPlayerStatus(PlayerStatus.ERROR)
         }
-        playerRepository.onGetLyricsSuccess = { lyrics, dictionary ->
+        playerRepository.onSucceed = { lyrics, dictionary ->
             parseLyrics(lyrics)
             setCues(_lyrics.value)
 
@@ -147,7 +147,7 @@ class PlayerViewModel @Inject constructor(
         keywords: List<String>
     ) = viewModelScope.launch {
         translateRepository.init(context)
-        translateRepository.onGetPhraseSuccess = { phraseList.addAll(it) }
+        translateRepository.onSucceed = { phraseList.addAll(it) }
         translateRepository.getPhrase(phraseLang, wordsLang, keywords)
     }
 

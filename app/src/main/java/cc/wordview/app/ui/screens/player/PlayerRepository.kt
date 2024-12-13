@@ -22,8 +22,8 @@ import cc.wordview.app.extractor.VideoStreamInterface
 import com.google.gson.JsonParser
 
 interface PlayerRepository : ApiRequestRepository {
-    var onGetLyricsSuccess: (String, String) -> Unit
-    var onGetLyricsFail: (String) -> Unit
+    var onSucceed: (String, String) -> Unit
+    var onFail: (String) -> Unit
 
     fun getLyrics(id: String, lang: String, video: VideoStreamInterface)
 

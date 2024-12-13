@@ -25,10 +25,10 @@ import com.android.volley.RequestQueue
 import javax.inject.Inject
 
 class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
-    override var onGetLyricsSuccess: (String, String) -> Unit =
+    override var onSucceed: (String, String) -> Unit =
         { _: String, _: String -> }
 
-    override var onGetLyricsFail: (String) -> Unit = {}
+    override var onFail: (String) -> Unit = {}
 
     override lateinit var queue: RequestQueue
 
@@ -42,8 +42,8 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
 
         val request = LyricsRequest(
             url.getURL(),
-            { lyrics, dictionary -> onGetLyricsSuccess(lyrics, dictionary) },
-            { onGetLyricsFail(it) }
+            { lyrics, dictionary -> onSucceed(lyrics, dictionary) },
+            { onFail(it) }
         )
 
         queue.add(request)
