@@ -102,7 +102,7 @@ fun Translate(
     }
 
     OneTimeEffect {
-        viewModel.getPhrase(LessonViewModel.currentWord.value.word.word)
+        viewModel.getPhrase(LessonViewModel.currentWord.value.tokenWord.word)
     }
 
     Box(

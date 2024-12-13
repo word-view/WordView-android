@@ -61,9 +61,9 @@ class IconDragTest {
 
             for (word in viewModel.wordsToRevise.value) {
                 val request = ImageRequest.Builder(LocalContext.current)
-                    .data("http://10.0.2.2:8080/api/v1/image?parent=${word.word.parent}")
+                    .data("http://10.0.2.2:8080/api/v1/image?parent=${word.tokenWord.parent}")
                     .allowHardware(true)
-                    .memoryCacheKey(word.word.parent)
+                    .memoryCacheKey(word.tokenWord.parent)
                     .build()
 
                 GlobalImageLoader.execute(request)

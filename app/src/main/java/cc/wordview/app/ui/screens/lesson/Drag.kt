@@ -98,10 +98,10 @@ fun Drag(
 
     LaunchedEffect(Unit) {
         val filteredWords = words
-            .filter { w -> w.word.word != currentWord.word.word }
-            .filter { w -> w.word.representable }
+            .filter { w -> w.tokenWord.word != currentWord.tokenWord.word }
+            .filter { w -> w.tokenWord.representable }
 
-        val alternatives = listOf(currentWord.word, filteredWords.random().word).shuffled()
+        val alternatives = listOf(currentWord.tokenWord, filteredWords.random().tokenWord).shuffled()
 
         dragViewModel.setTopWord(alternatives.first())
         dragViewModel.setDownWord(alternatives.last())
@@ -124,14 +124,14 @@ fun Drag(
             delay(500)
 
             if (y < -450) {
-                if (currentWord.word == topWord) correct()
+                if (currentWord.tokenWord == topWord) correct()
                 else wrong()
 
                 LessonViewModel.setScreen(ReviseScreen.Presenter.route)
             }
 
             if (y > 450) {
-                if (currentWord.word == downWord) correct()
+                if (currentWord.tokenWord == downWord) correct()
                 else wrong()
 
                 LessonViewModel.setScreen(ReviseScreen.Presenter.route)
@@ -160,9 +160,9 @@ fun Drag(
                 }
                 .detectTapGestures(
                     onPress = {
-                        isPressed = true // Shrink when pressed
+                        isPressed = true
                         tryAwaitRelease()
-                        isPressed = false // Restore size when released
+                        isPressed = false
                     }
                 )
                 .dragGestures(
@@ -185,7 +185,7 @@ fun Drag(
                 .zIndex(10f)
                 .testTag("drag")
         ) {
-            currentWord.word.let {
+            currentWord.tokenWord.let {
                 when (dragMode) {
                     DragMode.ICON -> Icon(word = it, testTag = "current")
                     DragMode.WORD -> Text(word = it, testTag = "current")

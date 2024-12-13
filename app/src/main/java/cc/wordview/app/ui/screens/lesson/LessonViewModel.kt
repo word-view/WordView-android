@@ -45,12 +45,12 @@ object LessonViewModel : ViewModel() {
 
     fun nextWord(answer: Answer = Answer.NONE) {
         _wordsToRevise.update { value ->
-            value.filter { w ->
-                w.word.word != currentWord.value.word.word
+            value.filter {
+                it.tokenWord.word != currentWord.value.tokenWord.word
             } as ArrayList<ReviseWord>
         }
 
-        if (currentWord.value.word.word != "") {
+        if (currentWord.value.tokenWord.word != "") {
             when (answer) {
                 Answer.CORRECT -> _wordsToRevise.value.add(
                     _wordsToRevise.value.lastIndex,
@@ -71,22 +71,20 @@ object LessonViewModel : ViewModel() {
         if (currentWord.value.hasPhrase) {
             setScreen(ReviseScreen.getRandomScreen().route)
         } else {
-            Timber.d("Word '${currentWord.value.word.word}' has no phrase")
+            Timber.d("Word '${currentWord.value.tokenWord.word}' has no phrase")
 
-            if (!currentWord.value.word.representable) {
-                Timber.d("Word '${currentWord.value.word.word}' is not representable (skipping)")
+            if (!currentWord.value.tokenWord.representable) {
+                Timber.d("Word '${currentWord.value.tokenWord.word}' is not representable (skipping)")
                 nextWord(answer)
             } else setScreen(ReviseScreen.getRandomScreen(ReviseScreen.Translate).route)
         }
     }
 
-    fun appendWord(word: ReviseWord) {
-        for (wordd in _wordsToRevise.value) {
-            if (wordd.word.word == word.word.word) return
-        }
+    fun appendWord(reviseWord: ReviseWord) {
+        if (_wordsToRevise.value.contains(reviseWord)) return
 
-        Timber.d("Appending '${word.word.word}' to be revised")
-        _wordsToRevise.update { old -> (old + word) as ArrayList<ReviseWord> }
+        Timber.d("Appending '${reviseWord.tokenWord.word}' to be revised")
+        _wordsToRevise.update { (it + reviseWord) as ArrayList<ReviseWord> }
     }
 
     fun setAnswer(answer: Answer) {
@@ -99,7 +97,7 @@ object LessonViewModel : ViewModel() {
 
     fun setWord(word: ReviseWord) {
         _currentWord.update {
-            Timber.v("setWord: previous=${it.word.word} new=${word.word.word}")
+            Timber.v("setWord: previous=${it.tokenWord.word} new=${word.tokenWord.word}")
             word
         }
     }
@@ -116,5 +114,7 @@ object LessonViewModel : ViewModel() {
         _wordsToRevise.update { arrayListOf() }
     }
 
-    fun ttsSpeak(context: Context, word: String, locale: Locale) {}
+    fun ttsSpeak(context: Context, word: String, locale: Locale) {
+        Timber.v("ttsSpeak: context=$context, word=$word, locale=$locale")
+    }
 }

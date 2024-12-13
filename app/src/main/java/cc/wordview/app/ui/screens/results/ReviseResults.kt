@@ -101,7 +101,7 @@ fun ReviseResults(
                             modifier = Modifier
                                 .size(80.dp),
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data("$endpoint/api/v1/image?parent=${word.word.parent}")
+                                .data("$endpoint/api/v1/image?parent=${word.tokenWord.parent}")
                                 .build(),
                             contentDescription = null
                         )
@@ -109,7 +109,7 @@ fun ReviseResults(
                         Spacer(Modifier.size(12.dp))
 
                         Column {
-                            Text(text = word.word.word, style = Typography.titleLarge)
+                            Text(text = word.tokenWord.word, style = Typography.titleLarge)
                             Spacer(Modifier.size(4.dp))
                             Text(text = stringResource(R.string.correct, word.corrects), style = Typography.titleSmall)
                             Text(text = stringResource(R.string.misses, word.misses), style = Typography.titleSmall)

@@ -19,7 +19,7 @@ package cc.wordview.app.ui.screens.lesson.components
 
 import cc.wordview.gengolex.languages.Word
 
-class ReviseWord(var word: Word = Word("", "")) {
+class ReviseWord(var tokenWord: Word = Word("", "")) {
     var misses = 0
     var corrects = 0
     var hasPhrase = false

@@ -59,7 +59,7 @@ class ReviseResultsTest {
         setupScreen()
 
         for (word in viewModel.words.value) {
-            composeTestRule.onNodeWithText(word.word.word).assertExists()
+            composeTestRule.onNodeWithText(word.tokenWord.word).assertExists()
         }
     }
 

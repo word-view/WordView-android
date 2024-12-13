@@ -50,7 +50,6 @@ import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import me.zhanghai.compose.preference.LocalPreferenceFlow
@@ -60,7 +59,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun Presenter() {
     val answerStatus by LessonViewModel.answerStatus.collectAsStateWithLifecycle()
-    val current by LessonViewModel.currentWord.collectAsStateWithLifecycle()
+    val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
 
     var visible by remember { mutableStateOf(false) }
 
@@ -89,7 +88,7 @@ fun Presenter() {
                     LessonViewModel.setAnswer(Answer.NONE)
                     visible = true
 
-                    LessonViewModel.ttsSpeak(context, current.word.word, Locale.JAPANESE)
+                    LessonViewModel.ttsSpeak(context, currentWord.tokenWord.word, Locale.JAPANESE)
 
                     delay(3000.milliseconds)
                     visible = false
@@ -135,7 +134,7 @@ fun Presenter() {
             }
 
             Answer.NONE -> {
-                val image = GlobalImageLoader.getCachedImage(current.word.parent)
+                val image = GlobalImageLoader.getCachedImage(currentWord.tokenWord.parent)
                 if (image != null) AsyncImage(
                     modifier = Modifier
                         .size(130.dp)
@@ -148,7 +147,7 @@ fun Presenter() {
                 val lang = remember { Language.byTag(langTag) }
 
                 Text(
-                    text = current.word.word,
+                    text = currentWord.tokenWord.word,
                     textAlign = TextAlign.Center,
                     style = if (lang == Language.JAPANESE) Typography.displayLarge else Typography.displayMedium,
                 )
