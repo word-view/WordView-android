@@ -45,7 +45,10 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -77,8 +80,7 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
-
-    val darkTheme = isSystemInDarkTheme()
+    var errorMessage by rememberSaveable { mutableStateOf("") }
 
     fun search(query: String) {
         viewModel.setState(SearchState.LOADING)
@@ -87,7 +89,10 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
         viewModel.search(
             query,
             onSuccess = { viewModel.setState(SearchState.COMPLETE) },
-            onError = { viewModel.setState(SearchState.ERROR) }
+            onError = {
+                viewModel.setState(SearchState.ERROR)
+                errorMessage = it
+            }
         )
     }
 
@@ -145,18 +150,24 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
                 ) {
                     Image(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .size(132.dp)
                             .aspectRatio(1f),
-                        painter = painterResource(id = if (darkTheme) R.drawable.nonet else R.drawable.nonet_dark),
+                        painter = painterResource(id = R.drawable.radio),
                         contentDescription = null
                     )
                     Spacer(Modifier.size(15.dp))
                     Text(
-                        text = "It seems that you are offline",
+                        text = "Failed to complete search",
                         textAlign = TextAlign.Center,
-                        style = Typography.headlineSmall,
+                        style = Typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.inverseSurface
+                    )
+                    Text(
+                        text = errorMessage,
+                        textAlign = TextAlign.Center,
+                        style = Typography.bodySmall,
+                        fontWeight = FontWeight.Light,
                     )
                 }
             }

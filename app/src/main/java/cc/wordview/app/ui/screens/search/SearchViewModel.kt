@@ -60,7 +60,7 @@ class SearchViewModel @Inject constructor(
         _query.update { query }
     }
 
-    fun search(query: String, onSuccess: () -> Unit, onError: () -> Unit) {
+    fun search(query: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
@@ -71,7 +71,7 @@ class SearchViewModel @Inject constructor(
                     setSearchResults(results)
                 } catch (e: Throwable) {
                     Timber.e(e)
-                    onError()
+                    onError(e.message ?: e.toString())
                 }
             }
         }
