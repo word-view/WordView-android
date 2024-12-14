@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.lesson
 
 import android.content.Context
+import android.speech.tts.TextToSpeech
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
@@ -35,6 +36,8 @@ object LessonViewModel : ViewModel() {
     private val _answerStatus = MutableStateFlow(Answer.NONE)
     private val _timer = MutableStateFlow("")
     private val _timerFinished = MutableStateFlow(false)
+
+    private var tts: TextToSpeech? = null
 
     val currentWord = _currentWord.asStateFlow()
     val currentScreen = _currentScreen.asStateFlow()
@@ -115,6 +118,36 @@ object LessonViewModel : ViewModel() {
     }
 
     fun ttsSpeak(context: Context, word: String, locale: Locale) {
-        Timber.v("ttsSpeak: context=$context, word=$word, locale=$locale")
+        Timber.v("ttsSpeak: word=$word, locale=$locale")
+
+        if (tts == null) {
+            tts = TextToSpeech(context) {
+                Timber.v("ttsSpeak: ttsStatus=$it")
+
+                if (it == TextToSpeech.SUCCESS) {
+                    tts?.let { textToSpeech ->
+                        textToSpeech.language = locale
+                        textToSpeech.setSpeechRate(1.0f)
+                        textToSpeech.speak(
+                            word,
+                            TextToSpeech.QUEUE_ADD,
+                            null,
+                            null
+                        )
+                    }
+                }
+            }
+        } else {
+            tts?.let { textToSpeech ->
+                textToSpeech.language = locale
+                textToSpeech.setSpeechRate(1.0f)
+                textToSpeech.speak(
+                    word,
+                    TextToSpeech.QUEUE_ADD,
+                    null,
+                    null
+                )
+            }
+        }
     }
 }

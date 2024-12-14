@@ -64,6 +64,7 @@ fun Presenter() {
     var visible by remember { mutableStateOf(false) }
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
+    val langTag = remember { preferences.getOrDefault<String>("language") }
 
     val context = LocalContext.current
 
@@ -88,7 +89,7 @@ fun Presenter() {
                     LessonViewModel.setAnswer(Answer.NONE)
                     visible = true
 
-                    LessonViewModel.ttsSpeak(context, currentWord.tokenWord.word, Locale.JAPANESE)
+                    LessonViewModel.ttsSpeak(context, currentWord.tokenWord.word, Language.byTag(langTag).locale)
 
                     delay(3000.milliseconds)
                     visible = false
