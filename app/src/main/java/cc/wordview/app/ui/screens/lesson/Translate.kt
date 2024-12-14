@@ -61,6 +61,7 @@ import cc.wordview.app.ui.components.TranslateResultContainer
 import cc.wordview.app.ui.components.WordCard
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
+import cc.wordview.app.ui.screens.lesson.components.ReviseTimer
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 
@@ -82,6 +83,7 @@ fun Translate(
 
     fun check() {
         checked = true
+        ReviseTimer.pause()
 
         for (origWord in originalPoolOrder) {
             val answerIndex = viewModel.answerWordPool.indexOf(origWord)
@@ -217,6 +219,7 @@ fun Translate(
                         LessonViewModel.setScreen(ReviseScreen.Presenter.route)
                         checked = false
                         viewModel.cleanup()
+                        ReviseTimer.start()
                     },
                     modifier = Modifier
                         .height(60.dp)
