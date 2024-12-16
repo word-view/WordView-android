@@ -30,4 +30,5 @@
     <string name="finish">Finish</string>
     <string name="dismiss">Dismiss</string>
     <string name="an_error_has_occurred">"An error has occurred: "</string>
+    <string name="couldn_t_find_any_lyrics_for">Couldn\'t find any lyrics for \'%1$s\'</string>
 </resources>

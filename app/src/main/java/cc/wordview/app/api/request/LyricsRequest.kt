@@ -24,7 +24,7 @@ import com.google.gson.JsonParser
 class LyricsRequest(
     url: String?,
     onSuccess: (String, String) -> Unit,
-    onError: (String) -> Unit,
+    onError: (String, Int) -> Unit,
 ) : StringRequest(
     Method.GET,
     url,
@@ -36,7 +36,8 @@ class LyricsRequest(
         val statusCode = it.networkResponse?.statusCode
         val responseData = it.networkResponse?.data?.let { String(it) }
         val errorTitle = scrapeErrorFromResponseData(responseData)
-        onError(it.message ?: "Request failed with status code $statusCode\n$errorTitle")
+
+        onError(it.message ?: "Request failed with status code $statusCode\n$errorTitle", statusCode ?: 0)
     }) {
 
     init {

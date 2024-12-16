@@ -23,7 +23,7 @@ import com.google.gson.JsonParser
 
 interface PlayerRepository : ApiRequestRepository {
     var onSucceed: (String, String) -> Unit
-    var onFail: (String) -> Unit
+    var onFail: (String, Int) -> Unit
 
     fun getLyrics(id: String, lang: String, video: VideoStreamInterface)
 

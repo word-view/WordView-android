@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,14 +37,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
+import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.ui.theme.Typography
 
 @Composable
-fun ErrorScreen(navHostController: NavHostController, message: String) {
+fun ErrorScreen(navHostController: NavHostController, message: String, statusCode: Int) {
+    val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
     val activity = LocalContext.current as Activity
 
     Column(
@@ -55,7 +59,7 @@ fun ErrorScreen(navHostController: NavHostController, message: String) {
     ) {
         Image(
             modifier = Modifier.size(180.dp),
-            painter = painterResource(id = R.drawable.radio),
+            painter = if (statusCode == 404) painterResource(id = R.drawable.nolyrics) else painterResource(id = R.drawable.radio),
             contentDescription = null
         )
         Spacer(Modifier.size(8.dp))
@@ -66,7 +70,10 @@ fun ErrorScreen(navHostController: NavHostController, message: String) {
             fontWeight = FontWeight.SemiBold,
         )
         Text(
-            text = message,
+            text = if (statusCode == 404) stringResource(
+                R.string.couldn_t_find_any_lyrics_for,
+                videoStream.info.name
+            ) else message,
             textAlign = TextAlign.Center,
             style = Typography.bodySmall,
             fontWeight = FontWeight.Light,

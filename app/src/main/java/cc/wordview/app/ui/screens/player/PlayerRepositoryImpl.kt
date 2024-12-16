@@ -28,7 +28,7 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     override var onSucceed: (String, String) -> Unit =
         { _: String, _: String -> }
 
-    override var onFail: (String) -> Unit = {}
+    override var onFail: (String, Int) -> Unit = { message, status -> }
 
     override lateinit var queue: RequestQueue
 
@@ -43,7 +43,7 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
         val request = LyricsRequest(
             url.getURL(),
             { lyrics, dictionary -> onSucceed(lyrics, dictionary) },
-            { onFail(it) }
+            { message, status -> onFail(message, status) }
         )
 
         queue.add(request)

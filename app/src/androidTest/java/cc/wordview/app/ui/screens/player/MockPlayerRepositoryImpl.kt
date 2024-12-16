@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     override var onSucceed: (String, String) -> Unit = { _: String, _: String -> }
-    override var onFail: (String) -> Unit = {}
+    override var onFail: (String, Int) -> Unit = { _: String, _: Int -> }
 
     override var endpoint: String = ""
 
@@ -31,7 +31,7 @@ class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {
 
     override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
         if (mocklyrics == "fail_trigger") {
-            onFail(mocklyrics)
+            onFail(mocklyrics, 0)
         } else {
             val (lyrics, dictionary) = parseLyricsAndDictionary(mocklyrics)
             onSucceed(lyrics, dictionary)

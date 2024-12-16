@@ -46,11 +46,15 @@ class PlayerButtonTest {
         composeTestRule.setContent {
             var icon by mutableStateOf(Icons.Filled.PlayArrow)
 
-            PlayerButton(modifier = Modifier.testTag("button"), icon = icon, size = 64.dp) {
-                icon =
-                    if (icon == Icons.Filled.PlayArrow) Icons.Filled.Pause else Icons.Filled.PlayArrow
-                onClick.run()
-            }
+            PlayerButton(
+                modifier = Modifier.testTag("button"),
+                icon = icon,
+                size = 64.dp,
+                onClick = {
+                    icon =
+                        if (icon == Icons.Filled.PlayArrow) Icons.Filled.Pause else Icons.Filled.PlayArrow
+                    onClick.run()
+                })
         }
     }
 

@@ -97,6 +97,7 @@ fun Player(
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
     val notEnoughWords by viewModel.notEnoughWords.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
+    val statusCode by viewModel.statusCode.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
 
@@ -257,7 +258,7 @@ fun Player(
                 }
             }
 
-            PlayerStatus.ERROR -> ErrorScreen(navHostController, errorMessage)
+            PlayerStatus.ERROR -> ErrorScreen(navHostController, errorMessage, statusCode)
 
             PlayerStatus.LOADING -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
