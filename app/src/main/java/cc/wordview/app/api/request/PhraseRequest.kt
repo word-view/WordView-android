@@ -23,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import org.json.JSONObject
+import timber.log.Timber
 
 class PhraseRequest(
     url: String?,
@@ -39,6 +40,8 @@ class PhraseRequest(
     onSuccess(phrases)
 }, { onError() }) {
     init {
+        Timber.v("init: method=POST, url=$url, onSuccess=$onSuccess, onError=$onError")
+
         retryPolicy = DefaultRetryPolicy(
             20000,
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
