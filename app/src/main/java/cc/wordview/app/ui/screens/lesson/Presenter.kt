@@ -89,7 +89,9 @@ fun Presenter() {
                     LessonViewModel.setAnswer(Answer.NONE)
                     visible = true
 
-                    LessonViewModel.ttsSpeak(context, currentWord.tokenWord.word, Language.byTag(langTag).locale)
+                    val tokenWord = currentWord.tokenWord
+
+                    LessonViewModel.ttsSpeak(context, tokenWord.pronunciation ?: tokenWord.word, Language.byTag(langTag).locale)
 
                     delay(3000.milliseconds)
                     visible = false
