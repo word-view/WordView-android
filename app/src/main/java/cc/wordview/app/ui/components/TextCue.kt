@@ -34,9 +34,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.subtitle.WordViewCue
+import cc.wordview.gengolex.languages.Representation
 import coil.compose.AsyncImage
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 
@@ -63,23 +65,40 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             if (word.representable) {
-                                val image = GlobalImageLoader.getCachedImage(word.parent)
-                                
-                                if (image != null) AsyncImage(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .aspectRatio(1f),
-                                    model = image,
-                                    contentDescription = null
-                                )
+                                when (word.representation) {
+                                    Representation.ILLUSTRATION.name -> {
+                                        val image = GlobalImageLoader.getCachedImage(word.parent)
+
+                                        if (image != null) AsyncImage(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .aspectRatio(1f),
+                                            model = image,
+                                            contentDescription = null
+                                        )
+                                    }
+
+                                    Representation.DESCRIPTION.name -> {
+                                        word.description?.let {
+                                            Text(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                text = it,
+                                                textAlign = TextAlign.Center,
+                                                color = MaterialTheme.colorScheme.inverseSurface
+                                            )
+                                        }
+                                    }
+                                }
                             }
                             Text(
                                 modifier = Modifier
                                     .background(
-                                        if (word.representable)
+                                        if (word.representable && word.representation == Representation.ILLUSTRATION.name)
                                             MaterialTheme.colorScheme.primaryContainer
-                                        else
+                                        else if (word.representable && word.representation == Representation.DESCRIPTION.name)
                                             MaterialTheme.colorScheme.secondaryContainer
+                                        else
+                                            MaterialTheme.colorScheme.tertiaryContainer
                                     )
                                     .testTag("text-cue-plain"),
                                 text = word.word,
