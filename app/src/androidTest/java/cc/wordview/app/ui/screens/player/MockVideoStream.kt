@@ -30,7 +30,7 @@ class MockVideoStream : VideoStreamInterface {
     override var cleanArtistName = ""
     override var cleanTrackName = ""
 
-    var url = "http://10.0.2.2:8080/public/gran_vals_tarrega.mp3"
+    var url = "http://10.0.2.2:8080/gran_vals_tarrega.mp3"
 
     init { info.uploaderName = "Francisco Tárrega" }
 
