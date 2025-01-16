@@ -41,7 +41,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -70,9 +73,11 @@ import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
+import cc.wordview.app.ui.components.WordsPresentDialog
 import cc.wordview.app.ui.screens.components.KeepScreenOn
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.gengolex.Language
+import cc.wordview.gengolex.languages.Word
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -92,6 +97,7 @@ fun Player(
     val status by viewModel.playerStatus.collectAsStateWithLifecycle()
     val player by viewModel.player.collectAsStateWithLifecycle()
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
+    val cues by viewModel.cues.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
@@ -107,6 +113,7 @@ fun Player(
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
     val composerMode = remember { preferences.getOrDefault<Boolean>("composer_mode") }
     val langTag = remember { preferences.getOrDefault<String>("language") }
+    var wordsPresentDialog by rememberSaveable { mutableStateOf(false) }
 
     val systemUiController = rememberSystemUiController()
 
@@ -149,11 +156,19 @@ fun Player(
 
     if (notEnoughWords) NotEnoughWordsDialog { back() }
 
+    if (wordsPresentDialog) {
+        val words = ArrayList<Word>()
+
+        for (cue in cues) words.addAll(cue.words)
+
+        WordsPresentDialog({ wordsPresentDialog = false; player.play() }, words.distinct())
+    }
+
     Scaffold { innerPadding ->
         when (status) {
             PlayerStatus.READY -> {
                 OneTimeEffect {
-                    player.play()
+                    wordsPresentDialog = true
                     // For some reason putting this inside the outer OneTimeEffect
                     // doest work on some API levels so this needs to be here
                     systemUiController.enterImmersiveMode()
@@ -183,7 +198,10 @@ fun Player(
                         if (isBuffering) CircularProgressIndicator(64.dp)
                     }
 
-                    FadeOutBox(duration = 250, stagnationTime = if (composerMode) 5000 * 10 else 5000) {
+                    FadeOutBox(
+                        duration = 250,
+                        stagnationTime = if (composerMode) 5000 * 10 else 5000
+                    ) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()

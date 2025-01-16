@@ -25,6 +25,7 @@ import coil.request.ImageRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * Globally handles the preloading of images
@@ -44,7 +45,12 @@ object GlobalImageLoader {
     }
 
     fun getCachedImage(key: String): Bitmap? {
-        val cachedValue = loader.memoryCache?.get(MemoryCache.Key(key))
-        return cachedValue?.bitmap
+        try {
+            val cachedValue = loader.memoryCache?.get(MemoryCache.Key(key))
+            return cachedValue?.bitmap
+        } catch (e: UninitializedPropertyAccessException) {
+            Timber.w("Attempted to retrieve a image while the loader has not yet been initialized.")
+            return null
+        }
     }
 }
