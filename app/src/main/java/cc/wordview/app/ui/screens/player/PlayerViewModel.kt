@@ -40,6 +40,7 @@ import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import coil.request.ImageRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -126,7 +127,7 @@ class PlayerViewModel @Inject constructor(
 
                 for (word in wordsFound) {
                     preloadImage(word.parent, context)
-                    words.add(word.word);
+                    words.add(word.word)
                     cue.words.add(word)
                 }
             }
@@ -138,7 +139,10 @@ class PlayerViewModel @Inject constructor(
                 words
             )
 
-            computeAndCheckReady()
+            CoroutineScope(Dispatchers.Main).launch {
+                GlobalImageLoader.executeAllInQueue()
+                computeAndCheckReady()
+            }
         }
 
         playerRepository.getLyrics(id, lang.tag, video)
@@ -161,9 +165,8 @@ class PlayerViewModel @Inject constructor(
                 .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
                 .allowHardware(true)
                 .memoryCacheKey(parent)
-                .build()
 
-            GlobalImageLoader.execute(request)
+            GlobalImageLoader.enqueue(request)
         }
     }
 

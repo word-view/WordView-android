@@ -65,9 +65,8 @@ class WordDragTest {
                     .data("http://10.0.2.2:8080/api/v1/image?parent=${word.tokenWord.parent}")
                     .allowHardware(true)
                     .memoryCacheKey(word.tokenWord.parent)
-                    .build()
 
-                GlobalImageLoader.execute(request)
+                GlobalImageLoader.enqueue(request)
             }
 
             ProvidePreferenceLocals {

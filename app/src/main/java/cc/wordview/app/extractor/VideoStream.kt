@@ -24,7 +24,6 @@ import coil.request.ImageRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.StreamingService
 import org.schabi.newpipe.extractor.stream.StreamInfo
@@ -46,9 +45,8 @@ class VideoStream : VideoStreamInterface {
                 .data(info.thumbnails.last().url)
                 .allowHardware(true)
                 .memoryCacheKey("$id-background")
-                .build()
 
-            GlobalImageLoader.execute(request)
+            GlobalImageLoader.enqueue(request)
         }
 
         // For now doing this is ok but as the filter grows

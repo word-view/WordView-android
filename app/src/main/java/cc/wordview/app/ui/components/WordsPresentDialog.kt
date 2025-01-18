@@ -31,10 +31,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -43,23 +39,9 @@ import androidx.compose.ui.unit.dp
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.languages.Word
 import coil.compose.AsyncImage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun WordsPresentDialog(onConfirm: () -> Unit = {}, words: List<Word>) {
-    var loading by rememberSaveable { mutableStateOf(true) }
-
-    OneTimeEffect {
-        CoroutineScope(Dispatchers.Main).launch {
-            // TODO: fix this loading after resolving https://github.com/word-view/WordView-android/issues/30
-            delay(550L)
-            loading = false
-        }
-    }
-
     AlertDialog(
         modifier = Modifier.testTag("words-present-dialog"),
         icon = {
@@ -70,9 +52,7 @@ fun WordsPresentDialog(onConfirm: () -> Unit = {}, words: List<Word>) {
         },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                if (loading)
-                    CircularProgressIndicator(24.dp)
-                else for (wordToken in words) {
+                for (wordToken in words) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         AsyncImage(
                             modifier = Modifier

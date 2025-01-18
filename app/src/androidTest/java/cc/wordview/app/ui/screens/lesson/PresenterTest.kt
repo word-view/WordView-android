@@ -27,6 +27,7 @@ import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.gengolex.languages.Word
 import coil.request.ImageRequest
+import kotlinx.coroutines.delay
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule
 import org.junit.Test
@@ -41,18 +42,18 @@ class PresenterTest {
         composeTestRule.mainClock.autoAdvance = autoAdvance
         viewModel.setWord(ReviseWord(Word("rain", "chuva")))
         composeTestRule.setContent {
+            val request = ImageRequest.Builder(LocalContext.current)
+                .data("http://10.0.2.2:8080/api/v1/image?parent=rain")
+                .allowHardware(true)
+                .memoryCacheKey("rain")
+
+            LaunchedEffect(Unit) {
+                GlobalImageLoader.enqueue(request)
+                GlobalImageLoader.executeAllInQueue()
+            }
+
             ProvidePreferenceLocals {
                 GlobalImageLoader.init(LocalContext.current)
-
-                val request = ImageRequest.Builder(LocalContext.current)
-                    .data("http://10.0.2.2:8080/api/v1/image?parent=rain")
-                    .allowHardware(true)
-                    .memoryCacheKey("rain")
-                    .build()
-
-                LaunchedEffect(Unit) {
-                    GlobalImageLoader.execute(request)
-                }
 
                 Presenter()
             }

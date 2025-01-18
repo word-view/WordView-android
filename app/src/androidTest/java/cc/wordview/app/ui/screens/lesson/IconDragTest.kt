@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.lesson
 
+import android.provider.Settings.Global
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -34,6 +35,9 @@ import cc.wordview.app.ui.screens.lesson.model.DragViewModel
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.gengolex.languages.Word
 import coil.request.ImageRequest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -64,9 +68,12 @@ class IconDragTest {
                     .data("http://10.0.2.2:8080/api/v1/image?parent=${word.tokenWord.parent}")
                     .allowHardware(true)
                     .memoryCacheKey(word.tokenWord.parent)
-                    .build()
 
-                GlobalImageLoader.execute(request)
+                GlobalImageLoader.enqueue(request)
+            }
+
+            CoroutineScope(Dispatchers.Main).launch {
+                GlobalImageLoader.executeAllInQueue()
             }
 
             ProvidePreferenceLocals {
