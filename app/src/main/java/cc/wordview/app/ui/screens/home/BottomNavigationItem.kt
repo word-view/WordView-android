@@ -17,29 +17,35 @@
 
 package cc.wordview.app.ui.screens.home
 
+import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.ui.graphics.vector.ImageVector
+import cc.wordview.app.R
 
 data class BottomNavigationItem(
     val icon : ImageVector = Icons.Filled.Home,
-    val route : String = ""
+    val route : String = "",
+    val name : String = "",
 ) {
-    fun bottomNavigationItems() : List<BottomNavigationItem> {
+    fun bottomNavigationItems(context: Context) : List<BottomNavigationItem> {
         return listOf(
             BottomNavigationItem(
                 icon = Icons.Filled.Home,
-                route = Tabs.Learn.route
+                route = Tabs.Learn.route,
+                name = context.getString(R.string.learn)
             ),
             BottomNavigationItem(
                 icon = Icons.Filled.Map,
-                route = Tabs.Explore.route
+                route = Tabs.Explore.route,
+                name = context.getString(R.string.explore)
             ),
             BottomNavigationItem(
                 icon = Icons.Filled.AccountCircle,
-                route = Tabs.Profile.route
+                route = Tabs.Profile.route,
+                name = context.getString(R.string.profile)
             ),
         )
     }

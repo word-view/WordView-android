@@ -36,8 +36,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -45,7 +45,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.R
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.redhatFamily
 
@@ -91,37 +90,31 @@ fun Home(navHostController: NavHostController) {
         )
     }, bottomBar = {
         NavigationBar {
-            BottomNavigationItem().bottomNavigationItems().forEachIndexed { _, navigationItem ->
-                NavigationBarItem(
-                    modifier = Modifier.testTag("${navigationItem.route}-tab"),
-                    selected = navigationItem.route == currentDestination?.route,
-                    label = {
-                        Text(
-                            when (navigationItem.route) {
-                                Tabs.Learn.route -> stringResource(R.string.learn)
-                                Tabs.Explore.route -> stringResource(R.string.explore)
-                                Tabs.Profile.route -> stringResource(R.string.profile)
-                                else -> ""
+            BottomNavigationItem().bottomNavigationItems(LocalContext.current)
+                .forEachIndexed { _, navigationItem ->
+                    NavigationBarItem(
+                        modifier = Modifier.testTag("${navigationItem.route}-tab"),
+                        selected = navigationItem.route == currentDestination?.route,
+                        label = {
+                            Text(navigationItem.name)
+                        },
+                        icon = {
+                            Icon(
+                                navigationItem.icon,
+                                contentDescription = null
+                            )
+                        },
+                        onClick = {
+                            navController.navigate(navigationItem.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                        )
-                    },
-                    icon = {
-                        Icon(
-                            navigationItem.icon,
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-                        navController.navigate(navigationItem.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    }
-                )
-            }
+                    )
+                }
         }
     }) { paddingValues ->
         NavHost(
