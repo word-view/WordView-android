@@ -68,7 +68,13 @@ object ImageCacheManager {
                     imagesStatus[key] = ImageLoaderStatus.SUCCESS
                 }
             })
-            imageRequestQueue.add(request.build())
+            val builtRequest = request.build()
+
+            val existingRequestStatus = imagesStatus[builtRequest.memoryCacheKey?.key]
+
+            if (existingRequestStatus == null || existingRequestStatus == ImageLoaderStatus.ERROR) {
+                imageRequestQueue.add(builtRequest)
+            }
         }
     }
 
@@ -76,6 +82,7 @@ object ImageCacheManager {
         for (item in imageRequestQueue) {
             loader.execute(item)
         }
+        imageRequestQueue.clear()
     }
 
     fun getCachedImage(key: String): Bitmap? {
@@ -86,10 +93,12 @@ object ImageCacheManager {
                 Timber.w("Image with key=$key is still being loaded")
                 return null
             }
+
             ImageLoaderStatus.ERROR -> {
                 Timber.w("Unable to retrieve image with key=$key due to an error")
                 return null
             }
+
             ImageLoaderStatus.SUCCESS -> {
                 val cachedValue = loader.memoryCache?.get(MemoryCache.Key(key))
                 return cachedValue?.bitmap
@@ -104,27 +113,8 @@ object ImageCacheManager {
 
     @OptIn(ExperimentalCoilApi::class)
     fun getDiskCachedImage(key: String): Bitmap? {
-        val currentStatus = imagesStatus[key]
-
-        when (currentStatus) {
-            ImageLoaderStatus.LOADING -> {
-                Timber.w("Image with key=$key is still being loaded")
-                return null
-            }
-            ImageLoaderStatus.ERROR -> {
-                Timber.w("Unable to retrieve image with key=$key due to an error")
-                return null
-            }
-            ImageLoaderStatus.SUCCESS -> {
-                val cachedValue = loader.diskCache?.openSnapshot(key)
-                return BitmapFactory.decodeFile(cachedValue?.data?.toFile()?.path)
-            }
-
-            null -> {
-                Timber.w("The image associated with key=$key is not present")
-                return null
-            }
-        }
+        val cachedValue = loader.diskCache?.openSnapshot(key)
+        return BitmapFactory.decodeFile(cachedValue?.data?.toFile()?.path)
     }
 
     enum class ImageLoaderStatus {
