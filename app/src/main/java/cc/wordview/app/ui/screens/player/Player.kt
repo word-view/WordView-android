@@ -71,6 +71,7 @@ import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.components.NotEnoughWordsDialog
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
+import cc.wordview.app.ui.components.PlayerTopBar
 import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.components.WordsPresentDialog
@@ -209,36 +210,25 @@ fun Player(
                         duration = 250,
                         stagnationTime = if (composerMode) 5000 * 10 else 5000
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(TopAppBarDefaults.TopAppBarExpandedHeight)
-                                .padding(innerPadding),
-                            contentAlignment = Alignment.TopStart,
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxHeight(),
-                                verticalAlignment = Alignment.CenterVertically
+                        PlayerTopBar {
+                            IconButton(
+                                onClick = { back() },
+                                modifier = Modifier.testTag("back-button"),
                             ) {
-                                IconButton(
-                                    onClick = { back() },
-                                    modifier = Modifier.testTag("back-button"),
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowBack,
-                                        contentDescription = "Back"
-                                    )
-                                }
-                                Column {
-                                    Text(
-                                        text = videoStream.info.name,
-                                        fontSize = 18.sp
-                                    )
-                                    Text(
-                                        text = videoStream.info.getCleanUploaderName(),
-                                        fontSize = 12.sp
-                                    )
-                                }
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = "Back"
+                                )
+                            }
+                            Column {
+                                Text(
+                                    text = videoStream.info.name,
+                                    fontSize = 18.sp
+                                )
+                                Text(
+                                    text = videoStream.info.getCleanUploaderName(),
+                                    fontSize = 12.sp
+                                )
                             }
                         }
                         Seekbar(
