@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.components
+package cc.wordview.app
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -32,7 +32,7 @@ import timber.log.Timber
 /**
  * Globally handles the preloading of images
  */
-object GlobalImageLoader {
+object ImageCacheManager {
     private lateinit var loader: ImageLoader
     private val globalImageLoaderScope = CoroutineScope(Dispatchers.IO)
 
@@ -81,11 +81,11 @@ object GlobalImageLoader {
 
         when (currentStatus) {
             ImageLoaderStatus.LOADING -> {
-                Timber.w("The image associated with key=$key has not yet been resolved")
+                Timber.w("Image with key=$key is still being loaded")
                 return null
             }
             ImageLoaderStatus.ERROR -> {
-                Timber.w("The image associated with key=$key is not available due to an error")
+                Timber.w("Unable to retrieve image with key=$key due to an error")
                 return null
             }
             ImageLoaderStatus.SUCCESS -> {

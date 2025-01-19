@@ -22,12 +22,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import cc.wordview.app.ui.components.GlobalImageLoader
+import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.gengolex.languages.Word
 import coil.request.ImageRequest
-import kotlinx.coroutines.delay
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule
 import org.junit.Test
@@ -48,12 +47,12 @@ class PresenterTest {
                 .memoryCacheKey("rain")
 
             LaunchedEffect(Unit) {
-                GlobalImageLoader.enqueue(request)
-                GlobalImageLoader.executeAllInQueue()
+                ImageCacheManager.enqueue(request)
+                ImageCacheManager.executeAllInQueue()
             }
 
             ProvidePreferenceLocals {
-                GlobalImageLoader.init(LocalContext.current)
+                ImageCacheManager.init(LocalContext.current)
 
                 Presenter()
             }

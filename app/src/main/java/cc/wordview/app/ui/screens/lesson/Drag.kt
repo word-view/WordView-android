@@ -48,7 +48,7 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.extensions.detectTapGestures
 import cc.wordview.app.extensions.dragGestures
 import cc.wordview.app.extensions.getOrDefault
-import cc.wordview.app.ui.components.GlobalImageLoader
+import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.DragMode
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
@@ -218,7 +218,7 @@ fun Text(word: Word, testTag: String) {
 
 @Composable
 fun Icon(word: Word, testTag: String) {
-    val image = GlobalImageLoader.getCachedImage(word.parent)
+    val image = ImageCacheManager.getCachedImage(word.parent)
 
     AsyncImage(
         modifier = Modifier

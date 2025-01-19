@@ -19,7 +19,7 @@ package cc.wordview.app.extractor
 
 import android.content.Context
 import android.graphics.Bitmap
-import cc.wordview.app.ui.components.GlobalImageLoader
+import cc.wordview.app.ImageCacheManager
 import coil.request.ImageRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +46,7 @@ class VideoStream : VideoStreamInterface {
                 .allowHardware(true)
                 .memoryCacheKey("$id-background")
 
-            GlobalImageLoader.enqueue(request)
+            ImageCacheManager.enqueue(request)
         }
 
         // For now doing this is ok but as the filter grows
@@ -78,7 +78,7 @@ class VideoStream : VideoStreamInterface {
     }
 
     override fun getHQThumbnail(): Bitmap? {
-        return GlobalImageLoader.getCachedImage("${info.id}-background")
+        return ImageCacheManager.getCachedImage("${info.id}-background")
     }
 
     companion object {

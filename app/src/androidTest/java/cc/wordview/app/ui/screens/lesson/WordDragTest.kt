@@ -26,7 +26,7 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.components.GlobalImageLoader
+import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.ui.screens.results.ReviseResults
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
@@ -58,7 +58,7 @@ class WordDragTest {
         composeTestRule.setContent {
             val navController = rememberNavController()
 
-            GlobalImageLoader.init(LocalContext.current)
+            ImageCacheManager.init(LocalContext.current)
 
             for (word in viewModel.wordsToRevise.value) {
                 val request = ImageRequest.Builder(LocalContext.current)
@@ -66,7 +66,7 @@ class WordDragTest {
                     .allowHardware(true)
                     .memoryCacheKey(word.tokenWord.parent)
 
-                GlobalImageLoader.enqueue(request)
+                ImageCacheManager.enqueue(request)
             }
 
             ProvidePreferenceLocals {

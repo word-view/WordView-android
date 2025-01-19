@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.lesson
 
-import android.provider.Settings.Global
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -26,7 +25,7 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.components.GlobalImageLoader
+import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.ui.screens.results.ReviseResults
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
@@ -61,7 +60,7 @@ class IconDragTest {
         composeTestRule.setContent {
             val navController = rememberNavController()
 
-            GlobalImageLoader.init(LocalContext.current)
+            ImageCacheManager.init(LocalContext.current)
 
             for (word in viewModel.wordsToRevise.value) {
                 val request = ImageRequest.Builder(LocalContext.current)
@@ -69,11 +68,11 @@ class IconDragTest {
                     .allowHardware(true)
                     .memoryCacheKey(word.tokenWord.parent)
 
-                GlobalImageLoader.enqueue(request)
+                ImageCacheManager.enqueue(request)
             }
 
             CoroutineScope(Dispatchers.Main).launch {
-                GlobalImageLoader.executeAllInQueue()
+                ImageCacheManager.executeAllInQueue()
             }
 
             ProvidePreferenceLocals {

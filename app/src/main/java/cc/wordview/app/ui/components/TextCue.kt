@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.gengolex.languages.Representation
@@ -69,7 +70,7 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                             if (word.representable) {
                                 when (word.representation) {
                                     Representation.ILLUSTRATION.name -> {
-                                        val image = GlobalImageLoader.getCachedImage(word.parent)
+                                        val image = ImageCacheManager.getCachedImage(word.parent)
 
                                         if (image != null) AsyncImage(
                                             modifier = Modifier

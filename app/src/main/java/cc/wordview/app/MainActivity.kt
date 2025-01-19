@@ -27,7 +27,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.extractor.DownloaderImpl
-import cc.wordview.app.ui.components.GlobalImageLoader
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.WordViewTheme
@@ -50,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
             OneTimeEffect {
                 Timber.plant(Timber.DebugTree())
-                GlobalImageLoader.init(context)
+                ImageCacheManager.init(context)
             }
 
             WordViewTheme {

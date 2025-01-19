@@ -45,7 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.extensions.getOrDefault
-import cc.wordview.app.ui.components.GlobalImageLoader
+import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
@@ -53,7 +53,6 @@ import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import me.zhanghai.compose.preference.LocalPreferenceFlow
-import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -137,7 +136,7 @@ fun Presenter() {
             }
 
             Answer.NONE -> {
-                val image = GlobalImageLoader.getCachedImage(currentWord.tokenWord.parent)
+                val image = ImageCacheManager.getCachedImage(currentWord.tokenWord.parent)
                 if (image != null) AsyncImage(
                     modifier = Modifier
                         .size(130.dp)

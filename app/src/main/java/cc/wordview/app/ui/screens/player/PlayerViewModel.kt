@@ -31,7 +31,7 @@ import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
-import cc.wordview.app.ui.components.GlobalImageLoader
+import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.ui.screens.lesson.LessonViewModel
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.lesson.model.TranslateRepository
@@ -140,7 +140,7 @@ class PlayerViewModel @Inject constructor(
             )
 
             CoroutineScope(Dispatchers.Main).launch {
-                GlobalImageLoader.executeAllInQueue()
+                ImageCacheManager.executeAllInQueue()
                 computeAndCheckReady()
             }
         }
@@ -166,7 +166,7 @@ class PlayerViewModel @Inject constructor(
                 .allowHardware(true)
                 .memoryCacheKey(parent)
 
-            GlobalImageLoader.enqueue(request)
+            ImageCacheManager.enqueue(request)
         }
     }
 

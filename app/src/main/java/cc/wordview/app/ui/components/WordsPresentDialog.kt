@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.languages.Word
 import coil.compose.AsyncImage
@@ -58,7 +59,7 @@ fun WordsPresentDialog(onConfirm: () -> Unit = {}, words: List<Word>) {
                             modifier = Modifier
                                 .size(40.dp)
                                 .aspectRatio(1f),
-                            model = GlobalImageLoader.getCachedImage(wordToken.parent),
+                            model = ImageCacheManager.getCachedImage(wordToken.parent),
                             contentDescription = null
                         )
                         Spacer(Modifier.size(12.dp))
