@@ -83,6 +83,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.LocalPreferenceFlow
+import org.schabi.newpipe.extractor.exceptions.ExtractionException
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -125,10 +126,16 @@ fun Player(
         activity.setOrientationSensorLandscape()
 
         CoroutineScope(Dispatchers.IO).launch {
-            SongViewModel.videoStream.value.init(videoId, context)
+            try {
+                SongViewModel.videoStream.value.init(videoId, context)
 
-            viewModel.initAudio(videoStream.getStreamURL(), context)
-            viewModel.getLyrics(preferences, context, videoId, lang, videoStream)
+                viewModel.initAudio(videoStream.getStreamURL(), context)
+                viewModel.getLyrics(preferences, context, videoId, lang, videoStream)
+            } catch (e: ExtractionException) {
+                Timber.e(e)
+                viewModel.setErrorMessage(e.message.toString())
+                viewModel.setPlayerStatus(PlayerStatus.ERROR)
+            }
         }
     }
 

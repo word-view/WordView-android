@@ -246,7 +246,11 @@ class PlayerViewModel @Inject constructor(
         _currentCue.update { cue }
     }
 
-    private fun setPlayerStatus(playerStatus: PlayerStatus) {
+    fun setPlayerStatus(playerStatus: PlayerStatus) {
         _playerStatus.update { playerStatus }
+    }
+
+    fun setErrorMessage(message: String) {
+        _errorMessage.update { message }
     }
 }
