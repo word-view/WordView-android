@@ -94,10 +94,7 @@ object ImageCacheManager {
                 return null
             }
 
-            ImageLoaderStatus.ERROR -> {
-                Timber.w("Unable to retrieve image with key=$key due to an error")
-                return null
-            }
+            ImageLoaderStatus.ERROR -> return null
 
             ImageLoaderStatus.SUCCESS -> {
                 val cachedValue = loader.memoryCache?.get(MemoryCache.Key(key))
