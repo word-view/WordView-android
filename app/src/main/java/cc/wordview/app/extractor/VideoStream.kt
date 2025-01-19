@@ -39,11 +39,12 @@ class VideoStream : VideoStreamInterface {
     override fun init(id: String, context: Context) {
         info = StreamInfo.getInfo(YTService, "https://youtube.com/watch?v=$id")
 
-        // Preload the background thumbnail
         CoroutineScope(Dispatchers.IO).launch {
             val request = ImageRequest.Builder(context)
                 .data(info.thumbnails.last().url)
                 .allowHardware(true)
+                .diskCacheKey("$id-background")
+                // Memory cache key is only used by the ImageCacheManager to keep track of it
                 .memoryCacheKey("$id-background")
 
             ImageCacheManager.enqueue(request)
@@ -78,7 +79,7 @@ class VideoStream : VideoStreamInterface {
     }
 
     override fun getHQThumbnail(): Bitmap? {
-        return ImageCacheManager.getCachedImage("${info.id}-background")
+        return ImageCacheManager.getDiskCachedImage("${info.id}-background")
     }
 
     companion object {

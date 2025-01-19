@@ -20,7 +20,6 @@ package cc.wordview.app.ui.components
 import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.EaseInExpo
-import androidx.compose.animation.core.EaseInOutExpo
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -35,15 +35,14 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 
-
-/**
- * A async image that gracefully fades in as the url changes.
- */
 @Composable
 fun FadeInAsyncImage(image: Bitmap?) {
     var isVisible by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(image) {
+    // This prevents the background from "flashing" due to recompositions (probably)
+    val img = remember { image }
+
+    LaunchedEffect(img) {
         isVisible = false
         isVisible = true
     }
@@ -59,7 +58,7 @@ fun FadeInAsyncImage(image: Bitmap?) {
         )
     ) {
         AsyncImage(
-            model = image,
+            model = img,
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()

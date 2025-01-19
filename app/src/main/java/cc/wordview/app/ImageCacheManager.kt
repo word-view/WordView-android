@@ -19,7 +19,9 @@ package cc.wordview.app
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
 import coil.memory.MemoryCache
 import coil.request.ErrorResult
 import coil.request.ImageRequest
@@ -91,6 +93,31 @@ object ImageCacheManager {
             ImageLoaderStatus.SUCCESS -> {
                 val cachedValue = loader.memoryCache?.get(MemoryCache.Key(key))
                 return cachedValue?.bitmap
+            }
+
+            null -> {
+                Timber.w("The image associated with key=$key is not present")
+                return null
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoilApi::class)
+    fun getDiskCachedImage(key: String): Bitmap? {
+        val currentStatus = imagesStatus[key]
+
+        when (currentStatus) {
+            ImageLoaderStatus.LOADING -> {
+                Timber.w("Image with key=$key is still being loaded")
+                return null
+            }
+            ImageLoaderStatus.ERROR -> {
+                Timber.w("Unable to retrieve image with key=$key due to an error")
+                return null
+            }
+            ImageLoaderStatus.SUCCESS -> {
+                val cachedValue = loader.diskCache?.openSnapshot(key)
+                return BitmapFactory.decodeFile(cachedValue?.data?.toFile()?.path)
             }
 
             null -> {
