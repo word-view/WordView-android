@@ -19,10 +19,7 @@ package cc.wordview.app.ui.screens.components
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import cc.wordview.app.ui.screens.LanguagePicker
-import cc.wordview.app.ui.screens.Login
 import cc.wordview.app.ui.screens.Settings
-import cc.wordview.app.ui.screens.Welcome
 import cc.wordview.app.ui.screens.home.Home
 import cc.wordview.app.ui.screens.results.ReviseResults
 import cc.wordview.app.ui.screens.player.Player
@@ -32,26 +29,6 @@ import cc.wordview.app.ui.screens.search.Search
 sealed class Screen(val route: String) {
     @Composable
     open fun Composable(navHostController: NavHostController) {}
-    data object Welcome : Screen("welcome") {
-        @Composable
-        override fun Composable(navHostController: NavHostController) {
-            Welcome(navHostController)
-        }
-    }
-
-    data object Login : Screen("login") {
-        @Composable
-        override fun Composable(navHostController: NavHostController) {
-            Login(navHostController)
-        }
-    }
-
-    data object LanguagePicker : Screen("language-picker") {
-        @Composable
-        override fun Composable(navHostController: NavHostController) {
-            LanguagePicker(navHostController)
-        }
-    }
 
     data object Settings : Screen("settings") {
         @Composable
@@ -96,6 +73,6 @@ sealed class Screen(val route: String) {
     }
 
     companion object {
-        val screens = listOf(Welcome, Login, LanguagePicker, Settings, Player, Home, Search, WordRevise, ReviseResults)
+        val screens = listOf(Settings, Player, Home, Search, WordRevise, ReviseResults)
     }
 }
