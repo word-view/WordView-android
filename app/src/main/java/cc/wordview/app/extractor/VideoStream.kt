@@ -47,7 +47,9 @@ class VideoStream : VideoStreamInterface {
                 // Memory cache key is only used by the ImageCacheManager to keep track of it
                 .memoryCacheKey("$id-background")
 
-            ImageCacheManager.enqueue(request)
+            if (getHQThumbnail() == null) {
+                ImageCacheManager.enqueue(request)
+            }
         }
 
         // For now doing this is ok but as the filter grows
