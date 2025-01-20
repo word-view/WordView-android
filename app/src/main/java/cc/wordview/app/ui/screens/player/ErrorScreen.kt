@@ -46,7 +46,7 @@ import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.ui.theme.Typography
 
 @Composable
-fun ErrorScreen(navHostController: NavHostController, message: String, statusCode: Int) {
+fun ErrorScreen(navHostController: NavHostController, message: String, refresh: () -> Unit, statusCode: Int) {
     val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
     val activity = LocalContext.current as Activity
 
@@ -79,6 +79,11 @@ fun ErrorScreen(navHostController: NavHostController, message: String, statusCod
             fontWeight = FontWeight.Light,
         )
         Spacer(Modifier.size(15.dp))
+        Button(
+            modifier = Modifier.testTag("error-back-button"),
+            onClick = { refresh() }) {
+            Text(text = stringResource(R.string.try_again))
+        }
         Button(
             modifier = Modifier.testTag("error-back-button"),
             onClick = {

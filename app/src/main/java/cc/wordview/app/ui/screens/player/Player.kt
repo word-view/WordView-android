@@ -119,7 +119,7 @@ fun Player(
 
     val systemUiController = rememberSystemUiController()
 
-    OneTimeEffect {
+    fun start() {
         val lang = Language.byTag(langTag)
 
         Timber.i("Chosen language is ${lang.name.lowercase()}")
@@ -139,6 +139,8 @@ fun Player(
             }
         }
     }
+
+    OneTimeEffect { start() }
 
     LaunchedEffect(finalized) {
         if (finalized) {
@@ -273,7 +275,11 @@ fun Player(
                 }
             }
 
-            PlayerStatus.ERROR -> ErrorScreen(navHostController, errorMessage, statusCode)
+            PlayerStatus.ERROR -> ErrorScreen(navHostController, errorMessage, {
+                Timber.d("Refreshing player")
+                viewModel.setPlayerStatus(PlayerStatus.LOADING)
+                start()
+            }, statusCode)
 
             PlayerStatus.LOADING -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
