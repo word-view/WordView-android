@@ -41,7 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.subtitle.WordViewCue
-import cc.wordview.gengolex.languages.Representation
+import cc.wordview.gengolex.word.Representation
 import coil.compose.AsyncImage
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 

@@ -17,7 +17,7 @@
 
 package cc.wordview.app.subtitle
 
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 
 class WordViewCue(
     var text: String = "",

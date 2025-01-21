@@ -55,7 +55,7 @@ import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
 import cc.wordview.app.ui.screens.lesson.model.DragViewModel
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 import coil.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

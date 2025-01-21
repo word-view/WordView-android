@@ -78,7 +78,7 @@ import cc.wordview.app.ui.components.WordsPresentDialog
 import cc.wordview.app.ui.screens.components.KeepScreenOn
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.gengolex.Language
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

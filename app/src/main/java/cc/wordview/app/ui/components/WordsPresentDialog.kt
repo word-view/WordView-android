@@ -38,7 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.ui.theme.Typography
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 import coil.compose.AsyncImage
 
 @Composable
