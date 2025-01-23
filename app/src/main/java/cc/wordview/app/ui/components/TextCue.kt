@@ -38,9 +38,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -89,17 +89,6 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                                             contentDescription = null
                                         )
                                     }
-
-                                    Representation.DESCRIPTION.name -> {
-                                        word.description?.let {
-                                            Text(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                text = it,
-                                                textAlign = TextAlign.Center,
-                                                color = MaterialTheme.colorScheme.inverseSurface
-                                            )
-                                        }
-                                    }
                                 }
                             }
                             Text(
@@ -107,8 +96,6 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                                     .background(
                                         if (word.representable && word.representation == Representation.ILLUSTRATION.name)
                                             MaterialTheme.colorScheme.primaryContainer
-                                        else if (word.representable && word.representation == Representation.DESCRIPTION.name)
-                                            MaterialTheme.colorScheme.secondaryContainer
                                         else
                                             MaterialTheme.colorScheme.tertiaryContainer
                                     )
@@ -123,20 +110,16 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                             ) {
                                 @Suppress("SENSELESS_COMPARISON")
                                 if (word.type != null) {
-                                    Text(
+                                    TraitText(
                                         text = word.type.capitalize(),
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 10.sp,
                                         color = MaterialTheme.colorScheme.primary
                                     )
                                 }
 
                                 if (word.time != null) {
                                     Spacer(Modifier.size(8.dp))
-                                    Text(
+                                    TraitText(
                                         text = word.time!!.capitalize(),
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 10.sp,
                                         color = MaterialTheme.colorScheme.tertiary
                                     )
                                 }
@@ -162,4 +145,14 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
             }
         }
     }
+}
+
+@Composable
+fun TraitText(text: String, color: Color) {
+    Text(
+        text = text,
+        fontWeight = FontWeight.Bold,
+        fontSize = 10.sp,
+        color = color
+    )
 }
