@@ -92,7 +92,7 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                                         if (word.representable)
                                             MaterialTheme.colorScheme.primaryContainer
                                         else
-                                            MaterialTheme.colorScheme.tertiaryContainer
+                                            MaterialTheme.colorScheme.surfaceVariant
                                     )
                                     .testTag("text-cue-plain"),
                                 text = word.word,
