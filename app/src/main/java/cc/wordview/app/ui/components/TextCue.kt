@@ -17,19 +17,10 @@
 
 package cc.wordview.app.ui.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,11 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.ImageCacheManager
-import cc.wordview.app.extensions.capitalize
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.subtitle.WordViewCue
-import coil.compose.AsyncImage
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @Composable
@@ -69,57 +57,12 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
 
                 for (word in cue.words) {
                     if (text.startsWith(word.word, currentIndex)) {
-                        Column(
-                            modifier = Modifier
-                                .width(IntrinsicSize.Max)
-                                .padding(horizontal = 2.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            if (word.representable) {
-                                val image = ImageCacheManager.getCachedImage(word.parent)
-
-                                if (image != null) AsyncImage(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .aspectRatio(1f),
-                                    model = image,
-                                    contentDescription = null
-                                )
-                            }
-                            Text(
-                                modifier = Modifier
-                                    .background(
-                                        if (word.representable)
-                                            MaterialTheme.colorScheme.primaryContainer
-                                        else
-                                            MaterialTheme.colorScheme.surfaceVariant
-                                    )
-                                    .testTag("text-cue-plain"),
-                                text = word.word,
-                                fontSize = getFontSize(text, langtag),
-                                color = MaterialTheme.colorScheme.inverseSurface
-                            )
-                            Row(
-                                modifier = Modifier.height(20.dp),
-                                horizontalArrangement = Arrangement.SpaceEvenly
-                            ) {
-                                @Suppress("SENSELESS_COMPARISON")
-                                if (word.type != null) {
-                                    TraitText(
-                                        text = word.type.capitalize(),
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-
-                                if (word.time != null) {
-                                    Spacer(Modifier.size(8.dp))
-                                    TraitText(
-                                        text = word.time!!.capitalize(),
-                                        color = MaterialTheme.colorScheme.tertiary
-                                    )
-                                }
-                            }
-                        }
+                        IdentifiedWord(
+                            modifier = Modifier.padding(horizontal = 2.dp),
+                            word = word,
+                            text = text,
+                            langtag = langtag
+                        )
                         currentIndex += word.word.length
                         foundWord = true
                         break
