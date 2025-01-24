@@ -48,7 +48,6 @@ import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.extensions.capitalize
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.subtitle.WordViewCue
-import cc.wordview.gengolex.word.Representation
 import coil.compose.AsyncImage
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 
@@ -77,24 +76,20 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             if (word.representable) {
-                                when (word.representation) {
-                                    Representation.ILLUSTRATION.name -> {
-                                        val image = ImageCacheManager.getCachedImage(word.parent)
+                                val image = ImageCacheManager.getCachedImage(word.parent)
 
-                                        if (image != null) AsyncImage(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .aspectRatio(1f),
-                                            model = image,
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
+                                if (image != null) AsyncImage(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(1f),
+                                    model = image,
+                                    contentDescription = null
+                                )
                             }
                             Text(
                                 modifier = Modifier
                                     .background(
-                                        if (word.representable && word.representation == Representation.ILLUSTRATION.name)
+                                        if (word.representable)
                                             MaterialTheme.colorScheme.primaryContainer
                                         else
                                             MaterialTheme.colorScheme.tertiaryContainer
