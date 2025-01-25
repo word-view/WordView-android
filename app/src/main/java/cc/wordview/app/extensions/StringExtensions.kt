@@ -23,3 +23,7 @@ fun String.asURLEncoded(): String {
     @Suppress("DEPRECATION")
     return URLEncoder.encode(this) ?: this
 }
+
+fun String.capitalize(): String {
+    return this[0].uppercase() + this.lowercase().substring(1)
+}

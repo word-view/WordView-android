@@ -18,7 +18,7 @@
 package cc.wordview.app.ui.screens.lesson.model
 
 import androidx.lifecycle.ViewModel
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

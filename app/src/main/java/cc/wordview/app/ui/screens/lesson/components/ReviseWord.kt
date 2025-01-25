@@ -17,7 +17,7 @@
 
 package cc.wordview.app.ui.screens.lesson.components
 
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 
 class ReviseWord(var tokenWord: Word = Word("", "")) {
     var misses = 0

@@ -17,15 +17,10 @@
 
 package cc.wordview.app.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,15 +29,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.subtitle.WordViewCue
-import cc.wordview.gengolex.languages.Representation
-import coil.compose.AsyncImage
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @Composable
@@ -63,52 +57,12 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
 
                 for (word in cue.words) {
                     if (text.startsWith(word.word, currentIndex)) {
-                        Column(
-                            modifier = Modifier.width(IntrinsicSize.Max).padding(horizontal = 2.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            if (word.representable) {
-                                when (word.representation) {
-                                    Representation.ILLUSTRATION.name -> {
-                                        val image = ImageCacheManager.getCachedImage(word.parent)
-
-                                        if (image != null) AsyncImage(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .aspectRatio(1f),
-                                            model = image,
-                                            contentDescription = null
-                                        )
-                                    }
-
-                                    Representation.DESCRIPTION.name -> {
-                                        word.description?.let {
-                                            Text(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                text = it,
-                                                textAlign = TextAlign.Center,
-                                                color = MaterialTheme.colorScheme.inverseSurface
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                            Text(
-                                modifier = Modifier
-                                    .background(
-                                        if (word.representable && word.representation == Representation.ILLUSTRATION.name)
-                                            MaterialTheme.colorScheme.primaryContainer
-                                        else if (word.representable && word.representation == Representation.DESCRIPTION.name)
-                                            MaterialTheme.colorScheme.secondaryContainer
-                                        else
-                                            MaterialTheme.colorScheme.tertiaryContainer
-                                    )
-                                    .testTag("text-cue-plain"),
-                                text = word.word,
-                                fontSize = getFontSize(text, langtag),
-                                color = MaterialTheme.colorScheme.inverseSurface
-                            )
-                        }
+                        IdentifiedWord(
+                            modifier = Modifier.padding(horizontal = 2.dp),
+                            word = word,
+                            text = text,
+                            langtag = langtag
+                        )
                         currentIndex += word.word.length
                         foundWord = true
                         break
@@ -117,7 +71,9 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
 
                 if (!foundWord) {
                     Text(
-                        modifier = Modifier.testTag("text-cue-word"),
+                        modifier = Modifier
+                            .testTag("text-cue-word")
+                            .padding(bottom = 20.dp),
                         text = text[currentIndex].toString(),
                         fontSize = getFontSize(text, langtag),
                         color = MaterialTheme.colorScheme.inverseSurface
@@ -127,4 +83,14 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
             }
         }
     }
+}
+
+@Composable
+fun TraitText(text: String, color: Color) {
+    Text(
+        text = text,
+        fontWeight = FontWeight.Bold,
+        fontSize = 10.sp,
+        color = color
+    )
 }
