@@ -33,10 +33,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.extensions.capitalize
+import cc.wordview.gengolex.word.Syntax
 import cc.wordview.gengolex.word.Word
 import coil.compose.AsyncImage
 
@@ -57,22 +59,22 @@ fun IdentifiedWord(word: Word, text: String, langtag: String, modifier: Modifier
                 contentDescription = null
             )
         }
-        Row(
-            Modifier.background(
-                if (word.representable)
-                    MaterialTheme.colorScheme.primaryContainer
-                else
-                    MaterialTheme.colorScheme.surfaceVariant
-            )
-        ) {
-            for (char in word.word) {
+        Row {
+            var i = 0
+
+            while (i < word.word.length) {
+                val char = word.word[i]
+
                 Text(
                     modifier = Modifier
-                        .testTag("text-cue-plain"),
+                        .testTag("text-cue-plain")
+                        .background(getColor(i, word.representable, word.syntax)),
                     text = char.toString(),
                     fontSize = getFontSize(text, langtag),
                     color = MaterialTheme.colorScheme.inverseSurface
                 )
+
+                i++
             }
         }
         Row(
@@ -96,4 +98,31 @@ fun IdentifiedWord(word: Word, text: String, langtag: String, modifier: Modifier
             }
         }
     }
+}
+
+@Composable
+fun getColor(position: Int, representable: Boolean, syntax: Syntax?): Color {
+    if (syntax == null) {
+        return if (representable)
+            MaterialTheme.colorScheme.primaryContainer
+        else
+            MaterialTheme.colorScheme.surfaceVariant
+    }
+
+    syntax.default?.let {
+        if (position >= it.start && position <= it.end)
+            return MaterialTheme.colorScheme.primaryContainer
+    }
+
+    syntax.negative?.let {
+        if (position >= it.start && position <= it.end)
+            return Color(0xFF723B3B)
+    }
+
+    syntax.conditional?.let {
+        if (position >= it.start && position <= it.end)
+            return Color(0xFF725F3B)
+    }
+
+    return MaterialTheme.colorScheme.tertiaryContainer
 }
