@@ -57,19 +57,24 @@ fun IdentifiedWord(word: Word, text: String, langtag: String, modifier: Modifier
                 contentDescription = null
             )
         }
-        Text(
-            modifier = Modifier
-                .background(
-                    if (word.representable)
-                        MaterialTheme.colorScheme.primaryContainer
-                    else
-                        MaterialTheme.colorScheme.surfaceVariant
+        Row(
+            Modifier.background(
+                if (word.representable)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
+                    MaterialTheme.colorScheme.surfaceVariant
+            )
+        ) {
+            for (char in word.word) {
+                Text(
+                    modifier = Modifier
+                        .testTag("text-cue-plain"),
+                    text = char.toString(),
+                    fontSize = getFontSize(text, langtag),
+                    color = MaterialTheme.colorScheme.inverseSurface
                 )
-                .testTag("text-cue-plain"),
-            text = word.word,
-            fontSize = getFontSize(text, langtag),
-            color = MaterialTheme.colorScheme.inverseSurface
-        )
+            }
+        }
         Row(
             modifier = Modifier.height(20.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
