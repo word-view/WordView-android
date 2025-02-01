@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -96,6 +97,7 @@ dependencies {
     implementation(libs.accompanist.flowlayout)
     implementation(libs.hilt.android)
     implementation(libs.timber)
+    implementation(libs.assis)
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)

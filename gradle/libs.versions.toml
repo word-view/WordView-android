@@ -2,6 +2,7 @@
 accompanistFlowlayout = "0.36.0"
 accompanistSystemuicontroller = "0.31.2-alpha"
 agp = "8.7.3"
+assis = "0.1.1"
 coil = "2.6.0"
 coilCompose = "2.6.0"
 composefadingedges = "1.0.4"
@@ -12,7 +13,7 @@ gson = "2.11.0"
 hiltAndroid = "2.51.1"
 hiltNavigationCompose = "1.2.0"
 junitJupiter = "5.10.3"
-kotlin = "1.9.24"
+kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -44,6 +45,7 @@ androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", versi
 androidx-media3-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "media3Extractor" }
 androidx-media3-extractor = { module = "androidx.media3:media3-extractor", version.ref = "media3Extractor" }
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3Extractor" }
+assis = { module = "com.github.word-view:assis", version.ref = "assis" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 compose-resources = { module = "com.github.ygorluizfrazao:compose-resources", version.ref = "composeResources" }
@@ -84,4 +86,5 @@ volley = { module = "com.android.volley:volley", version.ref = "volley" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
