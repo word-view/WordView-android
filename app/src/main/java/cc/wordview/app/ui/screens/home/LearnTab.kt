@@ -45,7 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
-import cc.wordview.app.SongViewModel
+import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.audio.Video
 import cc.wordview.app.ui.components.SongCard
 import cc.wordview.app.ui.screens.components.Screen
@@ -117,7 +117,7 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
                     trackName = it.title,
                     language = it.language
                 ) {
-                    SongViewModel.setVideo(it.id)
+                    GlobalViewModel.setVideo(it.id)
                     navHostController.navigate(Screen.Player.route)
                 }
             }

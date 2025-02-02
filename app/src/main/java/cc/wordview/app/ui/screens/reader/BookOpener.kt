@@ -44,9 +44,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.extensions.goBack
-import cc.wordview.assis.parseEpub
-import timber.log.Timber
 
 @SuppressLint("Recycle")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,13 +60,8 @@ fun BookOpener(navController: NavHostController) {
 
     LaunchedEffect(result.value) {
         if (result.value != null) {
-            Timber.i("cu ${result.value}")
-
             val epubInputStream = context.contentResolver.openInputStream(result.value!!)!!
-
-            val book = parseEpub(epubInputStream)
-
-            Timber.i(book.metadata.title)
+            GlobalViewModel.setBookInputStream(epubInputStream)
         }
     }
 

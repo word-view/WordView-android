@@ -25,7 +25,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import cc.wordview.app.MainActivity
-import cc.wordview.app.SongViewModel
+import cc.wordview.app.GlobalViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -55,7 +55,7 @@ class PlayerTest {
     }
 
     private fun enterPlayer() {
-        SongViewModel.setVideoStream(MockVideoStream())
+        GlobalViewModel.setVideoStream(MockVideoStream())
         composeTestRule.onNodeWithText("Aquarela").performClick()
     }
 
@@ -91,7 +91,7 @@ class PlayerTest {
         composeTestRule.onNodeWithText("Proceed").performClick()
         composeTestRule.onNodeWithTag("back-button").performClick()
 
-        SongViewModel.setVideoStream(MockVideoStream())
+        GlobalViewModel.setVideoStream(MockVideoStream())
 
         composeTestRule.onNodeWithText("Aquarela").performClick()
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("interface"), 5_000)

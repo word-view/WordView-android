@@ -21,7 +21,6 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -63,7 +62,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
-import cc.wordview.app.SongViewModel
+import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ResultItem
@@ -191,7 +190,7 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
                                 placementSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioMediumBouncy)
                             ), result = it
                         ) {
-                            SongViewModel.setVideo(it.id)
+                            GlobalViewModel.setVideo(it.id)
                             navHostController.navigate(Screen.Player.route)
                         }
                     }

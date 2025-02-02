@@ -23,10 +23,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -56,7 +54,7 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import cc.wordview.app.SongViewModel
+import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.extensions.enterImmersiveMode
 import cc.wordview.app.extensions.getCleanUploaderName
 import cc.wordview.app.extensions.getOrDefault
@@ -93,8 +91,8 @@ fun Player(
     navHostController: NavHostController,
     viewModel: PlayerViewModel = hiltViewModel()
 ) {
-    val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
-    val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
+    val videoId by GlobalViewModel.videoId.collectAsStateWithLifecycle()
+    val videoStream by GlobalViewModel.videoStream.collectAsStateWithLifecycle()
 
     val status by viewModel.playerStatus.collectAsStateWithLifecycle()
     val player by viewModel.player.collectAsStateWithLifecycle()
@@ -128,7 +126,7 @@ fun Player(
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                SongViewModel.videoStream.value.init(videoId, context)
+                GlobalViewModel.videoStream.value.init(videoId, context)
 
                 viewModel.initAudio(videoStream.getStreamURL(), context)
                 viewModel.getLyrics(preferences, context, videoId, lang, videoStream)
@@ -145,7 +143,7 @@ fun Player(
     LaunchedEffect(finalized) {
         if (finalized) {
             activity.setOrientationUnspecified()
-            SongViewModel.setVideoStream(VideoStream())
+            GlobalViewModel.setVideoStream(VideoStream())
             player.stop()
             systemUiController.leaveImmersiveMode()
             navHostController.navigate(Screen.WordRevise.route)
@@ -154,7 +152,7 @@ fun Player(
 
     fun back() {
         activity.setOrientationUnspecified()
-        SongViewModel.setVideoStream(VideoStream())
+        GlobalViewModel.setVideoStream(VideoStream())
         player.stop()
         systemUiController.leaveImmersiveMode()
         navHostController.goBack()

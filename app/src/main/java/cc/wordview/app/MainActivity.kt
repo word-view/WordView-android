@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
 fun Main() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "book-opener") {
         for (screen in Screen.screens) {
             composable(screen.route) {
                 screen.Composable(navHostController = navController)

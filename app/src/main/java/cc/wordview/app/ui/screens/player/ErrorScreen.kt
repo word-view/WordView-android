@@ -40,14 +40,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
-import cc.wordview.app.SongViewModel
+import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.ui.theme.Typography
 
 @Composable
 fun ErrorScreen(navHostController: NavHostController, message: String, refresh: () -> Unit, statusCode: Int) {
-    val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
+    val videoStream by GlobalViewModel.videoStream.collectAsStateWithLifecycle()
     val activity = LocalContext.current as Activity
 
     Column(
