@@ -50,6 +50,7 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.OneTimeEffect
+import cc.wordview.app.ui.theme.ptSerifFamily
 import cc.wordview.assis.book.epub.ElementCategory
 import cc.wordview.assis.book.epub.EpubBook
 import cc.wordview.assis.parseEpub
@@ -105,28 +106,32 @@ fun BookRender(navController: NavHostController) {
                                     modifier = Modifier.padding(bottom = 6.dp),
                                     text = element.value,
                                     fontSize = 20.sp,
-                                    textAlign = TextAlign.Justify
+                                    textAlign = TextAlign.Justify,
+                                    fontFamily = ptSerifFamily
                                 )
 
                                 ElementCategory.HEADER1 -> Text(
                                     modifier = Modifier.padding(vertical = 12.dp),
                                     text = element.value,
                                     fontSize = 42.sp,
-                                    lineHeight = 36.sp
+                                    lineHeight = 36.sp,
+                                    fontFamily = ptSerifFamily
                                 )
 
                                 ElementCategory.HEADER2 -> Text(
                                     modifier = Modifier.padding(vertical = 12.dp),
                                     text = element.value,
                                     fontSize = 36.sp,
-                                    lineHeight = 36.sp
+                                    lineHeight = 36.sp,
+                                    fontFamily = ptSerifFamily
                                 )
 
                                 ElementCategory.HEADER3 -> Text(
                                     modifier = Modifier.padding(vertical = 12.dp),
                                     text = element.value,
                                     fontSize = 28.sp,
-                                    lineHeight = 36.sp
+                                    lineHeight = 36.sp,
+                                    fontFamily = ptSerifFamily
                                 )
 
                                 ElementCategory.HORIZONTAL_RULE -> HorizontalDivider(

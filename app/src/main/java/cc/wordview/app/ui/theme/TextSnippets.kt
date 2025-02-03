@@ -34,3 +34,10 @@ val poppinsFamily = FontFamily(
 val redhatFamily = FontFamily(
     Font(R.font.redhat_display_bold, FontWeight.Bold)
 )
+
+val ptSerifFamily = FontFamily(
+    Font(R.font.ptserif_regular, FontWeight.Normal),
+    Font(R.font.ptserif_italic, FontWeight.Normal, FontStyle.Italic),
+    Font(R.font.ptserif_bolditalic, FontWeight.Bold, FontStyle.Italic),
+    Font(R.font.ptserif_bold, FontWeight.Bold),
+)
