@@ -2,7 +2,7 @@
 accompanistFlowlayout = "0.36.0"
 accompanistSystemuicontroller = "0.31.2-alpha"
 agp = "8.7.3"
-assis = "0.1.1"
+assis = "0.1.2"
 coil = "2.6.0"
 coilCompose = "2.6.0"
 composefadingedges = "1.0.4"

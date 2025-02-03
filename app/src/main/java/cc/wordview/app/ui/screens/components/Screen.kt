@@ -25,6 +25,7 @@ import cc.wordview.app.ui.screens.results.ReviseResults
 import cc.wordview.app.ui.screens.player.Player
 import cc.wordview.app.ui.screens.lesson.Lesson
 import cc.wordview.app.ui.screens.reader.BookOpener
+import cc.wordview.app.ui.screens.reader.BookRender
 import cc.wordview.app.ui.screens.search.Search
 
 sealed class Screen(val route: String) {
@@ -80,7 +81,14 @@ sealed class Screen(val route: String) {
         }
     }
 
+    data object BookRender : Screen("book-render") {
+        @Composable
+        override fun Composable(navHostController: NavHostController) {
+            BookRender(navHostController)
+        }
+    }
+
     companion object {
-        val screens = listOf(Settings, Player, Home, Search, WordRevise, ReviseResults, BookOpener)
+        val screens = listOf(Settings, Player, Home, Search, WordRevise, ReviseResults, BookOpener, BookRender)
     }
 }
