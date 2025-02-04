@@ -32,8 +32,8 @@ fun ReaderSettings() {
     LazyColumn(Modifier.fillMaxWidth()) {
         listPreference(
             key = "reader_theme",
-            defaultValue = "BLACK_ON_WHITE",
-            values = listOf("BLACK_ON_WHITE", "WHITE_ON_BLACK", "SEPIA"),
+            defaultValue = "LIGHT",
+            values = listOf("LIGHT", "DARK", "SEPIA"),
             title = { Text(text = "Theme") },
             summary = { Text(text = it) },
             icon = {

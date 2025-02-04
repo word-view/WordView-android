@@ -133,7 +133,7 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
         var textColor = Color.Black
 
         when (preferences.getOrDefault<String>("reader_theme")) {
-            "WHITE_ON_BLACK" -> {
+            "DARK" -> {
                 backgroundColor = Color.Black
                 textColor = Color.White
             }
@@ -141,8 +141,6 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
                 backgroundColor = Color(0xFFF5F5DC)
                 textColor = Color.Black
             }
-
-            "BLACK_ON_WHITE" -> {}
             else -> {}
         }
 
