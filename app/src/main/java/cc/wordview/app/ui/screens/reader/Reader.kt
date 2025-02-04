@@ -27,21 +27,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -53,6 +59,7 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.extensions.awaitEachGesture
 import cc.wordview.app.extensions.enterImmersiveMode
+import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.leaveImmersiveMode
 import cc.wordview.app.ui.components.OneTimeEffect
@@ -60,6 +67,7 @@ import cc.wordview.app.ui.theme.ptSerifFamily
 import cc.wordview.assis.book.epub.ElementCategory
 import cc.wordview.assis.parseEpub
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,9 +75,14 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
     val book by viewModel.book.collectAsStateWithLifecycle()
     val uiVisible by viewModel.uiVisible.collectAsStateWithLifecycle()
 
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     val currentPageNum by rememberSaveable { mutableIntStateOf(1) }
 
     val systemUiController = rememberSystemUiController()
+    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
 
     OneTimeEffect {
         val bookInputStream = GlobalViewModel.bookInputStream.value
@@ -97,6 +110,14 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
                 title = {
                     book?.metadata?.title?.let { Text(it) }
                 },
+                actions = {
+                    IconButton(onClick = { showBottomSheet = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings"
+                        )
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.goBack() }) {
                         Icon(
@@ -108,9 +129,22 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
             )
         }
     }) { innerPadding ->
-        val backgroundColor = Color.White
-        val textColor = Color.Black
+        var backgroundColor = Color.White
+        var textColor = Color.Black
 
+        when (preferences.getOrDefault<String>("reader_theme")) {
+            "WHITE_ON_BLACK" -> {
+                backgroundColor = Color.Black
+                textColor = Color.White
+            }
+            "SEPIA" -> {
+                backgroundColor = Color(0xFFF5F5DC)
+                textColor = Color.Black
+            }
+
+            "BLACK_ON_WHITE" -> {}
+            else -> {}
+        }
 
         Box(
             modifier = Modifier
@@ -176,6 +210,15 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
                         }
                     }
                 }
+            }
+        }
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                sheetState = sheetState
+            ) {
+                ReaderSettings()
             }
         }
     }

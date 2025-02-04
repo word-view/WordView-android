@@ -49,6 +49,9 @@ import me.zhanghai.compose.preference.switchPreference
 val defaultSettings = hashMapOf(
     "language" to "ja",
     "composer_mode" to false,
+
+    // Reader settings
+    "reader_theme" to "BLACK_ON_WHITE",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
