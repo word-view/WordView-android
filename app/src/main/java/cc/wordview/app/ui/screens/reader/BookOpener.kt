@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.reader
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -48,7 +47,6 @@ import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.screens.components.Screen
 
-@SuppressLint("Recycle")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookOpener(navController: NavHostController) {
@@ -63,7 +61,7 @@ fun BookOpener(navController: NavHostController) {
         if (result.value != null) {
             val epubInputStream = context.contentResolver.openInputStream(result.value!!)!!
             GlobalViewModel.setBookInputStream(epubInputStream)
-            navController.navigate(Screen.BookRender.route)
+            navController.navigate(Screen.Reader.route)
         }
     }
 

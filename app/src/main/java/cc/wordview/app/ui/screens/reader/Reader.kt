@@ -37,14 +37,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.GlobalViewModel
@@ -52,23 +50,19 @@ import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.theme.ptSerifFamily
 import cc.wordview.assis.book.epub.ElementCategory
-import cc.wordview.assis.book.epub.EpubBook
 import cc.wordview.assis.parseEpub
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookRender(navController: NavHostController) {
-    val bookInputStream by GlobalViewModel.bookInputStream.collectAsStateWithLifecycle()
-
-    var book by remember { mutableStateOf<EpubBook?>(null) }
+fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltViewModel()) {
+    val book by viewModel.book.collectAsStateWithLifecycle()
 
     val currentPageNum by rememberSaveable { mutableIntStateOf(1) }
 
     OneTimeEffect {
+        val bookInputStream = GlobalViewModel.bookInputStream.value
         if (bookInputStream != null) {
-            book = parseEpub(bookInputStream!!)
-            Timber.i("Parsed ${book?.metadata?.title}")
+            viewModel.setBook(parseEpub(bookInputStream))
         }
     }
 
