@@ -17,7 +17,10 @@
 
 package cc.wordview.app.ui.screens.reader
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -35,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,18 +50,25 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.GlobalViewModel
+import cc.wordview.app.extensions.awaitEachGesture
+import cc.wordview.app.extensions.enterImmersiveMode
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.extensions.leaveImmersiveMode
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.theme.ptSerifFamily
 import cc.wordview.assis.book.epub.ElementCategory
 import cc.wordview.assis.parseEpub
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltViewModel()) {
     val book by viewModel.book.collectAsStateWithLifecycle()
+    val uiVisible by viewModel.uiVisible.collectAsStateWithLifecycle()
 
     val currentPageNum by rememberSaveable { mutableIntStateOf(1) }
+
+    val systemUiController = rememberSystemUiController()
 
     OneTimeEffect {
         val bookInputStream = GlobalViewModel.bookInputStream.value
@@ -66,30 +77,50 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
         }
     }
 
+    LaunchedEffect(uiVisible) {
+        if (uiVisible)
+            systemUiController.leaveImmersiveMode()
+        else
+            systemUiController.enterImmersiveMode()
+    }
+
+    val page = book?.pages?.get(currentPageNum)
+
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        TopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                titleContentColor = LocalContentColor.current
-            ),
-            title = {},
-            navigationIcon = {
-                IconButton(onClick = { navController.goBack() }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Go back"
-                    )
+        AnimatedVisibility(uiVisible) {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = LocalContentColor.current
+                ),
+                title = {
+                    book?.metadata?.title?.let { Text(it) }
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.goBack() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Go back"
+                        )
+                    }
                 }
-            }
-        )
+            )
+        }
     }) { innerPadding ->
-        val page = book?.pages?.get(currentPageNum)
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background),
+                .background(MaterialTheme.colorScheme.background)
+                // Solution borrowed from Myne (https://github.com/Pool-Of-Tears/Myne/blob/bf2339e0f0e2c3077f344c90fb7f2634dcdbf448/app/src/main/java/com/starry/myne/ui/screens/reader/main/composables/ChaptersContent.kt#L190)
+                .awaitEachGesture {
+                    val down = awaitFirstDown()
+                    val up = waitForUpOrCancellation()
+                    if (up != null && down.id == up.id) {
+                        viewModel.toggleUi()
+                    }
+                }
         ) {
             page?.body?.let {
                 LazyColumn(Modifier.padding(horizontal = 8.dp)) {

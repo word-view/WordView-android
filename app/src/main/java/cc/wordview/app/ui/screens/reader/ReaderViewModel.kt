@@ -28,14 +28,21 @@ import javax.inject.Inject
 
 class ReaderViewModel @Inject constructor(private val savedStateHandle: SavedStateHandle) :
     ViewModel() {
+
     private val _book = MutableStateFlow<EpubBook?>(null)
+    private val _uiVisible = MutableStateFlow(false)
 
     val book = _book.asStateFlow()
+    val uiVisible = _uiVisible.asStateFlow()
 
     fun setBook(book: EpubBook) {
         _book.update {
             Timber.i("Book updated from '${it?.metadata?.title}' to '${book.metadata.title}'")
             book
         }
+    }
+
+    fun toggleUi() {
+        _uiVisible.update { !it }
     }
 }
