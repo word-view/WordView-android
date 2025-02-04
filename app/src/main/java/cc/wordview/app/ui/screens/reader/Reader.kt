@@ -43,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -107,12 +108,15 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
             )
         }
     }) { innerPadding ->
+        val backgroundColor = Color.White
+        val textColor = Color.Black
+
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background)
+                .background(backgroundColor)
                 // Solution borrowed from Myne (https://github.com/Pool-Of-Tears/Myne/blob/bf2339e0f0e2c3077f344c90fb7f2634dcdbf448/app/src/main/java/com/starry/myne/ui/screens/reader/main/composables/ChaptersContent.kt#L190)
                 .awaitEachGesture {
                     val down = awaitFirstDown()
@@ -130,6 +134,7 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
                                 ElementCategory.PARAGRAPH -> Text(
                                     modifier = Modifier.padding(bottom = 6.dp),
                                     text = element.value,
+                                    color = textColor,
                                     fontSize = 20.sp,
                                     textAlign = TextAlign.Justify,
                                     fontFamily = ptSerifFamily
@@ -138,6 +143,7 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
                                 ElementCategory.HEADER1 -> Text(
                                     modifier = Modifier.padding(vertical = 12.dp),
                                     text = element.value,
+                                    color = textColor,
                                     fontSize = 42.sp,
                                     lineHeight = 36.sp,
                                     fontFamily = ptSerifFamily
@@ -146,6 +152,7 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
                                 ElementCategory.HEADER2 -> Text(
                                     modifier = Modifier.padding(vertical = 12.dp),
                                     text = element.value,
+                                    color = textColor,
                                     fontSize = 36.sp,
                                     lineHeight = 36.sp,
                                     fontFamily = ptSerifFamily
@@ -154,6 +161,7 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
                                 ElementCategory.HEADER3 -> Text(
                                     modifier = Modifier.padding(vertical = 12.dp),
                                     text = element.value,
+                                    color = textColor,
                                     fontSize = 28.sp,
                                     lineHeight = 36.sp,
                                     fontFamily = ptSerifFamily
@@ -161,6 +169,7 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
 
                                 ElementCategory.HORIZONTAL_RULE -> HorizontalDivider(
                                     modifier = Modifier.padding(vertical = 24.dp),
+                                    color = textColor,
                                     thickness = 2.dp
                                 )
                             }
