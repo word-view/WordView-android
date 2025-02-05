@@ -210,11 +210,6 @@ fun getColors(preferences: Preferences): Pair<Color, Color> {
             backgroundColor = Color(0xFFF5F5DC)
             textColor = Color.Black
         }
-
-        "default" -> {
-            backgroundColor = MaterialTheme.colorScheme.background
-            textColor = MaterialTheme.colorScheme.onBackground
-        }
     }
 
     return backgroundColor to textColor

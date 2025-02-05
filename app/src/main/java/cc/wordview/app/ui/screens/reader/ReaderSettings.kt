@@ -34,8 +34,8 @@ fun ReaderSettings(modifier: Modifier = Modifier) {
     LazyColumn(modifier.fillMaxWidth()) {
         listPreference(
             key = "reader_theme",
-            defaultValue = "light",
-            values = listOf("light", "dark", "sepia", "default"),
+            defaultValue = "sepia",
+            values = listOf("light", "dark", "sepia"),
             title = { Text(text = "Color theme") },
             summary = { Text(text = it.capitalize()) },
             valueToText = { AnnotatedString(it.capitalize()) },
