@@ -30,8 +30,8 @@ import cc.wordview.app.extensions.capitalize
 import me.zhanghai.compose.preference.listPreference
 
 @Composable
-fun ReaderSettings() {
-    LazyColumn(Modifier.fillMaxWidth()) {
+fun ReaderSettings(modifier: Modifier = Modifier) {
+    LazyColumn(modifier.fillMaxWidth()) {
         listPreference(
             key = "reader_theme",
             defaultValue = "light",

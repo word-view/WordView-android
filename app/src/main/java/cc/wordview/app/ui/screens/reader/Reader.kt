@@ -23,31 +23,27 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -76,10 +72,6 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
     val book by viewModel.book.collectAsStateWithLifecycle()
     val uiVisible by viewModel.uiVisible.collectAsStateWithLifecycle()
 
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    var showBottomSheet by remember { mutableStateOf(false) }
-
     val currentPageNum by rememberSaveable { mutableIntStateOf(1) }
 
     val systemUiController = rememberSystemUiController()
@@ -101,35 +93,37 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
 
     val page = book?.pages?.get(currentPageNum)
 
-    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        AnimatedVisibility(uiVisible) {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = LocalContentColor.current
-                ),
-                title = {
-                    book?.metadata?.title?.let { Text(it) }
-                },
-                actions = {
-                    IconButton(onClick = { showBottomSheet = true }) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "Settings"
-                        )
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            AnimatedVisibility(uiVisible) {
+                TopAppBar(
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        titleContentColor = LocalContentColor.current
+                    ),
+                    title = {
+                        book?.metadata?.title?.let { Text(it) }
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.goBack() }) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = "Go back"
+                            )
+                        }
                     }
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.goBack() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Go back"
-                        )
-                    }
+                )
+            }
+        },
+        bottomBar = {
+            AnimatedVisibility(uiVisible) {
+                Surface(Modifier.fillMaxWidth()) {
+                    ReaderSettings(Modifier.padding(top = 12.dp, bottom = 24.dp))
                 }
-            )
+            }
         }
-    }) { innerPadding ->
+    ) { innerPadding ->
         val (backgroundColor, textColor) = getColors(preferences)
 
         Box(
@@ -198,15 +192,6 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
                 }
             }
         }
-
-        if (showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { showBottomSheet = false },
-                sheetState = sheetState
-            ) {
-                ReaderSettings()
-            }
-        }
     }
 }
 
@@ -220,10 +205,12 @@ fun getColors(preferences: Preferences): Pair<Color, Color> {
             backgroundColor = Color.Black
             textColor = Color.White
         }
+
         "sepia" -> {
             backgroundColor = Color(0xFFF5F5DC)
             textColor = Color.Black
         }
+
         "default" -> {
             backgroundColor = MaterialTheme.colorScheme.background
             textColor = MaterialTheme.colorScheme.onBackground
