@@ -48,6 +48,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -149,47 +150,24 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
                 LazyColumn(Modifier.padding(horizontal = 8.dp)) {
                     for (element in it) {
                         item {
-                            when (element.category) {
-                                ElementCategory.PARAGRAPH -> Text(
-                                    modifier = Modifier.padding(bottom = 6.dp),
-                                    text = element.value,
-                                    color = textColor,
-                                    fontSize = 20.sp,
-                                    textAlign = TextAlign.Justify,
-                                    fontFamily = ptSerifFamily
-                                )
-
-                                ElementCategory.HEADER1 -> Text(
-                                    modifier = Modifier.padding(vertical = 12.dp),
-                                    text = element.value,
-                                    color = textColor,
-                                    fontSize = 42.sp,
-                                    lineHeight = 36.sp,
-                                    fontFamily = ptSerifFamily
-                                )
-
-                                ElementCategory.HEADER2 -> Text(
-                                    modifier = Modifier.padding(vertical = 12.dp),
-                                    text = element.value,
-                                    color = textColor,
-                                    fontSize = 36.sp,
-                                    lineHeight = 36.sp,
-                                    fontFamily = ptSerifFamily
-                                )
-
-                                ElementCategory.HEADER3 -> Text(
-                                    modifier = Modifier.padding(vertical = 12.dp),
-                                    text = element.value,
-                                    color = textColor,
-                                    fontSize = 28.sp,
-                                    lineHeight = 36.sp,
-                                    fontFamily = ptSerifFamily
-                                )
-
-                                ElementCategory.HORIZONTAL_RULE -> HorizontalDivider(
+                            if (element.category == ElementCategory.HORIZONTAL_RULE) {
+                                HorizontalDivider(
                                     modifier = Modifier.padding(vertical = 24.dp),
                                     color = textColor,
                                     thickness = 2.dp
+                                )
+                            } else {
+                                val modifier =
+                                    if (element.category == ElementCategory.PARAGRAPH)
+                                        Modifier.padding(bottom = 6.dp)
+                                    else
+                                        Modifier.padding(vertical = 12.dp)
+
+                                Text(
+                                    modifier = modifier,
+                                    text = element.value,
+                                    color = textColor,
+                                    style = getTextStyle(element.category)
                                 )
                             }
                         }
@@ -200,8 +178,40 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
     }
 }
 
+private fun getTextStyle(category: ElementCategory): TextStyle {
+    return when (category) {
+        ElementCategory.PARAGRAPH -> TextStyle(
+            fontSize = 20.sp,
+            textAlign = TextAlign.Justify,
+            fontFamily = ptSerifFamily
+        )
+
+        ElementCategory.HEADER1 -> TextStyle(
+            fontSize = 42.sp,
+            lineHeight = 36.sp,
+            fontFamily = ptSerifFamily
+        )
+
+        ElementCategory.HEADER2 -> TextStyle(
+            fontSize = 36.sp,
+            lineHeight = 36.sp,
+            fontFamily = ptSerifFamily
+        )
+
+        ElementCategory.HEADER3 -> TextStyle(
+            fontSize = 28.sp,
+            lineHeight = 36.sp,
+            fontFamily = ptSerifFamily
+        )
+
+        ElementCategory.HORIZONTAL_RULE -> {
+            TODO("A horizontal rule can't have a text style")
+        }
+    }
+}
+
 @Composable
-fun getColors(preferences: Preferences): Pair<Color, Color> {
+private fun getColors(preferences: Preferences): Pair<Color, Color> {
     var backgroundColor = Color.White
     var textColor = Color.Black
 
