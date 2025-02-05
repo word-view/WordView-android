@@ -68,6 +68,7 @@ import cc.wordview.assis.book.epub.ElementCategory
 import cc.wordview.assis.parseEpub
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import me.zhanghai.compose.preference.LocalPreferenceFlow
+import me.zhanghai.compose.preference.Preferences
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -129,20 +130,7 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
             )
         }
     }) { innerPadding ->
-        var backgroundColor = Color.White
-        var textColor = Color.Black
-
-        when (preferences.getOrDefault<String>("reader_theme")) {
-            "DARK" -> {
-                backgroundColor = Color.Black
-                textColor = Color.White
-            }
-            "SEPIA" -> {
-                backgroundColor = Color(0xFFF5F5DC)
-                textColor = Color.Black
-            }
-            else -> {}
-        }
+        val (backgroundColor, textColor) = getColors(preferences)
 
         Box(
             modifier = Modifier
@@ -220,4 +208,22 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
             }
         }
     }
+}
+
+fun getColors(preferences: Preferences): Pair<Color, Color> {
+    var backgroundColor = Color.White
+    var textColor = Color.Black
+
+    when (preferences.getOrDefault<String>("reader_theme")) {
+        "DARK" -> {
+            backgroundColor = Color.Black
+            textColor = Color.White
+        }
+        "SEPIA" -> {
+            backgroundColor = Color(0xFFF5F5DC)
+            textColor = Color.Black
+        }
+    }
+
+    return backgroundColor to textColor
 }
