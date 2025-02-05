@@ -210,6 +210,7 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
     }
 }
 
+@Composable
 fun getColors(preferences: Preferences): Pair<Color, Color> {
     var backgroundColor = Color.White
     var textColor = Color.Black
@@ -222,6 +223,10 @@ fun getColors(preferences: Preferences): Pair<Color, Color> {
         "SEPIA" -> {
             backgroundColor = Color(0xFFF5F5DC)
             textColor = Color.Black
+        }
+        "WORDVIEW" -> {
+            backgroundColor = MaterialTheme.colorScheme.background
+            textColor = MaterialTheme.colorScheme.onBackground
         }
     }
 

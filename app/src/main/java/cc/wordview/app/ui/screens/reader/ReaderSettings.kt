@@ -33,7 +33,7 @@ fun ReaderSettings() {
         listPreference(
             key = "reader_theme",
             defaultValue = "LIGHT",
-            values = listOf("LIGHT", "DARK", "SEPIA"),
+            values = listOf("LIGHT", "DARK", "SEPIA", "WORDVIEW"),
             title = { Text(text = "Theme") },
             summary = { Text(text = it) },
             icon = {
