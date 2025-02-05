@@ -216,15 +216,15 @@ fun getColors(preferences: Preferences): Pair<Color, Color> {
     var textColor = Color.Black
 
     when (preferences.getOrDefault<String>("reader_theme")) {
-        "DARK" -> {
+        "dark" -> {
             backgroundColor = Color.Black
             textColor = Color.White
         }
-        "SEPIA" -> {
+        "sepia" -> {
             backgroundColor = Color(0xFFF5F5DC)
             textColor = Color.Black
         }
-        "WORDVIEW" -> {
+        "default" -> {
             backgroundColor = MaterialTheme.colorScheme.background
             textColor = MaterialTheme.colorScheme.onBackground
         }

@@ -25,6 +25,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import cc.wordview.app.extensions.capitalize
 import me.zhanghai.compose.preference.listPreference
 
 @Composable
@@ -32,10 +34,11 @@ fun ReaderSettings() {
     LazyColumn(Modifier.fillMaxWidth()) {
         listPreference(
             key = "reader_theme",
-            defaultValue = "LIGHT",
-            values = listOf("LIGHT", "DARK", "SEPIA", "WORDVIEW"),
-            title = { Text(text = "Theme") },
-            summary = { Text(text = it) },
+            defaultValue = "light",
+            values = listOf("light", "dark", "sepia", "default"),
+            title = { Text(text = "Color theme") },
+            summary = { Text(text = it.capitalize()) },
+            valueToText = { AnnotatedString(it.capitalize()) },
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.ColorLens,

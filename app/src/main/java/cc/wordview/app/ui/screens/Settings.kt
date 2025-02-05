@@ -51,7 +51,7 @@ val defaultSettings = hashMapOf(
     "composer_mode" to false,
 
     // Reader settings
-    "reader_theme" to "LIGHT",
+    "reader_theme" to "light",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
