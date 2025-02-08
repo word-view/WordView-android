@@ -23,12 +23,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * Runs only once per composition launching `block` and never executing again.
  */
 @Composable
-fun OneTimeEffect(block: () -> Unit) {
+fun OneTimeEffect(block: suspend CoroutineScope.() -> Unit) {
     var ran by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(ran) {
