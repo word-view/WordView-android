@@ -64,9 +64,11 @@ import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.R
 import cc.wordview.app.extensions.awaitEachGesture
 import cc.wordview.app.extensions.enterImmersiveMode
+import cc.wordview.app.extensions.getIntOrZero
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.leaveImmersiveMode
+import cc.wordview.app.extensions.putIntAndSave
 import cc.wordview.app.ui.components.LaunchWhenNotNullEffect
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.theme.ptSerifFamily
@@ -91,10 +93,12 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
 
     val context = LocalContext.current
 
-    val sharedPreferences =
-        context.getSharedPreferences(stringResource(R.string.reader_prefs), Context.MODE_PRIVATE)
+    val sharedPrefs =
+        context.getSharedPreferences(stringResource(R.string.reader_prefs), Context.MODE_PRIVATE)!!
 
-    val savedPosition = sharedPreferences?.getInt("${book?.metadata?.identifier}-$currentPageNum-pos", 0) ?: 0
+    fun getScrollPosKey(): String {
+        return "${book?.metadata?.identifier}-$currentPageNum-pos"
+    }
 
     OneTimeEffect {
         val bookInputStream = GlobalViewModel.bookInputStream.value
@@ -104,16 +108,12 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
     }
 
     LaunchWhenNotNullEffect(book) {
-        scrollState.scrollToItem(savedPosition)
+        scrollState.scrollToItem(sharedPrefs.getIntOrZero(getScrollPosKey()))
     }
 
     LaunchedEffect(scrollState) {
         snapshotFlow { scrollState.firstVisibleItemIndex }.collect {
-            if (it > savedPosition) with(sharedPreferences?.edit()) {
-                this?.putInt("${book?.metadata?.identifier}-$currentPageNum-pos", it)
-                this?.apply()
-                this?.commit()
-            }
+            sharedPrefs.edit().putIntAndSave(getScrollPosKey(), it)
         }
     }
 
