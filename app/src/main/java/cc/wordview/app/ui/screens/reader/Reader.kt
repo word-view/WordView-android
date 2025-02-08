@@ -94,6 +94,8 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
     val sharedPreferences =
         context.getSharedPreferences(stringResource(R.string.reader_prefs), Context.MODE_PRIVATE)
 
+    val savedPosition = sharedPreferences?.getInt("${book?.metadata?.identifier}-$currentPageNum-pos", 0) ?: 0
+
     OneTimeEffect {
         val bookInputStream = GlobalViewModel.bookInputStream.value
         if (bookInputStream != null) {
@@ -102,18 +104,11 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
     }
 
     LaunchWhenNotNullEffect(book) {
-        val savedPosition =
-            sharedPreferences?.getInt("${book?.metadata?.identifier}-$currentPageNum-pos", 0) ?: 0
-
         scrollState.scrollToItem(savedPosition)
     }
 
     LaunchedEffect(scrollState) {
         snapshotFlow { scrollState.firstVisibleItemIndex }.collect {
-            val savedPosition =
-                sharedPreferences?.getInt("${book?.metadata?.identifier}-$currentPageNum-pos", 0)
-                    ?: 0
-
             if (it > savedPosition) with(sharedPreferences?.edit()) {
                 this?.putInt("${book?.metadata?.identifier}-$currentPageNum-pos", it)
                 this?.apply()
