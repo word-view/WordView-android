@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.screens.reader
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import cc.wordview.assis.book.epub.EpubBook
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,9 +25,7 @@ import kotlinx.coroutines.flow.update
 import timber.log.Timber
 import javax.inject.Inject
 
-class ReaderViewModel @Inject constructor(private val savedStateHandle: SavedStateHandle) :
-    ViewModel() {
-
+class ReaderViewModel @Inject constructor() : ViewModel() {
     private val _book = MutableStateFlow<EpubBook?>(null)
     private val _uiVisible = MutableStateFlow(false)
 

@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.reader
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -28,6 +29,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,8 +48,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -56,11 +61,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.GlobalViewModel
+import cc.wordview.app.R
 import cc.wordview.app.extensions.awaitEachGesture
 import cc.wordview.app.extensions.enterImmersiveMode
 import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.leaveImmersiveMode
+import cc.wordview.app.ui.components.LaunchWhenNotNullEffect
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.theme.ptSerifFamily
 import cc.wordview.assis.book.epub.ElementCategory
@@ -80,10 +87,38 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
     val systemUiController = rememberSystemUiController()
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
 
+    val scrollState = rememberLazyListState()
+
+    val context = LocalContext.current
+
+    val sharedPreferences =
+        context.getSharedPreferences(stringResource(R.string.reader_prefs), Context.MODE_PRIVATE)
+
     OneTimeEffect {
         val bookInputStream = GlobalViewModel.bookInputStream.value
         if (bookInputStream != null) {
             viewModel.setBook(parseEpub(bookInputStream))
+        }
+    }
+
+    LaunchWhenNotNullEffect(book) {
+        val savedPosition =
+            sharedPreferences?.getInt("${book?.metadata?.identifier}-$currentPageNum-pos", 0) ?: 0
+
+        scrollState.scrollToItem(savedPosition)
+    }
+
+    LaunchedEffect(scrollState) {
+        snapshotFlow { scrollState.firstVisibleItemIndex }.collect {
+            val savedPosition =
+                sharedPreferences?.getInt("${book?.metadata?.identifier}-$currentPageNum-pos", 0)
+                    ?: 0
+
+            if (it > savedPosition) with(sharedPreferences?.edit()) {
+                this?.putInt("${book?.metadata?.identifier}-$currentPageNum-pos", it)
+                this?.apply()
+                this?.commit()
+            }
         }
     }
 
@@ -147,7 +182,7 @@ fun Reader(navController: NavHostController, viewModel: ReaderViewModel = hiltVi
                 }
         ) {
             page?.body?.let {
-                LazyColumn(Modifier.padding(horizontal = 8.dp)) {
+                LazyColumn(Modifier.padding(horizontal = 8.dp), state = scrollState) {
                     for (element in it) {
                         item {
                             if (element.category == ElementCategory.HORIZONTAL_RULE) {
