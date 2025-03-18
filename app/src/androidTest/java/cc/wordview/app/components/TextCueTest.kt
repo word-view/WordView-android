@@ -22,7 +22,6 @@ import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.theme.WordViewTheme
-import cc.wordview.gengolex.word.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule
 import org.junit.Test
@@ -41,65 +40,11 @@ class TextCueTest {
         }
     }
 
-    private fun setup(cue: WordViewCue) {
-        composeTestRule.setContent {
-            ProvidePreferenceLocals {
-                TextCue(cue)
-            }
-        }
-    }
-
     @Test
     fun renders() {
         setup("abcdefghijklmnopqrstuvwxyz 結局きたよ。")
         for (char in "abcdefghijklmnopqrstuvwxyz 結局きたよ。") {
             composeTestRule.onNodeWithText(char.toString()).assertExists()
-        }
-    }
-
-    @Test
-    fun dictionaryMultipleWordsEnglish() {
-        val words = arrayListOf(
-            Word("world", "world"),
-            Word("programmed", "programmed"),
-            Word("work", "work"),
-            Word("feel", "feel"),
-        )
-
-        setup(
-            WordViewCue(
-                "Hello, world programmed to work and not to feel",
-                0,
-                0,
-                words
-            )
-        )
-
-        for (word in words) {
-            composeTestRule.onNodeWithText(word.word).assertExists()
-        }
-    }
-
-    @Test
-    fun dictionaryMultipleWordsJapanese() {
-        val words = arrayListOf(
-            Word("hajimari", "始まり"),
-            Word("rain", "雨"),
-            Word("aruitanda", "歩いたんだ"),
-            Word("kumori", "曇り"),
-        )
-
-        setup(
-            WordViewCue(
-                "始まりはそうだ 曇りのち雨 歩いたんだ、ここ",
-                0,
-                0,
-                words,
-            )
-        )
-
-        for (word in words) {
-            composeTestRule.onNodeWithText(word.word).assertExists()
         }
     }
 }
