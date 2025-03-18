@@ -22,7 +22,7 @@ import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.theme.WordViewTheme
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule
 import org.junit.Test

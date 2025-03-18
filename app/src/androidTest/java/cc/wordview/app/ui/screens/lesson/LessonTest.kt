@@ -26,7 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.components.Screen
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test

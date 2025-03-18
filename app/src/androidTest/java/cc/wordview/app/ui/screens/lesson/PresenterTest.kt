@@ -25,7 +25,7 @@ import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 import coil.request.ImageRequest
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule

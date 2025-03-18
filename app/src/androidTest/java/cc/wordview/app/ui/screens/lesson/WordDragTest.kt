@@ -33,7 +33,7 @@ import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.lesson.components.DragMode
 import cc.wordview.app.ui.screens.lesson.model.DragViewModel
 import cc.wordview.app.ui.screens.components.Screen
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 import coil.request.ImageRequest
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Assert.assertTrue

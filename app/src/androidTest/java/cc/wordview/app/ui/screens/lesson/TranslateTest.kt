@@ -32,7 +32,7 @@ import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.lesson.model.Phrase
 import cc.wordview.app.ui.screens.lesson.model.TranslateViewModel
 import cc.wordview.app.ui.screens.lesson.model.phraseList
-import cc.wordview.gengolex.languages.Word
+import cc.wordview.gengolex.word.Word
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
