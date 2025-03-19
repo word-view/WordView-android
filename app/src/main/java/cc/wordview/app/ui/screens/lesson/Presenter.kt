@@ -137,7 +137,7 @@ fun Presenter() {
 
             Answer.NONE -> {
                 val image = ImageCacheManager.getCachedImage(currentWord.tokenWord.parent)
-                if (image != null) AsyncImage(
+                AsyncImage(
                     modifier = Modifier
                         .size(130.dp)
                         .testTag("word"),
