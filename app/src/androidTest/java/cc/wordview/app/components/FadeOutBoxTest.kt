@@ -27,6 +27,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.hasAlpha
 import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.theme.WordViewTheme
@@ -34,10 +35,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class FadeOutBoxTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class FadeOutBoxTest : ComposeTest() {
     @Before
     fun setup() {
         composeTestRule.mainClock.autoAdvance = false

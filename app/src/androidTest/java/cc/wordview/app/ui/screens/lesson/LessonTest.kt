@@ -18,23 +18,19 @@
 package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.gengolex.word.Word
 import org.junit.Ignore
-import org.junit.Rule
 import org.junit.Test
 
-class LessonTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class LessonTest : ComposeTest() {
     private val viewModel = LessonViewModel
 
     private fun setupScreen() {

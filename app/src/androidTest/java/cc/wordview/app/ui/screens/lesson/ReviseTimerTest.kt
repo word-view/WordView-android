@@ -18,15 +18,11 @@
 package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.test.junit4.createComposeRule
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.screens.lesson.components.ReviseTimer
-import org.junit.Rule
 import org.junit.Test
 
-class ReviseTimerTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class ReviseTimerTest : ComposeTest() {
     private val viewModel = LessonViewModel
 
     private fun setup(autoAdvance: Boolean = true, timeRemaining: Long = 1000L) {

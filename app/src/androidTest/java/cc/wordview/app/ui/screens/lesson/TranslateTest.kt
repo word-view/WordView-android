@@ -24,23 +24,19 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.lesson.model.Phrase
 import cc.wordview.app.ui.screens.lesson.model.TranslateViewModel
 import cc.wordview.app.ui.screens.lesson.model.phraseList
 import cc.wordview.gengolex.word.Word
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class TranslateTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class TranslateTest : ComposeTest() {
     private val viewModel = LessonViewModel
     private var translateViewModel = TranslateViewModel()
 

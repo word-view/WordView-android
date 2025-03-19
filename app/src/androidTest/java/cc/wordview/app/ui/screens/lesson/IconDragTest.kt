@@ -19,12 +19,12 @@ package cc.wordview.app.ui.screens.lesson
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ImageCacheManager
 import cc.wordview.app.ui.screens.results.ReviseResults
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
@@ -39,13 +39,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Assert.assertTrue
-import org.junit.Rule
 import org.junit.Test
 
-class IconDragTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class IconDragTest : ComposeTest() {
     private val viewModel = LessonViewModel
 
     private fun setupScreen(autoAdvance: Boolean = true) {

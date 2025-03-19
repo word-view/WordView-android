@@ -31,6 +31,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.PlayerButton
 import org.junit.Rule
 import org.junit.Test
@@ -38,10 +39,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 
-class PlayerButtonTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class PlayerButtonTest : ComposeTest() {
     private fun setup(onClick: Runnable) {
         composeTestRule.setContent {
             var icon by mutableStateOf(Icons.Filled.PlayArrow)

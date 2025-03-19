@@ -19,6 +19,7 @@ package cc.wordview.app.components
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.IdentifiedWord
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.Language
@@ -30,10 +31,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule
 import org.junit.Test
 
-class IdentifiedWordTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class IdentifiedWordTest : ComposeTest() {
     private fun setup(word: Word, text: String, langtag: String) {
         composeTestRule.setContent {
             WordViewTheme {

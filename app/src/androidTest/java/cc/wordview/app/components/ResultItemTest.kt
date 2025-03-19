@@ -23,6 +23,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.ui.components.ResultItem
 import org.junit.Rule
@@ -32,10 +33,7 @@ import org.mockito.Mockito.verify
 import org.schabi.newpipe.extractor.Image
 import kotlin.time.Duration.Companion.seconds
 
-class ResultItemTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class ResultItemTest : ComposeTest() {
     private fun setup(result: VideoSearchResult, onClick: Runnable) {
         composeTestRule.setContent {
             ResultItem(result = result, onClick = { onClick.run() })

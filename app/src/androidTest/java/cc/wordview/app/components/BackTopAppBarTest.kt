@@ -23,6 +23,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.BackTopAppBar
 import org.junit.Before
 import org.junit.Rule
@@ -30,10 +31,7 @@ import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
-class BackTopAppBarTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class BackTopAppBarTest : ComposeTest() {
     private val onClickBack = mock(Runnable::class.java)
 
     @Before

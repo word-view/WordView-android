@@ -15,34 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.components
+package cc.wordview.app
 
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-import cc.wordview.app.ComposeTest
-import cc.wordview.app.ui.components.NotEnoughWordsDialog
-import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 
-class NotEnoughWordsDialogTest : ComposeTest() {
-    private val onConfirm = mock(Runnable::class.java)
-
-    @Before
-    fun setup() {
-        composeTestRule.setContent {
-            NotEnoughWordsDialog(
-                onConfirm = { onConfirm.run() }
-            )
-        }
-    }
-
-    @Test
-    fun confirm() {
-        composeTestRule.onNodeWithText("Go back").performClick()
-        verify(onConfirm).run()
-    }
+open class ComposeTest {
+    @get:Rule
+    val composeTestRule = createComposeRule()
 }

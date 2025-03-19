@@ -27,6 +27,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.SongCard
 import cc.wordview.gengolex.Language
 import org.junit.Rule
@@ -34,10 +35,7 @@ import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
-class SongCardTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class SongCardTest : ComposeTest() {
     private fun setup(
         artist: String,
         trackName: String,

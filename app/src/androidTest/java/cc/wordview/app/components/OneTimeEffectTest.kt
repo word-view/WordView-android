@@ -29,6 +29,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.OneTimeEffect
 import org.junit.Before
 import org.junit.Rule
@@ -37,10 +38,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 
-class OneTimeEffectTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class OneTimeEffectTest : ComposeTest() {
     private val mockBlock = mock(Runnable::class.java)
 
     @Before

@@ -19,6 +19,7 @@ package cc.wordview.app.components
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.theme.WordViewTheme
@@ -26,10 +27,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Rule
 import org.junit.Test
 
-class TextCueTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class TextCueTest : ComposeTest() {
     private fun setup(text: String = "") {
         composeTestRule.setContent {
             WordViewTheme {

@@ -24,14 +24,12 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.theme.WordViewTheme
 import org.junit.Rule
 import org.junit.Test
 
-class HomeTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class HomeTest : ComposeTest() {
     @Test
     fun learnTabRendersByItself() {
         composeTestRule.setContent {

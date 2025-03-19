@@ -20,6 +20,7 @@ package cc.wordview.app.components
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.LessonQuitDialog
 import org.junit.Before
 import org.junit.Rule
@@ -27,10 +28,7 @@ import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
-class LessonQuitDialogTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class LessonQuitDialogTest : ComposeTest() {
     private val onDismiss = mock(Runnable::class.java)
     private val onConfirm = mock(Runnable::class.java)
 

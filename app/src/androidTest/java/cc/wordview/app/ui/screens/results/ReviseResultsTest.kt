@@ -17,20 +17,16 @@
 
 package cc.wordview.app.ui.screens.results
 
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.gengolex.word.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import org.junit.Rule
 import org.junit.Test
 
-class ReviseResultsTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class ReviseResultsTest : ComposeTest() {
     private val viewModel = ReviseResultsViewModel
 
     private fun setupScreen() {

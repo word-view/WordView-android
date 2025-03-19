@@ -22,6 +22,7 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.WordsPresentDialog
 import cc.wordview.gengolex.word.Word
 import org.junit.Before
@@ -31,10 +32,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 
-class WordsPresentDialogTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
+class WordsPresentDialogTest : ComposeTest() {
     private val onConfirm = mock(Runnable::class.java)
 
     @Before
