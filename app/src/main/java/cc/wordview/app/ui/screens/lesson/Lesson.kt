@@ -21,6 +21,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -66,7 +67,7 @@ fun Lesson(
     val timerFinished by viewModel.timerFinished.collectAsStateWithLifecycle()
     val timer by viewModel.timer.collectAsStateWithLifecycle()
 
-    val activity = LocalContext.current as Activity
+    val activity = LocalActivity.current!!
 
     var openQuitConfirm by remember { mutableStateOf(false) }
 

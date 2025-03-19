@@ -19,6 +19,7 @@ package cc.wordview.app.ui.screens.player
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -109,7 +110,7 @@ fun Player(
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
 
-    val activity = LocalContext.current as Activity
+    val activity = LocalActivity.current!!
     val context = LocalContext.current
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()

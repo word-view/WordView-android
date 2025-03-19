@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.player
 
 import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,7 +49,7 @@ import cc.wordview.app.ui.theme.Typography
 @Composable
 fun ErrorScreen(navHostController: NavHostController, message: String, refresh: () -> Unit, statusCode: Int) {
     val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
-    val activity = LocalContext.current as Activity
+    val activity = LocalActivity.current!!
 
     Column(
         modifier = Modifier
