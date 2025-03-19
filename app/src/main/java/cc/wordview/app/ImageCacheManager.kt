@@ -57,7 +57,7 @@ object ImageCacheManager {
                 }
 
                 override fun onError(request: ImageRequest, result: ErrorResult) {
-                    Timber.e("Failed to download image: ${result.throwable.message}")
+                    Timber.e("Failed to download image \"${request.memoryCacheKey?.key}\": ${result.throwable.message}")
 
                     val key = request.memoryCacheKey?.key!!
                     imagesStatus[key] = ImageLoaderStatus.ERROR
