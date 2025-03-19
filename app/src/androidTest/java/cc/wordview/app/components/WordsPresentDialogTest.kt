@@ -19,14 +19,12 @@ package cc.wordview.app.components
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.WordsPresentDialog
 import cc.wordview.gengolex.word.Word
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times

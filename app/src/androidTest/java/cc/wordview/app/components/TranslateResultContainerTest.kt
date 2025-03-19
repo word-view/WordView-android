@@ -18,12 +18,10 @@
 package cc.wordview.app.components
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.TranslateResultContainer
-import org.junit.Rule
 import org.junit.Test
 
 class TranslateResultContainerTest : ComposeTest() {

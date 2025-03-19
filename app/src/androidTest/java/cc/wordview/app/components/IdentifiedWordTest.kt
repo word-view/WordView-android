@@ -17,7 +17,6 @@
 
 package cc.wordview.app.components
 
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.IdentifiedWord
@@ -28,7 +27,6 @@ import cc.wordview.gengolex.word.Syntax
 import cc.wordview.gengolex.word.Time
 import cc.wordview.gengolex.word.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import org.junit.Rule
 import org.junit.Test
 
 class IdentifiedWordTest : ComposeTest() {

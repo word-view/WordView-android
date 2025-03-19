@@ -85,6 +85,6 @@ class VideoStream : VideoStreamInterface {
     }
 
     companion object {
-        var YTService: StreamingService = NewPipe.getService(0);
+        var YTService: StreamingService = NewPipe.getService(0)
     }
 }

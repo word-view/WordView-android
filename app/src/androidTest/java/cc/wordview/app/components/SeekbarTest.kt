@@ -18,13 +18,11 @@
 package cc.wordview.app.components
 
 import androidx.compose.ui.test.assertWidthIsEqualTo
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.Seekbar
-import org.junit.Rule
 import org.junit.Test
 
 class SeekbarTest : ComposeTest() {

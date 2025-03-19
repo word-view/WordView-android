@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.screens.lesson
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.pm.ActivityInfo
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
@@ -43,7 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,9 +51,9 @@ import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.LessonQuitDialog
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.screens.components.Screen
-import cc.wordview.app.ui.screens.results.ReviseResultsViewModel
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
 import cc.wordview.app.ui.screens.lesson.components.ReviseTimer
+import cc.wordview.app.ui.screens.results.ReviseResultsViewModel
 
 @SuppressLint("SourceLockedOrientationActivity")
 @Composable

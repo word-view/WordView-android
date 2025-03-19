@@ -20,13 +20,11 @@ package cc.wordview.app.components
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertWidthIsEqualTo
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.CircularProgressIndicator
-import org.junit.Rule
 import org.junit.Test
 
 class CircularProgressIndicatorTest : ComposeTest() {

@@ -24,15 +24,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.hasAlpha
 import cc.wordview.app.ui.components.FadeOutBox
-import cc.wordview.app.ui.theme.WordViewTheme
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 class FadeOutBoxTest : ComposeTest() {

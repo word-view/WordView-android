@@ -35,6 +35,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import androidx.core.net.toUri
 
 class AudioPlayer {
     private lateinit var player: ExoPlayer
@@ -69,7 +70,7 @@ class AudioPlayer {
             player.addListener(internalListener)
             player.addListener(listener)
 
-            val mediaItem = MediaItem.fromUri(Uri.parse(url))
+            val mediaItem = MediaItem.fromUri(url.toUri())
 
             player.setMediaItem(mediaItem)
             player.prepare()

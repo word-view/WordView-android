@@ -19,14 +19,11 @@ package cc.wordview.app.ui.screens.home
 
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.click
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ComposeTest
-import cc.wordview.app.ui.theme.WordViewTheme
-import org.junit.Rule
 import org.junit.Test
 
 class HomeTest : ComposeTest() {

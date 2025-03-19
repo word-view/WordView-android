@@ -18,7 +18,6 @@
 package cc.wordview.app.components
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -26,7 +25,6 @@ import androidx.compose.ui.test.performClick
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.ui.components.ResultItem
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify

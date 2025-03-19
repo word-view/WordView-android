@@ -18,12 +18,10 @@
 package cc.wordview.app.components
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.WordCard
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
