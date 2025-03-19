@@ -47,9 +47,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    lint {
-        baseline = file("lint-baseline.xml")
-    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
