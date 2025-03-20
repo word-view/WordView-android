@@ -39,17 +39,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.extensions.goBack
 import me.zhanghai.compose.preference.ListPreferenceType
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.switchPreference
-
-val defaultSettings = hashMapOf(
-    "language" to "ja",
-    "composer_mode" to false,
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,8 +90,8 @@ fun Settings(navController: NavHostController) {
                     },
                 )
                 listPreference(
-                    key = "language",
-                    defaultValue = "ja",
+                    key = AppSettings.language.key,
+                    defaultValue = AppSettings.language.defaultValue,
                     values = listOf(
                         "pt",
                         "ja",
@@ -121,8 +117,8 @@ fun Settings(navController: NavHostController) {
                 @Suppress("KotlinConstantConditions")
                 if (BuildConfig.BUILD_TYPE == "debug") {
                     switchPreference(
-                        key = "composer_mode",
-                        defaultValue = false,
+                        key = AppSettings.composerMode.key,
+                        defaultValue = AppSettings.composerMode.defaultValue,
                         title = { Text(text = stringResource(R.string.composer_mode)) },
                         icon = {
                             Icon(

@@ -45,10 +45,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.extensions.detectTapGestures
 import cc.wordview.app.extensions.dragGestures
-import cc.wordview.app.extensions.getOrDefault
-import cc.wordview.app.ImageCacheManager
+import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.DragMode
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
@@ -59,7 +59,6 @@ import cc.wordview.gengolex.word.Word
 import coil.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import me.zhanghai.compose.preference.LocalPreferenceFlow
 import kotlin.math.roundToInt
 
 @Composable
@@ -204,8 +203,7 @@ fun Drag(
 
 @Composable
 fun Text(word: Word, testTag: String) {
-    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val langTag = remember { preferences.getOrDefault<String>("language") }
+    val langTag = AppSettings.language.get()
     val lang = remember { Language.byTag(langTag) }
 
     Text(

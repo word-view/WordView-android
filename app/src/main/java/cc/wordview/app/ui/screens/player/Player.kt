@@ -40,7 +40,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,10 +53,10 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.enterImmersiveMode
 import cc.wordview.app.extensions.getCleanUploaderName
-import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.leaveImmersiveMode
 import cc.wordview.app.extensions.setOrientationSensorLandscape
@@ -111,8 +110,8 @@ fun Player(
     val context = LocalContext.current
 
     val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val composerMode = remember { preferences.getOrDefault<Boolean>("composer_mode") }
-    val langTag = remember { preferences.getOrDefault<String>("language") }
+    val composerMode = AppSettings.composerMode.get()
+    val langTag = AppSettings.language.get()
     var wordsPresentDialog by rememberSaveable { mutableStateOf(false) }
 
     val systemUiController = rememberSystemUiController()

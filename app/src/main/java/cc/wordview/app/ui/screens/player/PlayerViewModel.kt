@@ -24,14 +24,14 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.audio.AudioPlayerListener
 import cc.wordview.app.audio.AudioPlayer
-import cc.wordview.app.extensions.getOrDefault
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
-import cc.wordview.app.ImageCacheManager
+import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.screens.lesson.LessonViewModel
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.app.ui.screens.lesson.model.TranslateRepository
@@ -135,7 +135,7 @@ class PlayerViewModel @Inject constructor(
             preloadPhrases(
                 context,
                 "en",
-                preferences.getOrDefault("language"),
+                AppSettings.language.get(preferences),
                 words
             )
 

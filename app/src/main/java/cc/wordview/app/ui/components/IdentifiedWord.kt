@@ -36,7 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import cc.wordview.app.ImageCacheManager
+import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.extensions.capitalize
 import cc.wordview.gengolex.word.Syntax
 import cc.wordview.gengolex.word.Word
