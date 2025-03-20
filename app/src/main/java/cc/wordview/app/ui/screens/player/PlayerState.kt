@@ -17,6 +17,6 @@
 
 package cc.wordview.app.ui.screens.player
 
-enum class PlayerStatus {
+enum class PlayerState {
     ERROR, LOADING, READY
 }

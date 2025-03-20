@@ -93,7 +93,7 @@ fun Player(
     val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
     val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
 
-    val status by viewModel.playerStatus.collectAsStateWithLifecycle()
+    val state by viewModel.playerState.collectAsStateWithLifecycle()
     val player by viewModel.player.collectAsStateWithLifecycle()
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val cues by viewModel.cues.collectAsStateWithLifecycle()
@@ -132,7 +132,7 @@ fun Player(
             } catch (e: ExtractionException) {
                 Timber.e(e)
                 viewModel.setErrorMessage(e.message.toString())
-                viewModel.setPlayerStatus(PlayerStatus.ERROR)
+                viewModel.setPlayerState(PlayerState.ERROR)
             }
         }
     }
@@ -172,8 +172,8 @@ fun Player(
     }
 
     Scaffold { innerPadding ->
-        when (status) {
-            PlayerStatus.READY -> {
+        when (state) {
+            PlayerState.READY -> {
                 OneTimeEffect {
                     wordsPresentDialog = true
                     // For some reason putting this inside the outer OneTimeEffect
@@ -272,13 +272,13 @@ fun Player(
                 }
             }
 
-            PlayerStatus.ERROR -> ErrorScreen(navHostController, errorMessage, {
+            PlayerState.ERROR -> ErrorScreen(navHostController, errorMessage, {
                 Timber.d("Refreshing player")
-                viewModel.setPlayerStatus(PlayerStatus.LOADING)
+                viewModel.setPlayerState(PlayerState.LOADING)
                 start()
             }, statusCode)
 
-            PlayerStatus.LOADING -> {
+            PlayerState.LOADING -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(64.dp)
                 }
