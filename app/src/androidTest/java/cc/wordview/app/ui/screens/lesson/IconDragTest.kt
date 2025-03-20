@@ -25,7 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ComposeTest
-import cc.wordview.app.ImageCacheManager
+import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.screens.results.ReviseResults
 import cc.wordview.app.ui.screens.lesson.components.ReviseScreen
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord

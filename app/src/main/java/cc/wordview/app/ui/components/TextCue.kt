@@ -25,8 +25,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,15 +32,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.extensions.getOrDefault
+import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.subtitle.WordViewCue
-import me.zhanghai.compose.preference.LocalPreferenceFlow
 
 @Composable
 fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
-    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val langtag = remember { preferences.getOrDefault<String>("language") }
+    val langtag = AppSettings.language.get()
 
     Column(Modifier.wrapContentWidth(Alignment.Start)) {
         Row(

@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app
+package cc.wordview.app.misc
 
 import android.content.Context
 import android.graphics.Bitmap

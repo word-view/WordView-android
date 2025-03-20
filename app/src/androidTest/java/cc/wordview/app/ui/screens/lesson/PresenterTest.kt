@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ComposeTest
-import cc.wordview.app.ImageCacheManager
+import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.screens.lesson.components.ReviseWord
 import cc.wordview.gengolex.word.Word

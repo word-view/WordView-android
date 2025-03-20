@@ -44,15 +44,14 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.extensions.getOrDefault
-import cc.wordview.app.ImageCacheManager
+import cc.wordview.app.misc.AppSettings
+import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.screens.lesson.components.Answer
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
-import me.zhanghai.compose.preference.LocalPreferenceFlow
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -62,8 +61,7 @@ fun Presenter() {
 
     var visible by remember { mutableStateOf(false) }
 
-    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-    val langTag = remember { preferences.getOrDefault<String>("language") }
+    val langTag = AppSettings.language.get()
 
     val context = LocalContext.current
 
@@ -145,7 +143,6 @@ fun Presenter() {
                     contentDescription = null
                 )
 
-                val langTag = remember { preferences.getOrDefault<String>("language") }
                 val lang = remember { Language.byTag(langTag) }
 
                 Text(
