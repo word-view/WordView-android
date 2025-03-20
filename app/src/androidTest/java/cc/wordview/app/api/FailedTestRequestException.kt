@@ -15,23 +15,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app
+package cc.wordview.app.api
 
-import android.content.Context
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.test.junit4.createComposeRule
-import org.junit.Rule
-
-open class ComposeTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
-    val context: Context
-        get() {
-            lateinit var c: Context
-            composeTestRule.setContent {
-               c = LocalContext.current
-            }
-            return c
-        }
-}
+class FailedTestRequestException(override val message: String) : Exception()
