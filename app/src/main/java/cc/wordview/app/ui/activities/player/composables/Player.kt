@@ -22,6 +22,7 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,7 +34,6 @@ import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -45,18 +45,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.getCleanUploaderName
-import cc.wordview.app.extractor.VideoStream
-import cc.wordview.app.ui.activities.player.viewmodel.PlayerState
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FadeInAsyncImage
@@ -68,22 +64,11 @@ import cc.wordview.app.ui.components.PlayerTopBar
 import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.components.WordsPresentDialog
-import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.word.Word
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import me.zhanghai.compose.preference.LocalPreferenceFlow
-import org.schabi.newpipe.extractor.exceptions.ExtractionException
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Player(viewModel: PlayerViewModel = hiltViewModel()) {
-    val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
-    val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
-
-    val state by viewModel.playerState.collectAsStateWithLifecycle()
+fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     val player by viewModel.player.collectAsStateWithLifecycle()
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val cues by viewModel.cues.collectAsStateWithLifecycle()
@@ -91,43 +76,18 @@ fun Player(viewModel: PlayerViewModel = hiltViewModel()) {
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
     val notEnoughWords by viewModel.notEnoughWords.collectAsStateWithLifecycle()
-    val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
-    val statusCode by viewModel.statusCode.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
 
+    val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
+
     val activity = LocalActivity.current!!
-    val context = LocalContext.current
 
-    val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
     val composerMode = AppSettings.composerMode.get()
-    val langTag = AppSettings.language.get()
     var wordsPresentDialog by rememberSaveable { mutableStateOf(false) }
-
-    fun start() {
-        val lang = Language.byTag(langTag)
-
-        Timber.i("Chosen language is ${lang.name.lowercase()}")
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                SongViewModel.videoStream.value.init(videoId, context)
-
-                viewModel.initAudio(videoStream.getStreamURL(), context)
-                viewModel.getLyrics(preferences, context, videoId, lang, videoStream)
-            } catch (e: ExtractionException) {
-                Timber.e(e)
-                viewModel.setErrorMessage(e.message.toString())
-                viewModel.setPlayerState(PlayerState.ERROR)
-            }
-        }
-    }
-
-    OneTimeEffect { start() }
 
     LaunchedEffect(finalized) {
         if (finalized) {
-            SongViewModel.setVideoStream(VideoStream())
             player.stop()
             // TODO: Exit the activity for now
             activity.finish()
@@ -135,7 +95,6 @@ fun Player(viewModel: PlayerViewModel = hiltViewModel()) {
     }
 
     fun back() {
-        SongViewModel.setVideoStream(VideoStream())
         player.stop()
         activity.finish()
     }
@@ -152,113 +111,93 @@ fun Player(viewModel: PlayerViewModel = hiltViewModel()) {
         WordsPresentDialog({ wordsPresentDialog = false; player.play() }, words.distinct())
     }
 
-    Scaffold { innerPadding ->
-        when (state) {
-            PlayerState.READY -> {
-                OneTimeEffect {
-                    wordsPresentDialog = true
-                }
+    OneTimeEffect { wordsPresentDialog = true }
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .testTag("interface")
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("interface")
+    ) {
+        FadeInAsyncImage(videoStream.getHQThumbnail())
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            TextCue(
+                modifier = Modifier
+                    .zIndex(1f)
+                    .padding(bottom = innerPadding.calculateBottomPadding() + 6.dp)
+                    .testTag("text-cue"),
+                cue = currentCue
+            )
+        }
+
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            if (isBuffering) CircularProgressIndicator(64.dp)
+        }
+
+        FadeOutBox(
+            duration = 250,
+            stagnationTime = if (composerMode) 5000 * 10 else 5000
+        ) {
+            PlayerTopBar {
+                IconButton(
+                    onClick = { back() },
+                    modifier = Modifier.testTag("back-button"),
                 ) {
-                    FadeInAsyncImage(videoStream.getHQThumbnail())
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Bottom
-                    ) {
-                        TextCue(
-                            modifier = Modifier
-                                .zIndex(1f)
-                                .padding(bottom = innerPadding.calculateBottomPadding() + 6.dp)
-                                .testTag("text-cue"),
-                            cue = currentCue
-                        )
-                    }
-
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        if (isBuffering) CircularProgressIndicator(64.dp)
-                    }
-
-                    FadeOutBox(
-                        duration = 250,
-                        stagnationTime = if (composerMode) 5000 * 10 else 5000
-                    ) {
-                        PlayerTopBar {
-                            IconButton(
-                                onClick = { back() },
-                                modifier = Modifier.testTag("back-button"),
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowBack,
-                                    contentDescription = "Back"
-                                )
-                            }
-                            Column {
-                                Text(
-                                    text = videoStream.info.name,
-                                    fontSize = 18.sp
-                                )
-                                Text(
-                                    text = videoStream.info.getCleanUploaderName(),
-                                    fontSize = 12.sp
-                                )
-                            }
-                        }
-                        Seekbar(
-                            Modifier.padding(top = TopAppBarDefaults.TopAppBarExpandedHeight),
-                            composerMode,
-                            currentPosition,
-                            player.getDuration(),
-                            bufferedPercentage
-                        )
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Row(
-                                Modifier.fillMaxWidth(0.5f),
-                                horizontalArrangement = Arrangement.SpaceEvenly,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                PlayerButton(
-                                    modifier = Modifier.testTag("skip-back"),
-                                    icon = Icons.Filled.SkipPrevious,
-                                    size = 72.dp,
-                                    onClick = { player.skipBack() }
-                                )
-                                PlayerButton(
-                                    modifier = Modifier
-                                        .testTag("toggle-play")
-                                        .alpha(if (isBuffering) 0.0f else 1.0f),
-                                    icon = playIcon,
-                                    size = 80.dp,
-                                    onClick = { player.play() }
-                                )
-                                PlayerButton(
-                                    modifier = Modifier.testTag("skip-forward"),
-                                    icon = Icons.Filled.SkipNext,
-                                    size = 72.dp,
-                                    onClick = { player.skipForward() }
-                                )
-                            }
-                        }
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+                Column {
+                    Text(
+                        text = videoStream.info.name,
+                        fontSize = 18.sp
+                    )
+                    Text(
+                        text = videoStream.info.getCleanUploaderName(),
+                        fontSize = 12.sp
+                    )
                 }
             }
-
-            PlayerState.ERROR -> ErrorScreen(errorMessage, {
-                Timber.d("Refreshing player")
-                viewModel.setPlayerState(PlayerState.LOADING)
-                start()
-            }, statusCode)
-
-            PlayerState.LOADING -> {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(64.dp)
+            Seekbar(
+                Modifier.padding(top = TopAppBarDefaults.TopAppBarExpandedHeight),
+                composerMode,
+                currentPosition,
+                player.getDuration(),
+                bufferedPercentage
+            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    Modifier.fillMaxWidth(0.5f),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    PlayerButton(
+                        modifier = Modifier.testTag("skip-back"),
+                        icon = Icons.Filled.SkipPrevious,
+                        size = 72.dp,
+                        onClick = { player.skipBack() }
+                    )
+                    PlayerButton(
+                        modifier = Modifier
+                            .testTag("toggle-play")
+                            .alpha(if (isBuffering) 0.0f else 1.0f),
+                        icon = playIcon,
+                        size = 80.dp,
+                        onClick = { player.play() }
+                    )
+                    PlayerButton(
+                        modifier = Modifier.testTag("skip-forward"),
+                        icon = Icons.Filled.SkipNext,
+                        size = 72.dp,
+                        onClick = { player.skipForward() }
+                    )
                 }
             }
         }
