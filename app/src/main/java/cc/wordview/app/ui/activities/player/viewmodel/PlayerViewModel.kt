@@ -32,10 +32,6 @@ import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
-import cc.wordview.app.ui.screens.lesson.LessonViewModel
-import cc.wordview.app.ui.screens.lesson.components.ReviseWord
-import cc.wordview.app.ui.screens.lesson.model.TranslateRepository
-import cc.wordview.app.ui.screens.lesson.model.phraseList
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import coil.request.ImageRequest
@@ -48,13 +44,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.zhanghai.compose.preference.Preferences
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val playerRepository: PlayerRepository,
-    private val translateRepository: TranslateRepository,
+    private val playerRepository: PlayerRepository
 ) : ViewModel() {
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
@@ -148,15 +144,14 @@ class PlayerViewModel @Inject constructor(
         playerRepository.getLyrics(id, lang.tag, video)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun preloadPhrases(
         context: Context,
         phraseLang: String,
         wordsLang: String,
         keywords: List<String>
     ) = viewModelScope.launch {
-        translateRepository.init(context)
-        translateRepository.onSucceed = { phraseList.addAll(it) }
-        translateRepository.getPhrase(phraseLang, wordsLang, keywords)
+        Timber.w("preloadPhrases: temporarily disabled")
     }
 
     private fun preloadImage(parent: String, context: Context) = viewModelScope.launch {
@@ -184,24 +179,7 @@ class PlayerViewModel @Inject constructor(
 
             onPlaybackEnd = {
                 player.value.stop()
-
-                for (cue in _cues.value) {
-                    for (word in cue.words) {
-                        val reviseWord = ReviseWord(word)
-
-                        for (phrase in phraseList) {
-                            if (phrase.words.contains(word.word)) {
-                                reviseWord.hasPhrase = true
-                            }
-                        }
-
-                        LessonViewModel.appendWord(reviseWord)
-                    }
-                }
-
-                if (LessonViewModel.wordsToRevise.value.isEmpty() || LessonViewModel.wordsToRevise.value.size < 3) {
-                    _notEnoughWords.update { true }
-                } else _finalized.update { true }
+                _finalized.update { true }
             }
         }
 

@@ -15,6 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.lesson.model
+package cc.wordview.app.ui.activities.player.viewmodel
 
-val phraseList = ArrayList<Phrase>()
+data class Phrase(
+    val phrase: String,
+    val words: List<String>,
+)
