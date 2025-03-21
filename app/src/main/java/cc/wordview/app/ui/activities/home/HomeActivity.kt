@@ -18,24 +18,18 @@
 package cc.wordview.app.ui.activities.home
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.extractor.DownloaderImpl
-import cc.wordview.app.misc.ImageCacheManager
-import cc.wordview.app.ui.components.OneTimeEffect
+import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.theme.WordViewTheme
 import dagger.hilt.android.AndroidEntryPoint
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import org.schabi.newpipe.extractor.NewPipe
-import timber.log.Timber
 
 @AndroidEntryPoint
-class HomeActivity : ComponentActivity() {
+class HomeActivity : WordViewActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,20 +37,6 @@ class HomeActivity : ComponentActivity() {
         setContent {
             WordViewTheme {
                 ProvidePreferenceLocals {
-                    val context = LocalContext.current
-
-                    OneTimeEffect {
-                        // If no trees were planted, we can assume that
-                        // this activity was started separately
-                        if (Timber.treeCount == 0) {
-                            DownloaderImpl.init(null)
-                            NewPipe.init(DownloaderImpl.getInstance())
-
-                            Timber.plant(Timber.DebugTree())
-                            ImageCacheManager.init(context)
-                        }
-                    }
-
                     val navController = rememberNavController()
 
                     NavHost(navController = navController, startDestination = "home") {

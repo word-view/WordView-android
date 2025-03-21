@@ -19,7 +19,6 @@ package cc.wordview.app.ui.activities.player
 
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -37,10 +36,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.setOrientationSensorLandscape
-import cc.wordview.app.extractor.DownloaderImpl
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.misc.AppSettings
-import cc.wordview.app.misc.ImageCacheManager
+import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
 import cc.wordview.app.ui.activities.player.composables.Player
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerState
@@ -55,12 +53,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.exceptions.ExtractionException
 import timber.log.Timber
 
 @AndroidEntryPoint
-class PlayerActivity : ComponentActivity() {
+class PlayerActivity : WordViewActivity() {
     private val viewModel: PlayerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,18 +78,6 @@ class PlayerActivity : ComponentActivity() {
                 val langTag = AppSettings.language.get()
 
                 val context = LocalContext.current
-
-                OneTimeEffect {
-                    // If no trees were planted, we can assume that
-                    // this activity was started separately
-                    if (Timber.treeCount == 0) {
-                        DownloaderImpl.init(null)
-                        NewPipe.init(DownloaderImpl.getInstance())
-
-                        Timber.plant(Timber.DebugTree())
-                        ImageCacheManager.init(context)
-                    }
-                }
 
                 fun start() {
                     val lang = Language.byTag(langTag)
