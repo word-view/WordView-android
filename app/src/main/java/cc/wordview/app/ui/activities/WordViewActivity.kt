@@ -15,23 +15,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app
+package cc.wordview.app.ui.activities
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import cc.wordview.app.ui.activities.home.HomeActivity
-import dagger.hilt.android.AndroidEntryPoint
+import cc.wordview.app.extractor.DownloaderImpl
+import cc.wordview.app.misc.ImageCacheManager
+import org.schabi.newpipe.extractor.NewPipe
+import timber.log.Timber
 
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+abstract class WordViewActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // This will vary in the future, if the user is logged in or if
-        // this is a debug build, start HomeActivity; if not start AuthActivity
-        startActivity(
-            Intent(baseContext, HomeActivity::class.java)
-        )
+        // If no trees were planted, we can assume that
+        // this activity was started separately
+        if (Timber.treeCount == 0) {
+            DownloaderImpl.init(null)
+            NewPipe.init(DownloaderImpl.getInstance())
+
+            ImageCacheManager.init(baseContext)
+
+            Timber.plant(Timber.DebugTree())
+        }
     }
 }

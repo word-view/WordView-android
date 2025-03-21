@@ -17,7 +17,7 @@
 
 package cc.wordview.app.api.request
 
-import cc.wordview.app.ui.screens.lesson.model.Phrase
+import cc.wordview.app.ui.activities.player.viewmodel.Phrase
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson

@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.search
 
+import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
 import org.schabi.newpipe.extractor.Image
 import org.schabi.newpipe.extractor.Image.ResolutionLevel
 import org.schabi.newpipe.extractor.stream.StreamInfoItem

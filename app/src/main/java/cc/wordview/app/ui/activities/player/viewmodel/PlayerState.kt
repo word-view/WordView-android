@@ -15,23 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app
+package cc.wordview.app.ui.activities.player.viewmodel
 
-import android.content.Intent
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import cc.wordview.app.ui.activities.home.HomeActivity
-import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // This will vary in the future, if the user is logged in or if
-        // this is a debug build, start HomeActivity; if not start AuthActivity
-        startActivity(
-            Intent(baseContext, HomeActivity::class.java)
-        )
-    }
+enum class PlayerState {
+    ERROR, LOADING, READY
 }

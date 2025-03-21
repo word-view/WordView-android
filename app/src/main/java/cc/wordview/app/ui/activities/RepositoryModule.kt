@@ -15,28 +15,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app
+package cc.wordview.app.ui.activities
 
-import cc.wordview.app.ui.activities.RepositoryModule
-import cc.wordview.app.ui.screens.player.MockPlayerRepositoryImpl
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
-import cc.wordview.app.ui.screens.search.MockSearchRepositoryImpl
+import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepositoryImpl
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
-import dagger.hilt.components.SingletonComponent
-import dagger.hilt.testing.TestInstallIn
-import javax.inject.Singleton
-import dagger.Module
+import cc.wordview.app.ui.activities.home.composables.search.SearchRepositoryImpl
 import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-@TestInstallIn(components = [SingletonComponent::class], replaces = [RepositoryModule::class])
 @Module
-abstract class RepositoryTestModule {
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun bindsMockSearchRepository(mockSearchRepositoryImpl: MockSearchRepositoryImpl): SearchRepository
+    internal abstract fun bindSearchRepository(searchRepositoryImpl: SearchRepositoryImpl): SearchRepository
 
     @Singleton
     @Binds
-    abstract fun bindsMockPlayerRepository(mockPlayerRepositoryImpl: MockPlayerRepositoryImpl): PlayerRepository
+    internal abstract fun bindPlayerRepository(playerRepositoryImpl: PlayerRepositoryImpl): PlayerRepository
 }

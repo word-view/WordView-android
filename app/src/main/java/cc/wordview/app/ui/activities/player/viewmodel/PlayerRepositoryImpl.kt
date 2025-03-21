@@ -15,27 +15,37 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.player
+package cc.wordview.app.ui.activities.player.viewmodel
 
+import cc.wordview.app.api.APIUrl
+import cc.wordview.app.api.request.LyricsRequest
+import cc.wordview.app.extensions.asURLEncoded
 import cc.wordview.app.extractor.VideoStreamInterface
-import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import com.android.volley.RequestQueue
 import javax.inject.Inject
 
-class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {
-    override var onSucceed: (String, String) -> Unit = { _: String, _: String -> }
-    override var onFail: (String, Int) -> Unit = { _: String, _: Int -> }
+class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
+    override var onSucceed: (String, String) -> Unit =
+        { _: String, _: String -> }
 
-    override var endpoint: String = ""
+    override var onFail: (String, Int) -> Unit = { message, status -> }
 
     override lateinit var queue: RequestQueue
 
     override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
-        if (mocklyrics == "fail_trigger") {
-            onFail(mocklyrics, 0)
-        } else {
-            val (lyrics, dictionary) = parseLyricsAndDictionary(mocklyrics)
-            onSucceed(lyrics, dictionary)
-        }
+        val url = APIUrl("$endpoint/api/v1/lyrics")
+
+        url.addRequestParam("id", id)
+        url.addRequestParam("lang", lang)
+        url.addRequestParam("trackName", video.cleanTrackName.asURLEncoded())
+        url.addRequestParam("artistName", video.cleanArtistName.asURLEncoded())
+
+        val request = LyricsRequest(
+            url.getURL(),
+            { lyrics, dictionary -> onSucceed(lyrics, dictionary) },
+            { message, status -> onFail(message, status) }
+        )
+
+        queue.add(request)
     }
 }

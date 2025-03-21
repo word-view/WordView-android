@@ -24,8 +24,9 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import cc.wordview.app.MainActivity
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.ui.activities.home.HomeActivity
+import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -40,7 +41,7 @@ class PlayerTest {
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
+    val composeTestRule = createAndroidComposeRule<HomeActivity>()
 
     @Inject
     lateinit var playerRepository: PlayerRepository
