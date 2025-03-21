@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.player
+package cc.wordview.app.ui.activities.player.viewmodel
 
 import cc.wordview.app.api.ApiRequestRepository
 import cc.wordview.app.extractor.VideoStreamInterface

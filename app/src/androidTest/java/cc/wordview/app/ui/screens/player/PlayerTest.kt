@@ -26,6 +26,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import cc.wordview.app.MainActivity
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before

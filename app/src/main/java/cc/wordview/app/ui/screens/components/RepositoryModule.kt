@@ -17,8 +17,8 @@
 
 package cc.wordview.app.ui.screens.components
 
-import cc.wordview.app.ui.screens.player.PlayerRepository
-import cc.wordview.app.ui.screens.player.PlayerRepositoryImpl
+import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
+import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepositoryImpl
 import cc.wordview.app.ui.screens.search.SearchRepository
 import cc.wordview.app.ui.screens.search.SearchRepositoryImpl
 import dagger.Binds

@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.player
 
 import cc.wordview.app.extractor.VideoStreamInterface
+import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import com.android.volley.RequestQueue
 import javax.inject.Inject
 

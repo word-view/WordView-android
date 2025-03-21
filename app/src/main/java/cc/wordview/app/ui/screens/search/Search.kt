@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.screens.search
 
+import android.content.Intent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -52,6 +53,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -63,10 +65,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ResultItem
-import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.Typography
 import com.gigamole.composefadingedges.verticalFadingEdges
 
@@ -80,6 +82,8 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
 
     val focusRequester = remember { FocusRequester() }
     var errorMessage by rememberSaveable { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     fun search(query: String) {
         viewModel.setState(SearchState.LOADING)
@@ -191,7 +195,8 @@ fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hi
                             ), result = it
                         ) {
                             SongViewModel.setVideo(it.id)
-                            navHostController.navigate(Screen.Player.route)
+                            val intent = Intent(context, PlayerActivity::class.java)
+                            context.startActivity(intent)
                         }
                     }
                 }

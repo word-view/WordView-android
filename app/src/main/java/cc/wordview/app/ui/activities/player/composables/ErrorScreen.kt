@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.player
+package cc.wordview.app.ui.activities.player.composables
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
@@ -37,15 +37,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.extensions.goBack
-import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.ui.theme.Typography
 
 @Composable
-fun ErrorScreen(navHostController: NavHostController, message: String, refresh: () -> Unit, statusCode: Int) {
+fun ErrorScreen(message: String, refresh: () -> Unit, statusCode: Int) {
     val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
     val activity = LocalActivity.current!!
 
@@ -85,10 +82,8 @@ fun ErrorScreen(navHostController: NavHostController, message: String, refresh: 
         }
         Button(
             modifier = Modifier.testTag("error-back-button"),
-            onClick = {
-                activity.setOrientationUnspecified()
-                navHostController.goBack()
-            }) {
+            onClick = { activity.finish() }
+        ) {
             Text(text = stringResource(R.string.go_back))
         }
     }

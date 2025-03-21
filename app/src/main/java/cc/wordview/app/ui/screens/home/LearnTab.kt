@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,8 +49,8 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.audio.Video
+import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.SongCard
-import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
 import com.gigamole.composefadingedges.horizontalFadingEdges
@@ -57,6 +59,7 @@ import com.gigamole.composefadingedges.horizontalFadingEdges
 @Composable
 fun LearnTab(navController: NavHostController, navHostController: NavHostController) {
     var editorsPick by remember { mutableStateOf(ArrayList<Video>()) }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         editorsPick = arrayListOf(
@@ -118,7 +121,8 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
                     language = it.language
                 ) {
                     SongViewModel.setVideo(it.id)
-                    navHostController.navigate(Screen.Player.route)
+                    val intent = Intent(context, PlayerActivity::class.java)
+                    context.startActivity(intent)
                 }
             }
 

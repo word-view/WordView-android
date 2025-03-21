@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.player
+package cc.wordview.app.ui.activities.player.composables
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
@@ -52,16 +52,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.enterImmersiveMode
 import cc.wordview.app.extensions.getCleanUploaderName
-import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.leaveImmersiveMode
 import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.extractor.VideoStream
+import cc.wordview.app.ui.activities.player.viewmodel.PlayerState
+import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FadeInAsyncImage
 import cc.wordview.app.ui.components.FadeOutBox
@@ -73,7 +73,6 @@ import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.components.WordsPresentDialog
 import cc.wordview.app.ui.screens.components.KeepScreenOn
-import cc.wordview.app.ui.screens.components.Screen
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.word.Word
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -86,10 +85,7 @@ import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Player(
-    navHostController: NavHostController,
-    viewModel: PlayerViewModel = hiltViewModel()
-) {
+fun Player(viewModel: PlayerViewModel = hiltViewModel()) {
     val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
     val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
 
@@ -145,7 +141,7 @@ fun Player(
             SongViewModel.setVideoStream(VideoStream())
             player.stop()
             systemUiController.leaveImmersiveMode()
-            navHostController.navigate(Screen.WordRevise.route)
+//            navHostController.navigate(Screen.WordRevise.route)
         }
     }
 
@@ -154,7 +150,7 @@ fun Player(
         SongViewModel.setVideoStream(VideoStream())
         player.stop()
         systemUiController.leaveImmersiveMode()
-        navHostController.goBack()
+        activity.finish()
     }
 
     BackHandler { back() }
@@ -272,7 +268,7 @@ fun Player(
                 }
             }
 
-            PlayerState.ERROR -> ErrorScreen(navHostController, errorMessage, {
+            PlayerState.ERROR -> ErrorScreen(errorMessage, {
                 Timber.d("Refreshing player")
                 viewModel.setPlayerState(PlayerState.LOADING)
                 start()

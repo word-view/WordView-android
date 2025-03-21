@@ -22,7 +22,6 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.ui.screens.Settings
 import cc.wordview.app.ui.screens.home.Home
 import cc.wordview.app.ui.screens.results.ReviseResults
-import cc.wordview.app.ui.screens.player.Player
 import cc.wordview.app.ui.screens.lesson.Lesson
 import cc.wordview.app.ui.screens.search.Search
 
@@ -34,13 +33,6 @@ sealed class Screen(val route: String) {
         @Composable
         override fun Composable(navHostController: NavHostController) {
             Settings(navHostController)
-        }
-    }
-
-    data object Player : Screen("player") {
-        @Composable
-        override fun Composable(navHostController: NavHostController) {
-            Player(navHostController)
         }
     }
 
@@ -73,6 +65,6 @@ sealed class Screen(val route: String) {
     }
 
     companion object {
-        val screens = listOf(Settings, Player, Home, Search, WordRevise, ReviseResults)
+        val screens = listOf(Settings, Home, Search, WordRevise, ReviseResults)
     }
 }
