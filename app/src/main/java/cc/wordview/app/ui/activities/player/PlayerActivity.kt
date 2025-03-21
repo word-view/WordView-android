@@ -100,7 +100,7 @@ class PlayerActivity : WordViewActivity() {
 
                 OneTimeEffect { start() }
 
-                WordViewTheme {
+                WordViewTheme(darkTheme = true) {
                     Scaffold { innerPadding ->
                         when (state) {
                             PlayerState.READY -> Player(viewModel, innerPadding)
