@@ -54,11 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.extensions.enterImmersiveMode
 import cc.wordview.app.extensions.getCleanUploaderName
-import cc.wordview.app.extensions.leaveImmersiveMode
-import cc.wordview.app.extensions.setOrientationSensorLandscape
-import cc.wordview.app.extensions.setOrientationUnspecified
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerState
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
@@ -72,10 +68,8 @@ import cc.wordview.app.ui.components.PlayerTopBar
 import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.components.WordsPresentDialog
-import cc.wordview.app.ui.screens.components.KeepScreenOn
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.word.Word
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -110,14 +104,10 @@ fun Player(viewModel: PlayerViewModel = hiltViewModel()) {
     val langTag = AppSettings.language.get()
     var wordsPresentDialog by rememberSaveable { mutableStateOf(false) }
 
-    val systemUiController = rememberSystemUiController()
-
     fun start() {
         val lang = Language.byTag(langTag)
 
         Timber.i("Chosen language is ${lang.name.lowercase()}")
-
-        activity.setOrientationSensorLandscape()
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -137,25 +127,20 @@ fun Player(viewModel: PlayerViewModel = hiltViewModel()) {
 
     LaunchedEffect(finalized) {
         if (finalized) {
-            activity.setOrientationUnspecified()
             SongViewModel.setVideoStream(VideoStream())
             player.stop()
-            systemUiController.leaveImmersiveMode()
-//            navHostController.navigate(Screen.WordRevise.route)
+            // TODO: Exit the activity for now
+            activity.finish()
         }
     }
 
     fun back() {
-        activity.setOrientationUnspecified()
         SongViewModel.setVideoStream(VideoStream())
         player.stop()
-        systemUiController.leaveImmersiveMode()
         activity.finish()
     }
 
     BackHandler { back() }
-
-    KeepScreenOn()
 
     if (notEnoughWords) NotEnoughWordsDialog { back() }
 
@@ -172,9 +157,6 @@ fun Player(viewModel: PlayerViewModel = hiltViewModel()) {
             PlayerState.READY -> {
                 OneTimeEffect {
                     wordsPresentDialog = true
-                    // For some reason putting this inside the outer OneTimeEffect
-                    // doest work on some API levels so this needs to be here
-                    systemUiController.enterImmersiveMode()
                 }
 
                 Box(
