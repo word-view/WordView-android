@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.search
+package cc.wordview.app.ui.activities.home.composables.search
 
 import android.content.Intent
 import androidx.compose.animation.core.Spring
@@ -74,7 +74,7 @@ import com.gigamole.composefadingedges.verticalFadingEdges
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Search(navHostController: NavHostController, viewModel: SearchViewModel = hiltViewModel()) {
+fun Search(viewModel: SearchViewModel = hiltViewModel()) {
     val query by viewModel.query.collectAsStateWithLifecycle()
     val results by viewModel.searchResults.collectAsStateWithLifecycle()
     val searching by viewModel.searching.collectAsStateWithLifecycle()

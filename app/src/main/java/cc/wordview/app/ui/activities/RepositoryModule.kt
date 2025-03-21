@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.components
+package cc.wordview.app.ui.activities
 
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepositoryImpl
-import cc.wordview.app.ui.screens.search.SearchRepository
-import cc.wordview.app.ui.screens.search.SearchRepositoryImpl
+import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
+import cc.wordview.app.ui.activities.home.composables.search.SearchRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

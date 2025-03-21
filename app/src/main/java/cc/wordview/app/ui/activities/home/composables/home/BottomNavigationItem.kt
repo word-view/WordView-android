@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home
+package cc.wordview.app.ui.activities.home.composables.home
 
 import android.content.Context
 import androidx.compose.material.icons.Icons

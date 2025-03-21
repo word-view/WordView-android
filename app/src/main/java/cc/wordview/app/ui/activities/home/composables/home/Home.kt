@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home
+package cc.wordview.app.ui.activities.home.composables.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,7 +45,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.screens.components.Screen
+import cc.wordview.app.ui.activities.home.HomeNav
 import cc.wordview.app.ui.theme.redhatFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +72,7 @@ fun Home(navHostController: NavHostController) {
             actions = {
                 IconButton(
                     modifier = Modifier.testTag("search"),
-                    onClick = { navHostController.navigate(Screen.Search.route) }) {
+                    onClick = { navHostController.navigate(HomeNav.Search.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Search,
                         contentDescription = "Search"
@@ -80,7 +80,7 @@ fun Home(navHostController: NavHostController) {
                 }
                 IconButton(
                     modifier = Modifier.testTag("settings"),
-                    onClick = { navHostController.navigate(Screen.Settings.route) }) {
+                    onClick = { navHostController.navigate(HomeNav.Settings.route) }) {
                     Icon(
                         imageVector = Icons.Filled.Settings,
                         contentDescription = "Settings"

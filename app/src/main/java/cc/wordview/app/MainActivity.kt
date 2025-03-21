@@ -17,60 +17,21 @@
 
 package cc.wordview.app
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.extractor.DownloaderImpl
-import cc.wordview.app.misc.ImageCacheManager
-import cc.wordview.app.ui.components.OneTimeEffect
-import cc.wordview.app.ui.screens.components.Screen
-import cc.wordview.app.ui.theme.WordViewTheme
+import cc.wordview.app.ui.activities.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
-import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import org.schabi.newpipe.extractor.NewPipe
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        DownloaderImpl.init(null)
-        NewPipe.init(DownloaderImpl.getInstance())
-
-        enableEdgeToEdge()
-        setContent {
-            val context = LocalContext.current
-
-            OneTimeEffect {
-                Timber.plant(Timber.DebugTree())
-                ImageCacheManager.init(context)
-            }
-
-            WordViewTheme {
-                ProvidePreferenceLocals {
-                    Main()
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun Main() {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = "home") {
-        for (screen in Screen.screens) {
-            composable(screen.route) {
-                screen.Composable(navHostController = navController)
-            }
-        }
+        // This will vary in the future, if the user is logged in or if
+        // this is a debug build, start HomeActivity; if not start AuthActivity
+        startActivity(
+            Intent(baseContext, HomeActivity::class.java)
+        )
     }
 }

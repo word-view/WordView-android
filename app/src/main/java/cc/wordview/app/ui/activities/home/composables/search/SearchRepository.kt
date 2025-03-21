@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.home
+package cc.wordview.app.ui.activities.home.composables.search
 
-sealed class Tabs(val route : String) {
-    data object Learn : Tabs("learn_tab")
-    data object Explore : Tabs("explore_tab")
-    data object Profile : Tabs("profile_tab")
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
+
+interface SearchRepository {
+    fun search(query: String): List<StreamInfoItem>
 }

@@ -15,6 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.search
+package cc.wordview.app.ui.activities.home.composables.home
 
-enum class SearchState { COMPLETE, LOADING, ERROR, NONE }
+sealed class Tabs(val route : String) {
+    data object Learn : Tabs("learn_tab")
+    data object Explore : Tabs("explore_tab")
+    data object Profile : Tabs("profile_tab")
+}

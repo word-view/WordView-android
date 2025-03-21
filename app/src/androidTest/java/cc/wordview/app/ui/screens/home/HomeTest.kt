@@ -24,6 +24,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ComposeTest
+import cc.wordview.app.ui.activities.home.composables.home.Home
+import cc.wordview.app.ui.activities.home.composables.home.LearnTab
+import cc.wordview.app.ui.activities.home.composables.home.Tabs
 import org.junit.Test
 
 class HomeTest : ComposeTest() {

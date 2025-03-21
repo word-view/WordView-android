@@ -17,11 +17,11 @@
 
 package cc.wordview.app
 
-import cc.wordview.app.ui.screens.components.RepositoryModule
+import cc.wordview.app.ui.activities.RepositoryModule
 import cc.wordview.app.ui.screens.player.MockPlayerRepositoryImpl
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.screens.search.MockSearchRepositoryImpl
-import cc.wordview.app.ui.screens.search.SearchRepository
+import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import javax.inject.Singleton

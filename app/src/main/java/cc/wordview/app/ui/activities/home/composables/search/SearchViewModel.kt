@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.search
+package cc.wordview.app.ui.activities.home.composables.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

@@ -15,10 +15,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.search
+package cc.wordview.app.ui.activities.home.composables.search
 
-import org.schabi.newpipe.extractor.stream.StreamInfoItem
-
-interface SearchRepository {
-    fun search(query: String): List<StreamInfoItem>
-}
+enum class SearchState { COMPLETE, LOADING, ERROR, NONE }

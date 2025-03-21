@@ -15,56 +15,45 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.components
+package cc.wordview.app.ui.activities.home
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import cc.wordview.app.ui.activities.home.composables.Settings
 import cc.wordview.app.ui.activities.home.composables.home.Home
-import cc.wordview.app.ui.screens.results.ReviseResults
-import cc.wordview.app.ui.screens.lesson.Lesson
 import cc.wordview.app.ui.activities.home.composables.search.Search
 
-sealed class Screen(val route: String) {
+/**
+ * Contains all the screens that Home can navigate to
+ *
+ * @property route The route of the screen
+ */
+sealed class HomeNav(val route: String) {
     @Composable
     open fun Composable(navHostController: NavHostController) {}
 
-    data object Settings : Screen("settings") {
+    data object Settings : HomeNav("settings") {
         @Composable
         override fun Composable(navHostController: NavHostController) {
             Settings(navHostController)
         }
     }
 
-    data object Home : Screen("home") {
+    data object Home : HomeNav("home") {
         @Composable
         override fun Composable(navHostController: NavHostController) {
             Home(navHostController)
         }
     }
 
-    data object Search : Screen("search") {
+    data object Search : HomeNav("search") {
         @Composable
         override fun Composable(navHostController: NavHostController) {
             Search()
         }
     }
 
-    data object WordRevise : Screen("word-revise") {
-        @Composable
-        override fun Composable(navHostController: NavHostController) {
-            Lesson(navHostController)
-        }
-    }
-
-    data object ReviseResults : Screen("revise-results") {
-        @Composable
-        override fun Composable(navHostController: NavHostController) {
-            ReviseResults(navHostController)
-        }
-    }
-
     companion object {
-        val screens = listOf(Settings, Home, Search, WordRevise, ReviseResults)
+        val screens = listOf(Settings, Home, Search)
     }
 }
