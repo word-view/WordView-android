@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <style name="Theme.WordView.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#2C2831</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon</item>
+        <item name="postSplashScreenTheme">@style/Theme.WordView</item>
+    </style>
+</resources>

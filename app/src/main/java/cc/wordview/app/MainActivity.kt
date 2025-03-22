@@ -20,6 +20,7 @@ package cc.wordview.app
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import cc.wordview.app.ui.activities.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,6 +28,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen()
 
         // This will vary in the future, if the user is logged in or if
         // this is a debug build, start HomeActivity; if not start AuthActivity
