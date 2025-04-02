@@ -36,22 +36,35 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.activities.auth.composables.FormValidation.*
+import cc.wordview.app.ui.activities.auth.viewmodel.LoginViewModel
 import cc.wordview.app.ui.components.AuthForm
+import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FormTextField
 import cc.wordview.app.ui.components.Icon
 import cc.wordview.app.ui.components.Space
 
 @Composable
 @Preview
-fun Login(navController: NavHostController = rememberNavController()) {
+fun Login(
+    navController: NavHostController = rememberNavController(),
+    viewModel: LoginViewModel = hiltViewModel()
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(
@@ -68,7 +81,7 @@ fun Login(navController: NavHostController = rememberNavController()) {
             ) {
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Mail) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag("email-field"),
                     value = email,
                     isError = (email.isNotEmpty() && !Email.validate(email)),
                     errorMessage = "Invalid email!",
@@ -78,7 +91,7 @@ fun Login(navController: NavHostController = rememberNavController()) {
                 Space(24.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Password) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag("password-field"),
                     value = password,
                     errorMessage = "Password is too weak!",
                     onValueChange = { password = it },
@@ -95,9 +108,13 @@ fun Login(navController: NavHostController = rememberNavController()) {
                 Button(
                     modifier = Modifier.fillMaxWidth(.9f),
                     enabled = ((email.isNotEmpty() && Email.validate(email)) && password.isNotEmpty()),
-                    onClick = { }
+                    onClick = { if (!isLoading) viewModel.login(email, password, context) }
                 ) {
-                    Text("Log in")
+                    if (!isLoading) {
+                        Text("Log in")
+                    } else {
+                        CircularProgressIndicator(12.dp)
+                    }
                 }
                 Space(12.dp)
                 Text("Or")
