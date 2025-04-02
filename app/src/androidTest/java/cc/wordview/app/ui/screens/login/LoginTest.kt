@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.screens.login
 
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -52,14 +53,14 @@ class LoginTest {
     }
 
     @Test
-    fun loginCorrect() {
+    fun emailCorrect() {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("auth-form"), 5_000)
         composeTestRule.onNodeWithTag("email-field").performTextInput("success@test.com")
         composeTestRule.onNodeWithText("Invalid email!").assertDoesNotExist()
     }
 
     @Test
-    fun loginInvalidEmail() {
+    fun emailInvalid() {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("auth-form"), 5_000)
         composeTestRule.onNodeWithTag("email-field").performTextInput("success@testm")
         composeTestRule.onNodeWithText("Invalid email!").assertExists()
@@ -70,5 +71,35 @@ class LoginTest {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("auth-form"), 5_000)
         composeTestRule.onNodeWithText("Create an account").performClick()
         composeTestRule.waitUntilAtLeastOneExists(hasText("Register"), 5_000)
+    }
+
+    @Test
+    fun makeLogin_Success() {
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("auth-form"), 5_000)
+        composeTestRule.onNodeWithTag("email-field").performTextInput("success@test.com")
+        composeTestRule.onNodeWithTag("password-field").performTextInput("123456")
+        composeTestRule.onNodeWithText("Log in")
+            .assertIsEnabled()
+            .performClick()
+    }
+
+    @Test
+    fun makeLogin_Inexistent() {
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("auth-form"), 5_000)
+        composeTestRule.onNodeWithTag("email-field").performTextInput("inexistent.email@test.com")
+        composeTestRule.onNodeWithTag("password-field").performTextInput("123456")
+        composeTestRule.onNodeWithText("Log in")
+            .assertIsEnabled()
+            .performClick()
+    }
+
+    @Test
+    fun makeLogin_Incorrect() {
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("auth-form"), 5_000)
+        composeTestRule.onNodeWithTag("email-field").performTextInput("incorrect.credentials@test.com")
+        composeTestRule.onNodeWithTag("password-field").performTextInput("123456")
+        composeTestRule.onNodeWithText("Log in")
+            .assertIsEnabled()
+            .performClick()
     }
 }
