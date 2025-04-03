@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.activities.auth.viewmodel
+package cc.wordview.app.ui.activities.auth.viewmodel.login
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle

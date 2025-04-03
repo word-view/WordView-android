@@ -46,7 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.activities.auth.composables.FormValidation.*
-import cc.wordview.app.ui.activities.auth.viewmodel.LoginViewModel
+import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginViewModel
 import cc.wordview.app.ui.components.AuthForm
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FormTextField

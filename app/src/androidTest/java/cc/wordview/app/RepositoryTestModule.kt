@@ -18,7 +18,7 @@
 package cc.wordview.app
 
 import cc.wordview.app.ui.activities.RepositoryModule
-import cc.wordview.app.ui.activities.auth.viewmodel.LoginRepository
+import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginRepository
 import cc.wordview.app.ui.screens.player.MockPlayerRepositoryImpl
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.screens.search.MockSearchRepositoryImpl

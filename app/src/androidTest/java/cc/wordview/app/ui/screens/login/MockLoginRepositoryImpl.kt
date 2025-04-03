@@ -17,7 +17,7 @@
 
 package cc.wordview.app.ui.screens.login
 
-import cc.wordview.app.ui.activities.auth.viewmodel.LoginRepository
+import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginRepository
 import com.android.volley.RequestQueue
 import javax.inject.Inject
 

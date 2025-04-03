@@ -27,7 +27,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import cc.wordview.app.ui.activities.auth.AuthActivity
-import cc.wordview.app.ui.activities.auth.viewmodel.LoginRepository
+import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before

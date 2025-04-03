@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.activities.auth.viewmodel
+package cc.wordview.app.ui.activities.auth.viewmodel.login
 
 import cc.wordview.app.api.request.LoginRequest
 import com.android.volley.RequestQueue
