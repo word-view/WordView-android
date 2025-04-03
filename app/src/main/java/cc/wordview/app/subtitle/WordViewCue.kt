@@ -24,5 +24,4 @@ class WordViewCue(
     var startTimeMs: Int = 0,
     var endTimeMs: Int = 0,
     var words: ArrayList<Word> = arrayListOf()
-    // test
 )
