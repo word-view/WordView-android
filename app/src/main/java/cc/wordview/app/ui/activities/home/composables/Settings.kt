@@ -43,6 +43,7 @@ import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.ui.theme.poppinsFont
 import me.zhanghai.compose.preference.ListPreferenceType
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.switchPreference
@@ -57,7 +58,7 @@ fun Settings(navController: NavHostController) {
                 titleContentColor = LocalContentColor.current
             ),
             title = {
-                Text(stringResource(R.string.settings))
+                Text(stringResource(R.string.settings) , fontFamily = poppinsFont)
             },
             navigationIcon = {
                 IconButton(onClick = { navController.goBack() }) {
@@ -80,7 +81,7 @@ fun Settings(navController: NavHostController) {
                     enabled = { false },
                     defaultValue = BuildConfig.API_BASE_URL,
                     values = listOf(),
-                    title = { Text(text = stringResource(R.string.api_endpoint)) },
+                    title = { Text(text = stringResource(R.string.api_endpoint), fontFamily = poppinsFont) },
                     summary = { Text(text = it) },
                     icon = {
                         Icon(
@@ -97,7 +98,7 @@ fun Settings(navController: NavHostController) {
                         "ja",
                         "en"
                     ),
-                    title = { Text(text = stringResource(R.string.learning_language)) },
+                    title = { Text(text = stringResource(R.string.learning_language) , fontFamily = poppinsFont) },
                     summary = {
                         Text(
                             text = stringResource(
@@ -119,7 +120,7 @@ fun Settings(navController: NavHostController) {
                     switchPreference(
                         key = AppSettings.composerMode.key,
                         defaultValue = AppSettings.composerMode.defaultValue,
-                        title = { Text(text = stringResource(R.string.composer_mode)) },
+                        title = { Text(text = stringResource(R.string.composer_mode), fontFamily = poppinsFont) },
                         icon = {
                             Icon(
                                 imageVector = Icons.Outlined.Carpenter,

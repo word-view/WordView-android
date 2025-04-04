@@ -70,6 +70,7 @@ import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.theme.Typography
+import cc.wordview.app.ui.theme.poppinsFont
 import com.gigamole.composefadingedges.verticalFadingEdges
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -164,10 +165,12 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                         textAlign = TextAlign.Center,
                         style = Typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
+                        fontFamily = poppinsFont,
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                     Text(
                         text = errorMessage,
+                        fontFamily = poppinsFont,
                         textAlign = TextAlign.Center,
                         style = Typography.bodySmall,
                         fontWeight = FontWeight.Light,

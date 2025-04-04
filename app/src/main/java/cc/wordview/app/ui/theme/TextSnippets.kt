@@ -34,3 +34,5 @@ val poppinsFamily = FontFamily(
 val redhatFamily = FontFamily(
     Font(R.font.redhat_display_bold, FontWeight.Bold)
 )
+
+val poppinsFont = FontFamily(Font(R.font.poppins_bold, FontWeight.Bold))
