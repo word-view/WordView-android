@@ -38,7 +38,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
@@ -62,7 +61,6 @@ fun Settings(navController: NavHostController) {
                 Text(
                     stringResource(R.string.settings),
                     fontFamily = poppinsFamily,
-                    fontWeight = FontWeight.Bold
                 )
             },
             navigationIcon = {
@@ -110,7 +108,6 @@ fun Settings(navController: NavHostController) {
                         Text(
                             text = stringResource(R.string.learning_language),
                             fontFamily = poppinsFamily,
-                            fontWeight = FontWeight.Bold
                         )
                     },
                     summary = {
@@ -137,8 +134,7 @@ fun Settings(navController: NavHostController) {
                         title = {
                             Text(
                                 text = stringResource(R.string.composer_mode),
-                                fontFamily = poppinsFamily,
-                                fontWeight = FontWeight.Bold
+                                fontFamily = poppinsFamily
                             )
                         },
                         icon = {

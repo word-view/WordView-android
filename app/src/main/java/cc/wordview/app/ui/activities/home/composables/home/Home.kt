@@ -99,8 +99,7 @@ fun Home(navHostController: NavHostController) {
                         label = {
                             Text(
                                 navigationItem.name,
-                                fontFamily = poppinsFamily,
-                                fontWeight = FontWeight.Bold
+                                fontFamily = poppinsFamily
                             )
                         },
                         icon = {
