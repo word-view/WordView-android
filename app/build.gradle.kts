@@ -97,6 +97,7 @@ dependencies {
     implementation(libs.accompanist.flowlayout)
     implementation(libs.hilt.android)
     implementation(libs.timber)
+    implementation(libs.androidx.core.splashscreen)
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
