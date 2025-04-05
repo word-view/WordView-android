@@ -86,7 +86,10 @@ fun Settings(navController: NavHostController) {
                     enabled = { false },
                     defaultValue = BuildConfig.API_BASE_URL,
                     values = listOf(),
-                    title = { Text(text = stringResource(R.string.api_endpoint)) },
+                    title = { Text(
+                        text = stringResource(R.string.api_endpoint),
+                        fontFamily = poppinsFamily
+                    ) },
                     summary = { Text(text = it) },
                     icon = {
                         Icon(
