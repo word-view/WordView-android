@@ -62,7 +62,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.ui.activities.player.PlayerActivity
@@ -70,7 +69,7 @@ import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.theme.Typography
-import cc.wordview.app.ui.theme.poppinsFont
+import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -165,15 +164,15 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                         textAlign = TextAlign.Center,
                         style = Typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
-                        fontFamily = poppinsFont,
+                        fontFamily = poppinsFamily,
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                     Text(
                         text = errorMessage,
-                        fontFamily = poppinsFont,
-                        textAlign = TextAlign.Center,
-                        style = Typography.bodySmall,
+                        fontFamily = poppinsFamily,
                         fontWeight = FontWeight.Light,
+                        textAlign = TextAlign.Center,
+                        style = Typography.bodySmall
                     )
                 }
             }
@@ -194,7 +193,10 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                         ResultItem(
                             modifier = Modifier.animateItem(
                                 fadeInSpec = tween(durationMillis = i * 250),
-                                placementSpec = spring(stiffness = Spring.StiffnessLow, dampingRatio = Spring.DampingRatioMediumBouncy)
+                                placementSpec = spring(
+                                    stiffness = Spring.StiffnessLow,
+                                    dampingRatio = Spring.DampingRatioMediumBouncy
+                                )
                             ), result = it
                         ) {
                             SongViewModel.setVideo(it.id)

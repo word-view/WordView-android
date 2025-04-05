@@ -46,7 +46,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.activities.home.HomeNav
-import cc.wordview.app.ui.theme.poppinsFont
+import cc.wordview.app.ui.theme.poppinsFamily
+import cc.wordview.app.ui.theme.redhatFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +67,7 @@ fun Home(navHostController: NavHostController) {
                 Text(
                     text = "WordView",
                     fontWeight = FontWeight.Bold,
-                    fontFamily = poppinsFont
+                    fontFamily = redhatFamily
                 )
             },
             actions = {
@@ -96,7 +97,11 @@ fun Home(navHostController: NavHostController) {
                         modifier = Modifier.testTag("${navigationItem.route}-tab"),
                         selected = navigationItem.route == currentDestination?.route,
                         label = {
-                            Text(navigationItem.name, fontFamily = poppinsFont)
+                            Text(
+                                navigationItem.name,
+                                fontFamily = poppinsFamily,
+                                fontWeight = FontWeight.Bold
+                            )
                         },
                         icon = {
                             Icon(
