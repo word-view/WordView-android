@@ -52,6 +52,7 @@ import cc.wordview.app.audio.Video
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.SongCard
 import cc.wordview.app.ui.theme.Typography
+import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.gengolex.Language
 import com.gigamole.composefadingedges.horizontalFadingEdges
 
@@ -94,9 +95,10 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
     ) {
         Text(
             text = stringResource(R.string.editors_pick),
+            fontFamily = poppinsFamily,
+            fontWeight = FontWeight.Normal,
             textAlign = TextAlign.Center,
             style = Typography.titleLarge,
-            fontWeight = FontWeight.Normal,
             modifier = Modifier.padding(start = 17.dp)
         )
         LazyRow(
