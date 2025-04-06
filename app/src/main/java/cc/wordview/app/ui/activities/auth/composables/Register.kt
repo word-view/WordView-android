@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material3.Button
@@ -49,6 +50,7 @@ import cc.wordview.app.ui.components.Space
 @Composable
 @Preview
 fun Register(navController: NavHostController = rememberNavController()) {
+    var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var repeat by remember { mutableStateOf("") }
@@ -66,6 +68,16 @@ fun Register(navController: NavHostController = rememberNavController()) {
                     .align(Alignment.Center),
                 title = "Register"
             ) {
+                FormTextField(
+                    leadingIcon = { Icon(Icons.Filled.AccountBox) },
+                    modifier = Modifier.fillMaxWidth(),
+                    value = username,
+                    isError = false,
+                    errorMessage = "Invalid username!",
+                    onValueChange = { username = it.take(20) },
+                    label = { Text("Username") }
+                )
+                Space(24.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Mail) },
                     modifier = Modifier.fillMaxWidth(),
