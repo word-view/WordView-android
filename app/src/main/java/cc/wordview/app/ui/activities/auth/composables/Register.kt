@@ -77,7 +77,7 @@ fun Register(navController: NavHostController = rememberNavController()) {
                     onValueChange = { username = it.take(20) },
                     label = { Text("Username") }
                 )
-                Space(24.dp)
+                Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Mail) },
                     modifier = Modifier.fillMaxWidth(),
@@ -87,7 +87,7 @@ fun Register(navController: NavHostController = rememberNavController()) {
                     onValueChange = { email = it },
                     label = { Text("Email") }
                 )
-                Space(24.dp)
+                Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Password) },
                     modifier = Modifier.fillMaxWidth(),
@@ -98,7 +98,7 @@ fun Register(navController: NavHostController = rememberNavController()) {
                     visualTransformation = PasswordVisualTransformation(),
                     label = { Text("Password") }
                 )
-                Space(24.dp)
+                Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Password) },
                     modifier = Modifier.fillMaxWidth(),

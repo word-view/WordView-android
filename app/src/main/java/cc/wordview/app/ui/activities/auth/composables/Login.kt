@@ -88,7 +88,7 @@ fun Login(
                     onValueChange = { email = it },
                     label = { Text("Email") }
                 )
-                Space(24.dp)
+                Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Password) },
                     modifier = Modifier.fillMaxWidth().testTag("password-field"),
