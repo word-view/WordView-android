@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
+import cc.wordview.app.ui.theme.poppinsFamily
 
 @Composable
 fun AuthForm(title: String, modifier: Modifier = Modifier, fieldBlock: @Composable (ColumnScope.() -> Unit)) {
@@ -52,6 +53,7 @@ fun AuthForm(title: String, modifier: Modifier = Modifier, fieldBlock: @Composab
                     textAlign = TextAlign.Center,
                     style = Typography.displaySmall,
                     fontWeight = FontWeight.Bold,
+                    fontFamily = poppinsFamily,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Space(32.dp)
