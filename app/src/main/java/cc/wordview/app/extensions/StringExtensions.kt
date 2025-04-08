@@ -17,6 +17,7 @@
 
 package cc.wordview.app.extensions
 
+import cc.wordview.gengolex.Language
 import java.net.URLEncoder
 
 fun String.asURLEncoded(): String {
@@ -26,4 +27,11 @@ fun String.asURLEncoded(): String {
 
 fun String.capitalize(): String {
     return this[0].uppercase() + this.lowercase().substring(1)
+}
+
+// convert language tag to language name in smaller to camel case
+fun String.languageDisplayName(): String {
+    return Language.byTag(this).name
+        .lowercase()
+        .replaceFirstChar { it.uppercase() }
 }

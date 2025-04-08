@@ -38,11 +38,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.navigation.NavHostController
-import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.extensions.languageDisplayName
+import cc.wordview.app.misc.AppSettings
+import cc.wordview.app.ui.theme.poppinsFamily
+import cc.wordview.gengolex.Language
 import me.zhanghai.compose.preference.ListPreferenceType
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.switchPreference
@@ -50,6 +54,7 @@ import me.zhanghai.compose.preference.switchPreference
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(navController: NavHostController) {
+    val langTag = AppSettings.language.get()
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
@@ -57,7 +62,10 @@ fun Settings(navController: NavHostController) {
                 titleContentColor = LocalContentColor.current
             ),
             title = {
-                Text(stringResource(R.string.settings))
+                Text(
+                    stringResource(R.string.settings),
+                    fontFamily = poppinsFamily,
+                )
             },
             navigationIcon = {
                 IconButton(onClick = { navController.goBack() }) {
@@ -80,7 +88,12 @@ fun Settings(navController: NavHostController) {
                     enabled = { false },
                     defaultValue = BuildConfig.API_BASE_URL,
                     values = listOf(),
-                    title = { Text(text = stringResource(R.string.api_endpoint)) },
+                    title = {
+                        Text(
+                            text = stringResource(R.string.api_endpoint),
+                            fontFamily = poppinsFamily
+                        )
+                    },
                     summary = { Text(text = it) },
                     icon = {
                         Icon(
@@ -97,12 +110,22 @@ fun Settings(navController: NavHostController) {
                         "ja",
                         "en"
                     ),
-                    title = { Text(text = stringResource(R.string.learning_language)) },
+                    valueToText = { value ->
+                        buildAnnotatedString {
+                            append(value.languageDisplayName())
+                        }
+                    },
+                    title = {
+                        Text(
+                            text = stringResource(R.string.learning_language),
+                            fontFamily = poppinsFamily,
+                        )
+                    },
                     summary = {
                         Text(
                             text = stringResource(
                                 R.string.the_language_that_you_want_to_learn,
-                                it
+                                it.languageDisplayName()
                             )
                         )
                     },
@@ -119,7 +142,12 @@ fun Settings(navController: NavHostController) {
                     switchPreference(
                         key = AppSettings.composerMode.key,
                         defaultValue = AppSettings.composerMode.defaultValue,
-                        title = { Text(text = stringResource(R.string.composer_mode)) },
+                        title = {
+                            Text(
+                                text = stringResource(R.string.composer_mode),
+                                fontFamily = poppinsFamily
+                            )
+                        },
                         icon = {
                             Icon(
                                 imageVector = Icons.Outlined.Carpenter,
