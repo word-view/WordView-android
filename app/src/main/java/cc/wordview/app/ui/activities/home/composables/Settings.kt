@@ -88,12 +88,10 @@ fun Settings(navController: NavHostController) {
                     enabled = { false },
                     defaultValue = BuildConfig.API_BASE_URL,
                     values = listOf(),
-                    title = {
-                        Text(
-                            text = stringResource(R.string.api_endpoint),
-                            fontFamily = poppinsFamily
-                        )
-                    },
+                    title = { Text(
+                        text = stringResource(R.string.api_endpoint),
+                        fontFamily = poppinsFamily
+                    ) },
                     summary = { Text(text = it) },
                     icon = {
                         Icon(
@@ -110,11 +108,13 @@ fun Settings(navController: NavHostController) {
                         "ja",
                         "en"
                     ),
+
                     valueToText = { value ->
                         buildAnnotatedString {
                             append(value.languageDisplayName())
                         }
                     },
+
                     title = {
                         Text(
                             text = stringResource(R.string.learning_language),
