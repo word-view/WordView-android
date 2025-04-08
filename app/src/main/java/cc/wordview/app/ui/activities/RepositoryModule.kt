@@ -19,6 +19,8 @@ package cc.wordview.app.ui.activities
 
 import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginRepository
 import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginRepositoryImpl
+import cc.wordview.app.ui.activities.auth.viewmodel.register.RegisterRepository
+import cc.wordview.app.ui.activities.auth.viewmodel.register.RegisterRepositoryImpl
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepositoryImpl
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
@@ -44,4 +46,8 @@ abstract class RepositoryModule {
     @Singleton
     @Binds
     internal abstract fun bindLoginRepository(loginRepositoryImpl: LoginRepositoryImpl): LoginRepository
+
+    @Singleton
+    @Binds
+    internal abstract fun bindRegisterRepository(registerRepositoryImpl: RegisterRepositoryImpl): RegisterRepository
 }

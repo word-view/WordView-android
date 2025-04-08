@@ -36,24 +36,36 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.activities.auth.composables.FormValidation.*
+import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginViewModel
+import cc.wordview.app.ui.activities.auth.viewmodel.register.RegisterViewModel
 import cc.wordview.app.ui.components.AuthForm
+import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FormTextField
 import cc.wordview.app.ui.components.Icon
 import cc.wordview.app.ui.components.Space
 
 @Composable
 @Preview
-fun Register(navController: NavHostController = rememberNavController()) {
+fun Register(
+    navController: NavHostController = rememberNavController(),
+    viewModel: RegisterViewModel = hiltViewModel()
+) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var repeat by remember { mutableStateOf("") }
+
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(
@@ -112,9 +124,19 @@ fun Register(navController: NavHostController = rememberNavController()) {
                 Space(24.dp)
                 Button(
                     modifier = Modifier.fillMaxWidth(.9f),
-                    onClick = { }
+                    enabled = (
+                            username.isNotEmpty() &&
+                            (email.isNotEmpty() && Email.validate(email)) &&
+                            (password.isNotEmpty() && Password.validate(password)) &&
+                            repeat == password
+                            ),
+                    onClick = { if (!isLoading) viewModel.register(username, email, password, context) }
                 ) {
-                    Text("Create")
+                    if (!isLoading) {
+                        Text("Create")
+                    } else {
+                        CircularProgressIndicator(12.dp)
+                    }
                 }
                 Space(12.dp)
                 Text("Or")
