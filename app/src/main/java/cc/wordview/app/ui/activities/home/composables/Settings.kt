@@ -159,6 +159,4 @@ fun Settings(navController: NavHostController) {
             }
         }
     }
-
-    Language.byTag("en").displayName()
 }
