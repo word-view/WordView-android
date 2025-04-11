@@ -42,8 +42,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.navigation.NavHostController
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
+import cc.wordview.app.extensions.displayName
 import cc.wordview.app.extensions.goBack
-import cc.wordview.app.extensions.languageDisplayName
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.gengolex.Language
@@ -111,7 +111,7 @@ fun Settings(navController: NavHostController) {
 
                     valueToText = { value ->
                         buildAnnotatedString {
-                            append(value.languageDisplayName())
+                            append(Language.byTag(value).displayName())
                         }
                     },
 
@@ -125,7 +125,7 @@ fun Settings(navController: NavHostController) {
                         Text(
                             text = stringResource(
                                 R.string.the_language_that_you_want_to_learn,
-                                it.languageDisplayName()
+                                Language.byTag(it).displayName()
                             )
                         )
                     },
@@ -160,4 +160,6 @@ fun Settings(navController: NavHostController) {
             }
         }
     }
+
+    Language.byTag("en").displayName()
 }
