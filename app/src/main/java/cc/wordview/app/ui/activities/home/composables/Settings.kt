@@ -54,7 +54,6 @@ import me.zhanghai.compose.preference.switchPreference
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(navController: NavHostController) {
-    val langTag = AppSettings.language.get()
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
