@@ -38,12 +38,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.navigation.NavHostController
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
+import cc.wordview.app.extensions.displayName
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.theme.poppinsFamily
+import cc.wordview.gengolex.Language
 import me.zhanghai.compose.preference.ListPreferenceType
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.switchPreference
@@ -104,6 +107,13 @@ fun Settings(navController: NavHostController) {
                         "ja",
                         "en"
                     ),
+
+                    valueToText = { value ->
+                        buildAnnotatedString {
+                            append(Language.byTag(value).displayName())
+                        }
+                    },
+
                     title = {
                         Text(
                             text = stringResource(R.string.learning_language),
@@ -114,7 +124,7 @@ fun Settings(navController: NavHostController) {
                         Text(
                             text = stringResource(
                                 R.string.the_language_that_you_want_to_learn,
-                                it
+                                Language.byTag(it).displayName()
                             )
                         )
                     },

@@ -27,3 +27,4 @@ fun String.asURLEncoded(): String {
 fun String.capitalize(): String {
     return this[0].uppercase() + this.lowercase().substring(1)
 }
+
