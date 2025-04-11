@@ -39,7 +39,7 @@ class LoginViewModel @Inject constructor(
 
     val isLoading = _isLoading.asStateFlow()
 
-    fun login(email: String, password: String, context: Context) = viewModelScope.launch {
+    fun login(email: String, password: String, onLoginCompleted: () -> Unit, context: Context) = viewModelScope.launch {
         _isLoading.update { true }
 
         loginRepository.apply {
@@ -47,9 +47,8 @@ class LoginViewModel @Inject constructor(
 
             onSucceed = {
                 Timber.e("Login succeeded! jwt=$it")
-                context.showToast("Login succeeded!")
-
                 _isLoading.update { false }
+                onLoginCompleted.invoke()
             }
             onFail = { s: String, i: Int ->
                 Timber.e("Login failed \n\t message=$s, status=$i")

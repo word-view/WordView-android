@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.activities.auth.composables
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,6 +48,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.activities.auth.composables.FormValidation.*
 import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginViewModel
+import cc.wordview.app.ui.activities.home.HomeActivity
+import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.AuthForm
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FormTextField
@@ -81,7 +84,9 @@ fun Login(
             ) {
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Mail) },
-                    modifier = Modifier.fillMaxWidth().testTag("email-field"),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("email-field"),
                     value = email,
                     isError = (email.isNotEmpty() && !Email.validate(email)),
                     errorMessage = "Invalid email!",
@@ -91,7 +96,9 @@ fun Login(
                 Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Password) },
-                    modifier = Modifier.fillMaxWidth().testTag("password-field"),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("password-field"),
                     value = password,
                     errorMessage = "Password is too weak!",
                     onValueChange = { password = it },
@@ -108,7 +115,17 @@ fun Login(
                 Button(
                     modifier = Modifier.fillMaxWidth(.9f),
                     enabled = ((email.isNotEmpty() && Email.validate(email)) && password.isNotEmpty()),
-                    onClick = { if (!isLoading) viewModel.login(email, password, context) }
+                    onClick = {
+                        if (!isLoading) viewModel.login(
+                            email = email,
+                            password = password,
+                            onLoginCompleted = {
+                                val intent = Intent(context, HomeActivity::class.java)
+                                context.startActivity(intent)
+                            },
+                            context = context
+                        )
+                    }
                 ) {
                     if (!isLoading) {
                         Text("Log in")
