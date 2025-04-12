@@ -41,6 +41,7 @@ class RegisterViewModel @Inject constructor(
         username: String,
         email: String,
         password: String,
+        onRegisterCompleted: () -> Unit,
         context: Context
     ) = viewModelScope.launch {
         _isLoading.update { true }
@@ -50,9 +51,8 @@ class RegisterViewModel @Inject constructor(
 
             onSucceed = {
                 Timber.e("Register succeeded! jwt=$it")
-                context.showToast("Register succeeded!")
-
                 _isLoading.update { false }
+                onRegisterCompleted.invoke()
             }
             onFail = { s: String, i: Int ->
 
