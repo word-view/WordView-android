@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.activities.auth.composables.FormValidation.*
-import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginViewModel
 import cc.wordview.app.ui.activities.auth.viewmodel.register.RegisterViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
 import cc.wordview.app.ui.components.AuthForm
@@ -84,7 +84,7 @@ fun Register(
             ) {
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.AccountBox) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag("username-field"),
                     value = username,
                     isError = false,
                     errorMessage = "Invalid username!",
@@ -94,7 +94,7 @@ fun Register(
                 Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Mail) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag("email-field"),
                     value = email,
                     isError = (email.isNotEmpty() && !Email.validate(email)),
                     errorMessage = "Invalid email!",
@@ -104,7 +104,7 @@ fun Register(
                 Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Password) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag("password-field"),
                     value = password,
                     isError = (password.isNotEmpty() && !Password.validate(password)),
                     errorMessage = "Password is too weak",
@@ -115,7 +115,7 @@ fun Register(
                 Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Password) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag("repeat-field"),
                     value = repeat,
                     isError = (password.isNotEmpty() && repeat.isNotEmpty() && (repeat != password)),
                     errorMessage = "Passwords are not equal!",
