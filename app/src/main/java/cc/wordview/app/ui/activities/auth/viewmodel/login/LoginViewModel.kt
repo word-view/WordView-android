@@ -21,6 +21,7 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.extensions.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,6 +48,7 @@ class LoginViewModel @Inject constructor(
 
             onSucceed = {
                 Timber.e("Login succeeded! jwt=$it")
+                setStoredJwt(it, context)
                 _isLoading.update { false }
                 onLoginCompleted.invoke()
             }

@@ -20,6 +20,7 @@ package cc.wordview.app.ui.activities.auth.viewmodel.register
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.extensions.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,6 +53,7 @@ class RegisterViewModel @Inject constructor(
             onSucceed = {
                 Timber.e("Register succeeded! jwt=$it")
                 _isLoading.update { false }
+                setStoredJwt(it, context)
                 onRegisterCompleted.invoke()
             }
             onFail = { s: String, i: Int ->

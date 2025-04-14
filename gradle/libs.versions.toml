@@ -30,6 +30,7 @@ navigationCompose = "2.8.9"
 media3Common = "1.5.1"
 lifecycleRuntimeComposeAndroid = "2.8.7"
 newpipeextractor = "v0.24.5"
+securityCrypto = "1.1.0-alpha07"
 timber = "5.0.1"
 uiTestJunit4 = "1.7.8"
 uiTestManifest = "1.7.8"
@@ -46,6 +47,7 @@ androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", versi
 androidx-media3-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "media3Extractor" }
 androidx-media3-extractor = { module = "androidx.media3:media3-extractor", version.ref = "media3Extractor" }
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3Extractor" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 compose-resources = { module = "com.github.ygorluizfrazao:compose-resources", version.ref = "composeResources" }
