@@ -17,17 +17,12 @@
 
 package cc.wordview.app.api
 
-import cc.wordview.app.BuildConfig
-import cc.wordview.app.ComposeTest
 import cc.wordview.app.api.request.PhraseRequest
-import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Test
 
-class PhraseRequestTest : ComposeTest()  {
-    private val endpoint get() = BuildConfig.API_BASE_URL
-
+class PhraseRequestTest : RequestTest()  {
     @Test
     fun getPhrase_English() {
         getPhrase(
@@ -49,8 +44,6 @@ class PhraseRequestTest : ComposeTest()  {
     }
 
     private fun getPhrase(words: List<String>, phraseLang: String, wordsLang: String, expectedPhrase: String) {
-        val queue = Volley.newRequestQueue(context)
-
         val url = "$endpoint/api/v1/lesson/phrase"
 
         val jsonArray = JSONArray()
@@ -70,6 +63,6 @@ class PhraseRequestTest : ComposeTest()  {
             { throw FailedTestRequestException("Are you sure the API is running?") }
         )
 
-        queue.add(request)
+        makeRequest(request)
     }
 }

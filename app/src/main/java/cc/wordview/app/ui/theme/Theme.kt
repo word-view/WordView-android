@@ -272,6 +272,7 @@ val unspecified_scheme = ColorFamily(
 )
 
 val DefaultRoundedCornerShape = RoundedCornerShape(20.dp)
+val DefaultTopRoundedCornerShape = RoundedCornerShape(24.dp, 24.dp, 0.dp, 0.dp)
 
 @Composable
 fun WordViewTheme(

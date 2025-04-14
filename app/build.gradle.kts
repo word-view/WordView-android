@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.lifecycle.runtime.compose.android)
+    implementation(libs.androidx.security.crypto)
     implementation(libs.gengolex)
     implementation(libs.volley)
     implementation(libs.gson)

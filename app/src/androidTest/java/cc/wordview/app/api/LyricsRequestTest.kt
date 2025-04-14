@@ -24,13 +24,9 @@ import cc.wordview.app.extensions.asURLEncoded
 import com.android.volley.toolbox.Volley
 import org.junit.Test
 
-class LyricsRequestTest : ComposeTest() {
-    private val endpoint get() = BuildConfig.API_BASE_URL
-
+class LyricsRequestTest : RequestTest() {
     @Test
     fun getLyrics() {
-        val queue = Volley.newRequestQueue(context)
-
         val url = APIUrl("$endpoint/api/v1/lyrics")
 
         url.addRequestParam("id", "ZpT9VCUS54s")
@@ -172,6 +168,6 @@ class LyricsRequestTest : ComposeTest() {
             } }
         )
 
-        queue.add(request)
+        makeRequest(request)
     }
 }
