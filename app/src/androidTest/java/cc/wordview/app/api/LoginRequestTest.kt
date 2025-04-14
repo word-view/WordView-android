@@ -17,7 +17,7 @@
 
 package cc.wordview.app.api
 
-import cc.wordview.app.api.request.LoginRequest
+import cc.wordview.app.api.request.AuthRequest
 import org.json.JSONObject
 import org.junit.Test
 
@@ -28,7 +28,7 @@ class LoginRequestTest : RequestTest() {
             .put("email", "mock.user@gmail.com")
             .put("password", "S_enha64")
 
-        val request = LoginRequest(
+        val request = AuthRequest(
             "$endpoint/api/v1/user/login",
             json,
             { assert(it.startsWith("ey")) },
@@ -44,7 +44,7 @@ class LoginRequestTest : RequestTest() {
             .put("email", "mock.user@gmail.com")
             .put("password", "enha64")
 
-        val request = LoginRequest(
+        val request = AuthRequest(
             "$endpoint/api/v1/user/login",
             json,
             { },
@@ -65,7 +65,7 @@ class LoginRequestTest : RequestTest() {
             .put("email", "mock.use@gmail.com")
             .put("password", "S_enha64")
 
-        val request = LoginRequest(
+        val request = AuthRequest(
             "$endpoint/api/v1/user/login",
             json,
             { },

@@ -17,7 +17,7 @@
 
 package cc.wordview.app.ui.activities.auth.viewmodel.register
 
-import cc.wordview.app.api.request.LoginRequest
+import cc.wordview.app.api.request.AuthRequest
 import com.android.volley.RequestQueue
 import org.json.JSONObject
 import javax.inject.Inject
@@ -34,7 +34,7 @@ class RegisterRepositoryImpl @Inject constructor() : RegisterRepository {
             .put("email", email)
             .put("password", password)
 
-        val request = LoginRequest(
+        val request = AuthRequest(
             "$endpoint/api/v1/user/register",
             json,
             { onSucceed(it) },

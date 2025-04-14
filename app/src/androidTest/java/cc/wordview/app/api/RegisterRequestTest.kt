@@ -17,8 +17,7 @@
 
 package cc.wordview.app.api
 
-import cc.wordview.app.api.request.LoginRequest
-import cc.wordview.app.api.request.RegisterRequest
+import cc.wordview.app.api.request.AuthRequest
 import org.json.JSONObject
 import org.junit.Test
 import java.util.UUID
@@ -31,7 +30,7 @@ class RegisterRequestTest : RequestTest() {
             .put("email", "${UUID.randomUUID()}@gmail.com")
             .put("password", "S_enha64")
 
-        val request = RegisterRequest(
+        val request = AuthRequest(
             "$endpoint/api/v1/user/register",
             json,
             { assert(it.startsWith("ey")) },
@@ -49,7 +48,7 @@ class RegisterRequestTest : RequestTest() {
             .put("password", "S_enha64")
 
 
-        val request = LoginRequest(
+        val request = AuthRequest(
             "$endpoint/api/v1/user/login",
             json,
             { },
@@ -72,7 +71,7 @@ class RegisterRequestTest : RequestTest() {
             .put("password", "S_enha64")
 
 
-        val request = LoginRequest(
+        val request = AuthRequest(
             "$endpoint/api/v1/user/register",
             json,
             { },
@@ -95,7 +94,7 @@ class RegisterRequestTest : RequestTest() {
             .put("password", "S_enha64")
 
 
-        val request = LoginRequest(
+        val request = AuthRequest(
             "$endpoint/api/v1/user/register",
             json,
             { },

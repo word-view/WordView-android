@@ -22,7 +22,10 @@ import com.android.volley.toolbox.StringRequest
 import org.json.JSONObject
 import timber.log.Timber
 
-class RegisterRequest(
+/**
+ * Generic authentication request, encompasses both login and registration.
+ */
+class AuthRequest(
     url: String?,
     private val body: JSONObject,
     onSuccess: (jwt: String) -> Unit,
