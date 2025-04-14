@@ -125,7 +125,7 @@ fun Register(
                         .fillMaxWidth()
                         .testTag("repeat-field"),
                     value = repeat,
-                    isError = password.isNotEmpty() && repeat.isNotEmpty() && (repeat != password),
+                    isError = password.isNotEmpty() && repeat.isNotEmpty() && repeat != password,
                     errorMessage = "Passwords are not equal!",
                     onValueChange = { repeat = it },
                     visualTransformation = PasswordVisualTransformation(),

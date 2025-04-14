@@ -114,7 +114,7 @@ fun Login(
                 Space(24.dp)
                 Button(
                     modifier = Modifier.fillMaxWidth(.9f),
-                    enabled = (email.isNotEmpty() && Email.validate(email)) && password.isNotEmpty(),
+                    enabled = email.isNotEmpty() && Email.validate(email) && password.isNotEmpty(),
                     onClick = {
                         if (!isLoading) viewModel.login(
                             email = email,
