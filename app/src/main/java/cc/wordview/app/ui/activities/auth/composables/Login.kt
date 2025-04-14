@@ -88,7 +88,7 @@ fun Login(
                         .fillMaxWidth()
                         .testTag("email-field"),
                     value = email,
-                    isError = (email.isNotEmpty() && !Email.validate(email)),
+                    isError = email.isNotEmpty() && !Email.validate(email),
                     errorMessage = "Invalid email!",
                     onValueChange = { email = it },
                     label = { Text("Email") }
@@ -114,7 +114,7 @@ fun Login(
                 Space(24.dp)
                 Button(
                     modifier = Modifier.fillMaxWidth(.9f),
-                    enabled = ((email.isNotEmpty() && Email.validate(email)) && password.isNotEmpty()),
+                    enabled = (email.isNotEmpty() && Email.validate(email)) && password.isNotEmpty(),
                     onClick = {
                         if (!isLoading) viewModel.login(
                             email = email,

@@ -84,7 +84,9 @@ fun Register(
             ) {
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.AccountBox) },
-                    modifier = Modifier.fillMaxWidth().testTag("username-field"),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("username-field"),
                     value = username,
                     isError = false,
                     errorMessage = "Invalid username!",
@@ -94,9 +96,11 @@ fun Register(
                 Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Mail) },
-                    modifier = Modifier.fillMaxWidth().testTag("email-field"),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("email-field"),
                     value = email,
-                    isError = (email.isNotEmpty() && !Email.validate(email)),
+                    isError = email.isNotEmpty() && !Email.validate(email),
                     errorMessage = "Invalid email!",
                     onValueChange = { email = it },
                     label = { Text("Email") }
@@ -104,9 +108,11 @@ fun Register(
                 Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Password) },
-                    modifier = Modifier.fillMaxWidth().testTag("password-field"),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("password-field"),
                     value = password,
-                    isError = (password.isNotEmpty() && !Password.validate(password)),
+                    isError = password.isNotEmpty() && !Password.validate(password),
                     errorMessage = "Password is too weak",
                     onValueChange = { password = it },
                     visualTransformation = PasswordVisualTransformation(),
@@ -115,9 +121,11 @@ fun Register(
                 Space(12.dp)
                 FormTextField(
                     leadingIcon = { Icon(Icons.Filled.Password) },
-                    modifier = Modifier.fillMaxWidth().testTag("repeat-field"),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("repeat-field"),
                     value = repeat,
-                    isError = (password.isNotEmpty() && repeat.isNotEmpty() && (repeat != password)),
+                    isError = password.isNotEmpty() && repeat.isNotEmpty() && (repeat != password),
                     errorMessage = "Passwords are not equal!",
                     onValueChange = { repeat = it },
                     visualTransformation = PasswordVisualTransformation(),
@@ -126,12 +134,11 @@ fun Register(
                 Space(24.dp)
                 Button(
                     modifier = Modifier.fillMaxWidth(.9f),
-                    enabled = (
-                            username.isNotEmpty() &&
-                            (email.isNotEmpty() && Email.validate(email)) &&
-                            (password.isNotEmpty() && Password.validate(password)) &&
-                            repeat == password
-                            ),
+                    enabled =
+                        username.isNotEmpty() &&
+                                email.isNotEmpty() && Email.validate(email) &&
+                                password.isNotEmpty() && Password.validate(password) &&
+                                repeat == password,
                     onClick = {
                         if (!isLoading) viewModel.register(
                             username = username,
