@@ -22,9 +22,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.api.setStoredJwt
-import cc.wordview.app.extensions.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,34 +38,43 @@ class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository
 ) : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
-
     val isLoading = _isLoading.asStateFlow()
 
-    fun login(email: String, password: String, onLoginCompleted: () -> Unit, context: Context) = viewModelScope.launch {
-        _isLoading.update { true }
+    private var _snackBarMessage = MutableSharedFlow<String>()
+    val snackBarMessage = _snackBarMessage.asSharedFlow()
 
-        loginRepository.apply {
-            init(context)
+    fun login(email: String, password: String, onLoginCompleted: () -> Unit, context: Context) =
+        viewModelScope.launch {
+            _isLoading.update { true }
 
-            onSucceed = {
-                Timber.e("Login succeeded! jwt=$it")
-                setStoredJwt(it, context)
-                _isLoading.update { false }
-                onLoginCompleted.invoke()
-            }
-            onFail = { s: String, i: Int ->
-                Timber.e("Login failed \n\t message=$s, status=$i")
+            loginRepository.apply {
+                init(context)
 
-                if (s.startsWith("NoSuchEntryException")) {
-                    context.showToast("This email address has not yet been registered")
-                } else if (s.startsWith("IncorrectCredentialsException")) {
-                    context.showToast("Incorrect credentials")
+                onSucceed = {
+                    Timber.e("Login succeeded! jwt=$it")
+                    setStoredJwt(it, context)
+                    _isLoading.update { false }
+                    onLoginCompleted.invoke()
+                }
+                onFail = { s: String, i: Int ->
+                    Timber.e("Login failed \n\t message=$s, status=$i")
+
+                    if (s.startsWith("NoSuchEntryException")) {
+                        emitMessage("This email address has not yet been registered")
+                    } else if (s.startsWith("IncorrectCredentialsException")) {
+                        emitMessage("Incorrect credentials")
+                    }
+
+                    _isLoading.update { false }
                 }
 
-                _isLoading.update { false }
+                login(email, password)
             }
+        }
 
-            login(email, password)
+    private fun emitMessage(msg: String) {
+        viewModelScope.launch {
+            _snackBarMessage.emit(msg)
         }
     }
 }
