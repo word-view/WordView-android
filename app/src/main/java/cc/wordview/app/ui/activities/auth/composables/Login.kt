@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,13 +51,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.activities.auth.composables.FormValidation.*
+import cc.wordview.app.ui.activities.auth.composables.FormValidation.Email
 import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
 import cc.wordview.app.ui.components.AuthForm
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FormTextField
 import cc.wordview.app.ui.components.Icon
+import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.Space
 import kotlinx.coroutines.launch
 
@@ -75,16 +77,18 @@ fun Login(
 
     val snackBarHostState = remember { SnackbarHostState() } // ✅ This line is essential!
     val scope = rememberCoroutineScope()
+    val message by viewModel.snackBarMessage.collectAsState(initial = "")
+
 
     // 🔁 Collect events from ViewModel
-    LaunchedEffect(Unit) {
-        viewModel.snackBarMessage.collect { message ->
-            // ✅ You can use `scope.launch` here, but it's optional
+    if(message.isNotEmpty()) {
+        OneTimeEffect() {
             scope.launch {
                 snackBarHostState.showSnackbar(message)
             }
         }
     }
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

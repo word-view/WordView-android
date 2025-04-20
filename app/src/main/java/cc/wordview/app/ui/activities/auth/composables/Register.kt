@@ -46,7 +46,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.activities.auth.composables.FormValidation.*
+import cc.wordview.app.ui.activities.auth.composables.FormValidation.Email
+import cc.wordview.app.ui.activities.auth.composables.FormValidation.Password
 import cc.wordview.app.ui.activities.auth.viewmodel.register.RegisterViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
 import cc.wordview.app.ui.components.AuthForm
