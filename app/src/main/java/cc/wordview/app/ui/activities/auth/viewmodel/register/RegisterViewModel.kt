@@ -21,9 +21,10 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.api.setStoredJwt
-import cc.wordview.app.extensions.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -35,8 +36,10 @@ class RegisterViewModel @Inject constructor(
     private val registerRepository: RegisterRepository
 ) : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
-
     val isLoading = _isLoading.asStateFlow()
+
+    private var _snackBarMessage = MutableSharedFlow<String>()
+    val snackBarMessage = _snackBarMessage.asSharedFlow()
 
     fun register(
         username: String,
@@ -57,14 +60,18 @@ class RegisterViewModel @Inject constructor(
                 onRegisterCompleted.invoke()
             }
             onFail = { s: String, i: Int ->
-
                 Timber.e("Register failed \n\t message=$s, status=$i")
-                context.showToast("Register failed!")
-
+                emitMessage("Register failed!")
                 _isLoading.update { false }
             }
 
             register(username, email, password)
+        }
+    }
+
+    private fun emitMessage(msg: String) {
+        viewModelScope.launch {
+            _snackBarMessage.emit(msg)
         }
     }
 }
