@@ -33,6 +33,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -76,13 +77,12 @@ fun Register(
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    val snackBarHostState = remember { SnackbarHostState() } // ✅ This line is essential!
+    val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val message by viewModel.snackBarMessage.collectAsState(initial = "")
 
-    // 🔁 Collect events from ViewModel
-    if (message.isNotEmpty()) {
-        OneTimeEffect() {
+    LaunchedEffect(Unit) {
+        viewModel.snackBarMessage.collect {
             scope.launch {
                 snackBarHostState.showSnackbar(message)
             }

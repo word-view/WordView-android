@@ -75,20 +75,17 @@ fun Login(
 
     val context = LocalContext.current
 
-    val snackBarHostState = remember { SnackbarHostState() } // ✅ This line is essential!
+    val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val message by viewModel.snackBarMessage.collectAsState(initial = "")
 
-
-    // 🔁 Collect events from ViewModel
-    if(message.isNotEmpty()) {
-        OneTimeEffect() {
+    LaunchedEffect(Unit) {
+        viewModel.snackBarMessage.collect {
             scope.launch {
                 snackBarHostState.showSnackbar(message)
             }
         }
     }
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
