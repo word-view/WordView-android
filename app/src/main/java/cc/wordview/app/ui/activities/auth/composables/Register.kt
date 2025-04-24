@@ -29,11 +29,16 @@ import androidx.compose.material.icons.filled.Password
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,14 +51,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ui.activities.auth.composables.FormValidation.*
+import cc.wordview.app.ui.activities.auth.composables.FormValidation.Email
+import cc.wordview.app.ui.activities.auth.composables.FormValidation.Password
 import cc.wordview.app.ui.activities.auth.viewmodel.register.RegisterViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
 import cc.wordview.app.ui.components.AuthForm
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FormTextField
 import cc.wordview.app.ui.components.Icon
+import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.Space
+import kotlinx.coroutines.launch
 
 @Composable
 @Preview
@@ -69,7 +77,21 @@ fun Register(
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val message by viewModel.snackBarMessage.collectAsState(initial = "")
+
+    LaunchedEffect(Unit) {
+        viewModel.snackBarMessage.collect {
+            scope.launch {
+                snackBarHostState.showSnackbar(message)
+            }
+        }
+    }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(snackBarHostState) }) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()

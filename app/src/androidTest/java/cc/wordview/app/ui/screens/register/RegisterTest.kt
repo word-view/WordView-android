@@ -117,6 +117,8 @@ class RegisterTest {
         composeTestRule.onNodeWithText("Create")
             .assertIsEnabled()
             .performClick()
+
+        composeTestRule.onNodeWithText("Register failed!").assertDoesNotExist()
     }
 
     @Test
@@ -129,5 +131,7 @@ class RegisterTest {
         composeTestRule.onNodeWithText("Create")
             .assertIsEnabled()
             .performClick()
+
+        composeTestRule.onNodeWithText("Register failed!").assertExists()
     }
 }
