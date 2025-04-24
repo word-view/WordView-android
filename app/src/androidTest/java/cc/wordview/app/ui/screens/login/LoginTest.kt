@@ -81,6 +81,7 @@ class LoginTest {
         composeTestRule.onNodeWithText("Log in")
             .assertIsEnabled()
             .performClick()
+        composeTestRule.onNodeWithText("Register failed!").assertDoesNotExist()
     }
 
     @Test
@@ -91,6 +92,8 @@ class LoginTest {
         composeTestRule.onNodeWithText("Log in")
             .assertIsEnabled()
             .performClick()
+
+        composeTestRule.onNodeWithText("This email address has not yet been registered").assertExists()
     }
 
     @Test
@@ -101,5 +104,7 @@ class LoginTest {
         composeTestRule.onNodeWithText("Log in")
             .assertIsEnabled()
             .performClick()
+
+        composeTestRule.onNodeWithText("Incorrect credentials").assertExists()
     }
 }
