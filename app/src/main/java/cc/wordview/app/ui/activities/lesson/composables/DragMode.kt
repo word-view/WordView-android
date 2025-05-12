@@ -15,17 +15,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.extensions
+package cc.wordview.app.ui.activities.lesson.composables
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.pm.ActivityInfo
+import kotlin.random.Random
 
-fun Activity.setOrientationSensorLandscape() {
-    this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-}
+/**
+ * All the modes that the `Drag` screen can be in.
+ */
+enum class DragMode {
+    /**
+     * Means that the middle object should be a Icon
+     */
+    ICON,
 
-@SuppressLint("SourceLockedOrientationActivity")
-fun Activity.setOrientationSensorPortrait() {
-    this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+    /**
+     * Means that the middle object should e a Word
+     */
+    WORD;
+
+    companion object {
+        fun random(): DragMode {
+            val values = enumValues<DragMode>()
+            return values[Random.nextInt(values.size)]
+        }
+    }
 }

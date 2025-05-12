@@ -32,6 +32,8 @@ import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
+import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
+import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import coil.request.ImageRequest
@@ -179,7 +181,17 @@ class PlayerViewModel @Inject constructor(
 
             onPlaybackEnd = {
                 player.value.stop()
-                _finalized.update { true }
+
+                for (cue in _cues.value) {
+                    for (word in cue.words) {
+                        val reviseWord = ReviseWord(word)
+                        LessonViewModel.appendWord(reviseWord)
+                    }
+                }
+
+                if (LessonViewModel.wordsToRevise.value.isEmpty() || LessonViewModel.wordsToRevise.value.size < 3) {
+                    _notEnoughWords.update { true }
+                } else _finalized.update { true }
             }
         }
 
