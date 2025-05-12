@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.activities.player
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
@@ -26,7 +25,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +39,6 @@ import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
-import cc.wordview.app.ui.activities.lesson.LessonActivity
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
 import cc.wordview.app.ui.activities.player.composables.Player
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerState
@@ -76,7 +73,6 @@ class PlayerActivity : WordViewActivity() {
                 val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
                 val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
                 val statusCode by viewModel.statusCode.collectAsStateWithLifecycle()
-                val finalized by viewModel.finalized.collectAsStateWithLifecycle()
 
                 val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
                 val langTag = AppSettings.language.get()
@@ -103,13 +99,6 @@ class PlayerActivity : WordViewActivity() {
                 }
 
                 OneTimeEffect { start() }
-
-                LaunchedEffect(finalized) {
-                    if (finalized) {
-                        val intent = Intent(context, LessonActivity::class.java)
-                        context.startActivity(intent)
-                    }
-                }
 
                 WordViewTheme(darkTheme = true) {
                     Scaffold { innerPadding ->
