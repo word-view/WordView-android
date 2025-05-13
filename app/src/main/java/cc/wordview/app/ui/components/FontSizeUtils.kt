@@ -17,9 +17,17 @@
 
 package cc.wordview.app.ui.components
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import cc.wordview.app.misc.AppSettings
 import cc.wordview.gengolex.Language
+
+@Composable
+fun getFontSize(cueText: String): TextUnit {
+    val langTag = AppSettings.language.get()
+    return getFontSize(cueText, langTag)
+}
 
 fun getFontSize(cueText: String, langTag: String): TextUnit {
     val language = Language.byTag(langTag)
