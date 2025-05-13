@@ -26,6 +26,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
+import cc.wordview.app.ui.activities.lesson.ReviseTimer
+import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -188,6 +190,27 @@ class PlayerTest {
 
         composeTestRule.waitUntilAtLeastOneExists(
             hasTestTag("not-enough-words-alert-dialog"),
+            15_000
+        )
+    }
+
+    @Test
+    fun noTimeLeftDialogShows() {
+        setLyrics()
+        enterPlayer()
+
+        LessonViewModel.finishTimer()
+        composeTestRule.onNodeWithText("Proceed").performClick()
+
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("skip-forward"), 2_000)
+        composeTestRule.onNodeWithTag("skip-forward")
+            .performClick().performClick().performClick().performClick().performClick()
+            .performClick().performClick().performClick().performClick().performClick()
+            .performClick().performClick()
+
+
+        composeTestRule.waitUntilAtLeastOneExists(
+            hasTestTag("no-time-left-dialog"),
             15_000
         )
     }
