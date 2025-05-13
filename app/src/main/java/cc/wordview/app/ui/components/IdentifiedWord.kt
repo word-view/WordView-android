@@ -60,7 +60,12 @@ fun IdentifiedWord(word: Word, text: String, modifier: Modifier = Modifier) {
                 Text(
                     modifier = Modifier
                         .testTag("text-cue-plain")
-                        .background(MaterialTheme.colorScheme.primaryContainer),
+                        .background(
+                            if (word.representable)
+                                MaterialTheme.colorScheme.primaryContainer
+                            else
+                                MaterialTheme.colorScheme.surfaceVariant
+                        ),
                     text = char.toString(),
                     fontSize = getFontSize(text),
                     color = MaterialTheme.colorScheme.inverseSurface
