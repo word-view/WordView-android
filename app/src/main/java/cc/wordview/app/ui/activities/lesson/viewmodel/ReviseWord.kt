@@ -15,17 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.extensions
+package cc.wordview.app.ui.activities.lesson.viewmodel
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.pm.ActivityInfo
+import cc.wordview.gengolex.word.Word
 
-fun Activity.setOrientationSensorLandscape() {
-    this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-}
-
-@SuppressLint("SourceLockedOrientationActivity")
-fun Activity.setOrientationSensorPortrait() {
-    this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+class ReviseWord(var tokenWord: Word = Word("", "")) {
+    var misses = 0
+    var corrects = 0
 }

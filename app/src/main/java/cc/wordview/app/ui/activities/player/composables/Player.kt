@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.activities.player.composables
 
+import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,10 +55,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.getCleanUploaderName
+import cc.wordview.app.ui.activities.lesson.LessonActivity
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FadeInAsyncImage
 import cc.wordview.app.ui.components.FadeOutBox
+import cc.wordview.app.ui.components.NoTimeLeftDialog
 import cc.wordview.app.ui.components.NotEnoughWordsDialog
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
@@ -76,12 +80,14 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
     val notEnoughWords by viewModel.notEnoughWords.collectAsStateWithLifecycle()
+    val noTimeLeft by viewModel.noTimeLeft.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
 
     val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
 
     val activity = LocalActivity.current!!
+    val context = LocalContext.current
 
     val composerMode = AppSettings.composerMode.get()
     var wordsPresentDialog by rememberSaveable { mutableStateOf(false) }
@@ -89,7 +95,8 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     LaunchedEffect(finalized) {
         if (finalized) {
             player.stop()
-            // TODO: Exit the activity for now
+            val intent = Intent(context, LessonActivity::class.java)
+            context.startActivity(intent)
             activity.finish()
         }
     }
@@ -102,6 +109,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     BackHandler { back() }
 
     if (notEnoughWords) NotEnoughWordsDialog { back() }
+    if (noTimeLeft) NoTimeLeftDialog { back() }
 
     if (wordsPresentDialog) {
         val words = ArrayList<Word>()

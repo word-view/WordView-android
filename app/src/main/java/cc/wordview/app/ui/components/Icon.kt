@@ -29,6 +29,6 @@ import androidx.compose.ui.platform.testTag
  * @param imageVector ImageVector to draw inside this icon
  */
 @Composable
-fun Icon(imageVector: ImageVector) {
-    androidx.compose.material3.Icon(imageVector, contentDescription = null, modifier = Modifier.testTag("contentDescriptionless-icon"))
+fun Icon(imageVector: ImageVector, modifier: Modifier = Modifier) {
+    androidx.compose.material3.Icon(imageVector, contentDescription = null, modifier = modifier.testTag("contentDescriptionless-icon"))
 }

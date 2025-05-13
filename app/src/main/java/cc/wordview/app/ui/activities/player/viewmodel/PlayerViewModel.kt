@@ -32,6 +32,9 @@ import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
+import cc.wordview.app.ui.activities.lesson.ReviseTimer
+import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
+import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import coil.request.ImageRequest
@@ -62,6 +65,7 @@ class PlayerViewModel @Inject constructor(
     private val _finalized = MutableStateFlow(false)
     private val _isBuffering = MutableStateFlow(false)
     private val _notEnoughWords = MutableStateFlow(false)
+    private val _noTimeLeft = MutableStateFlow(false)
     private val _errorMessage = MutableStateFlow("")
     private val _statusCode = MutableStateFlow(0)
 
@@ -80,6 +84,7 @@ class PlayerViewModel @Inject constructor(
     val finalized = _finalized.asStateFlow()
     val isBuffering = _isBuffering.asStateFlow()
     val notEnoughWords = _notEnoughWords.asStateFlow()
+    val noTimeLeft = _noTimeLeft.asStateFlow()
     val errorMessage = _errorMessage.asStateFlow()
     val statusCode = _statusCode.asStateFlow()
 
@@ -179,7 +184,24 @@ class PlayerViewModel @Inject constructor(
 
             onPlaybackEnd = {
                 player.value.stop()
-                _finalized.update { true }
+
+                for (cue in _cues.value) {
+                    for (word in cue.words) {
+                        val reviseWord = ReviseWord(word)
+                        LessonViewModel.appendWord(reviseWord)
+                    }
+                }
+
+                val isTimerFinished = LessonViewModel.timerFinished.value
+                val wordsToRevise = LessonViewModel.wordsToRevise.value
+
+                if (isTimerFinished) {
+                    _noTimeLeft.update { true }
+                } else if (wordsToRevise.isEmpty() || wordsToRevise.size < 3) {
+                    _notEnoughWords.update { true }
+                } else {
+                    _finalized.update { true }
+                }
             }
         }
 
