@@ -18,32 +18,24 @@
 package cc.wordview.app.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.dp
 import cc.wordview.app.misc.ImageCacheManager
-import cc.wordview.app.extensions.capitalize
-import cc.wordview.gengolex.word.Syntax
 import cc.wordview.gengolex.word.Word
 import coil.compose.AsyncImage
 
 @Composable
-fun IdentifiedWord(word: Word, text: String, langtag: String, modifier: Modifier = Modifier) {
+fun IdentifiedWord(word: Word, text: String, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.width(IntrinsicSize.Max),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -68,61 +60,19 @@ fun IdentifiedWord(word: Word, text: String, langtag: String, modifier: Modifier
                 Text(
                     modifier = Modifier
                         .testTag("text-cue-plain")
-                        .background(getColor(i, word.representable, word.syntax)),
+                        .background(
+                            if (word.representable)
+                                MaterialTheme.colorScheme.primaryContainer
+                            else
+                                MaterialTheme.colorScheme.surfaceVariant
+                        ),
                     text = char.toString(),
-                    fontSize = getFontSize(text, langtag),
+                    fontSize = getFontSize(text),
                     color = MaterialTheme.colorScheme.inverseSurface
                 )
 
                 i++
             }
         }
-        Row(
-            modifier = Modifier.height(20.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            @Suppress("SENSELESS_COMPARISON")
-            if (word.type != null) {
-                TraitText(
-                    text = word.type.capitalize(),
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            if (word.time != null) {
-                Spacer(Modifier.size(8.dp))
-                TraitText(
-                    text = word.time!!.capitalize(),
-                    color = MaterialTheme.colorScheme.tertiary
-                )
-            }
-        }
     }
-}
-
-@Composable
-fun getColor(position: Int, representable: Boolean, syntax: Syntax?): Color {
-    if (syntax == null) {
-        return if (representable)
-            MaterialTheme.colorScheme.primaryContainer
-        else
-            MaterialTheme.colorScheme.surfaceVariant
-    }
-
-    syntax.default?.let {
-        if (position >= it.start && position <= it.end)
-            return MaterialTheme.colorScheme.primaryContainer
-    }
-
-    syntax.negative?.let {
-        if (position >= it.start && position <= it.end)
-            return Color(0xFF723B3B)
-    }
-
-    syntax.conditional?.let {
-        if (position >= it.start && position <= it.end)
-            return Color(0xFF725F3B)
-    }
-
-    return MaterialTheme.colorScheme.tertiaryContainer
 }

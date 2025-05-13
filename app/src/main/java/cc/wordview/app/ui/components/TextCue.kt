@@ -32,13 +32,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.subtitle.WordViewCue
 
 @Composable
 fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
-    val langtag = AppSettings.language.get()
-
     Column(Modifier.wrapContentWidth(Alignment.Start)) {
         Row(
             modifier = modifier.fillMaxHeight(),
@@ -56,7 +53,6 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                             modifier = Modifier.padding(horizontal = 2.dp),
                             word = word,
                             text = text,
-                            langtag = langtag
                         )
                         currentIndex += word.word.length
                         foundWord = true
@@ -67,10 +63,9 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                 if (!foundWord) {
                     Text(
                         modifier = Modifier
-                            .testTag("text-cue-word")
-                            .padding(bottom = 20.dp),
+                            .testTag("text-cue-word"),
                         text = text[currentIndex].toString(),
-                        fontSize = getFontSize(text, langtag),
+                        fontSize = getFontSize(text),
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                     currentIndex++
@@ -78,14 +73,4 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
             }
         }
     }
-}
-
-@Composable
-fun TraitText(text: String, color: Color) {
-    Text(
-        text = text,
-        fontWeight = FontWeight.Bold,
-        fontSize = 10.sp,
-        color = color
-    )
 }

@@ -21,23 +21,18 @@ import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.IdentifiedWord
 import cc.wordview.app.ui.theme.WordViewTheme
-import cc.wordview.gengolex.Language
-import cc.wordview.gengolex.word.Specifier
-import cc.wordview.gengolex.word.Syntax
-import cc.wordview.gengolex.word.Time
 import cc.wordview.gengolex.word.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Test
 
 class IdentifiedWordTest : ComposeTest() {
-    private fun setup(word: Word, text: String, langtag: String) {
+    private fun setup(word: Word, text: String) {
         composeTestRule.setContent {
             WordViewTheme {
                 ProvidePreferenceLocals {
                     IdentifiedWord(
                         word = word,
-                        text = text,
-                        langtag = langtag
+                        text = text
                     )
                 }
             }
@@ -45,117 +40,12 @@ class IdentifiedWordTest : ComposeTest() {
     }
 
     @Test
-    fun rendersBareBones() {
+    fun renders() {
         setup(
             word = Word("world", "world"),
             text = "world",
-            langtag = Language.ENGLISH.tag
         )
 
-        composeTestRule.onNodeWithText("Noun").assertExists()
-        for (char in "world") {
-            composeTestRule.onNodeWithText(char.toString()).assertExists()
-        }
-    }
-
-    @Test
-    fun rendersNegativeSyntax() {
-        val word = Word(
-            parent = "world",
-            word = "world",
-            syntax = Syntax(
-                default = Specifier(start = 0, end = 1),
-                negative = Specifier(start = 2, end = 4),
-                conditional = null
-            )
-        )
-        setup(
-            word = word,
-            text = "world",
-            langtag = Language.ENGLISH.tag
-        )
-
-        composeTestRule.onNodeWithText("Noun").assertExists()
-        for (char in "world") {
-            composeTestRule.onNodeWithText(char.toString()).assertExists()
-        }
-    }
-
-    @Test
-    fun rendersConditionalSyntax() {
-        val word = Word(
-            parent = "world",
-            word = "world",
-            syntax = Syntax(
-                default = Specifier(start = 0, end = 1),
-                conditional = Specifier(start = 2, end = 4),
-                negative = null
-            )
-        )
-        setup(
-            word = word,
-            text = "world",
-            langtag = Language.ENGLISH.tag
-        )
-
-        composeTestRule.onNodeWithText("Noun").assertExists()
-        for (char in "world") {
-            composeTestRule.onNodeWithText(char.toString()).assertExists()
-        }
-    }
-
-    @Test
-    fun rendersPast() {
-        val word = Word(
-            parent = "world",
-            word = "world",
-            time = Time.PAST.toString()
-        )
-        setup(
-            word = word,
-            text = "world",
-            langtag = Language.ENGLISH.tag
-        )
-
-        composeTestRule.onNodeWithText("Past").assertExists()
-        for (char in "world") {
-            composeTestRule.onNodeWithText(char.toString()).assertExists()
-        }
-    }
-
-    @Test
-    fun rendersPresent() {
-        val word = Word(
-            parent = "world",
-            word = "world",
-            time = Time.PRESENT.toString()
-        )
-        setup(
-            word = word,
-            text = "world",
-            langtag = Language.ENGLISH.tag
-        )
-
-        composeTestRule.onNodeWithText("Present").assertExists()
-        for (char in "world") {
-            composeTestRule.onNodeWithText(char.toString()).assertExists()
-        }
-    }
-
-    @Test
-    fun rendersFuture() {
-        val word = Word(
-            parent = "world",
-            word = "world",
-            time = Time.FUTURE.toString()
-        )
-        setup(
-            word = word,
-            text = "world",
-            langtag = Language.ENGLISH.tag
-        )
-
-        composeTestRule.onNodeWithText("Future").assertExists()
         for (char in "world") {
             composeTestRule.onNodeWithText(char.toString()).assertExists()
         }
