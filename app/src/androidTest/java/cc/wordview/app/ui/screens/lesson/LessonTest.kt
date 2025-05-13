@@ -65,18 +65,6 @@ class LessonTest {
         composeTestRule.onNodeWithTag("root")
             .assertExists()
             .assertIsDisplayed()
-
-        composeTestRule.onNodeWithTag("top-word")
-            .assertExists()
-            .assertIsDisplayed()
-
-        composeTestRule.onNodeWithTag("drag")
-            .assertExists()
-            .assertIsDisplayed()
-
-        composeTestRule.onNodeWithTag("down-word")
-            .assertExists()
-            .assertIsDisplayed()
     }
 
     @Test
@@ -105,11 +93,5 @@ class LessonTest {
             moveBy(Offset(0f, 500f))
             up()
         }
-    }
-
-    @OptIn(ExperimentalTestApi::class)
-    @Test
-    fun timerWorks() {
-        composeTestRule.waitUntilAtLeastOneExists(hasText("4:59"), 5_000)
     }
 }

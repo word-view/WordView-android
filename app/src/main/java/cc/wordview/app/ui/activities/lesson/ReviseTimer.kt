@@ -32,6 +32,11 @@ object ReviseTimer {
     private var timer: CountDownTimer? = null
 
     fun start() {
+        if (timer != null) {
+            Timber.w("Timer is already running; The attempt to start will be ignored")
+            return
+        }
+
         Timber.i("Initializing timer with ${formatMillisecondsToMS(timeRemaining)} left")
 
         timer = object : CountDownTimer(timeRemaining, 1000) {
