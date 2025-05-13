@@ -58,7 +58,7 @@ import com.gigamole.composefadingedges.horizontalFadingEdges
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun LearnTab(navController: NavHostController, navHostController: NavHostController) {
+fun LearnTab(innerPadding: PaddingValues = PaddingValues()) {
     var editorsPick by remember { mutableStateOf(ArrayList<Video>()) }
     val context = LocalContext.current
 
@@ -91,6 +91,7 @@ fun LearnTab(navController: NavHostController, navHostController: NavHostControl
     Column(
         Modifier
             .fillMaxSize()
+            .padding(innerPadding)
             .padding(PaddingValues(top = 17.dp))
     ) {
         Text(

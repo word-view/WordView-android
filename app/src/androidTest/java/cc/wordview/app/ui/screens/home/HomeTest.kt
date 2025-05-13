@@ -33,30 +33,19 @@ class HomeTest : ComposeTest() {
     @Test
     fun learnTabRendersByItself() {
         composeTestRule.setContent {
-            val mockNavController = rememberNavController()
-            val mockNavHostController = rememberNavController()
-
-            LearnTab(navController = mockNavController, navHostController = mockNavHostController)
+            LearnTab()
         }
 
         composeTestRule.onAllNodesWithTag("song-card").assertCountEquals(3)
     }
 
     @Test
-    fun navigateBetweenTabs() {
+    fun fullHomeRenders() {
         composeTestRule.setContent {
             val mockNavController = rememberNavController()
-
             Home(navHostController = mockNavController)
         }
 
-        performTabTest(Tabs.Profile.route)
-        performTabTest(Tabs.Explore.route)
-        performTabTest(Tabs.Learn.route)
-    }
-
-    private fun performTabTest(tabRoute: String) {
-        composeTestRule.onNodeWithTag("$tabRoute-tab").assertExists()
-        composeTestRule.onNodeWithTag("$tabRoute-tab").performTouchInput { click() }
+        composeTestRule.onAllNodesWithTag("song-card").assertCountEquals(3)
     }
 }
