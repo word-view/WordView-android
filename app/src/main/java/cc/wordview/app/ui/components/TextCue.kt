@@ -48,6 +48,8 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                 var foundWord = false
 
                 for (word in cue.words) {
+                    if (word.parent == "") continue
+
                     if (text.startsWith(word.word, currentIndex)) {
                         IdentifiedWord(
                             modifier = Modifier.padding(horizontal = 2.dp),

@@ -54,6 +54,8 @@ fun WordsPresentDialog(onConfirm: () -> Unit = {}, words: List<Word>) {
         text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
                 for (wordToken in words) {
+                    if (wordToken.parent == "") continue
+
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         AsyncImage(
                             modifier = Modifier
