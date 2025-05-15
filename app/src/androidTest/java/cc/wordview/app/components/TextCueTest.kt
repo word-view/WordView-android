@@ -17,20 +17,24 @@
 
 package cc.wordview.app.components
 
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.theme.WordViewTheme
+import cc.wordview.gengolex.word.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Test
 
 class TextCueTest : ComposeTest() {
-    private fun setup(text: String = "") {
+    private fun setup(text: String = "", cue: WordViewCue? = null) {
         composeTestRule.setContent {
             WordViewTheme {
                 ProvidePreferenceLocals {
-                    TextCue(cue = WordViewCue(text = text))
+                    TextCue(cue = cue ?: WordViewCue(text = text))
                 }
             }
         }
@@ -42,5 +46,42 @@ class TextCueTest : ComposeTest() {
         for (char in "abcdefghijklmnopqrstuvwxyz 結局きたよ。") {
             composeTestRule.onNodeWithText(char.toString()).assertExists()
         }
+
+        composeTestRule.onNodeWithTag("text-cue-plain")
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun rendersWord() {
+        val cue = WordViewCue(
+            text = "abcdefghijklmnopqrstuvwxyz 結局きたよ。",
+            words = arrayListOf(Word("test", "結局きたよ。"))
+        )
+
+        setup(cue.text, cue)
+
+        for (char in "abcdefghijklmnopqrstuvwxyz 結局きたよ。") {
+            composeTestRule.onNodeWithText(char.toString()).assertExists()
+        }
+
+        composeTestRule.onAllNodesWithTag("text-cue-plain")
+            .assertCountEquals(6)
+    }
+
+    @Test
+    fun ignoresWordWithoutParent() {
+        val cue = WordViewCue(
+            text = "abcdefghijklmnopqrstuvwxyz 結局きたよ。",
+            words = arrayListOf(Word("", "結局きたよ。"))
+        )
+
+        setup(cue.text, cue)
+
+        for (char in "abcdefghijklmnopqrstuvwxyz 結局きたよ。") {
+            composeTestRule.onNodeWithText(char.toString()).assertExists()
+        }
+
+        composeTestRule.onNodeWithTag("text-cue-plain")
+            .assertDoesNotExist()
     }
 }
