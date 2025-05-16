@@ -147,7 +147,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
 
         FadeOutBox(
             duration = 250,
-            stagnationTime = if (composerMode) 5000 * 10 else 5000
+            stagnationTime = 5000
         ) {
             PlayerTopBar {
                 IconButton(

@@ -29,6 +29,7 @@ import androidx.compose.ui.test.performClick
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.hasAlpha
 import cc.wordview.app.ui.components.FadeOutBox
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Before
 import org.junit.Test
 
@@ -37,14 +38,16 @@ class FadeOutBoxTest : ComposeTest() {
     fun setup() {
         composeTestRule.mainClock.autoAdvance = false
         composeTestRule.setContent {
-            FadeOutBox(
-                duration = 1000,
-                stagnationTime = 5000
-            ) {
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.primary))
+            ProvidePreferenceLocals {
+                FadeOutBox(
+                    duration = 1000,
+                    stagnationTime = 5000
+                ) {
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.primary))
+                }
             }
         }
     }

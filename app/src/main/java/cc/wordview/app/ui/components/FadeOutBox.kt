@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import cc.wordview.app.extensions.alpha
+import cc.wordview.app.misc.AppSettings
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -47,6 +48,8 @@ fun FadeOutBox(
     var visible by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
+    val composerMode = AppSettings.composerMode.get()
+
     val fade by animateFloatAsState(
         if (visible) 1f else 0f,
         tween(duration),
@@ -55,7 +58,7 @@ fun FadeOutBox(
             if (visible) {
                 coroutineScope.launch {
                     delay(stagnationTime.toLong())
-                    visible = false
+                    if (!composerMode) visible = false
                 }
             }
         })
@@ -63,7 +66,7 @@ fun FadeOutBox(
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             delay(500)
-            visible = false
+            if (!composerMode) visible = false
         }
     }
 
