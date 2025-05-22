@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.activities.home.composables.search
 
+import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -35,7 +36,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +47,7 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,6 +64,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
@@ -71,6 +77,13 @@ import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringSetPreferencesKey
+import cc.wordview.app.ui.components.Space
+import kotlinx.coroutines.flow.map
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "search_history")
+val SEARCH_HISTORY = stringSetPreferencesKey("search_history")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,13 +98,19 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
 
     val context = LocalContext.current
 
+    val searchHistoryFlow = context.dataStore.data.map { it[SEARCH_HISTORY] ?: emptySet() }
+    val searchHistory by searchHistoryFlow.collectAsState(initial = emptySet())
+
     fun search(query: String) {
         viewModel.setState(SearchState.LOADING)
         viewModel.setSearching(false)
 
         viewModel.search(
             query,
-            onSuccess = { viewModel.setState(SearchState.COMPLETE) },
+            onSuccess = {
+                viewModel.saveSearch(context, query)
+                viewModel.setState(SearchState.COMPLETE)
+            },
             onError = {
                 viewModel.setState(SearchState.ERROR)
                 errorMessage = it
@@ -127,7 +146,23 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                     .fillMaxWidth(0.97F)
                     .testTag("search-bar"),
             ) {
-
+                Column(Modifier.fillMaxSize()) {
+                    for (entry in searchHistory.reversed()) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+                            onClick = {
+                                viewModel.setQuery(entry)
+                                search(entry)
+                            }
+                        ) {
+                            Row(Modifier.padding(12.dp)) {
+                                cc.wordview.app.ui.components.Icon(Icons.Filled.History)
+                                Space(24.dp)
+                                Text(entry)
+                            }
+                        }
+                    }
+                }
             }
         }
     }) { innerPadding ->
