@@ -17,10 +17,13 @@
 
 package cc.wordview.app.ui.activities.home.composables.search
 
+import android.content.Context
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.api.VideoSearchResult
+import cc.wordview.app.extensions.without
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -74,6 +77,21 @@ class SearchViewModel @Inject constructor(
                     onError(e.message ?: e.toString())
                 }
             }
+        }
+    }
+
+    fun saveSearch(context: Context, searchEntry: String) = viewModelScope.launch {
+        context.dataStore.edit { preferences ->
+            val current = preferences[SEARCH_HISTORY] ?: emptySet()
+            if (!current.contains(searchEntry))
+                preferences[SEARCH_HISTORY] = current + searchEntry
+        }
+    }
+
+    fun removeSearch(context: Context, searchEntry: String) = viewModelScope.launch {
+        context.dataStore.edit { preferences ->
+            val current = preferences[SEARCH_HISTORY] ?: emptySet()
+            preferences[SEARCH_HISTORY] = current.without(searchEntry)
         }
     }
 

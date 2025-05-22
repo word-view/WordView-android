@@ -17,11 +17,13 @@
 
 package cc.wordview.app.ui.activities.home.composables.search
 
+import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,15 +37,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,6 +68,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
@@ -71,6 +81,15 @@ import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringSetPreferencesKey
+import cc.wordview.app.extensions.goBack
+import cc.wordview.app.ui.components.SearchHistoryEntry
+import cc.wordview.app.ui.components.Space
+import kotlinx.coroutines.flow.map
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "search_history")
+val SEARCH_HISTORY = stringSetPreferencesKey("search_history")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,13 +104,19 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
 
     val context = LocalContext.current
 
+    val searchHistoryFlow = context.dataStore.data.map { it[SEARCH_HISTORY] ?: emptySet() }
+    val searchHistory by searchHistoryFlow.collectAsState(initial = emptySet())
+
     fun search(query: String) {
         viewModel.setState(SearchState.LOADING)
         viewModel.setSearching(false)
 
         viewModel.search(
             query,
-            onSuccess = { viewModel.setState(SearchState.COMPLETE) },
+            onSuccess = {
+                viewModel.saveSearch(context, query)
+                viewModel.setState(SearchState.COMPLETE)
+            },
             onError = {
                 viewModel.setState(SearchState.ERROR)
                 errorMessage = it
@@ -127,7 +152,24 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                     .fillMaxWidth(0.97F)
                     .testTag("search-bar"),
             ) {
-
+                LazyColumn(Modifier.fillMaxSize()) {
+                    items(searchHistory.reversed(), key = { it }) { entry ->
+                        SearchHistoryEntry(
+                            modifier = Modifier.animateItem(
+                                placementSpec = spring(
+                                    stiffness = Spring.StiffnessLow,
+                                    dampingRatio = Spring.DampingRatioMediumBouncy
+                                )
+                            ),
+                            entry = entry,
+                            onClick = {
+                                viewModel.setQuery(entry)
+                                search(entry)
+                            },
+                            onLongClick = { viewModel.removeSearch(context, entry) }
+                        )
+                    }
+                }
             }
         }
     }) { innerPadding ->
