@@ -23,7 +23,6 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,14 +36,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
@@ -83,9 +77,7 @@ import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
-import cc.wordview.app.extensions.goBack
 import cc.wordview.app.ui.components.SearchHistoryEntry
-import cc.wordview.app.ui.components.Space
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "search_history")
@@ -104,7 +96,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
 
     val context = LocalContext.current
 
-    val searchHistoryFlow = context.dataStore.data.map { it[SEARCH_HISTORY] ?: emptySet() }
+    val searchHistoryFlow = remember { context.dataStore.data.map { it[SEARCH_HISTORY] ?: emptySet() } }
     val searchHistory by searchHistoryFlow.collectAsState(initial = emptySet())
 
     fun search(query: String) {
