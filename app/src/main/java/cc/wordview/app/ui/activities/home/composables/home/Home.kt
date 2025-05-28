@@ -38,6 +38,7 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.ui.activities.home.HomeNav
 import cc.wordview.app.ui.components.OneTimeEffect
+import cc.wordview.app.ui.components.ProfilePicture
 import cc.wordview.app.ui.theme.redhatFamily
 import timber.log.Timber
 
@@ -81,6 +82,7 @@ fun Home(navHostController: NavHostController) {
                         contentDescription = "Settings"
                     )
                 }
+                ProfilePicture()
             }
         )
     }) { innerPadding ->
