@@ -49,8 +49,6 @@ import cc.wordview.app.ui.activities.home.viewmodel.ProfilePictureViewModel
 fun ProfilePicture(viewModel: ProfilePictureViewModel = viewModel(), onClick: (User) -> Unit = {}) {
     val jwt = getStoredJwt()
 
-    val logged = jwt != null
-
     val context = LocalContext.current
     val activity = LocalActivity.current
 
@@ -63,6 +61,8 @@ fun ProfilePicture(viewModel: ProfilePictureViewModel = viewModel(), onClick: (U
     }
 
     OneTimeEffect { viewModel.makeMeRequest(jwt, context) }
+
+    val logged = user.id != "-1"
 
     Space(10.0.dp)
     Box(
