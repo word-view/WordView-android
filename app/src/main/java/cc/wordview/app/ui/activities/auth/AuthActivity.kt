@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.activities.auth
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
@@ -38,6 +39,7 @@ class AuthActivity : WordViewActivity() {
 
         enableEdgeToEdge()
         setContent {
+            BackHandler {}
             WordViewTheme {
                 ProvidePreferenceLocals {
                     val navController = rememberNavController()
