@@ -82,7 +82,9 @@ fun Home(navHostController: NavHostController) {
                         contentDescription = "Settings"
                     )
                 }
-                ProfilePicture()
+                ProfilePicture(
+                    onClick = { navHostController.navigate(HomeNav.Profile.route) }
+                )
             }
         )
     }) { innerPadding ->

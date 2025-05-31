@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,14 +40,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cc.wordview.app.api.entity.User
+import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.ui.activities.auth.AuthActivity
 import cc.wordview.app.ui.activities.home.viewmodel.ProfilePictureViewModel
 
 @Preview
 @Composable
-fun ProfilePicture(viewModel: ProfilePictureViewModel = viewModel(), onClick: (User) -> Unit = {}) {
+fun ProfilePicture(viewModel: ProfilePictureViewModel = viewModel(), onClick: () -> Unit = {}) {
     val jwt = getStoredJwt()
 
     val context = LocalContext.current
@@ -64,6 +65,12 @@ fun ProfilePicture(viewModel: ProfilePictureViewModel = viewModel(), onClick: (U
 
     val logged = user.id != "-1"
 
+    LaunchedEffect(logged) {
+        if (logged) {
+            GlobalViewModel.setUser(user)
+        }
+    }
+
     Space(10.0.dp)
     Box(
         modifier = Modifier
@@ -72,7 +79,7 @@ fun ProfilePicture(viewModel: ProfilePictureViewModel = viewModel(), onClick: (U
             .background(if (logged) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.onPrimaryContainer)
             .clickable(
                 onClick = {
-                    if (logged) onClick.invoke(user)
+                    if (logged) onClick.invoke()
                     else openLoginScreen()
                 },
                 enabled = true,
