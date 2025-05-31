@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -127,7 +128,10 @@ fun Profile(navController: NavHostController = rememberNavController()) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    IconButton(onClick = { logout() }) {
+                    IconButton(
+                        modifier = Modifier.testTag("logout"),
+                        onClick = { logout() }
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Logout,
                             contentDescription = "Log out",
