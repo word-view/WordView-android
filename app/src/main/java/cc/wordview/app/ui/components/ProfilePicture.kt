@@ -29,7 +29,6 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,21 +38,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.ui.activities.auth.AuthActivity
-import cc.wordview.app.ui.activities.home.viewmodel.ProfilePictureViewModel
 
 @Preview
 @Composable
-fun ProfilePicture(viewModel: ProfilePictureViewModel = viewModel(), onClick: () -> Unit = {}) {
+fun ProfilePicture(onClick: () -> Unit = {}) {
     val jwt = getStoredJwt()
 
     val context = LocalContext.current
     val activity = LocalActivity.current
 
-    val user by viewModel.user.collectAsStateWithLifecycle()
+    val user by GlobalViewModel.user.collectAsStateWithLifecycle()
 
     fun openLoginScreen() {
         val intent = Intent(context, AuthActivity::class.java)
@@ -61,15 +58,9 @@ fun ProfilePicture(viewModel: ProfilePictureViewModel = viewModel(), onClick: ()
         activity?.finish()
     }
 
-    OneTimeEffect { viewModel.makeMeRequest(jwt, context) }
+    OneTimeEffect { GlobalViewModel.makeMeRequest(jwt, context) }
 
-    val logged = user.id != "-1"
-
-    LaunchedEffect(logged) {
-        if (logged) {
-            GlobalViewModel.setUser(user)
-        }
-    }
+    val logged = user != null
 
     Space(10.0.dp)
     Box(
@@ -88,7 +79,7 @@ fun ProfilePicture(viewModel: ProfilePictureViewModel = viewModel(), onClick: ()
     ) {
         if (logged) {
             Text(
-                text = user.username[0].toString().uppercase(),
+                text = user!!.username[0].toString().uppercase(),
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )

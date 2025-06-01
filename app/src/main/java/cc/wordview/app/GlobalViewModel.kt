@@ -17,11 +17,15 @@
 
 package cc.wordview.app
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.api.entity.User
+import cc.wordview.app.api.request.MeRequest
+import com.android.volley.toolbox.Volley
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 
 object GlobalViewModel : ViewModel() {
     private val _user = MutableStateFlow<User?>(null)
@@ -30,6 +34,20 @@ object GlobalViewModel : ViewModel() {
 
     fun setUser(user: User) {
         _user.update { user }
+    }
+
+    fun makeMeRequest(jwt: String?, context: Context) {
+        if (jwt == null) return
+
+        val endpoint = BuildConfig.API_BASE_URL
+        val request = MeRequest(
+            "$endpoint/api/v1/user/me",
+            { user -> _user.update { user } },
+            { msg, status -> Timber.e(msg) },
+            jwt
+        )
+
+        Volley.newRequestQueue(context).add(request)
     }
 
     fun resetUser() {
