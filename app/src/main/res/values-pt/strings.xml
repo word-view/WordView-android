@@ -31,4 +31,5 @@
     <string name="an_error_has_occurred">"Ocorreu um erro: "</string>
     <string name="couldn_t_find_any_lyrics_for">Não foi possível encontrar nenhuma letra para a música \'%1$s\'</string>
     <string name="try_again">Tentar novamente</string>
+    <string name="search">Pesquisar</string>
 </resources>

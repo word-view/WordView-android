@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,8 +34,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
+import cc.wordview.app.R
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.ui.activities.home.HomeNav
 import cc.wordview.app.ui.components.OneTimeEffect
@@ -52,42 +55,50 @@ fun Home(navHostController: NavHostController) {
     }
 
     BackHandler {}
-    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        TopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                titleContentColor = MaterialTheme.colorScheme.primary,
-            ),
-            title = {
-                Text(
-                    text = "WordView",
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = redhatFamily
-                )
-            },
-            actions = {
-                IconButton(
-                    modifier = Modifier.testTag("search"),
-                    onClick = { navHostController.navigate(HomeNav.Search.route) }) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(), topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
+                title = {
+                    Text(
+                        text = "WordView",
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = redhatFamily
+                    )
+                },
+                actions = {
+                    IconButton(
+                        modifier = Modifier.testTag("settings"),
+                        onClick = { navHostController.navigate(HomeNav.Settings.route) }) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings"
+                        )
+                    }
+                    ProfilePicture(
+                        onClick = { navHostController.navigate(HomeNav.Profile.route) }
+                    )
+                }
+            )
+        },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                modifier = Modifier.testTag("settings"),
+                text = { Text(text = stringResource(R.string.search)) },
+                onClick = { navHostController.navigate(HomeNav.Search.route) },
+                icon = {
                     Icon(
                         imageVector = Icons.Filled.Search,
-                        contentDescription = "Search"
+                        contentDescription = stringResource(R.string.search)
                     )
                 }
-                IconButton(
-                    modifier = Modifier.testTag("settings"),
-                    onClick = { navHostController.navigate(HomeNav.Settings.route) }) {
-                    Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Settings"
-                    )
-                }
-                ProfilePicture(
-                    onClick = { navHostController.navigate(HomeNav.Profile.route) }
-                )
-            }
-        )
-    }) { innerPadding ->
+            )
+
+        }
+    ) { innerPadding ->
         LearnTab(innerPadding)
     }
 }
