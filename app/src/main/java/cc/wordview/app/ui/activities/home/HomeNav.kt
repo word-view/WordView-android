@@ -19,6 +19,7 @@ package cc.wordview.app.ui.activities.home
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import cc.wordview.app.ui.activities.home.composables.Profile
 import cc.wordview.app.ui.activities.home.composables.Settings
 import cc.wordview.app.ui.activities.home.composables.home.Home
 import cc.wordview.app.ui.activities.home.composables.search.Search
@@ -53,7 +54,14 @@ sealed class HomeNav(val route: String) {
         }
     }
 
+    data object Profile : HomeNav("profile") {
+        @Composable
+        override fun Composable(navHostController: NavHostController) {
+            Profile(navHostController)
+        }
+    }
+
     companion object {
-        val screens = listOf(Settings, Home, Search)
+        val screens = listOf(Settings, Home, Search, Profile)
     }
 }
