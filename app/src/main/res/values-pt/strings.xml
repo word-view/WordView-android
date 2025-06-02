@@ -36,4 +36,5 @@
     <string name="an_unexpected_error_has_happened">Um erro inesperado aconteceu: %1$s</string>
     <string name="this_email_address_has_not_yet_been_registered">Este email ainda não foi registrado</string>
     <string name="incorrect_credentials">Credenciais incorretas</string>
+    <string name="search">Pesquisar</string>
 </resources>
