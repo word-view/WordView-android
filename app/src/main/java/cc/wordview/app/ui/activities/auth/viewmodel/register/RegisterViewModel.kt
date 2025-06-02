@@ -20,6 +20,7 @@ package cc.wordview.app.ui.activities.auth.viewmodel.register
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.R
 import cc.wordview.app.api.setStoredJwt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -61,7 +62,15 @@ class RegisterViewModel @Inject constructor(
             }
             onFail = { s: String, i: Int ->
                 Timber.e("Register failed \n\t message=$s, status=$i")
-                emitMessage("Register failed!")
+
+                if (s.contains("This email is already in use")) {
+                    emitMessage(context.getString(R.string.this_email_is_already_in_use))
+                } else if (s.contains("username cannot contain special characters")) {
+                    emitMessage(context.getString(R.string.username_cannot_contain_special_characters))
+                } else {
+                    emitMessage(context.getString(R.string.an_unexpected_error_has_happened, s))
+                }
+
                 _isLoading.update { false }
             }
 

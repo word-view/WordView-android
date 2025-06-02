@@ -21,6 +21,7 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.R
 import cc.wordview.app.api.setStoredJwt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -60,9 +61,9 @@ class LoginViewModel @Inject constructor(
                     Timber.e("Login failed \n\t message=$s, status=$i")
 
                     if (s.startsWith("NoSuchEntryException")) {
-                        emitMessage("This email address has not yet been registered")
+                        emitMessage(context.getString(R.string.this_email_address_has_not_yet_been_registered))
                     } else if (s.startsWith("IncorrectCredentialsException")) {
-                        emitMessage("Incorrect credentials")
+                        emitMessage(context.getString(R.string.incorrect_credentials))
                     }
 
                     _isLoading.update { false }
