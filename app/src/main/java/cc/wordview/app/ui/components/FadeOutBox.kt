@@ -22,6 +22,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import cc.wordview.app.extensions.alpha
@@ -77,6 +79,8 @@ fun FadeOutBox(
         .clickable(
             indication = null,
             interactionSource = remember { MutableInteractionSource() }) { visible = !visible }) {
-        content()
+        if (fade > 0.01f) {
+            content()
+        }
     }
 }
