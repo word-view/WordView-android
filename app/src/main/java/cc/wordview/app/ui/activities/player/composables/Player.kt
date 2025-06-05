@@ -146,6 +146,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
         }
 
         FadeOutBox(
+            modifier = Modifier.fillMaxSize(),
             duration = 250,
             stagnationTime = 5000
         ) {
