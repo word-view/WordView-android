@@ -21,53 +21,60 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
+import androidx.security.crypto.MasterKey
 import androidx.core.content.edit
+import java.io.IOException
+import javax.crypto.AEADBadTagException
 
-@Suppress("DEPRECATION")
-val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-
+private const val PREF_NAME = "user_store"
 private const val TOKEN_KEY = "jwt_token"
 
-fun getStoredJwt(context: Context): String? {
-    val sharedPreferences = EncryptedSharedPreferences.create(
-        "user_store",
-        masterKeyAlias,
+private fun getMasterKey(context: Context): MasterKey =
+    MasterKey.Builder(context)
+        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+        .build()
+
+private fun getEncryptedPrefs(context: Context) =
+    EncryptedSharedPreferences.create(
         context,
+        PREF_NAME,
+        getMasterKey(context),
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 
-    return sharedPreferences.getString(TOKEN_KEY, null)
+fun getStoredJwt(context: Context): String? {
+    return try {
+        val sharedPreferences = getEncryptedPrefs(context)
+        sharedPreferences.getString(TOKEN_KEY, null)
+    } catch (e: AEADBadTagException) {
+        context.deleteSharedPreferences(PREF_NAME)
+        null
+    } catch (e: IOException) {
+        context.deleteSharedPreferences(PREF_NAME)
+        null
+    }
 }
 
 @Composable
 fun getStoredJwt(): String? {
     val context = LocalContext.current
 
-    val sharedPreferences = EncryptedSharedPreferences.create(
-        "user_store",
-        masterKeyAlias,
-        context,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
-
-    return sharedPreferences.getString(TOKEN_KEY, null)
+    return try {
+        val sharedPreferences = getEncryptedPrefs(context)
+        sharedPreferences.getString(TOKEN_KEY, null)
+    } catch (e: AEADBadTagException) {
+        context.deleteSharedPreferences(PREF_NAME)
+        null
+    } catch (e: IOException) {
+        context.deleteSharedPreferences(PREF_NAME)
+        null
+    }
 }
 
 fun setStoredJwt(token: String, context: Context) {
-    val sharedPreferences = EncryptedSharedPreferences.create(
-        "user_store",
-        masterKeyAlias,
-        context,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
-
+    val sharedPreferences = getEncryptedPrefs(context)
     sharedPreferences.edit(commit = true) {
         putString(TOKEN_KEY, token)
     }
 }
-
-
