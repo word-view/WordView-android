@@ -18,45 +18,50 @@
 package cc.wordview.app.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.gengolex.word.Word
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 
 @Composable
 fun IdentifiedWord(word: Word, text: String, modifier: Modifier = Modifier) {
+    var textRowWidthPx by remember { mutableIntStateOf(0) }
+    val density = LocalDensity.current
+
     Column(
-        modifier = modifier.width(IntrinsicSize.Max),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (word.representable) {
             val image = ImageCacheManager.getCachedImage(word.parent)
-
-            if (image != null) AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-                model = image,
-                contentDescription = null
-            )
+            if (image != null) {
+                val imageSize =
+                    if (textRowWidthPx > 0) with(density) { textRowWidthPx.toDp() }
+                    else 48.dp
+                AsyncImage(
+                    modifier = Modifier.size(imageSize),
+                    model = image,
+                    contentDescription = null
+                )
+            }
         }
-        Row {
-            var i = 0
-
-            while (i < word.word.length) {
+        Row(
+            modifier = Modifier
+                .onGloballyPositioned { coordinates ->
+                    textRowWidthPx = coordinates.size.width
+                }
+        ) {
+            for (i in word.word.indices) {
                 val char = word.word[i]
-
                 Text(
                     modifier = Modifier
                         .testTag("text-cue-plain")
@@ -70,8 +75,6 @@ fun IdentifiedWord(word: Word, text: String, modifier: Modifier = Modifier) {
                     fontSize = getFontSize(text),
                     color = MaterialTheme.colorScheme.inverseSurface
                 )
-
-                i++
             }
         }
     }

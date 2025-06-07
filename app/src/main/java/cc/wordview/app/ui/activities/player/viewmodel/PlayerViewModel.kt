@@ -32,12 +32,12 @@ import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
-import cc.wordview.app.ui.activities.lesson.ReviseTimer
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
-import coil.request.ImageRequest
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

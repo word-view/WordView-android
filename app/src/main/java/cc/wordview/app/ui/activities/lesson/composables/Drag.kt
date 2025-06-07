@@ -54,7 +54,7 @@ import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.word.Word
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt

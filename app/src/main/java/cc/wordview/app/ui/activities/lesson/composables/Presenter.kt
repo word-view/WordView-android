@@ -50,10 +50,9 @@ import cc.wordview.app.ui.activities.lesson.viewmodel.Answer
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable

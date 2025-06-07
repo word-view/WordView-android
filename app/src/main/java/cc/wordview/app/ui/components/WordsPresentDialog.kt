@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.word.Word
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 
 @Composable
 fun WordsPresentDialog(onConfirm: () -> Unit = {}, words: List<Word>) {

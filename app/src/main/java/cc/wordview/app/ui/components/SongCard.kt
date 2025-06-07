@@ -47,7 +47,7 @@ import cc.wordview.app.R
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 
 @Composable
 fun SongCard(

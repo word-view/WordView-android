@@ -50,7 +50,7 @@ import androidx.compose.ui.zIndex
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.ui.theme.Typography
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import kotlin.time.Duration.Companion.seconds
 
 @Composable

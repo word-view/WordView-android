@@ -20,7 +20,8 @@ package cc.wordview.app.extractor
 import android.content.Context
 import android.graphics.Bitmap
 import cc.wordview.app.misc.ImageCacheManager
-import coil.request.ImageRequest
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

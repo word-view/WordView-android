@@ -20,12 +20,12 @@ package cc.wordview.app.misc
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import coil.ImageLoader
-import coil.annotation.ExperimentalCoilApi
-import coil.memory.MemoryCache
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.request.SuccessResult
+import coil3.ImageLoader
+import coil3.memory.MemoryCache
+import coil3.request.ErrorResult
+import coil3.request.ImageRequest
+import coil3.request.SuccessResult
+import coil3.toBitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,32 +45,29 @@ object ImageCacheManager {
         loader = ImageLoader(context)
     }
 
-    /**
-     * Will add the request to a queue. The queue items will be executed by calling `executeAllInQueue()`
-     */
     fun enqueue(request: ImageRequest.Builder) {
         globalImageLoaderScope.launch {
             request.listener(object : ImageRequest.Listener {
                 override fun onStart(request: ImageRequest) {
-                    val key = request.memoryCacheKey?.key!!
+                    val key = request.memoryCacheKey!!
                     imagesStatus[key] = ImageLoaderStatus.LOADING
                 }
 
                 override fun onError(request: ImageRequest, result: ErrorResult) {
-                    Timber.e("Failed to download image \"${request.memoryCacheKey?.key}\": ${result.throwable.message}")
+                    Timber.e("Failed to download image \"${request.memoryCacheKey!!}\": ${result.throwable.message}")
 
-                    val key = request.memoryCacheKey?.key!!
+                    val key = request.memoryCacheKey!!
                     imagesStatus[key] = ImageLoaderStatus.ERROR
                 }
 
                 override fun onSuccess(request: ImageRequest, result: SuccessResult) {
-                    val key = request.memoryCacheKey?.key!!
+                    val key = request.memoryCacheKey!!
                     imagesStatus[key] = ImageLoaderStatus.SUCCESS
                 }
             })
             val builtRequest = request.build()
 
-            val existingRequestStatus = imagesStatus[builtRequest.memoryCacheKey?.key]
+            val existingRequestStatus = imagesStatus[builtRequest.memoryCacheKey!!]
 
             if (existingRequestStatus == null || existingRequestStatus == ImageLoaderStatus.ERROR) {
                 imageRequestQueue.add(builtRequest)
@@ -98,7 +95,7 @@ object ImageCacheManager {
 
             ImageLoaderStatus.SUCCESS -> {
                 val cachedValue = loader.memoryCache?.get(MemoryCache.Key(key))
-                return cachedValue?.bitmap
+                return cachedValue?.image?.toBitmap()
             }
 
             null -> {
@@ -108,7 +105,6 @@ object ImageCacheManager {
         }
     }
 
-    @OptIn(ExperimentalCoilApi::class)
     fun getDiskCachedImage(key: String): Bitmap? {
         val cachedValue = loader.diskCache?.openSnapshot(key)
         return BitmapFactory.decodeFile(cachedValue?.data?.toFile()?.path)
