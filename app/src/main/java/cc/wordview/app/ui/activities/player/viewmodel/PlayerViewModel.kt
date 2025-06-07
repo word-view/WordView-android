@@ -140,9 +140,9 @@ class PlayerViewModel @Inject constructor(
                 words
             )
 
-            CoroutineScope(Dispatchers.Main).launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                ImageCacheManager.onQueueCompleted = { computeAndCheckReady() }
                 ImageCacheManager.executeAllInQueue()
-                computeAndCheckReady()
             }
         }
 
