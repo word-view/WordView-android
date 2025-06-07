@@ -40,6 +40,9 @@ object ImageCacheManager {
 
     private val imagesStatus = HashMap<String, ImageLoaderStatus>()
     private val imageRequestQueue = ArrayList<ImageRequest>()
+    private val imageCache = HashMap<String, Bitmap>()
+
+    var onQueueCompleted = {}
 
     fun init(context: Context) {
         loader = ImageLoader(context)
@@ -77,9 +80,16 @@ object ImageCacheManager {
 
     suspend fun executeAllInQueue() {
         for (item in imageRequestQueue) {
-            loader.execute(item)
+            val result = loader.execute(item)
+
+            val key = result.request.memoryCacheKey!!
+            val value = result.image?.toBitmap()
+
+            imageCache[key] = value!!
         }
+
         imageRequestQueue.clear()
+        onQueueCompleted.invoke()
     }
 
     fun getCachedImage(key: String): Bitmap? {
@@ -93,10 +103,7 @@ object ImageCacheManager {
 
             ImageLoaderStatus.ERROR -> return null
 
-            ImageLoaderStatus.SUCCESS -> {
-                val cachedValue = loader.memoryCache?.get(MemoryCache.Key(key))
-                return cachedValue?.image?.toBitmap()
-            }
+            ImageLoaderStatus.SUCCESS -> return imageCache[key]
 
             null -> {
                 Timber.w("The image associated with key=$key is not present")

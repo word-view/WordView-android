@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.dp
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.gengolex.word.Word
 import coil3.compose.AsyncImage
@@ -44,9 +43,7 @@ fun IdentifiedWord(word: Word, text: String, modifier: Modifier = Modifier) {
         if (word.representable) {
             val image = ImageCacheManager.getCachedImage(word.parent)
             if (image != null) {
-                val imageSize =
-                    if (textRowWidthPx > 0) with(density) { textRowWidthPx.toDp() }
-                    else 48.dp
+                val imageSize = with(density) { textRowWidthPx.toDp() }
                 AsyncImage(
                     modifier = Modifier.size(imageSize),
                     model = image,
