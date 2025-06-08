@@ -86,7 +86,7 @@ fun Home(navHostController: NavHostController) {
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                modifier = Modifier.testTag("settings"),
+                modifier = Modifier.testTag("search"),
                 text = { Text(text = stringResource(R.string.search)) },
                 onClick = { navHostController.navigate(HomeNav.Search.route) },
                 icon = {
