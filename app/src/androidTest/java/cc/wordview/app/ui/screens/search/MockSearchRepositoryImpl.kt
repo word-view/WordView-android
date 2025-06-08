@@ -40,6 +40,9 @@ class MockSearchRepositoryImpl @Inject constructor() : SearchRepository {
             else -> emptyList()
         }
     }
+    override fun searchNextPage(query: String): List<StreamInfoItem> {
+        return emptyList()
+    }
 
     private fun songConstructor(url: String, name: String, uploaderName: String): StreamInfoItem {
         val song = StreamInfoItem(

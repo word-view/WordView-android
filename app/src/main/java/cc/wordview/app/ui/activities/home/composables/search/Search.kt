@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,12 +46,15 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -79,16 +83,20 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import cc.wordview.app.ui.components.SearchHistoryEntry
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "search_history")
 val SEARCH_HISTORY = stringSetPreferencesKey("search_history")
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun Search(viewModel: SearchViewModel = hiltViewModel()) {
     val query by viewModel.query.collectAsStateWithLifecycle()
     val results by viewModel.searchResults.collectAsStateWithLifecycle()
     val searching by viewModel.searching.collectAsStateWithLifecycle()
+    val animateSearch by viewModel.animateSearch.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
@@ -99,6 +107,18 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
     val searchHistoryFlow = remember { context.dataStore.data.map { it[SEARCH_HISTORY] ?: emptySet() } }
     val searchHistory by searchHistoryFlow.collectAsState(initial = emptySet())
 
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { lastVisibleItemIndex ->
+                if (lastVisibleItemIndex == results.lastIndex) {
+                    viewModel.searchNextPage(query)
+                }
+            }
+    }
+
     fun search(query: String) {
         viewModel.setState(SearchState.LOADING)
         viewModel.setSearching(false)
@@ -106,6 +126,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
         viewModel.search(
             query,
             onSuccess = {
+                coroutineScope.launch { listState.scrollToItem(0) }
                 viewModel.saveSearch(context, query)
                 viewModel.setState(SearchState.COMPLETE)
             },
@@ -218,15 +239,16 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                         .padding(innerPadding)
                         .verticalFadingEdges(),
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    state = listState
                 ) {
                     var i = 0
 
-                    items(results, key = { it.id }) {
+                    items(results, key = { Uuid.random() }) {
                         i += 1
                         Spacer(Modifier.size(16.dp))
                         ResultItem(
                             modifier = Modifier.animateItem(
-                                fadeInSpec = tween(durationMillis = i * 250),
+                                fadeInSpec = if (animateSearch) tween(durationMillis = i * 250) else null,
                                 placementSpec = spring(
                                     stiffness = Spring.StiffnessLow,
                                     dampingRatio = Spring.DampingRatioMediumBouncy
