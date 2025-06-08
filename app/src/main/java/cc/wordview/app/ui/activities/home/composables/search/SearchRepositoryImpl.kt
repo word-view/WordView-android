@@ -27,6 +27,8 @@ class SearchRepositoryImpl @Inject constructor() : SearchRepository {
     private var nextPage: Page? = null
 
     override fun search(query: String): List<StreamInfoItem> {
+        nextPage = null
+
         val queryHandler = YTService.searchQHFactory.fromQuery(query, listOf("music_songs"), "")
         val search = SearchInfo.getInfo(YTService, queryHandler)
         nextPage = search.nextPage

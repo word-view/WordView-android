@@ -42,13 +42,13 @@ class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository
 ) : ViewModel() {
     private val _searching = MutableStateFlow(false)
-    private val _initialAnimationHasEnded = MutableStateFlow(false)
+    private val _animateSearch = MutableStateFlow(true)
     private val _query = MutableStateFlow("")
     private val _searchResults = MutableStateFlow(ArrayList<VideoSearchResult>())
     private val _state = MutableStateFlow(SearchState.NONE)
 
     val searching = _searching.asStateFlow()
-    val initialAnimationHasEnded = _initialAnimationHasEnded.asStateFlow()
+    val animateSearch = _animateSearch.asStateFlow()
     val query = _query.asStateFlow()
     val searchResults = _searchResults.asStateFlow()
     val state = _state.asStateFlow()
@@ -66,6 +66,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun search(query: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        _animateSearch.update { true }
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
@@ -83,7 +84,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun searchNextPage(query: String) {
-        _initialAnimationHasEnded.update { true }
+        _animateSearch.update { false }
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {

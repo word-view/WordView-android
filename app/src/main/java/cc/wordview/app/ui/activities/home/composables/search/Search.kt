@@ -51,6 +51,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -82,6 +83,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import cc.wordview.app.ui.components.SearchHistoryEntry
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -94,7 +96,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
     val query by viewModel.query.collectAsStateWithLifecycle()
     val results by viewModel.searchResults.collectAsStateWithLifecycle()
     val searching by viewModel.searching.collectAsStateWithLifecycle()
-    val initialAnimationHasEnded by viewModel.initialAnimationHasEnded.collectAsStateWithLifecycle()
+    val animateSearch by viewModel.animateSearch.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
@@ -106,6 +108,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
     val searchHistory by searchHistoryFlow.collectAsState(initial = emptySet())
 
     val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
@@ -123,6 +126,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
         viewModel.search(
             query,
             onSuccess = {
+                coroutineScope.launch { listState.scrollToItem(0) }
                 viewModel.saveSearch(context, query)
                 viewModel.setState(SearchState.COMPLETE)
             },
@@ -244,7 +248,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                         Spacer(Modifier.size(16.dp))
                         ResultItem(
                             modifier = Modifier.animateItem(
-                                fadeInSpec = if (initialAnimationHasEnded) null else tween(durationMillis = i * 250),
+                                fadeInSpec = if (animateSearch) tween(durationMillis = i * 250) else null,
                                 placementSpec = spring(
                                     stiffness = Spring.StiffnessLow,
                                     dampingRatio = Spring.DampingRatioMediumBouncy
