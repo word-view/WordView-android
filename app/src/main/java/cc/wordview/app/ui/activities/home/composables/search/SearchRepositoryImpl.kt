@@ -18,14 +18,18 @@
 package cc.wordview.app.ui.activities.home.composables.search
 
 import cc.wordview.app.extractor.VideoStream.Companion.YTService
+import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.search.SearchInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor() : SearchRepository {
+    private var nextPage: Page? = null
+
     override fun search(query: String): List<StreamInfoItem> {
         val queryHandler = YTService.searchQHFactory.fromQuery(query, listOf("music_songs"), "")
         val search = SearchInfo.getInfo(YTService, queryHandler)
+        nextPage = search.nextPage
 
         val items = ArrayList<StreamInfoItem>()
 
@@ -34,5 +38,15 @@ class SearchRepositoryImpl @Inject constructor() : SearchRepository {
         }
 
         return items
+    }
+
+    override fun searchNextPage(query: String): List<StreamInfoItem> {
+        if (nextPage == null) return emptyList()
+
+        val queryHandler = YTService.searchQHFactory.fromQuery(query, listOf("music_songs"), "")
+        val search = SearchInfo.getMoreItems(YTService, queryHandler, nextPage!!)
+        nextPage = search.nextPage
+
+        return search.items.filterIsInstance<StreamInfoItem>()
     }
 }

@@ -42,11 +42,13 @@ class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository
 ) : ViewModel() {
     private val _searching = MutableStateFlow(false)
+    private val _initialAnimationHasEnded = MutableStateFlow(false)
     private val _query = MutableStateFlow("")
     private val _searchResults = MutableStateFlow(ArrayList<VideoSearchResult>())
     private val _state = MutableStateFlow(SearchState.NONE)
 
     val searching = _searching.asStateFlow()
+    val initialAnimationHasEnded = _initialAnimationHasEnded.asStateFlow()
     val query = _query.asStateFlow()
     val searchResults = _searchResults.asStateFlow()
     val state = _state.asStateFlow()
@@ -75,6 +77,20 @@ class SearchViewModel @Inject constructor(
                 } catch (e: Throwable) {
                     Timber.e(e)
                     onError(e.message ?: e.toString())
+                }
+            }
+        }
+    }
+
+    fun searchNextPage(query: String) {
+        _initialAnimationHasEnded.update { true }
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    val results = searchRepository.searchNextPage(query)
+                    appendSearchResults(results)
+                } catch (e: Throwable) {
+                    Timber.e(e)
                 }
             }
         }
@@ -110,6 +126,25 @@ class SearchViewModel @Inject constructor(
         }
 
         _searchResults.update { parsed }
+    }
+
+    private fun appendSearchResults(resultList: List<StreamInfoItem>) {
+        val parsed = ArrayList<VideoSearchResult>()
+
+        for (item in resultList) {
+            parsed.add(VideoSearchResult(
+                id = getIdFromUrl(item.url),
+                title = item.name,
+                channel = item.uploaderName,
+                thumbnails = item.thumbnails,
+                channelIsVerified = item.isUploaderVerified,
+                duration = item.duration,
+            ))
+        }
+
+        _searchResults.update { oldList ->
+            ArrayList<VideoSearchResult>(oldList).apply { addAll(parsed) }.distinct() as ArrayList<VideoSearchResult>
+        }
     }
 
     private fun getIdFromUrl(url: String): String {

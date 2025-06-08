@@ -21,4 +21,5 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 interface SearchRepository {
     fun search(query: String): List<StreamInfoItem>
+    fun searchNextPage(query: String): List<StreamInfoItem>
 }
