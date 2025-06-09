@@ -64,6 +64,8 @@ class LoginViewModel @Inject constructor(
                         emitMessage(context.getString(R.string.this_email_address_has_not_yet_been_registered))
                     } else if (s.startsWith("IncorrectCredentialsException")) {
                         emitMessage(context.getString(R.string.incorrect_credentials))
+                    } else {
+                        emitMessage(context.getString(R.string.could_not_connect_to_the_server))
                     }
 
                     _isLoading.update { false }

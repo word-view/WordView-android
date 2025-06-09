@@ -68,7 +68,7 @@ class RegisterViewModel @Inject constructor(
                 } else if (s.contains("username cannot contain special characters")) {
                     emitMessage(context.getString(R.string.username_cannot_contain_special_characters))
                 } else {
-                    emitMessage(context.getString(R.string.an_unexpected_error_has_happened, s))
+                    emitMessage(context.getString(R.string.could_not_connect_to_the_server))
                 }
 
                 _isLoading.update { false }
