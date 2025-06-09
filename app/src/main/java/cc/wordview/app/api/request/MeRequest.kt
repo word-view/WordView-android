@@ -66,9 +66,8 @@ class MeRequest(
             val id = jsonObject.get("id").asString
             val username = jsonObject.get("username").asString
             val email = jsonObject.get("email").asString
-            val role = jsonObject.get("role").asString
 
-            return User(id, username, email, role)
+            return User(id, username, email)
         }
 
         private fun scrapeErrorFromResponseData(responseData: String?): String? {

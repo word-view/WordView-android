@@ -20,6 +20,5 @@ package cc.wordview.app.api.entity
 data class User(
     val id: String,
     val username: String,
-    val email: String,
-    val role: String
+    val email: String
 )
