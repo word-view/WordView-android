@@ -189,6 +189,8 @@ class PlayerViewModel @Inject constructor(
 
                 for (cue in _cues.value) {
                     for (word in cue.words) {
+                        if (word.parent == "") continue
+
                         val reviseWord = ReviseWord(word)
                         LessonViewModel.appendWord(reviseWord)
                     }
