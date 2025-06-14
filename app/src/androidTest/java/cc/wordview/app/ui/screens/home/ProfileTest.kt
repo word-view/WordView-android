@@ -33,8 +33,7 @@ class ProfileTest : ComposeTest() {
         GlobalViewModel.setUser(User(
             id = "1",
             username = "Mock user",
-            email = "mock.user@gmail.com",
-            role = "USER"
+            email = "mock.user@gmail.com"
         ))
     }
 
