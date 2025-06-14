@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
@@ -44,6 +45,7 @@ import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
@@ -54,32 +56,52 @@ fun MeaningPresenter() {
 
     val screenWidthPx = with(LocalDensity.current) { 400.dp.toPx() }
 
-    // Animation state
     val offsetX = remember { Animatable(-screenWidthPx) }
-    var started by remember { mutableStateOf(false) }
+    val alpha = remember { Animatable(0f) }
 
     val context = LocalContext.current
 
     LaunchedEffect(currentWord) {
         LessonViewModel.playEffect(context, R.raw.discovery)
-        started = false
-        // Slide in from left to center
         offsetX.snapTo(-screenWidthPx)
-        offsetX.animateTo(
-            targetValue = 0f,
-            animationSpec = tween(durationMillis = 600)
-        )
-        started = true
+        alpha.snapTo(0f)
 
-        // Wait at center
+        // Slide in & fade in simultaneously (600ms)
+        val slideIn = launch {
+            offsetX.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = 600)
+            )
+        }
+        val fadeIn = launch {
+            alpha.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 800)
+            )
+        }
+        slideIn.join()
+        fadeIn.join()
+
         val tokenWord = currentWord.tokenWord
         LessonViewModel.ttsSpeak(context, tokenWord.pronunciation ?: tokenWord.word, lang.locale)
         delay(2000)
 
-        offsetX.animateTo(
-            targetValue = screenWidthPx,
-            animationSpec = tween(durationMillis = 600)
-        )
+        // Slide out & fade out simultaneously (600ms)
+        val slideOut = launch {
+            offsetX.animateTo(
+                targetValue = screenWidthPx,
+                animationSpec = tween(durationMillis = 600)
+            )
+        }
+        val fadeOut = launch {
+            alpha.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = 400)
+            )
+        }
+
+        slideOut.join()
+        fadeOut.join()
 
         LessonViewModel.postPresent()
     }
@@ -96,17 +118,20 @@ fun MeaningPresenter() {
         AsyncImage(
             modifier = Modifier
                 .size(130.dp)
+                .alpha(alpha.value)
                 .testTag("word"),
             model = image,
             contentDescription = null
         )
         Space(12.dp)
         Text(
+            modifier = Modifier.alpha(alpha.value),
             text = currentWord.tokenWord.word,
             textAlign = TextAlign.Center,
             style = if (lang == Language.JAPANESE) Typography.displayLarge else Typography.displayMedium,
         )
         Text(
+            modifier = Modifier.alpha(alpha.value),
             text = currentWord.tokenWord.parent,
             textAlign = TextAlign.Center,
             style = Typography.bodyLarge,

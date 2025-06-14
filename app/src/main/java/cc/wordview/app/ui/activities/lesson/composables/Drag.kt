@@ -36,7 +36,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
@@ -67,9 +69,18 @@ fun Drag(mode: DragMode? = null) {
     var dragMode by remember { mutableStateOf(DragMode.random()) }
     var isPressed by remember { mutableStateOf(false) }
 
+    // Custom animation: scale, fade, and rotation for the drag item
     val scale by animateFloatAsState(
-        targetValue = if (isDragging || isPressed) 0.6f else 1f,
-        animationSpec = tween(durationMillis = 300)
+        targetValue = if (isDragging || isPressed) 0.85f else 1f,
+        animationSpec = tween(durationMillis = 280)
+    )
+    val alpha by animateFloatAsState(
+        targetValue = if (isDragging || isPressed) 0.85f else 1f,
+        animationSpec = tween(durationMillis = 280)
+    )
+    val rotation by animateFloatAsState(
+        targetValue = if (isDragging) (offsetX.coerceIn(-200f, 200f) / 3f) else 0f,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 300f),
     )
 
     val coroutineScope = rememberCoroutineScope()
@@ -176,8 +187,12 @@ fun Drag(mode: DragMode? = null) {
                         offsetY += dragAmount.y
                     })
                 .scale(scale)
+                .alpha(alpha)
                 .zIndex(10f)
                 .testTag("drag")
+                .graphicsLayer {
+                    rotationZ = rotation
+                }
         ) {
             currentWord.tokenWord.let {
                 when (dragMode) {

@@ -38,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -64,13 +65,19 @@ fun Presenter() {
     var visible by remember { mutableStateOf(false) }
 
     val langTag = AppSettings.language.get()
-
     val context = LocalContext.current
 
     val scaleIn = animateFloatAsState(
         if (visible) 1f else 0.01f,
         tween(500, easing = EaseInOutExpo),
         label = "WordPresenterAnimation",
+    )
+
+    // Fade animation value
+    val fadeInOut = animateFloatAsState(
+        if (visible) 1f else 0f,
+        tween(250, easing = EaseInOutExpo),
+        label = "WordPresenterAlpha",
     )
 
     val scope = rememberCoroutineScope()
@@ -125,7 +132,8 @@ fun Presenter() {
                 Icon(
                     modifier = Modifier
                         .size(130.dp)
-                        .testTag("correct"),
+                        .testTag("correct")
+                        .alpha(fadeInOut.value),
                     imageVector = Icons.Filled.CheckCircle,
                     contentDescription = "Correct"
                 )
@@ -135,7 +143,8 @@ fun Presenter() {
                 Icon(
                     modifier = Modifier
                         .size(130.dp)
-                        .testTag("wrong"),
+                        .testTag("wrong")
+                        .alpha(fadeInOut.value),
                     imageVector = Icons.Filled.Cancel,
                     contentDescription = "Wrong"
                 )
@@ -146,7 +155,8 @@ fun Presenter() {
                 AsyncImage(
                     modifier = Modifier
                         .size(130.dp)
-                        .testTag("word"),
+                        .testTag("word")
+                        .alpha(fadeInOut.value),
                     model = image,
                     contentDescription = null
                 )
@@ -157,6 +167,7 @@ fun Presenter() {
                     text = currentWord.tokenWord.word,
                     textAlign = TextAlign.Center,
                     style = if (lang == Language.JAPANESE) Typography.displayLarge else Typography.displayMedium,
+                    modifier = Modifier.alpha(fadeInOut.value)
                 )
             }
         }
