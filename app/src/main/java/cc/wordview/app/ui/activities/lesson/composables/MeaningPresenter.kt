@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cc.wordview.app.R
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
@@ -60,6 +61,7 @@ fun MeaningPresenter() {
     val context = LocalContext.current
 
     LaunchedEffect(currentWord) {
+        LessonViewModel.playEffect(context, R.raw.discovery)
         started = false
         // Slide in from left to center
         offsetX.snapTo(-screenWidthPx)

@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cc.wordview.app.R
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.activities.lesson.viewmodel.Answer
@@ -77,6 +78,12 @@ fun Presenter() {
     LaunchedEffect(key1 = scaleIn.value) {
         if (scaleIn.value == 1f) {
             scope.launch {
+                if (answerStatus == Answer.CORRECT) {
+                    LessonViewModel.playEffect(context, R.raw.correct)
+                } else if (answerStatus == Answer.WRONG) {
+                    LessonViewModel.playEffect(context, R.raw.wrong)
+                }
+
                 delay(1500.milliseconds)
                 visible = false
                 delay(500.milliseconds)

@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.activities.lesson.viewmodel
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.ui.activities.lesson.LessonNav
@@ -34,6 +35,7 @@ object LessonViewModel : ViewModel() {
     private val _answerStatus = MutableStateFlow(Answer.NONE)
     private val _timer = MutableStateFlow("")
     private val _timerFinished = MutableStateFlow(false)
+    private val _mediaPlayer = MutableStateFlow<MediaPlayer?>(null)
 
     private var tts: TextToSpeech? = null
 
@@ -124,6 +126,12 @@ object LessonViewModel : ViewModel() {
 
     fun cleanWords() {
         _wordsToRevise.update { arrayListOf() }
+    }
+
+    fun playEffect(context: Context, resId: Int) {
+        _mediaPlayer.value = MediaPlayer.create(context, resId)
+        _mediaPlayer.value?.seekTo(0)
+        _mediaPlayer.value?.start()
     }
 
     fun ttsSpeak(context: Context, word: String, locale: Locale) {
