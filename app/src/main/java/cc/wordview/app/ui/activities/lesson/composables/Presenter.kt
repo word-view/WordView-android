@@ -73,7 +73,6 @@ fun Presenter() {
         label = "WordPresenterAnimation",
     )
 
-    // Fade animation value
     val fadeInOut = animateFloatAsState(
         if (visible) 1f else 0f,
         tween(250, easing = EaseInOutExpo),

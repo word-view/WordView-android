@@ -66,7 +66,6 @@ fun MeaningPresenter() {
         offsetX.snapTo(-screenWidthPx)
         alpha.snapTo(0f)
 
-        // Slide in & fade in simultaneously (600ms)
         val slideIn = launch {
             offsetX.animateTo(
                 targetValue = 0f,
@@ -86,7 +85,6 @@ fun MeaningPresenter() {
         LessonViewModel.ttsSpeak(context, tokenWord.pronunciation ?: tokenWord.word, lang.locale)
         delay(2000)
 
-        // Slide out & fade out simultaneously (600ms)
         val slideOut = launch {
             offsetX.animateTo(
                 targetValue = screenWidthPx,
