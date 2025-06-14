@@ -52,11 +52,7 @@ object ReviseTimer {
             }
         }
 
-        // wait a bit in case the transition to the reviser took a bit longer
-        thread {
-            sleep(1000)
-            timer?.start()
-        }
+        thread { timer?.start() }
     }
 
     fun pause() {
