@@ -74,7 +74,22 @@ object LessonViewModel : ViewModel() {
         if (!currentWord.value.tokenWord.representable) {
             Timber.d("Word '${currentWord.value.tokenWord.word}' is not representable (skipping)")
             nextWord(answer)
-        } else setScreen(LessonNav.getRandomScreen().route)
+        } else {
+            if (!currentWord.value.isKnown) {
+                setScreen(LessonNav.MeaningPresenter.route)
+            } else setScreen(LessonNav.getRandomScreen().route)
+        }
+    }
+
+    fun postPresent() {
+        currentWord.value.isKnown = true
+
+        if (!currentWord.value.tokenWord.representable) {
+            Timber.d("Word '${currentWord.value.tokenWord.word}' is not representable (skipping)")
+            nextWord()
+        } else {
+            setScreen(LessonNav.getRandomScreen().route)
+        }
     }
 
     fun appendWord(reviseWord: ReviseWord) {

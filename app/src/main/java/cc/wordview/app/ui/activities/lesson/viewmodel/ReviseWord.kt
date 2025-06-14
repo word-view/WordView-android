@@ -22,4 +22,9 @@ import cc.wordview.gengolex.word.Word
 class ReviseWord(var tokenWord: Word = Word("", "")) {
     var misses = 0
     var corrects = 0
+
+    /**
+     * If it's the first time the user is seeing the word
+     */
+    var isKnown = false
 }
