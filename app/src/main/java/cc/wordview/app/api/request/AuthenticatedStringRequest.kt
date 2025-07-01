@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2025 Arthur Araujo
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package cc.wordview.app.api.request
+
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.toolbox.StringRequest
+import timber.log.Timber
+
+/**
+ * The same as the default StringRequest but it adds the jwt token to the header
+ */
+class AuthenticatedStringRequest(
+    url: String?,
+    private val jwt: String,
+    onSuccess: (String) -> Unit,
+    onError: (String, Int) -> Unit,
+) : StringRequest(
+    Method.GET,
+    url,
+    { onSuccess(it) },
+    {
+        val statusCode = it.networkResponse?.statusCode
+        val responseData = it.networkResponse?.data?.let { String(it) }
+        val errorTitle = scrapeErrorFromResponseData(responseData)
+
+        onError(it.message ?: "Request failed with status code $statusCode\n$errorTitle", statusCode ?: 0)
+    }) {
+
+    init {
+        Timber.v("init: method=GET, url=$url, onSuccess=$onSuccess, onError=$onError")
+
+        retryPolicy = DefaultRetryPolicy(
+            20000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+    }
+
+    override fun getHeaders(): MutableMap<String, String> {
+        val headers: MutableMap<String, String> = HashMap()
+        headers["Authorization"] = "Bearer $jwt"
+        return headers
+    }
+
+    companion object {
+        private fun scrapeErrorFromResponseData(responseData: String?): String? {
+            if (responseData != null) {
+                val titleRegex = "<title>(.*?)</title>".toRegex(RegexOption.IGNORE_CASE)
+                val matchResult = titleRegex.find(responseData)
+                return matchResult?.groups?.get(1)?.value
+            } else return null
+        }
+    }
+}

@@ -35,6 +35,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.misc.AppSettings
@@ -76,6 +77,7 @@ class PlayerActivity : WordViewActivity() {
 
                 val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
                 val langTag = AppSettings.language.get()
+                val jwt = getStoredJwt()
 
                 val context = LocalContext.current
 
@@ -90,6 +92,7 @@ class PlayerActivity : WordViewActivity() {
 
                             viewModel.initAudio(videoStream.getStreamURL(), context)
                             viewModel.getLyrics(preferences, context, videoId, lang, videoStream)
+                            jwt?.let { viewModel.getKnownWords(context, lang, it) }
                         } catch (e: ExtractionException) {
                             Timber.e(e)
                             viewModel.setErrorMessage(e.message.toString())

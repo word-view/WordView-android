@@ -25,6 +25,8 @@ import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepositoryImpl
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepositoryImpl
+import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
+import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -42,6 +44,10 @@ abstract class RepositoryModule {
     @Singleton
     @Binds
     internal abstract fun bindPlayerRepository(playerRepositoryImpl: PlayerRepositoryImpl): PlayerRepository
+
+    @Singleton
+    @Binds
+    internal abstract fun bindKnownWordsRepository(knownWordsRepositoryImpl: KnownWordsRepositoryImpl): KnownWordsRepository
 
     @Singleton
     @Binds

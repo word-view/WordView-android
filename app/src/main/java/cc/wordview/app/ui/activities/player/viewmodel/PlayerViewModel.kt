@@ -53,7 +53,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val playerRepository: PlayerRepository
+    private val playerRepository: PlayerRepository,
+    private val knownWordsRepository: KnownWordsRepository
 ) : ViewModel() {
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
@@ -68,6 +69,7 @@ class PlayerViewModel @Inject constructor(
     private val _noTimeLeft = MutableStateFlow(false)
     private val _errorMessage = MutableStateFlow("")
     private val _statusCode = MutableStateFlow(0)
+    private val _knownWords = MutableStateFlow(ArrayList<String>())
 
     // Seekbar states
     private val _currentPosition = MutableStateFlow(0L)
@@ -96,6 +98,23 @@ class PlayerViewModel @Inject constructor(
         stepsReady.update { it + 1 }
         if (stepsReady.value == 3)
             setPlayerState(PlayerState.READY)
+    }
+
+    fun getKnownWords(context: Context, lang: Language, jwt: String) = viewModelScope.launch {
+        knownWordsRepository.apply {
+            init(context)
+
+            onFail = { message, status ->
+                Timber.e("Failed to request known words \n\t message=$message, status=$status")
+            }
+
+            onSucceed = {
+                for (word in it)
+                    _knownWords.value.add(word)
+            }
+
+            getKnownWords(lang.tag, jwt)
+        }
     }
 
     fun getLyrics(
@@ -192,6 +211,9 @@ class PlayerViewModel @Inject constructor(
                         if (word.parent == "") continue
 
                         val reviseWord = ReviseWord(word)
+
+                        reviseWord.isKnown = _knownWords.value.contains(reviseWord.tokenWord.parent)
+
                         LessonViewModel.appendWord(reviseWord)
                     }
                 }
