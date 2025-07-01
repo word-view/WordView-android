@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.activities.player.viewmodel
+package cc.wordview.app.api.entity
 
 data class Phrase(
     val phrase: String,
