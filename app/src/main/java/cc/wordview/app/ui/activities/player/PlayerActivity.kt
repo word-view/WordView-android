@@ -77,7 +77,6 @@ class PlayerActivity : WordViewActivity() {
 
                 val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
                 val langTag = AppSettings.language.get()
-                val jwt = getStoredJwt()
 
                 val context = LocalContext.current
 
@@ -92,7 +91,7 @@ class PlayerActivity : WordViewActivity() {
 
                             viewModel.initAudio(videoStream.getStreamURL(), context)
                             viewModel.getLyrics(preferences, context, videoId, lang, videoStream)
-                            jwt?.let { viewModel.getKnownWords(context, lang, it) }
+                            viewModel.getKnownWords(context, lang)
                         } catch (e: ExtractionException) {
                             Timber.e(e)
                             viewModel.setErrorMessage(e.message.toString())

@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.BuildConfig
+import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.audio.AudioPlayerListener
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.extractor.VideoStreamInterface
@@ -100,12 +101,14 @@ class PlayerViewModel @Inject constructor(
             setPlayerState(PlayerState.READY)
     }
 
-    fun getKnownWords(context: Context, lang: Language, jwt: String) = viewModelScope.launch {
+    fun getKnownWords(context: Context, lang: Language) = viewModelScope.launch {
+        val jwt = getStoredJwt(context)
+
         knownWordsRepository.apply {
             init(context)
 
             onFail = { message, status ->
-                Timber.e("Failed to request known words \n\t message=$message, status=$status")
+                Timber.e("Failed to request known words \n\tmessage=$message, status=$status")
             }
 
             onSucceed = {
@@ -113,7 +116,7 @@ class PlayerViewModel @Inject constructor(
                     _knownWords.value.add(word)
             }
 
-            getKnownWords(lang.tag, jwt)
+            jwt?.let { getKnownWords(lang.tag, it) }
         }
     }
 
