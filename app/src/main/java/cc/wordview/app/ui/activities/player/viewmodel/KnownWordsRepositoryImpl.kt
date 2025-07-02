@@ -36,8 +36,8 @@ class KnownWordsRepositoryImpl @Inject constructor() : KnownWordsRepository {
         val request = AuthenticatedStringRequest(
             url.getURL(),
             jwt,
-            { onSucceed(it.split(",")) },
-            { message, status -> onFail(message, status) }
+            onSuccess = { onSucceed(it.split(",")) },
+            onError = { message, status -> onFail(message, status) }
         )
 
         queue.add(request)

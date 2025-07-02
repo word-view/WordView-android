@@ -19,6 +19,7 @@ package cc.wordview.app.api.request
 
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
+import org.json.JSONObject
 import timber.log.Timber
 
 /**
@@ -27,10 +28,12 @@ import timber.log.Timber
 class AuthenticatedStringRequest(
     url: String?,
     private val jwt: String,
+    method: Int = Method.GET,
+    private val body: JSONObject? = null,
     onSuccess: (String) -> Unit,
     onError: (String, Int) -> Unit,
 ) : StringRequest(
-    Method.GET,
+    method,
     url,
     { onSuccess(it) },
     {
@@ -49,6 +52,14 @@ class AuthenticatedStringRequest(
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         )
+    }
+
+    override fun getBodyContentType(): String {
+        return "application/json"
+    }
+
+    override fun getBody(): ByteArray {
+        return body.toString().toByteArray()
     }
 
     override fun getHeaders(): MutableMap<String, String> {
