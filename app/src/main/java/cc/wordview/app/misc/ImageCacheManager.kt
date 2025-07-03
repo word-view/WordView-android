@@ -85,7 +85,7 @@ object ImageCacheManager {
             val key = result.request.memoryCacheKey!!
             val value = result.image?.toBitmap()
 
-            imageCache[key] = value!!
+            value?.let { imageCache[key] = it }
         }
 
         imageRequestQueue.clear()

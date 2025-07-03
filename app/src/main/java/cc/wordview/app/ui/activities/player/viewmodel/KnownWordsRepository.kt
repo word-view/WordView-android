@@ -17,7 +17,11 @@
 
 package cc.wordview.app.ui.activities.player.viewmodel
 
-data class Phrase(
-    val phrase: String,
-    val words: List<String>,
-)
+import cc.wordview.app.api.ApiRequestRepository
+
+interface KnownWordsRepository : ApiRequestRepository {
+    var onSucceed: (List<String>) -> Unit
+    var onFail: (String, Int) -> Unit
+
+    fun getKnownWords(lang: String, jwt: String)
+}

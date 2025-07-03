@@ -40,21 +40,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extensions.setOrientationSensorPortrait
+import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
-import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.Icon
 import cc.wordview.app.ui.components.LessonQuitDialog
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.theme.WordViewTheme
-import cc.wordview.gengolex.word.Word
+import cc.wordview.gengolex.Language
 import dagger.hilt.android.AndroidEntryPoint
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 
@@ -75,12 +75,16 @@ class LessonActivity : WordViewActivity() {
                     val timerFinished by viewModel.timerFinished.collectAsStateWithLifecycle()
 
                     val activity = LocalActivity.current!!
+                    val context = LocalContext.current
+
+                    val langTag = AppSettings.language.get()
+                    val language = Language.byTag(langTag)
 
                     var openQuitConfirm by remember { mutableStateOf(false) }
 
                     OneTimeEffect {
                         viewModel.nextWord()
-                        ReviseTimer.start()
+                        ReviseTimer.start(context, language)
                     }
 
                     fun leave() {
@@ -94,7 +98,7 @@ class LessonActivity : WordViewActivity() {
                         LessonQuitDialog(
                             onDismiss = {
                                 openQuitConfirm = false
-                                ReviseTimer.start()
+                                ReviseTimer.start(context, language)
                             },
                             onConfirm = { leave() }
                         )

@@ -15,16 +15,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.activities.lesson.viewmodel
+package cc.wordview.app.ui.screens.player
 
-import cc.wordview.gengolex.word.Word
+import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
+import com.android.volley.RequestQueue
+import jakarta.inject.Inject
 
-class ReviseWord(var tokenWord: Word = Word("", "")) {
-    var misses = 0
-    var corrects = 0
+class MockKnownWordsRepositoryImpl @Inject constructor() : KnownWordsRepository {
+    override var onSucceed: (List<String>) -> Unit = {}
+    override var onFail: (String, Int) -> Unit = { s: String, i: Int -> }
 
-    /**
-     * If it's the first time the user is seeing the word
-     */
-    var isKnown = false
+    override var endpoint: String = ""
+
+    override lateinit var queue: RequestQueue
+
+    override fun getKnownWords(lang: String, jwt: String) {
+        onSucceed(listOf("rain", "world"))
+    }
 }

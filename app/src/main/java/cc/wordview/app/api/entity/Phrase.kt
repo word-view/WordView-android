@@ -15,16 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.activities.lesson.viewmodel
+package cc.wordview.app.api.entity
 
-import cc.wordview.gengolex.word.Word
-
-class ReviseWord(var tokenWord: Word = Word("", "")) {
-    var misses = 0
-    var corrects = 0
-
-    /**
-     * If it's the first time the user is seeing the word
-     */
-    var isKnown = false
-}
+data class Phrase(
+    val phrase: String,
+    val words: List<String>,
+)

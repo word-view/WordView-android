@@ -40,9 +40,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -67,8 +64,7 @@ import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.PlayerTopBar
 import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
-import cc.wordview.app.ui.components.WordsPresentDialog
-import cc.wordview.gengolex.word.Word
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,7 +86,6 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     val context = LocalContext.current
 
     val composerMode = AppSettings.composerMode.get()
-    var wordsPresentDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(finalized) {
         if (finalized) {
@@ -111,15 +106,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     if (notEnoughWords) NotEnoughWordsDialog { back() }
     if (noTimeLeft) NoTimeLeftDialog { back() }
 
-    if (wordsPresentDialog) {
-        val words = ArrayList<Word>()
-
-        for (cue in cues) words.addAll(cue.words)
-
-        WordsPresentDialog({ wordsPresentDialog = false; player.play() }, words.distinct())
-    }
-
-    OneTimeEffect { wordsPresentDialog = true }
+    OneTimeEffect { player.play() }
 
     Box(
         modifier = Modifier
@@ -146,7 +133,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
         }
 
         FadeOutBox(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().testTag("fade-out-box"),
             duration = 250,
             stagnationTime = 5000
         ) {

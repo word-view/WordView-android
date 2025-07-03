@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import cc.wordview.app.ui.activities.lesson.composables.Drag
 import cc.wordview.app.ui.activities.lesson.composables.DragMode
+import cc.wordview.app.ui.activities.lesson.composables.MeaningPresenter
 import cc.wordview.app.ui.activities.lesson.composables.Presenter
 
 sealed class LessonNav(val route: String) {
@@ -49,8 +50,15 @@ sealed class LessonNav(val route: String) {
         }
     }
 
+    data object MeaningPresenter : LessonNav("meaning-presenter") {
+        @Composable
+        override fun Composable(innerPadding: PaddingValues) {
+            MeaningPresenter()
+        }
+    }
+
     companion object {
-        val screens = listOf(IconDrag, WordDrag, Presenter)
+        val screens = listOf(IconDrag, WordDrag, Presenter, MeaningPresenter)
 
         fun getByRoute(route: String): LessonNav? {
             for (screen in screens) {
@@ -61,7 +69,10 @@ sealed class LessonNav(val route: String) {
         }
 
         fun getRandomScreen(): LessonNav {
-            return screens.filter { s -> s.route != Presenter.route }.random()
+            return screens
+                .filter { s -> s.route != Presenter.route }
+                .filter { s -> s.route != MeaningPresenter.route }
+                .random()
         }
 
         fun getRandomScreen(toFilter: LessonNav): LessonNav {

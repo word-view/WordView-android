@@ -18,10 +18,11 @@
 package cc.wordview.app.ui.activities.lesson
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.CountDownTimer
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
+import cc.wordview.gengolex.Language
 import timber.log.Timber
-import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
 object ReviseTimer {
@@ -31,7 +32,7 @@ object ReviseTimer {
 
     private var timer: CountDownTimer? = null
 
-    fun start() {
+    fun start(context: Context? = null, language: Language) {
         if (timer != null) {
             Timber.w("Timer is already running; The attempt to start will be ignored")
             return
@@ -48,15 +49,11 @@ object ReviseTimer {
 
             override fun onFinish() {
                 Timber.i("Timer finished!")
-                viewModel.finishTimer()
+                viewModel.finishTimer(context, language)
             }
         }
 
-        // wait a bit in case the transition to the reviser took a bit longer
-        thread {
-            sleep(1000)
-            timer?.start()
-        }
+        thread { timer?.start() }
     }
 
     fun pause() {
