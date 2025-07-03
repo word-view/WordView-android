@@ -157,8 +157,6 @@ object LessonViewModel : ViewModel() {
             .put("language", language.tag)
             .put("words", jsonArray)
 
-        Timber.v("Saving known words: \n\turl=${url.getURL()}, \n\tjwt=$jwt, \n\tjson=${json.toString()} ")
-
         val request = AuthenticatedStringRequest(
             url.getURL(),
             jwt,
