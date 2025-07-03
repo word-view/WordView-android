@@ -24,7 +24,9 @@ import cc.wordview.app.ui.screens.player.MockPlayerRepositoryImpl
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.screens.search.MockSearchRepositoryImpl
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
+import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
 import cc.wordview.app.ui.screens.login.MockLoginRepositoryImpl
+import cc.wordview.app.ui.screens.player.MockKnownWordsRepositoryImpl
 import cc.wordview.app.ui.screens.register.MockRegisterRepositoryImpl
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
@@ -43,6 +45,11 @@ abstract class RepositoryTestModule {
     @Singleton
     @Binds
     abstract fun bindsMockPlayerRepository(mockPlayerRepositoryImpl: MockPlayerRepositoryImpl): PlayerRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindsMockKnownWordsRepository(mockKnownWordsRepositoryImpl: MockKnownWordsRepositoryImpl): KnownWordsRepository
+
 
     @Singleton
     @Binds

@@ -28,7 +28,9 @@ import cc.wordview.app.SongViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
 import cc.wordview.app.ui.activities.lesson.ReviseTimer
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
+import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
+import cc.wordview.gengolex.Language
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -47,6 +49,9 @@ class PlayerTest {
 
     @Inject
     lateinit var playerRepository: PlayerRepository
+
+    @Inject
+    lateinit var knownWordsRepository: KnownWordsRepository
 
     @Before
     fun setup() {
@@ -202,7 +207,7 @@ class PlayerTest {
         composeTestRule.onNodeWithTag("fade-out-box")
             .performClick()
 
-        LessonViewModel.finishTimer()
+        LessonViewModel.finishTimer(language = Language.ENGLISH)
 
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("skip-forward"), 2_000)
         composeTestRule.onNodeWithTag("skip-forward")
