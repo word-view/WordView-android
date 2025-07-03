@@ -83,7 +83,7 @@ fun Drag(mode: DragMode? = null) {
         animationSpec = tween(durationMillis = 280)
     )
     val rotation by animateFloatAsState(
-        targetValue = if (isDragging && !isDropComplete) (offsetX.coerceIn(-200f, 200f) / 3f) else 0f,
+        targetValue = if (isDragging && !isDropComplete) offsetX.coerceIn(-200f, 200f) / 3f else 0f,
         animationSpec = spring(dampingRatio = 0.7f, stiffness = 300f),
     )
 
