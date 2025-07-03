@@ -131,43 +131,44 @@ object LessonViewModel : ViewModel() {
         _timer.update { time }
     }
 
-    @Suppress("NAME_SHADOWING")
     fun finishTimer(context: Context? = null, language: Language) {
         if (context == null)
             Timber.w("Words learned in this session won't be saved since context was not specified to finishTimer")
 
-        // TODO: The way this request is made does not follow the same way other requests are made in the app (through repositories).
-        context?.let { context ->
-            val endpoint = BuildConfig.API_BASE_URL
-            val queue = Volley.newRequestQueue(context)
-            val jwt = getStoredJwt(context)!!
-
-            val url = APIUrl("$endpoint/api/v1/lesson/words/known")
-
-            val jsonArray = JSONArray()
-
-            for (word in _knownWords.value)
-                jsonArray.put(word)
-
-            val json = JSONObject()
-                .put("language", language.tag)
-                .put("words", jsonArray)
-
-            Timber.v("Saving known words: \n\turl=${url.getURL()}, \n\tjwt=$jwt, \n\tjson=${json.toString()} ")
-
-            val request = AuthenticatedStringRequest(
-                url.getURL(),
-                jwt,
-                Request.Method.POST,
-                json,
-                { Timber.i("Know words have been successfully saved: $it") },
-                { message, status -> Timber.e("Failed to post known words \n\tmessage=$message, status=$status") }
-            )
-
-            queue.add(request)
-        }
+        context?.let { saveKnownWords(it, language) }
 
         _timerFinished.update { true }
+    }
+
+    private fun saveKnownWords(context: Context, language: Language) {
+        // TODO: The way this request is made does not follow the same way other requests are made in the app (through repositories).
+        val endpoint = BuildConfig.API_BASE_URL
+        val queue = Volley.newRequestQueue(context)
+        val jwt = getStoredJwt(context)!!
+
+        val url = APIUrl("$endpoint/api/v1/lesson/words/known")
+
+        val jsonArray = JSONArray()
+
+        for (word in _knownWords.value)
+            jsonArray.put(word)
+
+        val json = JSONObject()
+            .put("language", language.tag)
+            .put("words", jsonArray)
+
+        Timber.v("Saving known words: \n\turl=${url.getURL()}, \n\tjwt=$jwt, \n\tjson=${json.toString()} ")
+
+        val request = AuthenticatedStringRequest(
+            url.getURL(),
+            jwt,
+            Request.Method.POST,
+            json,
+            { Timber.i("Know words have been successfully saved: $it") },
+            { message, status -> Timber.e("Failed to post known words \n\tmessage=$message, status=$status") }
+        )
+
+        queue.add(request)
     }
 
     fun cleanWords() {
