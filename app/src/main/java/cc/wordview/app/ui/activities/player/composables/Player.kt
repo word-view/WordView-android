@@ -106,7 +106,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     if (notEnoughWords) NotEnoughWordsDialog { back() }
     if (noTimeLeft) NoTimeLeftDialog { back() }
 
-    OneTimeEffect { player.play() }
+    OneTimeEffect { player.togglePlay() }
 
     Box(
         modifier = Modifier
@@ -186,7 +186,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
                             .alpha(if (isBuffering) 0.0f else 1.0f),
                         icon = playIcon,
                         size = 80.dp,
-                        onClick = { player.play() }
+                        onClick = { player.togglePlay() }
                     )
                     PlayerButton(
                         modifier = Modifier.testTag("skip-forward"),

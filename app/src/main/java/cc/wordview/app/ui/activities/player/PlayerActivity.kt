@@ -130,6 +130,17 @@ class PlayerActivity : WordViewActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        val playerState = viewModel.playerState.value
+
+        if (playerState == PlayerState.READY) {
+            val player = viewModel.player.value
+            player.pause()
+        }
+    }
+
     override fun onDestroy() {
         if (isFinishing) {
             SongViewModel.setVideoStream(VideoStream())
