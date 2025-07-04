@@ -35,7 +35,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.misc.AppSettings
@@ -123,6 +122,17 @@ class PlayerActivity : WordViewActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val playerState = viewModel.playerState.value
+
+        if (playerState == PlayerState.READY) {
+            val player = viewModel.player.value
+            player.pause()
         }
     }
 

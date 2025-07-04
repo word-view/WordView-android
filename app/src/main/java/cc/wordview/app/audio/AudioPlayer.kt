@@ -19,7 +19,6 @@ package cc.wordview.app.audio
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import androidx.media3.common.AudioAttributes
@@ -89,7 +88,11 @@ class AudioPlayer {
         }
     }
 
-    fun play() {
+    /**
+     * Toggle the player state, if it is playing it will pause
+     * and vice-versa.
+     */
+    fun togglePlay() {
         when (player.isPlaying) {
             true -> {
                 player.pause()
@@ -100,6 +103,11 @@ class AudioPlayer {
                 startPositionCheck()
             }
         }
+    }
+
+    fun pause() {
+        player.pause()
+        stopPositionCheck()
     }
 
     fun skipForward() {
