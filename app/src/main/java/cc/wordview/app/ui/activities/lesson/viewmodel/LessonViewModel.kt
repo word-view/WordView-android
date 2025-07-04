@@ -179,37 +179,24 @@ object LessonViewModel : ViewModel() {
         _mediaPlayer.value?.start()
     }
 
-    fun ttsSpeak(context: Context, word: String, locale: Locale) {
-        Timber.v("ttsSpeak: word=$word, locale=$locale")
+    fun initTts(context: Context) {
+        tts = TextToSpeech(context) {
+            Timber.v("initTts: ttsStatus=$it")
+        }
+    }
 
-        if (tts == null) {
-            tts = TextToSpeech(context) {
-                Timber.v("ttsSpeak: ttsStatus=$it")
+    fun ttsSpeak(word: String, locale: Locale) {
+        tts?.let { textToSpeech ->
+            Timber.v("ttsSpeak: word=$word, locale=$locale")
 
-                if (it == TextToSpeech.SUCCESS) {
-                    tts?.let { textToSpeech ->
-                        textToSpeech.language = locale
-                        textToSpeech.setSpeechRate(1.0f)
-                        textToSpeech.speak(
-                            word,
-                            TextToSpeech.QUEUE_ADD,
-                            null,
-                            null
-                        )
-                    }
-                }
-            }
-        } else {
-            tts?.let { textToSpeech ->
-                textToSpeech.language = locale
-                textToSpeech.setSpeechRate(1.0f)
-                textToSpeech.speak(
-                    word,
-                    TextToSpeech.QUEUE_ADD,
-                    null,
-                    null
-                )
-            }
+            textToSpeech.language = locale
+            textToSpeech.setSpeechRate(1.0f)
+            textToSpeech.speak(
+                word,
+                TextToSpeech.QUEUE_ADD,
+                null,
+                null
+            )
         }
     }
 }

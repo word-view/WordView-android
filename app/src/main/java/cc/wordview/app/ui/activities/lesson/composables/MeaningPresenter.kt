@@ -82,7 +82,7 @@ fun MeaningPresenter() {
         fadeIn.join()
 
         val tokenWord = currentWord.tokenWord
-        LessonViewModel.ttsSpeak(context, tokenWord.pronunciation ?: tokenWord.word, lang.locale)
+        LessonViewModel.ttsSpeak(tokenWord.pronunciation ?: tokenWord.word, lang.locale)
         delay(2000)
 
         val slideOut = launch {

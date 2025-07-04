@@ -35,11 +35,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
+import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
 import cc.wordview.app.ui.activities.player.composables.Player
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerState
@@ -92,6 +92,10 @@ class PlayerActivity : WordViewActivity() {
                             viewModel.initAudio(videoStream.getStreamURL(), context)
                             viewModel.getLyrics(preferences, context, videoId, lang, videoStream)
                             viewModel.getKnownWords(context, lang)
+
+                            // we init the lesson tts here so that there is no delay
+                            // when the lesson actually starts.
+                            LessonViewModel.initTts(context)
                         } catch (e: ExtractionException) {
                             Timber.e(e)
                             viewModel.setErrorMessage(e.message.toString())
