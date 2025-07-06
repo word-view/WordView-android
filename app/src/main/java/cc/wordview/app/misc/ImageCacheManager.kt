@@ -79,7 +79,9 @@ object ImageCacheManager {
     }
 
     suspend fun executeAllInQueue() {
-        for (item in imageRequestQueue) {
+        val queue = imageRequestQueue.toList()
+
+        for (item in queue) {
             val result = loader.execute(item)
 
             val key = result.request.memoryCacheKey!!
