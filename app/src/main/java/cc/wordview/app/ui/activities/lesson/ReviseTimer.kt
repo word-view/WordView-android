@@ -28,7 +28,7 @@ import kotlin.concurrent.thread
 object ReviseTimer {
     private val viewModel = LessonViewModel
 
-    var timeRemaining = 300000L
+    var timeRemaining = 0L
 
     private var timer: CountDownTimer? = null
 
