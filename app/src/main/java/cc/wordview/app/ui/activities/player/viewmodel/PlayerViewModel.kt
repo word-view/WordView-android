@@ -26,19 +26,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.BuildConfig
+import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.getStoredJwt
+import cc.wordview.app.api.request.AuthenticatedStringRequest
 import cc.wordview.app.audio.AudioPlayerListener
 import cc.wordview.app.audio.AudioPlayer
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
+import cc.wordview.app.ui.activities.lesson.ReviseTimer
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
+import com.android.volley.toolbox.Volley
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -118,6 +122,24 @@ class PlayerViewModel @Inject constructor(
 
             jwt?.let { getKnownWords(lang.tag, it) }
         }
+    }
+
+    fun getLessonTime(context: Context) {
+        val jwt = getStoredJwt(context)!!
+        val queue = Volley.newRequestQueue(context)
+        val url = APIUrl("${BuildConfig.API_BASE_URL}/api/v1/user/me/lesson_time")
+
+        val request = AuthenticatedStringRequest(
+            url.getURL(),
+            jwt,
+            onSuccess = {
+                Timber.i("Time left: $it")
+                ReviseTimer.timeRemaining = it.toLong()
+                        },
+            onError = { message, status -> Timber.e("Failed to retrieve lesson time: \n\tmessage=$message, status=$status") }
+        )
+
+        queue.add(request)
     }
 
     fun getLyrics(
