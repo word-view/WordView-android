@@ -20,8 +20,15 @@ package cc.wordview.app.ui.activities.lesson
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.CountDownTimer
+import cc.wordview.app.BuildConfig
+import cc.wordview.app.api.APIUrl
+import cc.wordview.app.api.getStoredJwt
+import cc.wordview.app.api.request.AuthenticatedStringRequest
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.gengolex.Language
+import com.android.volley.Request.Method
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.Volley
 import timber.log.Timber
 import kotlin.concurrent.thread
 
@@ -31,8 +38,14 @@ object ReviseTimer {
     var timeRemaining = 0L
 
     private var timer: CountDownTimer? = null
+    private lateinit var queue: RequestQueue
 
-    fun start(context: Context? = null, language: Language) {
+    fun start(context: Context, language: Language) {
+        queue = Volley.newRequestQueue(context)
+        val jwt = getStoredJwt(context)
+
+        if (jwt == null || jwt == "") timeRemaining = 150000L
+
         if (timer != null) {
             Timber.w("Timer is already running; The attempt to start will be ignored")
             return
@@ -42,9 +55,24 @@ object ReviseTimer {
 
         timer = object : CountDownTimer(timeRemaining, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                // TODO: communicate the timer progress through a websocket
                 timeRemaining = millisUntilFinished
                 viewModel.setFormattedTime(formatMillisecondsToMS(millisUntilFinished))
+
+                jwt?.let {
+                    if (jwt == "") return
+
+                    val url = APIUrl("${BuildConfig.API_BASE_URL}/api/v1/user/me/lesson_time?time=$millisUntilFinished")
+
+                    val request = AuthenticatedStringRequest(
+                        url.getURL(),
+                        jwt,
+                        method = Method.PUT,
+                        onSuccess = { Timber.i("Timer updated!") },
+                        onError = { message, status -> Timber.e("Failed to save lesson time: \n\tmessage=$message, status=$status") }
+                    )
+
+                    queue.add(request)
+                }
             }
 
             override fun onFinish() {
