@@ -131,7 +131,7 @@ fun Choose() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        IconItem(currentWord.tokenWord, "word")
+        IconItem(currentWord.tokenWord, "icon-item")
 
         Text(
             text = if (revealedText && selectedWord != null) selectedWord!!.word else mainText,
