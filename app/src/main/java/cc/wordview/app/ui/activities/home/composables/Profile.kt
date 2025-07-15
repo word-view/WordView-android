@@ -68,7 +68,7 @@ fun Profile(navController: NavHostController = rememberNavController()) {
     val activity = LocalActivity.current
 
     fun logout() {
-        setStoredJwt("", context)
+        setStoredJwt(null, context)
         GlobalViewModel.resetUser()
 
         val intent = Intent(context, AuthActivity::class.java)

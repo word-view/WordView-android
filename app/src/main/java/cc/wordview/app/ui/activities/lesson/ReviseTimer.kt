@@ -44,7 +44,7 @@ object ReviseTimer {
         queue = Volley.newRequestQueue(context)
         val jwt = getStoredJwt(context)
 
-        if (jwt == null || jwt == "") timeRemaining = 150000L
+        if (jwt == null) timeRemaining = 150000L
 
         if (timer != null) {
             Timber.w("Timer is already running; The attempt to start will be ignored")
@@ -59,8 +59,6 @@ object ReviseTimer {
                 viewModel.setFormattedTime(formatMillisecondsToMS(millisUntilFinished))
 
                 jwt?.let {
-                    if (jwt == "") return
-
                     val url = APIUrl("${BuildConfig.API_BASE_URL}/api/v1/user/me/lesson_time?time=$millisUntilFinished")
 
                     val request = AuthenticatedStringRequest(

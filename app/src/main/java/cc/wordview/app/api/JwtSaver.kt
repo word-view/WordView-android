@@ -72,7 +72,7 @@ fun getStoredJwt(): String? {
     }
 }
 
-fun setStoredJwt(token: String, context: Context) {
+fun setStoredJwt(token: String?, context: Context) {
     val sharedPreferences = getEncryptedPrefs(context)
     sharedPreferences.edit(commit = true) {
         putString(TOKEN_KEY, token)
