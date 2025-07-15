@@ -60,14 +60,17 @@ fun Choose() {
             .filter { w -> w.tokenWord.representable }
             .shuffled()
 
-        val alt1 = filteredWords[0]
-        val alt2 = filteredWords[1]
-        val alt3 = filteredWords[2]
+        val a = arrayListOf(
+            filteredWords[0].tokenWord,
+            filteredWords[1].tokenWord,
+            filteredWords[2].tokenWord,
+            currentWord.tokenWord
+        ).shuffled()
 
-        alternatives.add(currentWord.tokenWord)
-        alternatives.add(alt1.tokenWord)
-        alternatives.add(alt2.tokenWord)
-        alternatives.add(alt3.tokenWord)
+        alternatives.add(a[0])
+        alternatives.add(a[1])
+        alternatives.add(a[2])
+        alternatives.add(a[3])
 
         val wordLength = currentWord.tokenWord.word.length
         mainText = "_".repeat(wordLength)
