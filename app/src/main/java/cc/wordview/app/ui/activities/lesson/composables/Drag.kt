@@ -26,8 +26,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -41,23 +39,16 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.extensions.detectTapGestures
 import cc.wordview.app.extensions.dragGestures
-import cc.wordview.app.misc.AppSettings
-import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.app.ui.activities.lesson.viewmodel.Answer
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.components.OneTimeEffect
-import cc.wordview.app.ui.theme.Typography
-import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.word.Word
-import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -253,29 +244,4 @@ fun Drag(mode: DragMode? = null) {
             }
         }
     }
-}
-@Composable
-fun TextItem(word: Word, testTag: String) {
-    val langTag = AppSettings.language.get()
-    val lang = remember { Language.byTag(langTag) }
-
-    Text(
-        modifier = Modifier.testTag(testTag),
-        text = word.word,
-        textAlign = TextAlign.Center,
-        style = if (lang == Language.JAPANESE) Typography.displayLarge else Typography.displayMedium,
-    )
-}
-
-@Composable
-fun IconItem(word: Word, testTag: String) {
-    val image = ImageCacheManager.getCachedImage(word.parent)
-
-    AsyncImage(
-        modifier = Modifier
-            .size(130.dp)
-            .testTag(testTag),
-        model = image,
-        contentDescription = null
-    )
 }

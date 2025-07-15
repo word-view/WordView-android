@@ -23,6 +23,7 @@ import cc.wordview.app.ui.activities.lesson.composables.Drag
 import cc.wordview.app.ui.activities.lesson.composables.DragMode
 import cc.wordview.app.ui.activities.lesson.composables.MeaningPresenter
 import cc.wordview.app.ui.activities.lesson.composables.Presenter
+import cc.wordview.app.ui.activities.lesson.composables.Choose
 
 sealed class LessonNav(val route: String) {
     @Composable
@@ -43,6 +44,13 @@ sealed class LessonNav(val route: String) {
         }
     }
 
+    data object Choose : LessonNav("choose") {
+        @Composable
+        override fun Composable(innerPadding: PaddingValues) {
+            Choose()
+        }
+    }
+
     data object Presenter : LessonNav("presenter") {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
@@ -58,7 +66,14 @@ sealed class LessonNav(val route: String) {
     }
 
     companion object {
-        val screens = listOf(IconDrag, WordDrag, Presenter, MeaningPresenter)
+        val screens = listOf(
+            IconDrag,
+            WordDrag,
+            Choose, Choose, // Choose needs to be repeated 2 times to make the proportions equivalent to the Drag
+
+            Presenter,
+            MeaningPresenter
+        )
 
         fun getByRoute(route: String): LessonNav? {
             for (screen in screens) {

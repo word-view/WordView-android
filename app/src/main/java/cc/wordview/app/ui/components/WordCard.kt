@@ -30,11 +30,12 @@ import cc.wordview.app.ui.theme.Typography
  * Small card component that wraps a text
  */
 @Composable
-fun WordCard(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun WordCard(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     Card(
         modifier = modifier,
         onClick = onClick,
-        shape = DefaultRoundedCornerShape
+        shape = DefaultRoundedCornerShape,
+        enabled = enabled,
     ) {
         Text(
             text = text,
