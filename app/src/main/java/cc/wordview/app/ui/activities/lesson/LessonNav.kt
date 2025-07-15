@@ -66,7 +66,14 @@ sealed class LessonNav(val route: String) {
     }
 
     companion object {
-        val screens = listOf(IconDrag, WordDrag, Choose, Presenter, MeaningPresenter)
+        val screens = listOf(
+            IconDrag,
+            WordDrag,
+            Choose, Choose, // Choose needs to be repeated 2 times to make the proportions equivalent to the Drag
+
+            Presenter,
+            MeaningPresenter
+        )
 
         fun getByRoute(route: String): LessonNav? {
             for (screen in screens) {
