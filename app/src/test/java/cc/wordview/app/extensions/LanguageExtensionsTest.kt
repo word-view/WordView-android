@@ -15,26 +15,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.components
+package cc.wordview.app.extensions
 
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
+import cc.wordview.gengolex.Language
+import org.junit.Test
+import org.junit.jupiter.api.Assertions
 
-@Composable
-fun LanguageFlagButton(languageName: String, onClick: () -> Unit) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = Modifier
-            .width(150.dp)
-            .height(150.dp),
-        shape = DefaultRoundedCornerShape
-    ) {
-        Text(text = languageName)
+class LanguageExtensionsTest {
+    @Test
+    fun getDisplayName_Portuguese() {
+        val lang = Language.PORTUGUESE
+        Assertions.assertEquals("Portuguese", lang.displayName())
+    }
+
+    @Test
+    fun getDisplayName_English() {
+        val lang = Language.ENGLISH
+        Assertions.assertEquals("English", lang.displayName())
+    }
+
+    @Test
+    fun getDisplayName_Japanese() {
+        val lang = Language.JAPANESE
+        Assertions.assertEquals("Japanese", lang.displayName())
     }
 }

@@ -17,16 +17,31 @@
 
 package cc.wordview.app.extensions
 
-import androidx.core.view.WindowInsetsControllerCompat
-import com.google.accompanist.systemuicontroller.SystemUiController
+import org.junit.jupiter.api.Assertions
+import org.junit.Test
+import org.junit.jupiter.api.assertThrows
 
-fun SystemUiController.enterImmersiveMode() {
-    isStatusBarVisible = false
-    isNavigationBarVisible = false
-    systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-}
+class CollectionExtensionsTest {
+    @Test
+    fun getRandomAmount() {
+        val array = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
-fun SystemUiController.leaveImmersiveMode() {
-    isStatusBarVisible = true
-    isNavigationBarVisible = true
+        val a1 = array.random(2)
+        Assertions.assertEquals(2, a1.size)
+
+        val a2 = array.random(4)
+        Assertions.assertEquals(4, a2.size)
+
+        val a3 = array.random(6)
+        Assertions.assertEquals(6, a3.size)
+    }
+
+    @Test
+    fun getRandomNegativeValue() {
+        val array = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+        assertThrows<IllegalArgumentException> {
+            array.random(-1)
+        }
+    }
 }
