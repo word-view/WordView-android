@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cc.wordview.app.extensions.random
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.app.ui.activities.lesson.viewmodel.Answer
@@ -75,19 +76,10 @@ fun Listen(mode: LessonMode? = null) {
         val filteredWords = words
             .filter { w -> w.tokenWord.word != currentWord.tokenWord.word }
             .filter { w -> w.tokenWord.representable }
-            .shuffled()
 
-        val a = arrayListOf(
-            filteredWords[0].tokenWord,
-            filteredWords[1].tokenWord,
-            filteredWords[2].tokenWord,
-            currentWord.tokenWord
-        ).shuffled()
+        val res = (filteredWords.map { it.tokenWord }.random(3) + currentWord.tokenWord)
 
-        alternatives.add(a[0])
-        alternatives.add(a[1])
-        alternatives.add(a[2])
-        alternatives.add(a[3])
+        alternatives.addAll(res.shuffled())
 
         val wordLength = currentWord.tokenWord.word.length
         mainText = "_".repeat(wordLength)
