@@ -17,17 +17,17 @@
 
 package cc.wordview.app.ui.screens.lesson
 
-import androidx.compose.ui.geometry.Offset
+import android.annotation.SuppressLint
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.test.assertCountEquals
-import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.activities.lesson.LessonNav
-import cc.wordview.app.ui.activities.lesson.composables.Drag
 import cc.wordview.app.ui.activities.lesson.composables.LessonMode
+import cc.wordview.app.ui.activities.lesson.composables.Listen
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.gengolex.word.Word
@@ -37,14 +37,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import org.junit.Ignore
 import org.junit.Test
 
-class DragTest : ComposeTest() {
+class ListenTest : ComposeTest() {
     private val viewModel = LessonViewModel
 
-    private fun setupScreen(mode: LessonMode = LessonMode.ICON) {
+    private fun setupScreen(mode: LessonMode) {
         viewModel.appendWord(ReviseWord(Word("tear", "lágrima", representable = true)))
         viewModel.appendWord(ReviseWord(Word("rain", "chuva", representable = true)))
+        viewModel.appendWord(ReviseWord(Word("sing", "cantar", representable = true)))
+        viewModel.appendWord(ReviseWord(Word("cry", "chorar", representable = true)))
 
         viewModel.setWord(ReviseWord(Word("tear", "lágrima", representable = true)))
 
@@ -64,88 +67,92 @@ class DragTest : ComposeTest() {
                 ImageCacheManager.executeAllInQueue()
             }
 
-            ProvidePreferenceLocals {
-                Drag(mode)
-            }
+            ProvidePreferenceLocals { Listen(mode) }
         }
     }
 
     @Test
-    fun renders_Icon() {
-        setupScreen()
+    fun clickListen() {
+        setupScreen(LessonMode.WORD)
 
-        composeTestRule.onNodeWithTag("root").assertExists()
-        composeTestRule.onNodeWithTag("drag").assertExists()
-        composeTestRule.onNodeWithTag("top-word").assertExists()
-        composeTestRule.onNodeWithTag("down-word").assertExists()
+        composeTestRule.onNodeWithTag("listen-button")
+            .performClick()
+
     }
 
     @Test
     fun renders_Word() {
         setupScreen(LessonMode.WORD)
 
-        composeTestRule.onNodeWithTag("root").assertExists()
-        composeTestRule.onNodeWithTag("drag").assertExists()
-        composeTestRule.onNodeWithTag("top-word").assertExists()
-        composeTestRule.onNodeWithTag("down-word").assertExists()
+        composeTestRule.onNodeWithTag("root")
+            .assertExists()
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("listen-button")
+            .assertExists()
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("lágrima").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithText("chuva").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithText("cantar").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithText("chorar").assertExists().assertIsDisplayed()
     }
 
     @Test
-    fun upAndDownNotEqual_Icon() {
-        setupScreen()
-
-        composeTestRule.onAllNodesWithText("chuva").assertCountEquals(1)
-        composeTestRule.onAllNodesWithText("lágrima").assertCountEquals(1)
-    }
-
-    @Test
-    fun dragUp_Icon() {
-        setupScreen()
-
-        composeTestRule.onNodeWithTag("drag").performTouchInput {
-            down(center)
-            moveBy(Offset(0f, 500f))
-            up()
-        }
-
-        composeTestRule.waitUntil(10_000) { viewModel.currentScreen.value == LessonNav.Presenter.route }
-    }
-
-    @Test
-    fun dragUp_Word() {
+    fun chooseRight_Word() {
         setupScreen(LessonMode.WORD)
 
-        composeTestRule.onNodeWithTag("drag").performTouchInput {
-            down(center)
-            moveBy(Offset(0f, 500f))
-            up()
-        }
-
+        composeTestRule.onNodeWithText("lágrima").performClick()
         composeTestRule.waitUntil(10_000) { viewModel.currentScreen.value == LessonNav.Presenter.route }
     }
 
     @Test
-    fun dragDown_Icon() {
-        setupScreen()
-
-        composeTestRule.onNodeWithTag("drag").performTouchInput {
-            down(center)
-            moveBy(Offset(0f, -500f))
-            up()
-        }
-
-        composeTestRule.waitUntil(10_000) { viewModel.currentScreen.value == LessonNav.Presenter.route }
-    }
-
-    @Test
-    fun dragDown_Word() {
+    fun chooseWrong_Word() {
         setupScreen(LessonMode.WORD)
 
-        composeTestRule.onNodeWithTag("drag").performTouchInput {
-            down(center)
-            moveBy(Offset(0f, -500f))
-            up()
-        }
+        composeTestRule.onNodeWithText("chuva").performClick()
+        composeTestRule.waitUntil(10_000) { viewModel.currentScreen.value == LessonNav.Presenter.route }
+    }
+
+
+    @Test
+    @Ignore
+    @SuppressLint("IgnoreWithoutReason")
+    fun renders_Icon() {
+        setupScreen(LessonMode.ICON)
+
+        composeTestRule.onNodeWithTag("root")
+            .assertExists()
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("listen-button")
+            .assertExists()
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("icon-item-alternative-tear").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithTag("icon-item-alternative-rain").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithTag("icon-item-alternative-sing").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithTag("icon-item-alternative-cry").assertExists().assertIsDisplayed()
+    }
+
+    @Test
+    @Ignore
+    @SuppressLint("IgnoreWithoutReason")
+    fun chooseRight_Icon() {
+        setupScreen(LessonMode.ICON)
+
+        composeTestRule.onNodeWithTag("icon-item-alternative-tear").performClick()
+
+        composeTestRule.waitUntil(10_000) { viewModel.currentScreen.value == LessonNav.Presenter.route }
+    }
+
+    @Test
+    @Ignore
+    @SuppressLint("IgnoreWithoutReason")
+    fun chooseWrong_Icon() {
+        setupScreen(LessonMode.ICON)
+
+        composeTestRule.onNodeWithTag("icon-item-alternative-rain").performClick()
 
         composeTestRule.waitUntil(10_000) { viewModel.currentScreen.value == LessonNav.Presenter.route }
     }

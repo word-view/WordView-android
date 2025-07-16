@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.misc.ImageCacheManager
@@ -46,12 +47,12 @@ fun TextItem(word: Word, testTag: String) {
 }
 
 @Composable
-fun IconItem(word: Word, testTag: String) {
+fun IconItem(word: Word, testTag: String, size: Dp = 130.dp) {
     val image = ImageCacheManager.getCachedImage(word.parent)
 
     AsyncImage(
         modifier = Modifier
-            .size(130.dp)
+            .size(size)
             .testTag(testTag),
         model = image,
         contentDescription = null

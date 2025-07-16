@@ -20,10 +20,11 @@ package cc.wordview.app.ui.activities.lesson
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import cc.wordview.app.ui.activities.lesson.composables.Drag
-import cc.wordview.app.ui.activities.lesson.composables.DragMode
+import cc.wordview.app.ui.activities.lesson.composables.LessonMode
 import cc.wordview.app.ui.activities.lesson.composables.MeaningPresenter
 import cc.wordview.app.ui.activities.lesson.composables.Presenter
 import cc.wordview.app.ui.activities.lesson.composables.Choose
+import cc.wordview.app.ui.activities.lesson.composables.Listen
 
 sealed class LessonNav(val route: String) {
     @Composable
@@ -33,14 +34,14 @@ sealed class LessonNav(val route: String) {
     data object IconDrag : LessonNav("icon-drag") {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
-            Drag(DragMode.ICON)
+            Drag(LessonMode.ICON)
         }
     }
 
     data object WordDrag : LessonNav("word-drag") {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
-            Drag(DragMode.WORD)
+            Drag(LessonMode.WORD)
         }
     }
 
@@ -48,6 +49,20 @@ sealed class LessonNav(val route: String) {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
             Choose()
+        }
+    }
+
+    data object ListenWord : LessonNav("listen-word") {
+        @Composable
+        override fun Composable(innerPadding: PaddingValues) {
+            Listen(LessonMode.WORD)
+        }
+    }
+
+    data object ListenIcon : LessonNav("listen-icon") {
+        @Composable
+        override fun Composable(innerPadding: PaddingValues) {
+            Listen(LessonMode.ICON)
         }
     }
 
@@ -67,9 +82,9 @@ sealed class LessonNav(val route: String) {
 
     companion object {
         val screens = listOf(
-            IconDrag,
-            WordDrag,
+            IconDrag, WordDrag,
             Choose, Choose, // Choose needs to be repeated 2 times to make the proportions equivalent to the Drag
+            ListenIcon, ListenWord,
 
             Presenter,
             MeaningPresenter

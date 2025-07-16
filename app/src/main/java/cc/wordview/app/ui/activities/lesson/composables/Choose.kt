@@ -33,6 +33,7 @@ import cc.wordview.app.ui.components.WordCard
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.word.Word
+import cc.wordview.app.extensions.random
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -58,19 +59,10 @@ fun Choose() {
         val filteredWords = words
             .filter { w -> w.tokenWord.word != currentWord.tokenWord.word }
             .filter { w -> w.tokenWord.representable }
-            .shuffled()
 
-        val a = arrayListOf(
-            filteredWords[0].tokenWord,
-            filteredWords[1].tokenWord,
-            filteredWords[2].tokenWord,
-            currentWord.tokenWord
-        ).shuffled()
+        val res = filteredWords.map { it.tokenWord }.random(3) + currentWord.tokenWord
 
-        alternatives.add(a[0])
-        alternatives.add(a[1])
-        alternatives.add(a[2])
-        alternatives.add(a[3])
+        alternatives.addAll(res.shuffled())
 
         val wordLength = currentWord.tokenWord.word.length
         mainText = "_".repeat(wordLength)

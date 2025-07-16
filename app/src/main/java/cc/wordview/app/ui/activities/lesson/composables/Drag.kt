@@ -54,11 +54,11 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
-fun Drag(mode: DragMode? = null) {
+fun Drag(mode: LessonMode? = null) {
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
     var isDragging by remember { mutableStateOf(false) }
-    var dragMode by remember { mutableStateOf(DragMode.random()) }
+    var lessonMode by remember { mutableStateOf(LessonMode.random()) }
     var isPressed by remember { mutableStateOf(false) }
 
     // Drop animation state
@@ -109,7 +109,7 @@ fun Drag(mode: DragMode? = null) {
         topWord = alternatives.first()
         downWord = alternatives.last()
 
-        dragMode = mode ?: DragMode.random()
+        lessonMode = mode ?: LessonMode.random()
     }
 
     val alternativesAlpha by animateFloatAsState(
@@ -178,9 +178,9 @@ fun Drag(mode: DragMode? = null) {
     ) {
         topWord?.let {
             Box(Modifier.alpha(alternativesAlpha)) {
-                when (dragMode) {
-                    DragMode.ICON -> TextItem(word = it, testTag = "top-word")
-                    DragMode.WORD -> IconItem(word = it, testTag = "top-word")
+                when (lessonMode) {
+                    LessonMode.ICON -> TextItem(word = it, testTag = "top-word")
+                    LessonMode.WORD -> IconItem(word = it, testTag = "top-word")
                 }
             }
         }
@@ -228,18 +228,18 @@ fun Drag(mode: DragMode? = null) {
                 }
         ) {
             currentWord.tokenWord.let {
-                when (dragMode) {
-                    DragMode.ICON -> IconItem(word = it, testTag = "current")
-                    DragMode.WORD -> TextItem(word = it, testTag = "current")
+                when (lessonMode) {
+                    LessonMode.ICON -> IconItem(word = it, testTag = "current")
+                    LessonMode.WORD -> TextItem(word = it, testTag = "current")
                 }
             }
         }
 
         downWord?.let {
             Box(Modifier.alpha(alternativesAlpha)) {
-                when (dragMode) {
-                    DragMode.ICON -> TextItem(word = it, testTag = "down-word")
-                    DragMode.WORD -> IconItem(word = it, testTag = "down-word")
+                when (lessonMode) {
+                    LessonMode.ICON -> TextItem(word = it, testTag = "down-word")
+                    LessonMode.WORD -> IconItem(word = it, testTag = "down-word")
                 }
             }
         }
