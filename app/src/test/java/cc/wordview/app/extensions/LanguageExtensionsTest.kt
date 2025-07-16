@@ -17,15 +17,26 @@
 
 package cc.wordview.app.extensions
 
-/**
- * Calculates what percentage [num] is of this [Long] value.
- *
- * Returns 0.0 if either this value or [num] is less than or equal to zero.
- *
- * @param num The number to calculate as a percentage of this value.
- * @return The percentage that [num] is of this [Long] value, as a [Double].
- */
-fun Long.percentageOf(num: Long): Double {
-    if (num <= 0 || this <= 0) return 0.toDouble()
-    return ((num.toDouble() / this) * 100)
+import cc.wordview.gengolex.Language
+import org.junit.Test
+import org.junit.jupiter.api.Assertions
+
+class LanguageExtensionsTest {
+    @Test
+    fun getDisplayName_Portuguese() {
+        val lang = Language.PORTUGUESE
+        Assertions.assertEquals("Portuguese", lang.displayName())
+    }
+
+    @Test
+    fun getDisplayName_English() {
+        val lang = Language.ENGLISH
+        Assertions.assertEquals("English", lang.displayName())
+    }
+
+    @Test
+    fun getDisplayName_Japanese() {
+        val lang = Language.JAPANESE
+        Assertions.assertEquals("Japanese", lang.displayName())
+    }
 }

@@ -17,15 +17,31 @@
 
 package cc.wordview.app.extensions
 
-/**
- * Calculates what percentage [num] is of this [Long] value.
- *
- * Returns 0.0 if either this value or [num] is less than or equal to zero.
- *
- * @param num The number to calculate as a percentage of this value.
- * @return The percentage that [num] is of this [Long] value, as a [Double].
- */
-fun Long.percentageOf(num: Long): Double {
-    if (num <= 0 || this <= 0) return 0.toDouble()
-    return ((num.toDouble() / this) * 100)
+import org.junit.jupiter.api.Assertions
+import org.junit.Test
+import org.junit.jupiter.api.assertThrows
+
+class CollectionExtensionsTest {
+    @Test
+    fun getRandomAmount() {
+        val array = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+        val a1 = array.random(2)
+        Assertions.assertEquals(2, a1.size)
+
+        val a2 = array.random(4)
+        Assertions.assertEquals(4, a2.size)
+
+        val a3 = array.random(6)
+        Assertions.assertEquals(6, a3.size)
+    }
+
+    @Test
+    fun getRandomNegativeValue() {
+        val array = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+        assertThrows<IllegalArgumentException> {
+            array.random(-1)
+        }
+    }
 }

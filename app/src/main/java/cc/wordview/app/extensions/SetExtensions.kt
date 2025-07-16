@@ -17,6 +17,14 @@
 
 package cc.wordview.app.extensions
 
+/**
+ * Returns a new [Set] containing all the elements of this set except the specified [value].
+ *
+ * If [value] is not present in the set, the original set is returned unchanged.
+ *
+ * @param value The element to be removed from the set.
+ * @return A new set without the specified [value], or the original set if [value] is not present.
+ */
 fun <T> Set<T>.without(value: T): Set<T> {
     if (!this.contains(value)) return this
     return this.filterNot { it == value }.toSet()
