@@ -24,6 +24,7 @@ import cc.wordview.app.ui.activities.lesson.composables.DragMode
 import cc.wordview.app.ui.activities.lesson.composables.MeaningPresenter
 import cc.wordview.app.ui.activities.lesson.composables.Presenter
 import cc.wordview.app.ui.activities.lesson.composables.Choose
+import cc.wordview.app.ui.activities.lesson.composables.Listen
 
 sealed class LessonNav(val route: String) {
     @Composable
@@ -51,6 +52,20 @@ sealed class LessonNav(val route: String) {
         }
     }
 
+    data object ListenWord : LessonNav("listen-word") {
+        @Composable
+        override fun Composable(innerPadding: PaddingValues) {
+            Listen(DragMode.WORD)
+        }
+    }
+
+    data object ListenIcon : LessonNav("listen-icon") {
+        @Composable
+        override fun Composable(innerPadding: PaddingValues) {
+            Listen(DragMode.ICON)
+        }
+    }
+
     data object Presenter : LessonNav("presenter") {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
@@ -67,9 +82,9 @@ sealed class LessonNav(val route: String) {
 
     companion object {
         val screens = listOf(
-            IconDrag,
-            WordDrag,
+            IconDrag, WordDrag,
             Choose, Choose, // Choose needs to be repeated 2 times to make the proportions equivalent to the Drag
+            ListenIcon, ListenWord,
 
             Presenter,
             MeaningPresenter
