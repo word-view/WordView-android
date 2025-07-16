@@ -20,22 +20,15 @@ package cc.wordview.app.ui.activities.lesson.composables
 import kotlin.random.Random
 
 /**
- * All the modes that the `Drag` screen can be in.
+ * Modes that some screens can be in.
  */
-enum class DragMode {
-    /**
-     * Means that the middle object should be a Icon
-     */
+enum class LessonMode {
     ICON,
-
-    /**
-     * Means that the middle object should e a Word
-     */
     WORD;
 
     companion object {
-        fun random(): DragMode {
-            val values = enumValues<DragMode>()
+        fun random(): LessonMode {
+            val values = enumValues<LessonMode>()
             return values[Random.nextInt(values.size)]
         }
     }

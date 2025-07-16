@@ -23,14 +23,11 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.app.ui.activities.lesson.composables.Drag
-import cc.wordview.app.ui.activities.lesson.composables.DragMode
+import cc.wordview.app.ui.activities.lesson.composables.LessonMode
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.gengolex.word.Word
@@ -45,7 +42,7 @@ import org.junit.Test
 class DragTest : ComposeTest() {
     private val viewModel = LessonViewModel
 
-    private fun setupScreen(mode: DragMode = DragMode.ICON) {
+    private fun setupScreen(mode: LessonMode = LessonMode.ICON) {
         viewModel.appendWord(ReviseWord(Word("tear", "lágrima", representable = true)))
         viewModel.appendWord(ReviseWord(Word("rain", "chuva", representable = true)))
 
@@ -85,7 +82,7 @@ class DragTest : ComposeTest() {
 
     @Test
     fun renders_Word() {
-        setupScreen(DragMode.WORD)
+        setupScreen(LessonMode.WORD)
 
         composeTestRule.onNodeWithTag("root").assertExists()
         composeTestRule.onNodeWithTag("drag").assertExists()
@@ -116,7 +113,7 @@ class DragTest : ComposeTest() {
 
     @Test
     fun dragUp_Word() {
-        setupScreen(DragMode.WORD)
+        setupScreen(LessonMode.WORD)
 
         composeTestRule.onNodeWithTag("drag").performTouchInput {
             down(center)
@@ -142,7 +139,7 @@ class DragTest : ComposeTest() {
 
     @Test
     fun dragDown_Word() {
-        setupScreen(DragMode.WORD)
+        setupScreen(LessonMode.WORD)
 
         composeTestRule.onNodeWithTag("drag").performTouchInput {
             down(center)

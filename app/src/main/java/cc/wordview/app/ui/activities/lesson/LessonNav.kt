@@ -20,7 +20,7 @@ package cc.wordview.app.ui.activities.lesson
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import cc.wordview.app.ui.activities.lesson.composables.Drag
-import cc.wordview.app.ui.activities.lesson.composables.DragMode
+import cc.wordview.app.ui.activities.lesson.composables.LessonMode
 import cc.wordview.app.ui.activities.lesson.composables.MeaningPresenter
 import cc.wordview.app.ui.activities.lesson.composables.Presenter
 import cc.wordview.app.ui.activities.lesson.composables.Choose
@@ -34,14 +34,14 @@ sealed class LessonNav(val route: String) {
     data object IconDrag : LessonNav("icon-drag") {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
-            Drag(DragMode.ICON)
+            Drag(LessonMode.ICON)
         }
     }
 
     data object WordDrag : LessonNav("word-drag") {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
-            Drag(DragMode.WORD)
+            Drag(LessonMode.WORD)
         }
     }
 
@@ -55,14 +55,14 @@ sealed class LessonNav(val route: String) {
     data object ListenWord : LessonNav("listen-word") {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
-            Listen(DragMode.WORD)
+            Listen(LessonMode.WORD)
         }
     }
 
     data object ListenIcon : LessonNav("listen-icon") {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
-            Listen(DragMode.ICON)
+            Listen(LessonMode.ICON)
         }
     }
 

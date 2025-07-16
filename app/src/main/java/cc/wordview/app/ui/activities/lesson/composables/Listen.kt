@@ -51,7 +51,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun Listen(mode: DragMode? = null) {
+fun Listen(mode: LessonMode? = null) {
     val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
     val words by LessonViewModel.wordsToRevise.collectAsStateWithLifecycle()
 
@@ -67,7 +67,7 @@ fun Listen(mode: DragMode? = null) {
     var selectedWord by remember { mutableStateOf<Word?>(null) }
     var isCorrect by remember { mutableStateOf<Boolean?>(null) }
 
-    var dragMode by remember { mutableStateOf(DragMode.random()) }
+    var lessonMode by remember { mutableStateOf(LessonMode.random()) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -92,7 +92,7 @@ fun Listen(mode: DragMode? = null) {
         val wordLength = currentWord.tokenWord.word.length
         mainText = "_".repeat(wordLength)
 
-        dragMode = mode ?: DragMode.random()
+        lessonMode = mode ?: LessonMode.random()
     }
 
     fun correct() {
@@ -239,8 +239,8 @@ fun Listen(mode: DragMode? = null) {
             for (word in alternatives) {
                 WordButton(
                     text = {
-                        when (dragMode) {
-                            DragMode.WORD -> {
+                        when (lessonMode) {
+                            LessonMode.WORD -> {
                                 Text(
                                     text = word.word,
                                     style = if (lang == Language.JAPANESE) Typography.displayMedium else Typography.displaySmall,
@@ -248,7 +248,7 @@ fun Listen(mode: DragMode? = null) {
                                 )
                             }
 
-                            DragMode.ICON -> {
+                            LessonMode.ICON -> {
                                 IconItem(
                                     word = word,
                                     size = 48.dp,

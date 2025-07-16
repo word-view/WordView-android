@@ -26,7 +26,7 @@ import androidx.compose.ui.test.performClick
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.activities.lesson.LessonNav
-import cc.wordview.app.ui.activities.lesson.composables.DragMode
+import cc.wordview.app.ui.activities.lesson.composables.LessonMode
 import cc.wordview.app.ui.activities.lesson.composables.Listen
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
@@ -43,7 +43,7 @@ import org.junit.Test
 class ListenTest : ComposeTest() {
     private val viewModel = LessonViewModel
 
-    private fun setupScreen(mode: DragMode) {
+    private fun setupScreen(mode: LessonMode) {
         viewModel.appendWord(ReviseWord(Word("tear", "lágrima", representable = true)))
         viewModel.appendWord(ReviseWord(Word("rain", "chuva", representable = true)))
         viewModel.appendWord(ReviseWord(Word("sing", "cantar", representable = true)))
@@ -73,7 +73,7 @@ class ListenTest : ComposeTest() {
 
     @Test
     fun clickListen() {
-        setupScreen(DragMode.WORD)
+        setupScreen(LessonMode.WORD)
 
         composeTestRule.onNodeWithTag("listen-button")
             .performClick()
@@ -82,7 +82,7 @@ class ListenTest : ComposeTest() {
 
     @Test
     fun renders_Word() {
-        setupScreen(DragMode.WORD)
+        setupScreen(LessonMode.WORD)
 
         composeTestRule.onNodeWithTag("root")
             .assertExists()
@@ -100,7 +100,7 @@ class ListenTest : ComposeTest() {
 
     @Test
     fun chooseRight_Word() {
-        setupScreen(DragMode.WORD)
+        setupScreen(LessonMode.WORD)
 
         composeTestRule.onNodeWithText("lágrima").performClick()
         composeTestRule.waitUntil(10_000) { viewModel.currentScreen.value == LessonNav.Presenter.route }
@@ -108,7 +108,7 @@ class ListenTest : ComposeTest() {
 
     @Test
     fun chooseWrong_Word() {
-        setupScreen(DragMode.WORD)
+        setupScreen(LessonMode.WORD)
 
         composeTestRule.onNodeWithText("chuva").performClick()
         composeTestRule.waitUntil(10_000) { viewModel.currentScreen.value == LessonNav.Presenter.route }
@@ -119,7 +119,7 @@ class ListenTest : ComposeTest() {
     @Ignore
     @SuppressLint("IgnoreWithoutReason")
     fun renders_Icon() {
-        setupScreen(DragMode.ICON)
+        setupScreen(LessonMode.ICON)
 
         composeTestRule.onNodeWithTag("root")
             .assertExists()
@@ -139,7 +139,7 @@ class ListenTest : ComposeTest() {
     @Ignore
     @SuppressLint("IgnoreWithoutReason")
     fun chooseRight_Icon() {
-        setupScreen(DragMode.ICON)
+        setupScreen(LessonMode.ICON)
 
         composeTestRule.onNodeWithTag("icon-item-alternative-tear").performClick()
 
@@ -150,7 +150,7 @@ class ListenTest : ComposeTest() {
     @Ignore
     @SuppressLint("IgnoreWithoutReason")
     fun chooseWrong_Icon() {
-        setupScreen(DragMode.ICON)
+        setupScreen(LessonMode.ICON)
 
         composeTestRule.onNodeWithTag("icon-item-alternative-rain").performClick()
 
