@@ -60,7 +60,7 @@ fun Choose() {
             .filter { w -> w.tokenWord.word != currentWord.tokenWord.word }
             .filter { w -> w.tokenWord.representable }
 
-        val res = (filteredWords.map { it.tokenWord }.random(3) + currentWord.tokenWord)
+        val res = filteredWords.map { it.tokenWord }.random(3) + currentWord.tokenWord
 
         alternatives.addAll(res.shuffled())
 
