@@ -23,8 +23,10 @@ import android.speech.tts.TextToSpeech
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.api.APIUrl
+import cc.wordview.app.api.entity.Translation
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.request.AuthenticatedStringRequest
+import cc.wordview.app.api.request.TranslationsRequest
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.gengolex.Language
 import com.android.volley.Request
@@ -46,6 +48,7 @@ object LessonViewModel : ViewModel() {
     private val _timerFinished = MutableStateFlow(false)
     private val _mediaPlayer = MutableStateFlow<MediaPlayer?>(null)
     private val _knownWords = MutableStateFlow(ArrayList<String>())
+    private val _translations = MutableStateFlow(ArrayList<Translation>())
 
     private var tts: TextToSpeech? = null
 
@@ -55,6 +58,7 @@ object LessonViewModel : ViewModel() {
     val wordsToRevise = _wordsToRevise.asStateFlow()
     val timer = _timer.asStateFlow()
     val timerFinished = _timerFinished.asStateFlow()
+    val translations = _translations.asStateFlow()
 
     fun nextWord(answer: Answer = Answer.NONE) {
         _wordsToRevise.update { value ->
@@ -138,6 +142,54 @@ object LessonViewModel : ViewModel() {
         context?.let { saveKnownWords(it, language) }
 
         _timerFinished.update { true }
+    }
+
+    fun getTranslations(context: Context) {
+        // TODO: The way this request is made does not follow the same way other requests are made in the app (through repositories).
+        val endpoint = BuildConfig.API_BASE_URL
+        val queue = Volley.newRequestQueue(context)
+
+        val url = APIUrl("$endpoint/api/v1/lesson/translations")
+
+        val jsonArray = JSONArray()
+
+        for (word in wordsToRevise.value)
+            jsonArray.put(word.tokenWord.parent)
+
+        val locale = getGengolexLocaleForUserLocale(context.resources.configuration.locales[0])
+
+        val language = Language.byLocale(locale)
+
+        val json = JSONObject()
+            .put("lang", language.tag)
+            .put("words", jsonArray)
+
+        val request = TranslationsRequest(
+            url.getURL(),
+            json,
+            { translations -> _translations.update { translations as ArrayList<Translation> } },
+            { Timber.e("Translations request failed!") }
+        )
+
+        queue.add(request)
+    }
+
+    // dumb workaround
+    private fun getGengolexLocaleForUserLocale(sysLocale: Locale): Locale {
+        var locale = Language.ENGLISH.locale
+
+        if (sysLocale.language.equals(Locale.ENGLISH.language)) {
+            locale = Language.ENGLISH.locale
+        }
+
+        if (sysLocale.language.equals(Locale.JAPANESE.language)) {
+            locale = Language.JAPANESE.locale
+        }
+
+        if (sysLocale.language.equals(Language.PORTUGUESE.locale.language)) {
+            locale = Language.PORTUGUESE.locale
+        }
+        return locale
     }
 
     private fun saveKnownWords(context: Context, language: Language) {
