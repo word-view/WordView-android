@@ -19,10 +19,8 @@ package cc.wordview.app.api.request
 
 import cc.wordview.app.api.entity.User
 import cc.wordview.app.api.wordViewRetryPolicy
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.JsonParser
-import timber.log.Timber
 
 class MeRequest(
     url: String?,
@@ -44,11 +42,7 @@ class MeRequest(
         onError(it.message ?: "Request failed with status code $statusCode\n$errorTitle", statusCode ?: 0)
     }) {
 
-    init {
-        Timber.v("init: method=GET, url=$url, onSuccess=$onSuccess, onError=$onError")
-
-        retryPolicy = wordViewRetryPolicy
-    }
+    init { retryPolicy = wordViewRetryPolicy }
 
     override fun getHeaders(): MutableMap<String, String> {
         val headers: MutableMap<String, String> = HashMap()

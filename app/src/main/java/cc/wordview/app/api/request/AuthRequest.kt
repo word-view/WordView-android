@@ -18,10 +18,8 @@
 package cc.wordview.app.api.request
 
 import cc.wordview.app.api.wordViewRetryPolicy
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import org.json.JSONObject
-import timber.log.Timber
 
 /**
  * Generic authentication request, encompasses both login and registration.
@@ -39,11 +37,7 @@ class AuthRequest(
 
     onError(statusCode, responseData)
 }) {
-    init {
-        Timber.v("init: method=POST, url=$url, onSuccess=$onSuccess, onError=$onError")
-
-        retryPolicy = wordViewRetryPolicy
-    }
+    init { retryPolicy = wordViewRetryPolicy }
 
     override fun getBodyContentType(): String {
         return "application/json"

@@ -18,10 +18,8 @@
 package cc.wordview.app.api.request
 
 import cc.wordview.app.api.wordViewRetryPolicy
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import org.json.JSONObject
-import timber.log.Timber
 
 /**
  * The same as the default StringRequest but it adds the jwt token to the header
@@ -45,11 +43,7 @@ class AuthenticatedStringRequest(
         onError(it.message ?: "Request failed with status code $statusCode\n$errorTitle", statusCode ?: 0)
     }) {
 
-    init {
-        Timber.v("init: method=GET, url=$url, onSuccess=$onSuccess, onError=$onError")
-
-        retryPolicy = wordViewRetryPolicy
-    }
+    init { retryPolicy = wordViewRetryPolicy }
 
     override fun getBodyContentType(): String {
         return "application/json"
