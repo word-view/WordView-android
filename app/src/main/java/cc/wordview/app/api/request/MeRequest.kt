@@ -18,6 +18,7 @@
 package cc.wordview.app.api.request
 
 import cc.wordview.app.api.entity.User
+import cc.wordview.app.api.wordViewRetryPolicy
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.JsonParser
@@ -46,11 +47,7 @@ class MeRequest(
     init {
         Timber.v("init: method=GET, url=$url, onSuccess=$onSuccess, onError=$onError")
 
-        retryPolicy = DefaultRetryPolicy(
-            20000,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
+        retryPolicy = wordViewRetryPolicy
     }
 
     override fun getHeaders(): MutableMap<String, String> {

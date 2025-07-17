@@ -19,6 +19,7 @@ package cc.wordview.app.api.request
 
 import cc.wordview.app.api.entity.Phrase
 import cc.wordview.app.api.entity.Translation
+import cc.wordview.app.api.wordViewRetryPolicy
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson
@@ -43,10 +44,6 @@ class TranslationsRequest(
     init {
         Timber.v("init: method=POST, url=$url, onSuccess=$onSuccess, onError=$onError")
 
-        retryPolicy = DefaultRetryPolicy(
-            20000,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
+        retryPolicy = wordViewRetryPolicy
     }
 }
