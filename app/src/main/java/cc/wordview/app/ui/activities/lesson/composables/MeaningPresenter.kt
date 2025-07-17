@@ -46,11 +46,14 @@ import cc.wordview.gengolex.Language
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.math.roundToInt
 
 @Composable
 fun MeaningPresenter() {
     val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
+    val translations by LessonViewModel.translations.collectAsStateWithLifecycle()
+
     val langTag = AppSettings.language.get()
     val lang = remember { Language.byTag(langTag) }
 
@@ -104,6 +107,19 @@ fun MeaningPresenter() {
         LessonViewModel.postPresent()
     }
 
+    fun getTranslated(): String {
+        val parent = currentWord.tokenWord.parent
+
+        var toReturn = parent
+
+        for (translationEntry in translations) {
+            if (translationEntry.parent == parent)
+                toReturn = translationEntry.translation
+        }
+
+        return toReturn
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -130,7 +146,7 @@ fun MeaningPresenter() {
         )
         Text(
             modifier = Modifier.alpha(alpha.value),
-            text = currentWord.tokenWord.parent,
+            text = getTranslated(),
             textAlign = TextAlign.Center,
             style = Typography.bodyLarge,
         )

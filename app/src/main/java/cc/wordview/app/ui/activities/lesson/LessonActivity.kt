@@ -83,6 +83,7 @@ class LessonActivity : WordViewActivity() {
                     var openQuitConfirm by remember { mutableStateOf(false) }
 
                     OneTimeEffect {
+                        LessonViewModel.getTranslations(context)
                         viewModel.nextWord()
                         ReviseTimer.start(context, language)
                     }
