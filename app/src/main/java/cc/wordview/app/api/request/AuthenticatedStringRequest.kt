@@ -17,6 +17,7 @@
 
 package cc.wordview.app.api.request
 
+import cc.wordview.app.api.wordViewRetryPolicy
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import org.json.JSONObject
@@ -45,13 +46,9 @@ class AuthenticatedStringRequest(
     }) {
 
     init {
-        Timber.v("init: method=GET, url=$url, onSuccess=$onSuccess, onError=$onError")
+        Timber.v("init: method=GET, url=$url")
 
-        retryPolicy = DefaultRetryPolicy(
-            20000,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
+        retryPolicy = wordViewRetryPolicy
     }
 
     override fun getBodyContentType(): String {
@@ -62,11 +59,9 @@ class AuthenticatedStringRequest(
         return body.toString().toByteArray()
     }
 
-    override fun getHeaders(): MutableMap<String, String> {
-        val headers: MutableMap<String, String> = HashMap()
-        headers["Authorization"] = "Bearer $jwt"
-        return headers
-    }
+    override fun getHeaders(): MutableMap<String, String> = mutableMapOf(
+        "Authorization" to "Bearer $jwt"
+    )
 
     companion object {
         private fun scrapeErrorFromResponseData(responseData: String?): String? {

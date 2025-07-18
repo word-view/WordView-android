@@ -17,6 +17,7 @@
 
 package cc.wordview.app.api.request
 
+import cc.wordview.app.api.wordViewRetryPolicy
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import org.json.JSONObject
@@ -39,13 +40,9 @@ class AuthRequest(
     onError(statusCode, responseData)
 }) {
     init {
-        Timber.v("init: method=POST, url=$url, onSuccess=$onSuccess, onError=$onError")
+        Timber.v("init: method=POST, url=$url")
 
-        retryPolicy = DefaultRetryPolicy(
-            20000,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
+        retryPolicy = wordViewRetryPolicy
     }
 
     override fun getBodyContentType(): String {

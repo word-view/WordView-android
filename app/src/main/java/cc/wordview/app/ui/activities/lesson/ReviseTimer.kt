@@ -65,7 +65,7 @@ object ReviseTimer {
                         url.getURL(),
                         jwt,
                         method = Method.PUT,
-                        onSuccess = { Timber.i("Timer updated!") },
+                        onSuccess = {},
                         onError = { message, status -> Timber.e("Failed to save lesson time: \n\tmessage=$message, status=$status") }
                     )
 
