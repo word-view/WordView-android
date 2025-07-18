@@ -42,11 +42,9 @@ class LyricsRequest(
 
     init { retryPolicy = wordViewRetryPolicy }
 
-    override fun getHeaders(): MutableMap<String, String> {
-        val headers: MutableMap<String, String> = HashMap()
-        headers["Accept"] = "application/json;charset=utf-8"
-        return headers
-    }
+    override fun getHeaders(): MutableMap<String, String> = mutableMapOf(
+        "Accept" to "application/json;charset=utf-8"
+    )
 
     companion object {
         fun parseLyricsAndDictionary(res: String): Pair<String, String> {

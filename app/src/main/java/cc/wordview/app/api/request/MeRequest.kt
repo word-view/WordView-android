@@ -44,11 +44,9 @@ class MeRequest(
 
     init { retryPolicy = wordViewRetryPolicy }
 
-    override fun getHeaders(): MutableMap<String, String> {
-        val headers: MutableMap<String, String> = HashMap()
-        headers["Authorization"] = "Bearer $jwtToken"
-        return headers
-    }
+    override fun getHeaders(): MutableMap<String, String> = mutableMapOf(
+        "Authorization" to "Bearer $jwtToken"
+    )
 
     companion object {
         fun parseUserJsonResponse(res: String): User {

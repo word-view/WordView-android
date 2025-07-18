@@ -53,11 +53,9 @@ class AuthenticatedStringRequest(
         return body.toString().toByteArray()
     }
 
-    override fun getHeaders(): MutableMap<String, String> {
-        val headers: MutableMap<String, String> = HashMap()
-        headers["Authorization"] = "Bearer $jwt"
-        return headers
-    }
+    override fun getHeaders(): MutableMap<String, String> = mutableMapOf(
+        "Authorization" to "Bearer $jwt"
+    )
 
     companion object {
         private fun scrapeErrorFromResponseData(responseData: String?): String? {
