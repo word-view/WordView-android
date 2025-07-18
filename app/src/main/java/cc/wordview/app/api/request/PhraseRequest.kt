@@ -19,10 +19,12 @@ package cc.wordview.app.api.request
 
 import cc.wordview.app.api.entity.Phrase
 import cc.wordview.app.api.wordViewRetryPolicy
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import org.json.JSONObject
+import timber.log.Timber
 
 class PhraseRequest(
     url: String?,
@@ -38,5 +40,9 @@ class PhraseRequest(
 
     onSuccess(phrases)
 }, { onError() }) {
-    init { retryPolicy = wordViewRetryPolicy }
+    init {
+        Timber.v("init: method=POST, url=$url")
+
+        retryPolicy = wordViewRetryPolicy
+    }
 }

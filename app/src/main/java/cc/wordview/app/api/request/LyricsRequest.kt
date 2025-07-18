@@ -18,8 +18,10 @@
 package cc.wordview.app.api.request
 
 import cc.wordview.app.api.wordViewRetryPolicy
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.JsonParser
+import timber.log.Timber
 
 class LyricsRequest(
     url: String?,
@@ -40,7 +42,11 @@ class LyricsRequest(
         onError(it.message ?: "Request failed with status code $statusCode\n$errorTitle", statusCode ?: 0)
     }) {
 
-    init { retryPolicy = wordViewRetryPolicy }
+    init {
+        Timber.v("init: method=GET, url=$url")
+
+        retryPolicy = wordViewRetryPolicy
+    }
 
     override fun getHeaders(): MutableMap<String, String> = mutableMapOf(
         "Accept" to "application/json;charset=utf-8"
