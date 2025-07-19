@@ -21,11 +21,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -35,9 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -45,47 +45,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.audio.Video
 import cc.wordview.app.ui.activities.player.PlayerActivity
+import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.SongCard
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
-import cc.wordview.gengolex.Language
 import com.gigamole.composefadingedges.horizontalFadingEdges
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun LearnTab(innerPadding: PaddingValues = PaddingValues()) {
-    var editorsPick by remember { mutableStateOf(ArrayList<Video>()) }
+fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewModel = hiltViewModel()) {
+    val editorsPick by viewModel.editorsPick.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        editorsPick = arrayListOf(
-            Video(
-                "ZnUEeXpxBJ0",
-                "Aquarela",
-                "Toquinho",
-                "https://i.ytimg.com/vi_webp/ZnUEeXpxBJ0/maxresdefault.webp",
-                Language.PORTUGUESE
-            ),
-            Video(
-                "ZpT9VCUS54s",
-                "Suisei no parade",
-                "majiko",
-                "https://i.ytimg.com/vi_webp/ZpT9VCUS54s/maxresdefault.webp",
-                Language.JAPANESE
-            ),
-            Video(
-                "HCTunqv1Xt4",
-                "When I'm Sixty Four",
-                "The Beatles",
-                "https://i.ytimg.com/vi_webp/HCTunqv1Xt4/maxresdefault.webp",
-                Language.ENGLISH
-            )
-        )
+        viewModel.getHome(context)
     }
 
     Column(
@@ -102,34 +80,43 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues()) {
             style = Typography.titleLarge,
             modifier = Modifier.padding(start = 17.dp)
         )
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalFadingEdges(),
-            state = rememberLazyListState(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            item { Spacer(Modifier.size(6.dp)) }
-
-            var i = 0
-            items(editorsPick, key = { it.id }) {
-                i += 1
-                SongCard(
-                    modifier = Modifier
-                        .testTag("song-card")
-                        .animateItem(fadeInSpec = tween(durationMillis = i * 500)),
-                    thumbnail = it.cover,
-                    artist = it.artist,
-                    trackName = it.title,
-                    language = it.language
-                ) {
-                    SongViewModel.setVideo(it.id)
-                    val intent = Intent(context, PlayerActivity::class.java)
-                    context.startActivity(intent)
-                }
+        if (editorsPick.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxWidth().height(120.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(48.dp)
             }
+        } else {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalFadingEdges(),
+                state = rememberLazyListState(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                item { Spacer(Modifier.size(6.dp)) }
 
-            item { Spacer(Modifier.size(128.dp)) }
+                var i = 0
+                items(editorsPick, key = { it.id }) {
+                    i += 1
+                    SongCard(
+                        modifier = Modifier
+                            .testTag("song-card")
+                            .animateItem(fadeInSpec = tween(durationMillis = i * 500)),
+                        thumbnail = it.cover,
+                        artist = it.artist,
+                        trackName = it.title,
+                        language = it.language
+                    ) {
+                        SongViewModel.setVideo(it.id)
+                        val intent = Intent(context, PlayerActivity::class.java)
+                        context.startActivity(intent)
+                    }
+                }
+
+                item { Spacer(Modifier.size(128.dp)) }
+            }
         }
     }
 }

@@ -15,14 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.audio
+package cc.wordview.app.ui.activities.home.composables.home
 
-import cc.wordview.gengolex.Language
+import cc.wordview.app.api.ApiRequestRepository
+import cc.wordview.app.api.entity.Video
 
-data class Video(
-    val id: String = "",
-    val title: String = "",
-    val artist: String = "",
-    val cover: String = "",
-    val language: Language? = null,
-)
+interface HomeRepository : ApiRequestRepository {
+    var onSucceed: (ArrayList<Video>) -> Unit
+    var onFail: (String, Int) -> Unit
+
+    fun getHomeVideos()
+}

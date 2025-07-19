@@ -19,33 +19,44 @@ package cc.wordview.app.ui.screens.home
 
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.click
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ComposeTest
+import cc.wordview.app.ui.activities.home.HomeActivity
 import cc.wordview.app.ui.activities.home.composables.home.Home
+import cc.wordview.app.ui.activities.home.composables.home.HomeRepository
 import cc.wordview.app.ui.activities.home.composables.home.LearnTab
 import cc.wordview.app.ui.activities.home.composables.home.Tabs
+import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
+import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import javax.inject.Inject
 
-class HomeTest : ComposeTest() {
-    @Test
-    fun learnTabRendersByItself() {
-        composeTestRule.setContent {
-            LearnTab()
-        }
+@HiltAndroidTest
+class HomeTest {
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
 
-        composeTestRule.onAllNodesWithTag("song-card").assertCountEquals(3)
+    @get:Rule(order = 1)
+    val composeTestRule = createAndroidComposeRule<HomeActivity>()
+
+    @Inject
+    lateinit var homeRepository: HomeRepository
+
+    @Before
+    fun setup() {
+        hiltRule.inject()
     }
 
     @Test
-    fun fullHomeRenders() {
-        composeTestRule.setContent {
-            val mockNavController = rememberNavController()
-            Home(navHostController = mockNavController)
-        }
-
+    fun renders() {
         composeTestRule.onAllNodesWithTag("song-card").assertCountEquals(3)
     }
 }
