@@ -18,7 +18,7 @@
 package cc.wordview.app.api.request
 
 import cc.wordview.app.api.wordViewRetryPolicy
-import cc.wordview.app.audio.Video
+import cc.wordview.app.api.entity.Video
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.Gson
 import com.google.gson.JsonParser

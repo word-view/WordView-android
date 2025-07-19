@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.audio
+package cc.wordview.app.api.entity
 
 import cc.wordview.gengolex.Language
 

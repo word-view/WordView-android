@@ -18,7 +18,7 @@
 package cc.wordview.app.ui.activities.home.composables.home
 
 import cc.wordview.app.api.ApiRequestRepository
-import cc.wordview.app.audio.Video
+import cc.wordview.app.api.entity.Video
 
 interface HomeRepository : ApiRequestRepository {
     var onSucceed: (ArrayList<Video>) -> Unit

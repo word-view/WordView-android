@@ -18,7 +18,7 @@
 package cc.wordview.app.ui.activities.home.composables.home
 
 import cc.wordview.app.api.request.HomeRequest
-import cc.wordview.app.audio.Video
+import cc.wordview.app.api.entity.Video
 import com.android.volley.RequestQueue
 import javax.inject.Inject
 

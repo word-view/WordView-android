@@ -37,9 +37,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -50,16 +47,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.audio.Video
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.SongCard
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
-import cc.wordview.gengolex.Language
 import com.gigamole.composefadingedges.horizontalFadingEdges
 
 @SuppressLint("MutableCollectionMutableState")
