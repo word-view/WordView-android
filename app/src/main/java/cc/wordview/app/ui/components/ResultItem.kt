@@ -38,6 +38,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -51,10 +52,20 @@ import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick: () -> Unit) {
+    val coroutineScope = rememberCoroutineScope()
+
+    fun onClickResult() = coroutineScope.launch {
+        // delay so that the animation can be seen
+        delay(120)
+        onClick()
+    }
+
     Card(
         modifier = modifier
             .testTag("result-item")
@@ -64,7 +75,7 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
             containerColor = MaterialTheme.colorScheme.background,
         ),
         shape = RoundedCornerShape(0.dp),
-        onClick = onClick
+        onClick = { onClickResult() }
     ) {
         Row {
             Surface(
