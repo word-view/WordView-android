@@ -101,11 +101,10 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
         },
         indicator = {
             Indicator(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 12.dp),
+                modifier = Modifier.align(Alignment.TopCenter),
                 isRefreshing = isRefreshing,
-                state = state
+                state = state,
+                threshold = 100.dp
             )
         }
     ) {
