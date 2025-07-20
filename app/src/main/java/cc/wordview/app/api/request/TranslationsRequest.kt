@@ -46,4 +46,8 @@ class TranslationsRequest(
 
         retryPolicy = wordViewRetryPolicy
     }
+
+    override fun getHeaders(): MutableMap<String, String> = mutableMapOf(
+        "Content-Encoding" to "gzip"
+    )
 }

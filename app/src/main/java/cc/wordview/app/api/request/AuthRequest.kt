@@ -49,6 +49,10 @@ class AuthRequest(
         return "application/json"
     }
 
+    override fun getHeaders(): MutableMap<String, String> = mutableMapOf(
+        "Content-Encoding" to "gzip"
+    )
+
     override fun getBody(): ByteArray {
         return body.toString().toByteArray()
     }
