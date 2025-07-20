@@ -153,12 +153,10 @@ object LessonViewModel : ViewModel() {
 
         val jsonArray = JSONArray()
 
-        for (word in wordsToRevise.value)
-            jsonArray.put(word.tokenWord.parent)
+        for (word in wordsToRevise.value) jsonArray.put(word.tokenWord.parent)
 
-        val locale = getGengolexLocaleForUserLocale(context.resources.configuration.locales[0])
-
-        val language = Language.byLocale(locale)
+        val userLocale = context.resources.configuration.locales[0]
+        val language = runCatching { Language.byLocaleLanguage(userLocale) }.getOrDefault(Language.ENGLISH)
 
         val json = JSONObject()
             .put("lang", language.tag)
@@ -172,24 +170,6 @@ object LessonViewModel : ViewModel() {
         )
 
         queue.add(request)
-    }
-
-    // dumb workaround
-    private fun getGengolexLocaleForUserLocale(sysLocale: Locale): Locale {
-        var locale = Language.ENGLISH.locale
-
-        if (sysLocale.language.equals(Locale.ENGLISH.language)) {
-            locale = Language.ENGLISH.locale
-        }
-
-        if (sysLocale.language.equals(Locale.JAPANESE.language)) {
-            locale = Language.JAPANESE.locale
-        }
-
-        if (sysLocale.language.equals(Language.PORTUGUESE.locale.language)) {
-            locale = Language.PORTUGUESE.locale
-        }
-        return locale
     }
 
     private fun saveKnownWords(context: Context, language: Language) {
