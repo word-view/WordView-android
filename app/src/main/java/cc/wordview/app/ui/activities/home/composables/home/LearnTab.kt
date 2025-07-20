@@ -65,6 +65,7 @@ import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.CircularProgressIndicator
+import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.SongCard
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
@@ -76,13 +77,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewModel = hiltViewModel()) {
     val editorsPick by viewModel.editorsPick.collectAsStateWithLifecycle()
+    val editorsPickLoading by viewModel.editorsPickLoading.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     var isRefreshing by remember { mutableStateOf(false) }
     val state = rememberPullToRefreshState()
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
+    OneTimeEffect {
         viewModel.getHome(context)
     }
 
@@ -122,7 +124,7 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
                 style = Typography.titleLarge,
                 modifier = Modifier.padding(start = 17.dp)
             )
-            if (editorsPick.isEmpty()) {
+            if (editorsPickLoading) {
                 Box(
                     modifier = Modifier.fillMaxWidth().height(120.dp),
                     contentAlignment = Alignment.Center,
