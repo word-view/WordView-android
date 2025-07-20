@@ -103,7 +103,7 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
             Indicator(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .padding(top = TopAppBarDefaults.TopAppBarExpandedHeight.minus(28.dp)),
+                    .padding(top = 12.dp),
                 isRefreshing = isRefreshing,
                 state = state
             )
