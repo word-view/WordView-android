@@ -38,27 +38,38 @@ class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository
 ) : ViewModel() {
     private val _editorsPick = MutableStateFlow(ArrayList<Video>())
+    private val _editorsPickLoading = MutableStateFlow(true)
 
     val editorsPick = _editorsPick.asStateFlow()
+    val editorsPickLoading = _editorsPickLoading.asStateFlow()
 
     private var _snackBarMessage = MutableSharedFlow<String>()
     val snackBarMessage = _snackBarMessage.asSharedFlow()
 
     fun getHome(context: Context) {
+        updateEditorsPick(arrayListOf())
+        _editorsPickLoading.update { true }
+
         homeRepository.apply {
             init(context)
 
-            onSucceed = { homeVideos ->
-                _editorsPick.update { homeVideos }
+            onSucceed = {
+                updateEditorsPick(it)
+                _editorsPickLoading.update { false }
             }
 
             onFail = { s, i ->
+                _editorsPickLoading.update { false }
                 Timber.e("Failed to request home videos \n\t message=$s, status=$i")
                 emitMessage(s)
             }
 
             getHomeVideos()
         }
+    }
+
+    fun updateEditorsPick(videos: ArrayList<Video>) {
+        _editorsPick.update { videos }
     }
 
     private fun emitMessage(msg: String) {
