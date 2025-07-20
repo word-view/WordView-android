@@ -2,7 +2,7 @@
 **WordView** aims to be a language learning platform mostly centered around music, you can pick up an international song you like, listen to it and the app will create a full lesson around the lyrics!
 
 # Development
-Any help is welcome, if you think you can help with something, take a look at https://github.com/orgs/word-view/projects/2
+Any help is welcome, if you think you can help with something, take a look at [good first issues](https://github.com/word-view/WordView-android/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22) or the [WordView kanban](https://github.com/orgs/word-view/projects/2)
 
 To start developing, you will need to have [APIWordView](https://github.com/word-view/APIWordView/releases/latest) running. Download the jar and execute it in the terminal:
 ```sh
