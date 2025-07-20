@@ -48,9 +48,7 @@ class HomeViewModel @Inject constructor(
         homeRepository.apply {
             init(context)
 
-            onSucceed = { homeVideos ->
-                _editorsPick.update { homeVideos }
-            }
+            onSucceed = { updateEditorsPick(it) }
 
             onFail = { s, i ->
                 Timber.e("Failed to request home videos \n\t message=$s, status=$i")
@@ -59,6 +57,10 @@ class HomeViewModel @Inject constructor(
 
             getHomeVideos()
         }
+    }
+
+    fun updateEditorsPick(videos: ArrayList<Video>) {
+        _editorsPick.update { videos }
     }
 
     private fun emitMessage(msg: String) {
