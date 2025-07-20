@@ -136,7 +136,6 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
                         .fillMaxWidth()
                         .horizontalFadingEdges(),
                     state = rememberLazyListState(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     item { Spacer(Modifier.size(6.dp)) }
 
