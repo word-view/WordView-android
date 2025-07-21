@@ -94,15 +94,14 @@ class AudioPlayer {
      */
     fun togglePlay() {
         when (player.isPlaying) {
-            true -> {
-                player.pause()
-                stopPositionCheck()
-            }
-            false -> {
-                player.play()
-                startPositionCheck()
-            }
+            true -> pause()
+            false -> play()
         }
+    }
+
+    fun play() {
+        player.play()
+        startPositionCheck()
     }
 
     fun pause() {

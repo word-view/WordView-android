@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.media3.extractor)
     implementation(libs.androidx.media3.common)
+    implementation(libs.androidx.media)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.lifecycle.runtime.compose.android)
     implementation(libs.androidx.security.crypto)
