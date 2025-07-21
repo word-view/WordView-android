@@ -125,7 +125,7 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun getLessonTime(context: Context) {
-        val jwt = getStoredJwt(context)!!
+        val jwt = getStoredJwt(context) ?: return
         val queue = Volley.newRequestQueue(context)
         val url = APIUrl("${BuildConfig.API_BASE_URL}/api/v1/user/me/lesson_time")
 
