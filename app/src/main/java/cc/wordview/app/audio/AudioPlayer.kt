@@ -68,6 +68,7 @@ class AudioPlayer {
 
             player.addListener(internalListener)
             player.addListener(listener)
+            player.setHandleAudioBecomingNoisy(true)
 
             val mediaItem = MediaItem.fromUri(url.toUri())
 
