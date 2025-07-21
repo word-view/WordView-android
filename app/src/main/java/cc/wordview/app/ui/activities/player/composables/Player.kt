@@ -40,6 +40,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -51,6 +52,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.audio.WordViewMediaSession
 import cc.wordview.app.extensions.getCleanUploaderName
 import cc.wordview.app.ui.activities.lesson.LessonActivity
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
@@ -87,9 +89,12 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
 
     val composerMode = AppSettings.composerMode.get()
 
+    val mediaSession = remember { WordViewMediaSession(context, player) }
+
     LaunchedEffect(finalized) {
         if (finalized) {
             player.stop()
+            mediaSession.release()
             val intent = Intent(context, LessonActivity::class.java)
             context.startActivity(intent)
             activity.finish()
@@ -98,6 +103,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
 
     fun back() {
         player.stop()
+        mediaSession.release()
         activity.finish()
     }
 
