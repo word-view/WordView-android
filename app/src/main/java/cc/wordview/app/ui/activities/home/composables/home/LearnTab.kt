@@ -63,6 +63,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.OneTimeEffect
@@ -152,8 +153,7 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
                             language = it.language
                         ) {
                             SongViewModel.setVideo(it.id)
-                            val intent = Intent(context, PlayerActivity::class.java)
-                            context.startActivity(intent)
+                            context.openActivity<PlayerActivity>()
                         }
                     }
 

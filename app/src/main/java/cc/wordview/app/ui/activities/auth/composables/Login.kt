@@ -52,9 +52,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.auth.composables.FormValidation.Email
 import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
+import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.AuthForm
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FormTextField
@@ -140,10 +142,7 @@ fun Login(
                         if (!isLoading) viewModel.login(
                             email = email,
                             password = password,
-                            onLoginCompleted = {
-                                val intent = Intent(context, HomeActivity::class.java)
-                                context.startActivity(intent)
-                            },
+                            onLoginCompleted = { context.openActivity<HomeActivity>() },
                             context = context
                         )
                     }

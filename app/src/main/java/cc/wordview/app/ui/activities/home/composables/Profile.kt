@@ -56,7 +56,9 @@ import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.auth.AuthActivity
+import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.Space
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,9 +72,7 @@ fun Profile(navController: NavHostController = rememberNavController()) {
     fun logout() {
         setStoredJwt(null, context)
         GlobalViewModel.resetUser()
-
-        val intent = Intent(context, AuthActivity::class.java)
-        context.startActivity(intent)
+        context.openActivity<AuthActivity>()
         activity?.finish()
     }
 

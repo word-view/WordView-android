@@ -81,6 +81,7 @@ import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.components.SearchHistoryEntry
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -256,8 +257,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                             ), result = it
                         ) {
                             SongViewModel.setVideo(it.id)
-                            val intent = Intent(context, PlayerActivity::class.java)
-                            context.startActivity(intent)
+                            context.openActivity<PlayerActivity>()
                         }
                     }
                 }

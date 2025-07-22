@@ -40,7 +40,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.api.getStoredJwt
+import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.auth.AuthActivity
+import cc.wordview.app.ui.activities.player.PlayerActivity
 
 @Preview
 @Composable
@@ -53,8 +55,7 @@ fun ProfilePicture(onClick: () -> Unit = {}) {
     val user by GlobalViewModel.user.collectAsStateWithLifecycle()
 
     fun openLoginScreen() {
-        val intent = Intent(context, AuthActivity::class.java)
-        context.startActivity(intent)
+        context.openActivity<AuthActivity>()
         activity?.finish()
     }
 
