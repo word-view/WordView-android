@@ -89,10 +89,10 @@ class PlayerActivity : WordViewActivity() {
                         try {
                             SongViewModel.videoStream.value.init(videoId, context)
 
-                            viewModel.initAudio(videoStream.getStreamURL(), context)
-                            viewModel.getLyrics(context, videoId, lang, videoStream)
-                            viewModel.getKnownWords(context, lang)
-                            viewModel.getLessonTime(context)
+                            viewModel.initAudio(videoStream.getStreamURL())
+                            viewModel.getLyrics(videoId, lang, videoStream)
+                            viewModel.getKnownWords(lang)
+                            viewModel.getLessonTime()
 
                             // we init the lesson tts here so that there is no delay
                             // when the lesson actually starts.
