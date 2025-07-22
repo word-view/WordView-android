@@ -90,7 +90,7 @@ class PlayerActivity : WordViewActivity() {
                             SongViewModel.videoStream.value.init(videoId, context)
 
                             viewModel.initAudio(videoStream.getStreamURL(), context)
-                            viewModel.getLyrics(preferences, context, videoId, lang, videoStream)
+                            viewModel.getLyrics(context, videoId, lang, videoStream)
                             viewModel.getKnownWords(context, lang)
                             viewModel.getLessonTime(context)
 
