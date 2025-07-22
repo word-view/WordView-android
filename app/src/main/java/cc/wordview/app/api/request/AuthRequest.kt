@@ -26,7 +26,7 @@ import timber.log.Timber
  * Generic authentication request, encompasses both login and registration.
  */
 class AuthRequest(
-    url: String?,
+    url: String,
     private val body: JSONObject,
     onSuccess: (jwt: String) -> Unit,
     onError: (status: Int?, message: String?) -> Unit,

@@ -25,7 +25,7 @@ import org.json.JSONObject
 import timber.log.Timber
 
 class TranslationsRequest(
-    url: String?,
+    url: String,
     body: JSONObject,
     onSuccess: (List<Translation>) -> Unit,
     onError: () -> Unit,
