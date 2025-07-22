@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.getStoredJwt
@@ -51,7 +50,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.zhanghai.compose.preference.Preferences
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -143,7 +141,6 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun getLyrics(
-        preferences: Preferences,
         context: Context,
         id: String,
         lang: Language,
@@ -177,13 +174,6 @@ class PlayerViewModel @Inject constructor(
                 }
             }
 
-            preloadPhrases(
-                context,
-                "en",
-                AppSettings.language.get(preferences),
-                words
-            )
-
             CoroutineScope(Dispatchers.IO).launch {
                 ImageCacheManager.onQueueCompleted = { computeAndCheckReady() }
                 ImageCacheManager.executeAllInQueue()
@@ -191,16 +181,6 @@ class PlayerViewModel @Inject constructor(
         }
 
         playerRepository.getLyrics(id, lang.tag, video)
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    private fun preloadPhrases(
-        context: Context,
-        phraseLang: String,
-        wordsLang: String,
-        keywords: List<String>
-    ) = viewModelScope.launch {
-        Timber.w("preloadPhrases: temporarily disabled")
     }
 
     private fun preloadImage(parent: String, context: Context) = viewModelScope.launch {
