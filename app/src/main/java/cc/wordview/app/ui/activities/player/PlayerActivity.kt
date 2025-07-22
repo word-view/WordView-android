@@ -75,7 +75,6 @@ class PlayerActivity : WordViewActivity() {
                 val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
                 val statusCode by viewModel.statusCode.collectAsStateWithLifecycle()
 
-                val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
                 val langTag = AppSettings.language.get()
 
                 val context = LocalContext.current
