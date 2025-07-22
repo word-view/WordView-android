@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.activities.home.composables.home
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,7 +34,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
 ) : ViewModel() {
     private val _editorsPick = MutableStateFlow(ArrayList<Video>())
     private val _editorsPickLoading = MutableStateFlow(true)
@@ -46,13 +45,11 @@ class HomeViewModel @Inject constructor(
     private var _snackBarMessage = MutableSharedFlow<String>()
     val snackBarMessage = _snackBarMessage.asSharedFlow()
 
-    fun getHome(context: Context) {
+    fun getHome() {
         updateEditorsPick(arrayListOf())
         _editorsPickLoading.update { true }
 
         homeRepository.apply {
-            init(context)
-
             onSucceed = {
                 updateEditorsPick(it)
                 _editorsPickLoading.update { false }

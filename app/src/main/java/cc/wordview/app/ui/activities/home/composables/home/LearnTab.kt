@@ -18,11 +18,7 @@
 package cc.wordview.app.ui.activities.home.composables.home
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -39,13 +35,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
-import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -86,7 +79,7 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
     val coroutineScope = rememberCoroutineScope()
 
     OneTimeEffect {
-        viewModel.getHome(context)
+        viewModel.getHome()
     }
 
     PullToRefreshBox(
@@ -96,7 +89,7 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
             coroutineScope.launch {
                 isRefreshing = true
                 viewModel.updateEditorsPick(arrayListOf())
-                viewModel.getHome(context)
+                viewModel.getHome()
                 isRefreshing = false
             }
         },
