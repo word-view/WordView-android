@@ -26,7 +26,6 @@ import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.entity.Translation
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.request.AuthenticatedStringRequest
-import cc.wordview.app.api.request.TranslationsRequest
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.gengolex.Language
 import com.android.volley.Request
@@ -59,6 +58,9 @@ object LessonViewModel : ViewModel() {
     val timer = _timer.asStateFlow()
     val timerFinished = _timerFinished.asStateFlow()
     val translations = _translations.asStateFlow()
+
+    private val translationsRepository: TranslationsRepository = TranslationsRepositoryImpl()
+    private val saveKnownWordsRepository: SaveKnownWordsRepository = SaveKnownWordsRepositoryImpl()
 
     fun nextWord(answer: Answer = Answer.NONE) {
         _wordsToRevise.update { value ->
@@ -145,60 +147,47 @@ object LessonViewModel : ViewModel() {
     }
 
     fun getTranslations(context: Context) {
-        // TODO: The way this request is made does not follow the same way other requests are made in the app (through repositories).
-        val endpoint = BuildConfig.API_BASE_URL
-        val queue = Volley.newRequestQueue(context)
+        val words = arrayListOf<String>()
 
-        val url = APIUrl("$endpoint/api/v1/lesson/translations")
-
-        val jsonArray = JSONArray()
-
-        for (word in wordsToRevise.value) jsonArray.put(word.tokenWord.parent)
+        for (word in wordsToRevise.value) words.add(word.tokenWord.parent)
 
         val userLocale = context.resources.configuration.locales[0]
         val language = runCatching { Language.byLocaleLanguage(userLocale) }.getOrDefault(Language.ENGLISH)
 
-        val json = JSONObject()
-            .put("lang", language.tag)
-            .put("words", jsonArray)
+        translationsRepository.apply {
+            init(context)
 
-        val request = TranslationsRequest(
-            url.getURL(),
-            json,
-            { translations -> _translations.update { translations as ArrayList<Translation> } },
-            { Timber.e("Translations request failed!") }
-        )
+            onSucceed = { translations ->
+                _translations.update { translations as ArrayList<Translation> }
+            }
 
-        queue.add(request)
+            onFail = { _: String, _: Int ->
+                Timber.e("Translations request failed")
+            }
+
+            getTranslations(language.tag, words)
+        }
     }
 
     private fun saveKnownWords(context: Context, language: Language) {
-        // TODO: The way this request is made does not follow the same way other requests are made in the app (through repositories).
-        val endpoint = BuildConfig.API_BASE_URL
-        val queue = Volley.newRequestQueue(context)
-        val jwt = getStoredJwt(context)!!
+        val jwt = getStoredJwt(context) ?: return
 
-        val url = APIUrl("$endpoint/api/v1/lesson/words/known")
+        val words = arrayListOf<String>()
+        for (word in _knownWords.value) words.add(word)
 
-        val jsonArray = JSONArray()
+        saveKnownWordsRepository.apply {
+            init(context)
 
-        for (word in _knownWords.value)
-            jsonArray.put(word)
+            onSucceed = {
+                Timber.i("Know words have been successfully saved: $it")
+            }
 
-        val json = JSONObject()
-            .put("language", language.tag)
-            .put("words", jsonArray)
+            onFail = { message, status ->
+                Timber.e("Failed to post known words \n\tmessage=$message, status=$status")
+            }
 
-        val request = AuthenticatedStringRequest(
-            url.getURL(),
-            jwt,
-            Request.Method.POST,
-            json,
-            { Timber.i("Know words have been successfully saved: $it") },
-            { message, status -> Timber.e("Failed to post known words \n\tmessage=$message, status=$status") }
-        )
-
-        queue.add(request)
+            saveKnownWords(language.tag, words, jwt)
+        }
     }
 
     fun cleanWords() {
