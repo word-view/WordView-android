@@ -25,7 +25,7 @@ class HomeRequestTest : RequestTest() {
     fun getHome() {
         val request = HomeRequest(
             "$endpoint/api/v1/home",
-            { assert(it.size == 3) },
+            { assert(it.size == 4) },
             { _, _ -> throw FailedTestRequestException("Are you sure the API is running?") }
         )
 
