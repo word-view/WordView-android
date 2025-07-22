@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import cc.wordview.app.R
 import cc.wordview.app.api.setStoredJwt
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -34,7 +35,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val registerRepository: RegisterRepository
+    private val registerRepository: RegisterRepository,
+    @ApplicationContext private val appContext: Context
 ) : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -46,29 +48,26 @@ class RegisterViewModel @Inject constructor(
         username: String,
         email: String,
         password: String,
-        onRegisterCompleted: () -> Unit,
-        context: Context
+        onRegisterCompleted: () -> Unit
     ) = viewModelScope.launch {
         _isLoading.update { true }
 
         registerRepository.apply {
-            init(context)
-
             onSucceed = {
                 Timber.e("Register succeeded! jwt=$it")
                 _isLoading.update { false }
-                setStoredJwt(it, context)
+                setStoredJwt(it, appContext)
                 onRegisterCompleted.invoke()
             }
             onFail = { s: String, i: Int ->
                 Timber.e("Register failed \n\t message=$s, status=$i")
 
                 if (s.contains("This email is already in use")) {
-                    emitMessage(context.getString(R.string.this_email_is_already_in_use))
+                    emitMessage(appContext.getString(R.string.this_email_is_already_in_use))
                 } else if (s.contains("username cannot contain special characters")) {
-                    emitMessage(context.getString(R.string.username_cannot_contain_special_characters))
+                    emitMessage(appContext.getString(R.string.username_cannot_contain_special_characters))
                 } else {
-                    emitMessage(context.getString(R.string.could_not_connect_to_the_server))
+                    emitMessage(appContext.getString(R.string.could_not_connect_to_the_server))
                 }
 
                 _isLoading.update { false }

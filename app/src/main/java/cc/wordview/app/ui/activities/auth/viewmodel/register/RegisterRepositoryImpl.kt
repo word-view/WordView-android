@@ -17,16 +17,21 @@
 
 package cc.wordview.app.ui.activities.auth.viewmodel.register
 
+import android.content.Context
 import cc.wordview.app.api.request.AuthRequest
 import com.android.volley.RequestQueue
+import com.android.volley.toolbox.Volley
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONObject
 import javax.inject.Inject
 
-class RegisterRepositoryImpl @Inject constructor() : RegisterRepository {
+class RegisterRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context
+) : RegisterRepository {
     override var onSucceed: (String) -> Unit = { _: String -> }
     override var onFail: (String, Int) -> Unit = { _: String, _: Int -> }
 
-    override lateinit var queue: RequestQueue
+    override var queue = Volley.newRequestQueue(context)
 
     override fun register(username: String, email: String, password: String) {
         val json = JSONObject()

@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.activities.auth.composables
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,12 +55,10 @@ import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.auth.composables.FormValidation.Email
 import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
-import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.AuthForm
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FormTextField
 import cc.wordview.app.ui.components.Icon
-import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.Space
 import kotlinx.coroutines.launch
 
@@ -142,8 +139,7 @@ fun Login(
                         if (!isLoading) viewModel.login(
                             email = email,
                             password = password,
-                            onLoginCompleted = { context.openActivity<HomeActivity>() },
-                            context = context
+                            onLoginCompleted = { context.openActivity<HomeActivity>() }
                         )
                     }
                 ) {
