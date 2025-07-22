@@ -54,7 +54,9 @@ import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.audio.WordViewMediaSession
 import cc.wordview.app.extensions.getCleanUploaderName
+import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.lesson.LessonActivity
+import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FadeInAsyncImage
@@ -95,8 +97,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
         if (finalized) {
             player.stop()
             mediaSession.release()
-            val intent = Intent(context, LessonActivity::class.java)
-            context.startActivity(intent)
+            context.openActivity<LessonActivity>()
             activity.finish()
         }
     }

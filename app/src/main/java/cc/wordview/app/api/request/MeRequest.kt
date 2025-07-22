@@ -25,7 +25,7 @@ import com.google.gson.JsonParser
 import timber.log.Timber
 
 class MeRequest(
-    url: String?,
+    url: String,
     onSuccess: (User) -> Unit,
     onError: (String, Int) -> Unit,
     private val jwtToken: String,

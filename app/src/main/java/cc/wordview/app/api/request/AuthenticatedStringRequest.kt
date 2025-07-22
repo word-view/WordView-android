@@ -27,7 +27,7 @@ import timber.log.Timber
  * The same as the default StringRequest but it adds the jwt token to the header
  */
 class AuthenticatedStringRequest(
-    url: String?,
+    url: String,
     private val jwt: String,
     method: Int = Method.GET,
     private val body: JSONObject? = null,

@@ -15,20 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.api
+package cc.wordview.app.ui.activities.lesson.viewmodel
 
-import cc.wordview.app.api.request.HomeRequest
-import org.junit.Test
+import cc.wordview.app.api.ApiRequestRepository
+import cc.wordview.app.api.entity.Translation
 
-class HomeRequestTest : RequestTest() {
-    @Test
-    fun getHome() {
-        val request = HomeRequest(
-            "$endpoint/api/v1/home",
-            { assert(it.size == 4) },
-            { _, _ -> throw FailedTestRequestException("Are you sure the API is running?") }
-        )
+interface TranslationsRepository : ApiRequestRepository {
+    var onSucceed: (List<Translation>) -> Unit
+    var onFail: (String, Int) -> Unit
 
-        makeRequest(request)
-    }
+    fun getTranslations(lang: String, words: List<String>)
 }

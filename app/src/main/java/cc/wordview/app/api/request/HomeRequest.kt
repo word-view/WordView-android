@@ -25,7 +25,7 @@ import com.google.gson.JsonParser
 import timber.log.Timber
 
 class HomeRequest(
-    url: String?,
+    url: String,
     onSuccess: (ArrayList<Video>) -> Unit,
     onError: (String, Int) -> Unit,
 ) : StringRequest(

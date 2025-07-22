@@ -24,7 +24,7 @@ import com.google.gson.JsonParser
 import timber.log.Timber
 
 class LyricsRequest(
-    url: String?,
+    url: String,
     onSuccess: (String, String) -> Unit,
     onError: (String, Int) -> Unit,
 ) : StringRequest(

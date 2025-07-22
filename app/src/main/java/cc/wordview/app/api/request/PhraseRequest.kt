@@ -27,7 +27,7 @@ import org.json.JSONObject
 import timber.log.Timber
 
 class PhraseRequest(
-    url: String?,
+    url: String,
     body: JSONObject,
     onSuccess: (List<Phrase>) -> Unit,
     onError: () -> Unit,

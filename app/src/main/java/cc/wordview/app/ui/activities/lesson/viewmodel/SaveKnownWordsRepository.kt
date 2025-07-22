@@ -15,20 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.api
+package cc.wordview.app.ui.activities.lesson.viewmodel
 
-import cc.wordview.app.api.request.HomeRequest
-import org.junit.Test
+import cc.wordview.app.api.ApiRequestRepository
 
-class HomeRequestTest : RequestTest() {
-    @Test
-    fun getHome() {
-        val request = HomeRequest(
-            "$endpoint/api/v1/home",
-            { assert(it.size == 4) },
-            { _, _ -> throw FailedTestRequestException("Are you sure the API is running?") }
-        )
+interface SaveKnownWordsRepository : ApiRequestRepository {
+    var onSucceed: (String) -> Unit
+    var onFail: (String, Int) -> Unit
 
-        makeRequest(request)
-    }
+    fun saveKnownWords(lang: String, words: List<String>, jwt: String)
 }
