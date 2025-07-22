@@ -18,7 +18,6 @@
 package cc.wordview.app.api.request
 
 import cc.wordview.app.api.wordViewRetryPolicy
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import org.json.JSONObject
 import timber.log.Timber
@@ -38,11 +37,8 @@ class AuthenticatedStringRequest(
     url,
     { onSuccess(it) },
     {
-        val statusCode = it.networkResponse?.statusCode
-        val responseData = it.networkResponse?.data?.let { String(it) }
-        val errorTitle = scrapeErrorFromResponseData(responseData)
-
-        onError(it.message ?: "Request failed with status code $statusCode\n$errorTitle", statusCode ?: 0)
+        val (status, message) = getErrorResults(it)
+        onError(message, status)
     }) {
 
     init {
@@ -62,14 +58,4 @@ class AuthenticatedStringRequest(
     override fun getHeaders(): MutableMap<String, String> = mutableMapOf(
         "Authorization" to "Bearer $jwt"
     )
-
-    companion object {
-        private fun scrapeErrorFromResponseData(responseData: String?): String? {
-            if (responseData != null) {
-                val titleRegex = "<title>(.*?)</title>".toRegex(RegexOption.IGNORE_CASE)
-                val matchResult = titleRegex.find(responseData)
-                return matchResult?.groups?.get(1)?.value
-            } else return null
-        }
-    }
 }

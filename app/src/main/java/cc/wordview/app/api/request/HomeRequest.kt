@@ -44,11 +44,8 @@ class HomeRequest(
         onSuccess(videos)
     },
     {
-        val statusCode = it.networkResponse?.statusCode
-        val responseData = it.networkResponse?.data?.let { String(it) }
-        val errorTitle = scrapeErrorFromResponseData(responseData)
-
-        onError(it.message ?: "Request failed with status code $statusCode\n$errorTitle", statusCode ?: 0)
+        val (status, message) = getErrorResults(it)
+        onError(message, status)
     }) {
 
     init {

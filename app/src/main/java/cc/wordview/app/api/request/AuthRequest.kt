@@ -18,7 +18,6 @@
 package cc.wordview.app.api.request
 
 import cc.wordview.app.api.wordViewRetryPolicy
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import org.json.JSONObject
 import timber.log.Timber
@@ -34,10 +33,8 @@ class AuthRequest(
 ) : StringRequest(Method.POST, url, {
     onSuccess(it)
 }, {
-    val statusCode = it.networkResponse?.statusCode
-    val responseData = it.networkResponse?.data?.let { String(it) }
-
-    onError(statusCode, responseData)
+    val (status, message) = getErrorResults(it)
+    onError(status, message)
 }) {
     init {
         Timber.v("init: method=POST, url=$url")
