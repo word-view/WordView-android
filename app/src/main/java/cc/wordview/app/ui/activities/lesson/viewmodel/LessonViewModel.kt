@@ -21,23 +21,16 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
 import androidx.lifecycle.ViewModel
-import cc.wordview.app.BuildConfig
-import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.entity.Translation
 import cc.wordview.app.api.getStoredJwt
-import cc.wordview.app.api.request.AuthenticatedStringRequest
 import cc.wordview.app.misc.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.gengolex.Language
-import com.android.volley.Request
-import com.android.volley.toolbox.Volley
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import org.json.JSONArray
-import org.json.JSONObject
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
@@ -151,25 +144,22 @@ class LessonViewModel @Inject constructor(
         _timer.update { time }
     }
 
-    fun finishTimer(context: Context? = null, language: Language) {
-        if (context == null)
-            Timber.w("Words learned in this session won't be saved since context was not specified to finishTimer")
-
-        context?.let { saveKnownWords(it, language) }
+    fun finishTimer(language: Language) {
+        saveKnownWords(language)
 
         _timerFinished.update { true }
     }
 
-    fun getTranslations(context: Context) {
+    fun getTranslations() {
         val words = arrayListOf<String>()
 
         for (word in wordsToRevise.value) words.add(word.tokenWord.parent)
 
-        val userLocale = context.resources.configuration.locales[0]
+        val userLocale = appContext.resources.configuration.locales[0]
         val language = runCatching { Language.byLocaleLanguage(userLocale) }.getOrDefault(Language.ENGLISH)
 
         translationsRepository.apply {
-            init(context)
+            init(appContext)
 
             onSucceed = { translations ->
                 _translations.update { translations as ArrayList<Translation> }
@@ -183,14 +173,14 @@ class LessonViewModel @Inject constructor(
         }
     }
 
-    private fun saveKnownWords(context: Context, language: Language) {
-        val jwt = getStoredJwt(context) ?: return
+    private fun saveKnownWords(language: Language) {
+        val jwt = getStoredJwt(appContext) ?: return
 
         val words = arrayListOf<String>()
         for (word in _knownWords.value) words.add(word)
 
         saveKnownWordsRepository.apply {
-            init(context)
+            init(appContext)
 
             onSucceed = {
                 Timber.i("Know words have been successfully saved: $it")
@@ -208,8 +198,8 @@ class LessonViewModel @Inject constructor(
         _wordsToRevise.update { arrayListOf() }
     }
 
-    fun playEffect(context: Context, resId: Int) {
-        _mediaPlayer.value = MediaPlayer.create(context, resId)
+    fun playEffect(resId: Int) {
+        _mediaPlayer.value = MediaPlayer.create(appContext, resId)
         _mediaPlayer.value?.seekTo(0)
         _mediaPlayer.value?.start()
     }

@@ -47,7 +47,6 @@ import cc.wordview.gengolex.Language
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 @Composable
@@ -68,7 +67,7 @@ fun MeaningPresenter(
     val context = LocalContext.current
 
     LaunchedEffect(currentWord) {
-        lessonViewModel.playEffect(context, R.raw.discovery)
+        lessonViewModel.playEffect(R.raw.discovery)
         offsetX.snapTo(-screenWidthPx)
         alpha.snapTo(0f)
 

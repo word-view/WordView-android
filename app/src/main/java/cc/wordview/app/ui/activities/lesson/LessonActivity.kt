@@ -86,7 +86,7 @@ class LessonActivity : WordViewActivity() {
                     var openQuitConfirm by remember { mutableStateOf(false) }
 
                     OneTimeEffect {
-                        viewModel.getTranslations(context)
+                        viewModel.getTranslations()
                         viewModel.nextWord()
 
                         ReviseTimer.start(
@@ -96,7 +96,7 @@ class LessonActivity : WordViewActivity() {
                                 viewModel.setFormattedTime(it)
                             },
                             onFinish = {
-                                viewModel.finishTimer(context, language)
+                                viewModel.finishTimer(language)
                             }
                         )
                     }
@@ -119,7 +119,7 @@ class LessonActivity : WordViewActivity() {
                                         viewModel.setFormattedTime(it)
                                     },
                                     onFinish = {
-                                        viewModel.finishTimer(context, language)
+                                        viewModel.finishTimer(language)
                                     }
                                 )
                             },

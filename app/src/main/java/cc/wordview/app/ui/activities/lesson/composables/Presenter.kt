@@ -88,9 +88,9 @@ fun Presenter(
         if (scaleIn.value == 1f) {
             scope.launch {
                 if (answerStatus == Answer.CORRECT) {
-                    lessonViewModel.playEffect(context, R.raw.correct)
+                    lessonViewModel.playEffect(R.raw.correct)
                 } else if (answerStatus == Answer.WRONG) {
-                    lessonViewModel.playEffect(context, R.raw.wrong)
+                    lessonViewModel.playEffect(R.raw.wrong)
                 }
 
                 delay(1500.milliseconds)
