@@ -158,8 +158,6 @@ class LessonViewModel @Inject constructor(
         val language = runCatching { Language.byLocaleLanguage(userLocale) }.getOrDefault(Language.ENGLISH)
 
         translationsRepository.apply {
-            init(appContext)
-
             onSucceed = { translations ->
                 _translations.update { translations as ArrayList<Translation> }
             }
@@ -179,8 +177,6 @@ class LessonViewModel @Inject constructor(
         for (word in _knownWords.value) words.add(word)
 
         saveKnownWordsRepository.apply {
-            init(appContext)
-
             onSucceed = {
                 Timber.i("Know words have been successfully saved: $it")
             }

@@ -17,19 +17,23 @@
 
 package cc.wordview.app.ui.activities.lesson.viewmodel
 
+import android.content.Context
 import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.entity.Translation
 import cc.wordview.app.api.request.TranslationsRequest
-import com.android.volley.RequestQueue
+import com.android.volley.toolbox.Volley
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 
-class TranslationsRepositoryImpl @Inject constructor() : TranslationsRepository {
+class TranslationsRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context
+) : TranslationsRepository {
     override var onSucceed: (List<Translation>) -> Unit = {}
     override var onFail: (String, Int) -> Unit = { message, status -> }
 
-    override lateinit var queue: RequestQueue
+    override var queue = Volley.newRequestQueue(context)
 
     override fun getTranslations(lang: String, words: List<String>) {
         val url = APIUrl("$endpoint/api/v1/lesson/translations")
