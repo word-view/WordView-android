@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.lesson.LessonNav
@@ -38,9 +39,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun Choose() {
-    val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
-    val words by LessonViewModel.wordsToRevise.collectAsStateWithLifecycle()
+fun Choose(lessonViewModel: LessonViewModel = hiltViewModel()) {
+    val currentWord by lessonViewModel.currentWord.collectAsStateWithLifecycle()
+    val words by lessonViewModel.wordsToRevise.collectAsStateWithLifecycle()
 
     val alternatives = remember { arrayListOf<Word>() }
 
@@ -69,12 +70,12 @@ fun Choose() {
     }
 
     fun correct() {
-        LessonViewModel.setAnswer(Answer.CORRECT)
+        lessonViewModel.setAnswer(Answer.CORRECT)
         currentWord.corrects++
     }
 
     fun wrong() {
-        LessonViewModel.setAnswer(Answer.WRONG)
+        lessonViewModel.setAnswer(Answer.WRONG)
         currentWord.misses++
     }
 
@@ -86,7 +87,7 @@ fun Choose() {
             wrong()
             isCorrect = false
         }
-        LessonViewModel.setScreen(LessonNav.Presenter.route)
+        lessonViewModel.setScreen(LessonNav.Presenter.route)
     }
 
     // Animate main text reveal

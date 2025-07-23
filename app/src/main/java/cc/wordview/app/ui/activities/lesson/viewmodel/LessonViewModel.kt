@@ -26,10 +26,13 @@ import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.entity.Translation
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.request.AuthenticatedStringRequest
+import cc.wordview.app.misc.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.gengolex.Language
 import com.android.volley.Request
 import com.android.volley.toolbox.Volley
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -37,8 +40,12 @@ import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
 import java.util.Locale
+import javax.inject.Inject
 
-object LessonViewModel : ViewModel() {
+@HiltViewModel
+class LessonViewModel @Inject constructor(
+    @ApplicationContext private val appContext: Context
+) : ViewModel() {
     private val _currentWord = MutableStateFlow(ReviseWord())
     private val _currentScreen = MutableStateFlow("")
     private val _wordsToRevise = MutableStateFlow<ArrayList<ReviseWord>>(arrayListOf())
@@ -49,7 +56,9 @@ object LessonViewModel : ViewModel() {
     private val _knownWords = MutableStateFlow(ArrayList<String>())
     private val _translations = MutableStateFlow(ArrayList<Translation>())
 
-    private var tts: TextToSpeech? = null
+    private val tts = TextToSpeech(appContext) {
+        Timber.v("initTts: ttsStatus=$it")
+    }
 
     val currentWord = _currentWord.asStateFlow()
     val currentScreen = _currentScreen.asStateFlow()
@@ -61,6 +70,11 @@ object LessonViewModel : ViewModel() {
 
     private val translationsRepository: TranslationsRepository = TranslationsRepositoryImpl()
     private val saveKnownWordsRepository: SaveKnownWordsRepository = SaveKnownWordsRepositoryImpl()
+
+    fun load() {
+        for (word in PlayerToLessonCommunicator.wordsToRevise.value)
+            appendWord(word)
+    }
 
     fun nextWord(answer: Answer = Answer.NONE) {
         _wordsToRevise.update { value ->
@@ -200,24 +214,16 @@ object LessonViewModel : ViewModel() {
         _mediaPlayer.value?.start()
     }
 
-    fun initTts(context: Context) {
-        tts = TextToSpeech(context) {
-            Timber.v("initTts: ttsStatus=$it")
-        }
-    }
-
     fun ttsSpeak(word: String, locale: Locale) {
-        tts?.let { textToSpeech ->
-            Timber.v("ttsSpeak: word=$word, locale=$locale")
+        Timber.v("ttsSpeak: word=$word, locale=$locale")
 
-            textToSpeech.language = locale
-            textToSpeech.setSpeechRate(1.0f)
-            textToSpeech.speak(
-                word,
-                TextToSpeech.QUEUE_ADD,
-                null,
-                null
-            )
-        }
+        tts.language = locale
+        tts.setSpeechRate(1.0f)
+        tts.speak(
+            word,
+            TextToSpeech.QUEUE_ADD,
+            null,
+            null
+        )
     }
 }

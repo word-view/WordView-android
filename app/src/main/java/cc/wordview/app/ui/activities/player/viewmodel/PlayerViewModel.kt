@@ -34,6 +34,7 @@ import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
+import cc.wordview.app.misc.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.ReviseTimer
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
@@ -216,12 +217,12 @@ class PlayerViewModel @Inject constructor(
 
                         reviseWord.isKnown = _knownWords.value.contains(reviseWord.tokenWord.parent)
 
-                        LessonViewModel.appendWord(reviseWord)
+                        PlayerToLessonCommunicator.appendWord(reviseWord)
                     }
                 }
 
-                val isTimerFinished = LessonViewModel.timerFinished.value
-                val wordsToRevise = LessonViewModel.wordsToRevise.value
+                val isTimerFinished = ReviseTimer.timeRemaining == 0L
+                val wordsToRevise = PlayerToLessonCommunicator.wordsToRevise.value
 
                 if (isTimerFinished) {
                     _noTimeLeft.update { true }

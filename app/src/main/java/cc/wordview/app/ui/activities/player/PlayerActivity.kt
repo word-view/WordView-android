@@ -92,10 +92,6 @@ class PlayerActivity : WordViewActivity() {
                             viewModel.getLyrics(videoId, lang, videoStream)
                             viewModel.getKnownWords(lang)
                             viewModel.getLessonTime()
-
-                            // we init the lesson tts here so that there is no delay
-                            // when the lesson actually starts.
-                            LessonViewModel.initTts(context)
                         } catch (e: ExtractionException) {
                             Timber.e(e)
                             viewModel.setErrorMessage(e.message.toString())
