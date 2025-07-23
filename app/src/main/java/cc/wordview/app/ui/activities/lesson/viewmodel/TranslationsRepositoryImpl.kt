@@ -21,6 +21,7 @@ import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.entity.Translation
 import cc.wordview.app.api.request.TranslationsRequest
 import com.android.volley.RequestQueue
+import org.json.JSONArray
 import org.json.JSONObject
 
 class TranslationsRepositoryImpl : TranslationsRepository {
@@ -32,9 +33,13 @@ class TranslationsRepositoryImpl : TranslationsRepository {
     override fun getTranslations(lang: String, words: List<String>) {
         val url = APIUrl("$endpoint/api/v1/lesson/translations")
 
+        val array = JSONArray()
+
+        for (word in words) array.put(word)
+
         val json = JSONObject()
             .put("lang", lang)
-            .put("words", words)
+            .put("words", array)
 
         val request = TranslationsRequest(
             url.getURL(),
