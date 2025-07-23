@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.activities.home.composables.home
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.api.entity.Video
@@ -33,7 +32,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val homeRepository: HomeRepository,
 ) : ViewModel() {
     private val _editorsPick = MutableStateFlow(ArrayList<Video>())

@@ -36,7 +36,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val loginRepository: LoginRepository,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {

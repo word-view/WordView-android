@@ -21,7 +21,6 @@ import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.BuildConfig
@@ -36,7 +35,6 @@ import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.misc.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.ReviseTimer
-import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
@@ -57,7 +55,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val playerRepository: PlayerRepository,
     private val knownWordsRepository: KnownWordsRepository,
     @ApplicationContext private val appContext: Context
