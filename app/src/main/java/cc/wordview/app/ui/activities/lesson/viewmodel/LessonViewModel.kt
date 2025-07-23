@@ -37,6 +37,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LessonViewModel @Inject constructor(
+    private val translationsRepository: TranslationsRepository,
+    private val saveKnownWordsRepository: SaveKnownWordsRepository,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
     private val _currentWord = MutableStateFlow(ReviseWord())
@@ -58,9 +60,6 @@ class LessonViewModel @Inject constructor(
     val timer = _timer.asStateFlow()
     val timerFinished = _timerFinished.asStateFlow()
     val translations = _translations.asStateFlow()
-
-    private val translationsRepository: TranslationsRepository = TranslationsRepositoryImpl()
-    private val saveKnownWordsRepository: SaveKnownWordsRepository = SaveKnownWordsRepositoryImpl()
 
     fun load() {
         tts = PlayerToLessonCommunicator.tts

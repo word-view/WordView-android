@@ -23,8 +23,9 @@ import cc.wordview.app.api.request.TranslationsRequest
 import com.android.volley.RequestQueue
 import org.json.JSONArray
 import org.json.JSONObject
+import javax.inject.Inject
 
-class TranslationsRepositoryImpl : TranslationsRepository {
+class TranslationsRepositoryImpl @Inject constructor() : TranslationsRepository {
     override var onSucceed: (List<Translation>) -> Unit = {}
     override var onFail: (String, Int) -> Unit = { message, status -> }
 

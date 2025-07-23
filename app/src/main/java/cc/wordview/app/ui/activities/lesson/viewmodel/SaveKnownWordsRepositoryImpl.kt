@@ -23,8 +23,9 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import org.json.JSONArray
 import org.json.JSONObject
+import javax.inject.Inject
 
-class SaveKnownWordsRepositoryImpl : SaveKnownWordsRepository {
+class SaveKnownWordsRepositoryImpl @Inject constructor() : SaveKnownWordsRepository {
     override var onSucceed: (String) -> Unit = {}
     override var onFail: (String, Int) -> Unit = { message, status -> }
 
