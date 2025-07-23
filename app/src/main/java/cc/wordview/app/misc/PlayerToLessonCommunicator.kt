@@ -17,6 +17,8 @@
 
 package cc.wordview.app.misc
 
+import android.content.Context
+import android.speech.tts.TextToSpeech
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -27,10 +29,17 @@ import timber.log.Timber
  */
 object PlayerToLessonCommunicator {
     val wordsToRevise = MutableStateFlow<ArrayList<ReviseWord>>(arrayListOf())
+    var tts: TextToSpeech? = null
 
     fun appendWord(reviseWord: ReviseWord) {
         if (wordsToRevise.value.contains(reviseWord)) return
         Timber.d("Appending '${reviseWord.tokenWord.word}' to be revised")
         wordsToRevise.update { (it + reviseWord) as ArrayList<ReviseWord> }
+    }
+
+    fun initTts(context: Context) {
+        tts = TextToSpeech(context) {
+            Timber.v("initTts: ttsStatus=$it")
+        }
     }
 }

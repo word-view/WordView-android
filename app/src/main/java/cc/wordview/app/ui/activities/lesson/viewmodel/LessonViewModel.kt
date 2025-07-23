@@ -56,9 +56,7 @@ class LessonViewModel @Inject constructor(
     private val _knownWords = MutableStateFlow(ArrayList<String>())
     private val _translations = MutableStateFlow(ArrayList<Translation>())
 
-    private val tts = TextToSpeech(appContext) {
-        Timber.v("initTts: ttsStatus=$it")
-    }
+    private var tts: TextToSpeech? = null
 
     val currentWord = _currentWord.asStateFlow()
     val currentScreen = _currentScreen.asStateFlow()
@@ -72,6 +70,8 @@ class LessonViewModel @Inject constructor(
     private val saveKnownWordsRepository: SaveKnownWordsRepository = SaveKnownWordsRepositoryImpl()
 
     fun load() {
+        tts = PlayerToLessonCommunicator.tts
+
         for (word in PlayerToLessonCommunicator.wordsToRevise.value)
             appendWord(word)
     }
@@ -217,13 +217,15 @@ class LessonViewModel @Inject constructor(
     fun ttsSpeak(word: String, locale: Locale) {
         Timber.v("ttsSpeak: word=$word, locale=$locale")
 
-        tts.language = locale
-        tts.setSpeechRate(1.0f)
-        tts.speak(
-            word,
-            TextToSpeech.QUEUE_ADD,
-            null,
-            null
-        )
+        tts?.let { tts ->
+            tts.language = locale
+            tts.setSpeechRate(1.0f)
+            tts.speak(
+                word,
+                TextToSpeech.QUEUE_ADD,
+                null,
+                null
+            )
+        }
     }
 }

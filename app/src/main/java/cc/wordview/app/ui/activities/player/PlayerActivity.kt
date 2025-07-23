@@ -38,8 +38,8 @@ import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.misc.AppSettings
+import cc.wordview.app.misc.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.WordViewActivity
-import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
 import cc.wordview.app.ui.activities.player.composables.Player
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerState
@@ -52,7 +52,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.zhanghai.compose.preference.LocalPreferenceFlow
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.schabi.newpipe.extractor.exceptions.ExtractionException
 import timber.log.Timber
@@ -92,6 +91,8 @@ class PlayerActivity : WordViewActivity() {
                             viewModel.getLyrics(videoId, lang, videoStream)
                             viewModel.getKnownWords(lang)
                             viewModel.getLessonTime()
+
+                            PlayerToLessonCommunicator.initTts(context)
                         } catch (e: ExtractionException) {
                             Timber.e(e)
                             viewModel.setErrorMessage(e.message.toString())
