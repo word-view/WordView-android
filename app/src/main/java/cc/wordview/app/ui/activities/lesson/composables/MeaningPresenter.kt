@@ -64,8 +64,6 @@ fun MeaningPresenter(
     val offsetX = remember { Animatable(-screenWidthPx) }
     val alpha = remember { Animatable(0f) }
 
-    val context = LocalContext.current
-
     LaunchedEffect(currentWord) {
         lessonViewModel.playEffect(R.raw.discovery)
         offsetX.snapTo(-screenWidthPx)

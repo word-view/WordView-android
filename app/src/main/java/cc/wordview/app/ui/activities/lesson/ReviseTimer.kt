@@ -24,8 +24,6 @@ import cc.wordview.app.BuildConfig
 import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.request.AuthenticatedStringRequest
-import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
-import cc.wordview.gengolex.Language
 import com.android.volley.Request.Method
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
@@ -38,7 +36,7 @@ object ReviseTimer {
     private var timer: CountDownTimer? = null
     private lateinit var queue: RequestQueue
 
-    fun start(context: Context, language: Language, onFinish: () -> Unit, onTick: (formattedTime: String) -> Unit) {
+    fun start(context: Context, onFinish: () -> Unit, onTick: (formattedTime: String) -> Unit) {
         queue = Volley.newRequestQueue(context)
         val jwt = getStoredJwt(context)
 

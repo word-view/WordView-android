@@ -91,12 +91,11 @@ class LessonActivity : WordViewActivity() {
 
                         ReviseTimer.start(
                             context = context,
-                            language = language,
-                            onTick = {
-                                viewModel.setFormattedTime(it)
-                            },
                             onFinish = {
                                 viewModel.finishTimer(language)
+                            },
+                            onTick = {
+                                viewModel.setFormattedTime(it)
                             }
                         )
                     }
@@ -114,12 +113,11 @@ class LessonActivity : WordViewActivity() {
                                 openQuitConfirm = false
                                 ReviseTimer.start(
                                     context = context,
-                                    language = language,
-                                    onTick = {
-                                        viewModel.setFormattedTime(it)
-                                    },
                                     onFinish = {
                                         viewModel.finishTimer(language)
+                                    },
+                                    onTick = {
+                                        viewModel.setFormattedTime(it)
                                     }
                                 )
                             },
