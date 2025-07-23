@@ -31,7 +31,7 @@ import timber.log.Timber
 import kotlin.concurrent.thread
 
 object ReviseTimer {
-    var timeRemaining = 0L
+    var timeRemaining = 150000L
 
     private var timer: CountDownTimer? = null
     private lateinit var queue: RequestQueue
@@ -39,8 +39,6 @@ object ReviseTimer {
     fun start(context: Context, onFinish: () -> Unit, onTick: (formattedTime: String) -> Unit) {
         queue = Volley.newRequestQueue(context)
         val jwt = getStoredJwt(context)
-
-        if (jwt == null) timeRemaining = 150000L
 
         if (timer != null) {
             Timber.w("Timer is already running; The attempt to start will be ignored")
