@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import cc.wordview.app.R
 import cc.wordview.app.api.setStoredJwt
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -35,8 +36,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    @ApplicationContext private val appContext: Context
 ) : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -44,16 +45,14 @@ class LoginViewModel @Inject constructor(
     private var _snackBarMessage = MutableSharedFlow<String>()
     val snackBarMessage = _snackBarMessage.asSharedFlow()
 
-    fun login(email: String, password: String, onLoginCompleted: () -> Unit, context: Context) =
+    fun login(email: String, password: String, onLoginCompleted: () -> Unit) =
         viewModelScope.launch {
             _isLoading.update { true }
 
             loginRepository.apply {
-                init(context)
-
                 onSucceed = {
                     Timber.e("Login succeeded! jwt=$it")
-                    setStoredJwt(it, context)
+                    setStoredJwt(it, appContext)
                     _isLoading.update { false }
                     onLoginCompleted.invoke()
                 }
@@ -61,11 +60,11 @@ class LoginViewModel @Inject constructor(
                     Timber.e("Login failed \n\t message=$s, status=$i")
 
                     if (s.startsWith("NoSuchEntryException")) {
-                        emitMessage(context.getString(R.string.this_email_address_has_not_yet_been_registered))
+                        emitMessage(appContext.getString(R.string.this_email_address_has_not_yet_been_registered))
                     } else if (s.startsWith("IncorrectCredentialsException")) {
-                        emitMessage(context.getString(R.string.incorrect_credentials))
+                        emitMessage(appContext.getString(R.string.incorrect_credentials))
                     } else {
-                        emitMessage(context.getString(R.string.could_not_connect_to_the_server))
+                        emitMessage(appContext.getString(R.string.could_not_connect_to_the_server))
                     }
 
                     _isLoading.update { false }

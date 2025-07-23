@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.activities.home.composables
 
-import android.content.Intent
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -58,7 +57,6 @@ import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.auth.AuthActivity
-import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.Space
 
 @OptIn(ExperimentalMaterial3Api::class)

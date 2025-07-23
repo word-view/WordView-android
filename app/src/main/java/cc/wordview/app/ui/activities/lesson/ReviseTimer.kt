@@ -24,8 +24,6 @@ import cc.wordview.app.BuildConfig
 import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.request.AuthenticatedStringRequest
-import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
-import cc.wordview.gengolex.Language
 import com.android.volley.Request.Method
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
@@ -33,14 +31,12 @@ import timber.log.Timber
 import kotlin.concurrent.thread
 
 object ReviseTimer {
-    private val viewModel = LessonViewModel
-
     var timeRemaining = 0L
 
     private var timer: CountDownTimer? = null
     private lateinit var queue: RequestQueue
 
-    fun start(context: Context, language: Language) {
+    fun start(context: Context, onFinish: () -> Unit, onTick: (formattedTime: String) -> Unit) {
         queue = Volley.newRequestQueue(context)
         val jwt = getStoredJwt(context)
 
@@ -56,7 +52,7 @@ object ReviseTimer {
         timer = object : CountDownTimer(timeRemaining, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeRemaining = millisUntilFinished
-                viewModel.setFormattedTime(formatMillisecondsToMS(millisUntilFinished))
+                onTick(formatMillisecondsToMS(millisUntilFinished))
 
                 jwt?.let {
                     val url = APIUrl("${BuildConfig.API_BASE_URL}/api/v1/user/me/lesson_time?time=$millisUntilFinished")
@@ -75,7 +71,7 @@ object ReviseTimer {
 
             override fun onFinish() {
                 Timber.i("Timer finished!")
-                viewModel.finishTimer(context, language)
+                onFinish()
             }
         }
 

@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.extensions.detectTapGestures
 import cc.wordview.app.extensions.dragGestures
@@ -54,7 +55,10 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
-fun Drag(mode: LessonMode? = null) {
+fun Drag(
+    mode: LessonMode? = null,
+    lessonViewModel: LessonViewModel = hiltViewModel()
+) {
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
     var isDragging by remember { mutableStateOf(false) }
@@ -93,8 +97,8 @@ fun Drag(mode: LessonMode? = null) {
         animationSpec = tween(durationMillis = 100)
     )
 
-    val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
-    val words by LessonViewModel.wordsToRevise.collectAsStateWithLifecycle()
+    val currentWord by lessonViewModel.currentWord.collectAsStateWithLifecycle()
+    val words by lessonViewModel.wordsToRevise.collectAsStateWithLifecycle()
 
     var topWord by remember { mutableStateOf<Word?>(null) }
     var downWord by remember { mutableStateOf<Word?>(null) }
@@ -118,12 +122,12 @@ fun Drag(mode: LessonMode? = null) {
     )
 
     fun correct() {
-        LessonViewModel.setAnswer(Answer.CORRECT)
+        lessonViewModel.setAnswer(Answer.CORRECT)
         currentWord.corrects++
     }
 
     fun wrong() {
-        LessonViewModel.setAnswer(Answer.WRONG)
+        lessonViewModel.setAnswer(Answer.WRONG)
         currentWord.misses++
     }
 
@@ -153,13 +157,13 @@ fun Drag(mode: LessonMode? = null) {
             if (y < -450) {
                 if (currentWord.tokenWord.parent == topWord?.parent) correct()
                 else wrong()
-                LessonViewModel.setScreen(LessonNav.Presenter.route)
+                lessonViewModel.setScreen(LessonNav.Presenter.route)
             }
 
             if (y > 450) {
                 if (currentWord.tokenWord.parent == downWord?.parent) correct()
                 else wrong()
-                LessonViewModel.setScreen(LessonNav.Presenter.route)
+                lessonViewModel.setScreen(LessonNav.Presenter.route)
             }
 
             // Reset drop animation

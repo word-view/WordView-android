@@ -17,18 +17,23 @@
 
 package cc.wordview.app.ui.activities.lesson.viewmodel
 
+import android.content.Context
 import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.request.AuthenticatedStringRequest
 import com.android.volley.Request
-import com.android.volley.RequestQueue
+import com.android.volley.toolbox.Volley
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONArray
 import org.json.JSONObject
+import javax.inject.Inject
 
-class SaveKnownWordsRepositoryImpl : SaveKnownWordsRepository {
+class SaveKnownWordsRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context
+) : SaveKnownWordsRepository {
     override var onSucceed: (String) -> Unit = {}
     override var onFail: (String, Int) -> Unit = { message, status -> }
 
-    override lateinit var queue: RequestQueue
+    override var queue = Volley.newRequestQueue(context)
 
     override fun saveKnownWords(lang: String, words: List<String>, jwt: String) {
         val url = APIUrl("$endpoint/api/v1/lesson/words/known")

@@ -21,7 +21,6 @@ import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.BuildConfig
@@ -34,8 +33,8 @@ import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
+import cc.wordview.app.misc.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.ReviseTimer
-import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
@@ -43,6 +42,7 @@ import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import com.android.volley.toolbox.Volley
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,9 +55,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val playerRepository: PlayerRepository,
-    private val knownWordsRepository: KnownWordsRepository
+    private val knownWordsRepository: KnownWordsRepository,
+    @ApplicationContext private val appContext: Context
 ) : ViewModel() {
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
@@ -103,12 +103,10 @@ class PlayerViewModel @Inject constructor(
             setPlayerState(PlayerState.READY)
     }
 
-    fun getKnownWords(context: Context, lang: Language) = viewModelScope.launch {
-        val jwt = getStoredJwt(context)
+    fun getKnownWords(lang: Language) = viewModelScope.launch {
+        val jwt = getStoredJwt(appContext)
 
         knownWordsRepository.apply {
-            init(context)
-
             onFail = { message, status ->
                 Timber.e("Failed to request known words \n\tmessage=$message, status=$status")
             }
@@ -122,9 +120,9 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    fun getLessonTime(context: Context) {
-        val jwt = getStoredJwt(context) ?: return
-        val queue = Volley.newRequestQueue(context)
+    fun getLessonTime() {
+        val jwt = getStoredJwt(appContext) ?: return
+        val queue = Volley.newRequestQueue(appContext)
         val url = APIUrl("${BuildConfig.API_BASE_URL}/api/v1/user/me/lesson_time")
 
         val request = AuthenticatedStringRequest(
@@ -141,13 +139,10 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun getLyrics(
-        context: Context,
         id: String,
         lang: Language,
         video: VideoStreamInterface
     ) = viewModelScope.launch {
-        playerRepository.init(context)
-
         playerRepository.onFail = { message, status ->
             _errorMessage.update { message }
             _statusCode.update { status }
@@ -168,7 +163,7 @@ class PlayerViewModel @Inject constructor(
                 val wordsFound = _parser.value.findWords(cue.text)
 
                 for (word in wordsFound) {
-                    preloadImage(word.parent, context)
+                    preloadImage(word.parent)
                     words.add(word.word)
                     cue.words.add(word)
                 }
@@ -183,11 +178,11 @@ class PlayerViewModel @Inject constructor(
         playerRepository.getLyrics(id, lang.tag, video)
     }
 
-    private fun preloadImage(parent: String, context: Context) = viewModelScope.launch {
+    private fun preloadImage(parent: String) = viewModelScope.launch {
         if (parent == "") return@launch
 
         withContext(Dispatchers.IO) {
-            val request = ImageRequest.Builder(context)
+            val request = ImageRequest.Builder(appContext)
                 .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
                 .allowHardware(true)
                 .memoryCacheKey(parent)
@@ -196,7 +191,7 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    fun initAudio(videoStreamUrl: String, context: Context) = viewModelScope.launch {
+    fun initAudio(videoStreamUrl: String) = viewModelScope.launch {
         val listener = AudioPlayerListener()
 
         listener.apply {
@@ -219,12 +214,12 @@ class PlayerViewModel @Inject constructor(
 
                         reviseWord.isKnown = _knownWords.value.contains(reviseWord.tokenWord.parent)
 
-                        LessonViewModel.appendWord(reviseWord)
+                        PlayerToLessonCommunicator.appendWord(reviseWord)
                     }
                 }
 
-                val isTimerFinished = LessonViewModel.timerFinished.value
-                val wordsToRevise = LessonViewModel.wordsToRevise.value
+                val isTimerFinished = ReviseTimer.timeRemaining == 0L
+                val wordsToRevise = PlayerToLessonCommunicator.wordsToRevise.value
 
                 if (isTimerFinished) {
                     _noTimeLeft.update { true }
@@ -245,7 +240,7 @@ class PlayerViewModel @Inject constructor(
             onInitializeFail = { setPlayerState(PlayerState.ERROR) }
             onPrepared = { computeAndCheckReady() }
 
-            initialize(videoStreamUrl, context, listener)
+            initialize(videoStreamUrl, appContext, listener)
         }
     }
 

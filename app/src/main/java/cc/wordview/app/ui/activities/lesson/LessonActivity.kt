@@ -22,6 +22,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -60,10 +61,12 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 
 @AndroidEntryPoint
 class LessonActivity : WordViewActivity() {
-    private val viewModel = LessonViewModel
+    private val viewModel: LessonViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.load()
 
         setOrientationSensorPortrait()
         enableEdgeToEdge()
@@ -83,14 +86,23 @@ class LessonActivity : WordViewActivity() {
                     var openQuitConfirm by remember { mutableStateOf(false) }
 
                     OneTimeEffect {
-                        LessonViewModel.getTranslations(context)
+                        viewModel.getTranslations()
                         viewModel.nextWord()
-                        ReviseTimer.start(context, language)
+
+                        ReviseTimer.start(
+                            context = context,
+                            onFinish = {
+                                viewModel.finishTimer(language)
+                            },
+                            onTick = {
+                                viewModel.setFormattedTime(it)
+                            }
+                        )
                     }
 
                     fun leave() {
                         ReviseTimer.pause()
-                        LessonViewModel.cleanWords()
+                        viewModel.cleanWords()
                         activity.finish()
                     }
 
@@ -99,7 +111,15 @@ class LessonActivity : WordViewActivity() {
                         LessonQuitDialog(
                             onDismiss = {
                                 openQuitConfirm = false
-                                ReviseTimer.start(context, language)
+                                ReviseTimer.start(
+                                    context = context,
+                                    onFinish = {
+                                        viewModel.finishTimer(language)
+                                    },
+                                    onTick = {
+                                        viewModel.setFormattedTime(it)
+                                    }
+                                )
                             },
                             onConfirm = { leave() }
                         )

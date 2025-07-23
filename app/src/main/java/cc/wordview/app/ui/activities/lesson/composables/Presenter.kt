@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.misc.AppSettings
@@ -58,9 +59,11 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun Presenter() {
-    val answerStatus by LessonViewModel.answerStatus.collectAsStateWithLifecycle()
-    val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
+fun Presenter(
+    lessonViewModel: LessonViewModel = hiltViewModel()
+) {
+    val answerStatus by lessonViewModel.answerStatus.collectAsStateWithLifecycle()
+    val currentWord by lessonViewModel.currentWord.collectAsStateWithLifecycle()
 
     var visible by remember { mutableStateOf(false) }
 
@@ -84,11 +87,7 @@ fun Presenter() {
     LaunchedEffect(key1 = scaleIn.value) {
         if (scaleIn.value == 1f) {
             scope.launch {
-                if (answerStatus == Answer.CORRECT) {
-                    LessonViewModel.playEffect(context, R.raw.correct)
-                } else if (answerStatus == Answer.WRONG) {
-                    LessonViewModel.playEffect(context, R.raw.wrong)
-                }
+                lessonViewModel.playEffect(answerStatus)
 
                 delay(1500.milliseconds)
                 visible = false
@@ -97,18 +96,18 @@ fun Presenter() {
                 if (answerStatus != Answer.NONE) {
                     val answerToNextWord = answerStatus
 
-                    LessonViewModel.setAnswer(Answer.NONE)
+                    lessonViewModel.setAnswer(Answer.NONE)
                     visible = true
 
                     val tokenWord = currentWord.tokenWord
 
-                    LessonViewModel.ttsSpeak(tokenWord.pronunciation ?: tokenWord.word, Language.byTag(langTag).locale)
+                    lessonViewModel.ttsSpeak(tokenWord.pronunciation ?: tokenWord.word, Language.byTag(langTag).locale)
 
                     delay(3000.milliseconds)
                     visible = false
                     delay(500.milliseconds)
 
-                    LessonViewModel.nextWord(answerToNextWord)
+                    lessonViewModel.nextWord(answerToNextWord)
                 }
             }
         }

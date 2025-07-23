@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.misc.AppSettings
@@ -46,13 +47,14 @@ import cc.wordview.gengolex.Language
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 @Composable
-fun MeaningPresenter() {
-    val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
-    val translations by LessonViewModel.translations.collectAsStateWithLifecycle()
+fun MeaningPresenter(
+    lessonViewModel: LessonViewModel = hiltViewModel()
+) {
+    val currentWord by lessonViewModel.currentWord.collectAsStateWithLifecycle()
+    val translations by lessonViewModel.translations.collectAsStateWithLifecycle()
 
     val langTag = AppSettings.language.get()
     val lang = remember { Language.byTag(langTag) }
@@ -62,10 +64,8 @@ fun MeaningPresenter() {
     val offsetX = remember { Animatable(-screenWidthPx) }
     val alpha = remember { Animatable(0f) }
 
-    val context = LocalContext.current
-
     LaunchedEffect(currentWord) {
-        LessonViewModel.playEffect(context, R.raw.discovery)
+        lessonViewModel.playEffect(R.raw.discovery)
         offsetX.snapTo(-screenWidthPx)
         alpha.snapTo(0f)
 
@@ -85,7 +85,7 @@ fun MeaningPresenter() {
         fadeIn.join()
 
         val tokenWord = currentWord.tokenWord
-        LessonViewModel.ttsSpeak(tokenWord.pronunciation ?: tokenWord.word, lang.locale)
+        lessonViewModel.ttsSpeak(tokenWord.pronunciation ?: tokenWord.word, lang.locale)
         delay(2000)
 
         val slideOut = launch {
@@ -104,7 +104,7 @@ fun MeaningPresenter() {
         slideOut.join()
         fadeOut.join()
 
-        LessonViewModel.postPresent()
+        lessonViewModel.postPresent()
     }
 
     fun getTranslated(): String {

@@ -17,20 +17,25 @@
 
 package cc.wordview.app.ui.activities.player.viewmodel
 
+import android.content.Context
 import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.request.LyricsRequest
 import cc.wordview.app.extensions.asURLEncoded
 import cc.wordview.app.extractor.VideoStreamInterface
 import com.android.volley.RequestQueue
+import com.android.volley.toolbox.Volley
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
+class PlayerRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context
+) : PlayerRepository {
     override var onSucceed: (String, String) -> Unit =
         { _: String, _: String -> }
 
     override var onFail: (String, Int) -> Unit = { message, status -> }
 
-    override lateinit var queue: RequestQueue
+    override var queue = Volley.newRequestQueue(context)
 
     override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
         val url = APIUrl("$endpoint/api/v1/lyrics")

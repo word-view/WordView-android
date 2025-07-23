@@ -34,6 +34,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.extensions.random
 import cc.wordview.app.misc.AppSettings
@@ -52,9 +53,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun Listen(mode: LessonMode? = null) {
-    val currentWord by LessonViewModel.currentWord.collectAsStateWithLifecycle()
-    val words by LessonViewModel.wordsToRevise.collectAsStateWithLifecycle()
+fun Listen(
+    mode: LessonMode? = null,
+    lessonViewModel: LessonViewModel = hiltViewModel()
+) {
+    val currentWord by lessonViewModel.currentWord.collectAsStateWithLifecycle()
+    val words by lessonViewModel.wordsToRevise.collectAsStateWithLifecycle()
 
     val alternatives = remember { arrayListOf<Word>() }
 
@@ -88,12 +92,12 @@ fun Listen(mode: LessonMode? = null) {
     }
 
     fun correct() {
-        LessonViewModel.setAnswer(Answer.CORRECT)
+        lessonViewModel.setAnswer(Answer.CORRECT)
         currentWord.corrects++
     }
 
     fun wrong() {
-        LessonViewModel.setAnswer(Answer.WRONG)
+        lessonViewModel.setAnswer(Answer.WRONG)
         currentWord.misses++
     }
 
@@ -105,7 +109,7 @@ fun Listen(mode: LessonMode? = null) {
             wrong()
             isCorrect = false
         }
-        LessonViewModel.setScreen(LessonNav.Presenter.route)
+        lessonViewModel.setScreen(LessonNav.Presenter.route)
     }
 
     // Animate main text reveal
@@ -198,7 +202,7 @@ fun Listen(mode: LessonMode? = null) {
                     canListen = false
 
                     val toPronounce = currentWord.tokenWord.pronunciation ?: currentWord.tokenWord.word
-                    LessonViewModel.ttsSpeak(toPronounce, lang.locale)
+                    lessonViewModel.ttsSpeak(toPronounce, lang.locale)
 
                     coroutineScope.launch {
                         delay(900)
