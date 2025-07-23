@@ -21,6 +21,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
 import androidx.lifecycle.ViewModel
+import cc.wordview.app.R
 import cc.wordview.app.api.entity.Translation
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.misc.PlayerToLessonCommunicator
@@ -197,6 +198,14 @@ class LessonViewModel @Inject constructor(
         _mediaPlayer.value = MediaPlayer.create(appContext, resId)
         _mediaPlayer.value?.seekTo(0)
         _mediaPlayer.value?.start()
+    }
+
+    fun playEffect(answerStatus: Answer) {
+        if (answerStatus == Answer.CORRECT) {
+            playEffect(R.raw.correct)
+        } else if (answerStatus == Answer.WRONG) {
+            playEffect(R.raw.wrong)
+        }
     }
 
     fun ttsSpeak(word: String, locale: Locale) {

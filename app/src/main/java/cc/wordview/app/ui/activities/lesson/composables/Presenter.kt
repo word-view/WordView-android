@@ -87,11 +87,7 @@ fun Presenter(
     LaunchedEffect(key1 = scaleIn.value) {
         if (scaleIn.value == 1f) {
             scope.launch {
-                if (answerStatus == Answer.CORRECT) {
-                    lessonViewModel.playEffect(R.raw.correct)
-                } else if (answerStatus == Answer.WRONG) {
-                    lessonViewModel.playEffect(R.raw.wrong)
-                }
+                lessonViewModel.playEffect(answerStatus)
 
                 delay(1500.milliseconds)
                 visible = false
