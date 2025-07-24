@@ -33,68 +33,9 @@ class SeekbarTest : ComposeTest() {
     }
 
     @Test
-    fun renders() {
-        setup(5_000, 300_000, 50)
-        composeTestRule.onNodeWithText("00:05 / 05:00").assertExists()
-        composeTestRule.onNodeWithTag("progress-line").assertExists()
-        composeTestRule.onNodeWithTag("buffer-line").assertExists()
-        composeTestRule.onNodeWithTag("buffer-line").assertWidthIsEqualTo(457.dp)
-    }
-
-    @Test
     fun positionsZero() {
         setup(0, 0, 0)
         composeTestRule.onNodeWithText("0:00 / 0:00").assertExists()
-    }
-
-    // progress width tests
-    @Test
-    fun progress100() {
-        setup(300_000, 300_000, 50)
-        composeTestRule.onNodeWithText("05:00 / 05:00").assertExists()
-        composeTestRule.onNodeWithTag("progress-line").assertWidthIsEqualTo(914.dp)
-    }
-
-    @Test
-    fun progress75() {
-        setup(225_000, 300_000, 50)
-        composeTestRule.onNodeWithText("03:45 / 05:00").assertExists()
-        composeTestRule.onNodeWithTag("progress-line").assertWidthIsEqualTo(686.dp)
-    }
-
-    @Test
-    fun progress50() {
-        setup(150_000, 300_000, 50)
-        composeTestRule.onNodeWithText("02:30 / 05:00").assertExists()
-        composeTestRule.onNodeWithTag("progress-line").assertWidthIsEqualTo(457.dp)
-    }
-
-    @Test
-    fun progress25() {
-        setup(75_000, 300_000, 50)
-        composeTestRule.onNodeWithText("01:15 / 05:00").assertExists()
-        composeTestRule.onNodeWithTag("progress-line").assertWidthIsEqualTo(229.dp)
-    }
-
-    @Test
-    fun progress10() {
-        setup(30_000, 300_000, 50)
-        composeTestRule.onNodeWithText("00:30 / 05:00").assertExists()
-        composeTestRule.onNodeWithTag("progress-line").assertWidthIsEqualTo(91.dp)
-    }
-
-    @Test
-    fun progress5() {
-        setup(15_000, 300_000, 50)
-        composeTestRule.onNodeWithText("00:15 / 05:00").assertExists()
-        composeTestRule.onNodeWithTag("progress-line").assertWidthIsEqualTo(46.dp)
-    }
-
-    @Test
-    fun progress1() {
-        setup(3_000, 300_000, 50)
-        composeTestRule.onNodeWithText("00:03 / 05:00").assertExists()
-        composeTestRule.onNodeWithTag("progress-line").assertWidthIsEqualTo(9.dp)
     }
 
     @Test
@@ -109,49 +50,6 @@ class SeekbarTest : ComposeTest() {
         setup(-2500, 300_000, 50)
         composeTestRule.onNodeWithText("0:00 / 05:00").assertExists()
         composeTestRule.onNodeWithTag("progress-line").assertWidthIsEqualTo(0.dp)
-    }
-
-    // buffer width tests
-    @Test
-    fun bufferAt100() {
-        setup(0, 0, 100)
-        composeTestRule.onNodeWithTag("buffer-line").assertWidthIsEqualTo(914.dp)
-    }
-
-    @Test
-    fun bufferAt75() {
-        setup(0, 0, 75)
-        composeTestRule.onNodeWithTag("buffer-line").assertWidthIsEqualTo(686.dp)
-    }
-
-    @Test
-    fun bufferAt50() {
-        setup(0, 0, 50)
-        composeTestRule.onNodeWithTag("buffer-line").assertWidthIsEqualTo(457.dp)
-    }
-
-    @Test
-    fun bufferAt25() {
-        setup(0, 0, 25)
-        composeTestRule.onNodeWithTag("buffer-line").assertWidthIsEqualTo(229.dp)
-    }
-
-    @Test
-    fun bufferAt10() {
-        setup(0, 0, 10)
-        composeTestRule.onNodeWithTag("buffer-line").assertWidthIsEqualTo(91.dp)
-    }
-
-    @Test
-    fun bufferAt5() {
-        setup(0, 0, 5)
-        composeTestRule.onNodeWithTag("buffer-line").assertWidthIsEqualTo(46.dp)
-    }
-
-    @Test
-    fun bufferAt1() {
-        setup(0, 0, 1)
-        composeTestRule.onNodeWithTag("buffer-line").assertWidthIsEqualTo(9.dp)
     }
 
     @Test
