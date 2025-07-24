@@ -102,6 +102,7 @@ fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltVi
                         )
                     }
                     ProfilePicture(
+                        modifier = Modifier.testTag("profile-picture"),
                         onClick = { navHostController.navigate(HomeNav.Profile.route) }
                     )
                 }

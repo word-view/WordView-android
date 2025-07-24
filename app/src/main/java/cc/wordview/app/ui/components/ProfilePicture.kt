@@ -46,7 +46,7 @@ import cc.wordview.app.ui.activities.player.PlayerActivity
 
 @Preview
 @Composable
-fun ProfilePicture(onClick: () -> Unit = {}) {
+fun ProfilePicture(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
     val jwt = getStoredJwt()
 
     val context = LocalContext.current
@@ -65,7 +65,7 @@ fun ProfilePicture(onClick: () -> Unit = {}) {
 
     Space(10.0.dp)
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(32.dp)
             .clip(CircleShape)
             .background(if (logged) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.onPrimaryContainer)
