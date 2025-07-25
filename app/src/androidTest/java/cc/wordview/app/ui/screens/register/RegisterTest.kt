@@ -132,6 +132,6 @@ class RegisterTest {
             .assertIsEnabled()
             .performClick()
 
-        composeTestRule.onNodeWithText("Register failed!").assertExists()
+        composeTestRule.onNodeWithText("This email is already in use").assertExists()
     }
 }

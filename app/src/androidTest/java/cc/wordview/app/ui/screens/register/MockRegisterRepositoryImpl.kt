@@ -31,7 +31,7 @@ class MockRegisterRepositoryImpl @Inject constructor() : RegisterRepository {
     override fun register(username: String, email: String, password: String) {
         when (email) {
             "success@test.com" -> onSucceed("eyJ...")
-            "existing.email@test.com" -> onFail("ValueTakenException", 400)
+            "existing.email@test.com" -> onFail("This email is already in use ", 400)
         }
     }
 }

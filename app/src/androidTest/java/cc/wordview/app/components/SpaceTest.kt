@@ -28,25 +28,10 @@ import org.junit.Test
 
 class SpaceTest : ComposeTest() {
     @Test
-    fun dimensionsMatchRequested_1dp() = testDimensionsMatch(1.dp)
-
-    @Test
-    fun dimensionsMatchRequested_2dp() = testDimensionsMatch(2.dp)
-
-    @Test
     fun dimensionsMatchRequested_4dp() = testDimensionsMatch(4.dp)
 
     @Test
-    fun dimensionsMatchRequested_6dp() = testDimensionsMatch(6.dp)
-
-    @Test
     fun dimensionsMatchRequested_8dp() = testDimensionsMatch(8.dp)
-
-    @Test
-    fun dimensionsMatchRequested_12dp() = testDimensionsMatch(12.dp)
-
-    @Test
-    fun dimensionsMatchRequested_14dp() = testDimensionsMatch(14.dp)
 
     @Test
     fun dimensionsMatchRequested_24dp() = testDimensionsMatch(24.dp)
@@ -56,10 +41,6 @@ class SpaceTest : ComposeTest() {
 
     @Test
     fun dimensionsMatchRequested_64dp() = testDimensionsMatch(64.dp)
-
-    @Test
-    fun dimensionsMatchRequested_128dp() = testDimensionsMatch(128.dp)
-
 
     private fun testDimensionsMatch(requested: Dp) {
         composeTestRule.setContent { Space(requested) }

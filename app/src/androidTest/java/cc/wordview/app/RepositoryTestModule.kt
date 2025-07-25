@@ -25,6 +25,10 @@ import cc.wordview.app.ui.screens.player.MockPlayerRepositoryImpl
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.screens.search.MockSearchRepositoryImpl
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
+import cc.wordview.app.ui.activities.lesson.viewmodel.SaveKnownWordsRepository
+import cc.wordview.app.ui.activities.lesson.viewmodel.SaveKnownWordsRepositoryImpl
+import cc.wordview.app.ui.activities.lesson.viewmodel.TranslationsRepository
+import cc.wordview.app.ui.activities.lesson.viewmodel.TranslationsRepositoryImpl
 import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
 import cc.wordview.app.ui.screens.home.MockHomeRepositoryImpl
 import cc.wordview.app.ui.screens.login.MockLoginRepositoryImpl
@@ -64,4 +68,12 @@ abstract class RepositoryTestModule {
     @Singleton
     @Binds
     abstract fun bindsMockHomeRepository(mockHomeRepositoryImpl: MockHomeRepositoryImpl): HomeRepository
+
+    @Singleton
+    @Binds
+    internal abstract fun bindMockSaveKnownWordsRepository(mockSaveKnownWordsRepositoryImpl: SaveKnownWordsRepositoryImpl): SaveKnownWordsRepository
+
+    @Singleton
+    @Binds
+    internal abstract fun bindMockTranslationsRepository(mockTranslationsRepositoryImpl: TranslationsRepositoryImpl): TranslationsRepository
 }

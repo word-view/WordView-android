@@ -17,13 +17,10 @@
 
 package cc.wordview.app.components
 
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.WordViewLogo
-import cc.wordview.app.ui.theme.WordViewTheme
 import org.junit.Before
 import org.junit.Test
 
