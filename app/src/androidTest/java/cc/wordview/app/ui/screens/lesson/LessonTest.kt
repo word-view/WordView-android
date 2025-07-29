@@ -17,7 +17,7 @@
 
 package cc.wordview.app.ui.screens.lesson
 
-import androidx.compose.ui.semantics.SemanticsNode
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -31,7 +31,6 @@ import cc.wordview.app.ui.activities.lesson.LessonNav.ListenIcon
 import cc.wordview.app.ui.activities.lesson.LessonNav.ListenWord
 import cc.wordview.app.ui.activities.lesson.LessonNav.Presenter
 import cc.wordview.app.ui.activities.lesson.LessonNav.WordDrag
-import cc.wordview.app.ui.activities.lesson.composables.MeaningPresenter
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.app.ui.activities.lesson.viewmodel.SaveKnownWordsRepository
 import cc.wordview.app.ui.activities.lesson.viewmodel.TranslationsRepository
@@ -119,9 +118,33 @@ class LessonTest {
                 composeTestRule.onNodeWithTag("choose")
                     .assertExists()
                     .assertIsDisplayed()
+
+                composeTestRule.onNodeWithTag("icon-item")
+                    .assertExists()
+                    .assertIsDisplayed()
+
+                composeTestRule.onNodeWithTag("reveal-text")
+                    .assertExists()
+                    .assertIsDisplayed()
+
+                composeTestRule.onAllNodesWithTag("alternative")
+                    .assertCountEquals(4)
+
             }
             "drag" -> {
                 composeTestRule.onNodeWithTag("drag")
+                    .assertExists()
+                    .assertIsDisplayed()
+
+                composeTestRule.onNodeWithTag("top-word")
+                    .assertExists()
+                    .assertIsDisplayed()
+
+                composeTestRule.onNodeWithTag("current")
+                    .assertExists()
+                    .assertIsDisplayed()
+
+                composeTestRule.onNodeWithTag("down-word")
                     .assertExists()
                     .assertIsDisplayed()
             }
@@ -129,6 +152,13 @@ class LessonTest {
                 composeTestRule.onNodeWithTag("listen")
                     .assertExists()
                     .assertIsDisplayed()
+
+                composeTestRule.onNodeWithTag("listen-button")
+                    .assertExists()
+                    .assertIsDisplayed()
+
+                composeTestRule.onAllNodesWithTag("alternative")
+                    .assertCountEquals(4)
             }
         }
     }

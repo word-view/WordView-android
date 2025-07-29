@@ -136,7 +136,8 @@ fun Choose(lessonViewModel: LessonViewModel = hiltViewModel()) {
             modifier = Modifier
                 .scale(if (isCorrect != null) resultScale else mainTextScale)
                 .alpha(if (isCorrect != null) 1f else mainTextAlpha)
-                .padding(bottom = 16.dp),
+                .padding(bottom = 16.dp)
+                .testTag("reveal-text"),
         )
 
         Row(Modifier.padding(top = 48.dp)) {
@@ -146,7 +147,8 @@ fun Choose(lessonViewModel: LessonViewModel = hiltViewModel()) {
                     enabled = buttonsEnabled,
                     modifier = Modifier
                         .scale(wordCardScale(word))
-                        .alpha(wordCardAlpha(word)),
+                        .alpha(wordCardAlpha(word))
+                        .testTag("alternative"),
                     onClick = {
                         buttonsEnabled = false
                         selectedWord = word
