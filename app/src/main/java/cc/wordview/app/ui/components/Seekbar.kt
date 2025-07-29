@@ -83,7 +83,7 @@ fun Seekbar(
             Modifier
                 .padding(horizontal = 36.dp)
                 .padding(top = 8.dp)
-                .background(MaterialTheme.colorScheme.background, RoundedCornerShape(12.dp)),
+                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.5f), RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -98,7 +98,7 @@ fun Seekbar(
                 Modifier
                     .padding(horizontal = 36.dp)
                     .padding(top = 8.dp)
-                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(12.dp)),
+                    .background(MaterialTheme.colorScheme.background.copy(alpha = 0.5f), RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -112,7 +112,7 @@ fun Seekbar(
                 Modifier
                     .padding(horizontal = 36.dp)
                     .padding(top = 8.dp)
-                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(12.dp)),
+                    .background(MaterialTheme.colorScheme.background.copy(alpha = 0.5f), RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
