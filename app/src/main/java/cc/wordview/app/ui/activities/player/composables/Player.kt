@@ -20,11 +20,14 @@ package cc.wordview.app.ui.activities.player.composables
 import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,6 +38,7 @@ import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -44,8 +48,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -144,7 +150,18 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
             duration = 250,
             stagnationTime = 5000
         ) {
-            PlayerTopBar {
+            Box(
+                modifier = Modifier.fillMaxHeight(0.25f).fillMaxWidth()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
+                                androidx.compose.ui.graphics.Color.Transparent
+                            )
+                        )
+                    )
+            )
+            PlayerTopBar(Modifier.padding(horizontal = 58.dp)) {
                 IconButton(
                     onClick = { back() },
                     modifier = Modifier.testTag("back-button"),
@@ -166,7 +183,9 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
                 }
             }
             Seekbar(
-                Modifier.padding(top = TopAppBarDefaults.TopAppBarExpandedHeight),
+                Modifier
+                    .padding(top = TopAppBarDefaults.TopAppBarExpandedHeight)
+                    .padding(horizontal = 58.dp),
                 composerMode,
                 currentPosition,
                 player.getDuration(),
