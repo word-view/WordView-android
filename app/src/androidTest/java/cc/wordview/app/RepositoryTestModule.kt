@@ -26,11 +26,11 @@ import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.screens.search.MockSearchRepositoryImpl
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
 import cc.wordview.app.ui.activities.lesson.viewmodel.SaveKnownWordsRepository
-import cc.wordview.app.ui.activities.lesson.viewmodel.SaveKnownWordsRepositoryImpl
 import cc.wordview.app.ui.activities.lesson.viewmodel.TranslationsRepository
-import cc.wordview.app.ui.activities.lesson.viewmodel.TranslationsRepositoryImpl
 import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
 import cc.wordview.app.ui.screens.home.MockHomeRepositoryImpl
+import cc.wordview.app.ui.screens.lesson.MockSaveKnownWordsRepositoryImpl
+import cc.wordview.app.ui.screens.lesson.MockTranslationsRepositoryImpl
 import cc.wordview.app.ui.screens.login.MockLoginRepositoryImpl
 import cc.wordview.app.ui.screens.player.MockKnownWordsRepositoryImpl
 import cc.wordview.app.ui.screens.register.MockRegisterRepositoryImpl
@@ -71,9 +71,9 @@ abstract class RepositoryTestModule {
 
     @Singleton
     @Binds
-    internal abstract fun bindMockSaveKnownWordsRepository(mockSaveKnownWordsRepositoryImpl: SaveKnownWordsRepositoryImpl): SaveKnownWordsRepository
+    internal abstract fun bindMockSaveKnownWordsRepository(mockSaveKnownWordsRepositoryImpl: MockSaveKnownWordsRepositoryImpl): SaveKnownWordsRepository
 
     @Singleton
     @Binds
-    internal abstract fun bindMockTranslationsRepository(mockTranslationsRepositoryImpl: TranslationsRepositoryImpl): TranslationsRepository
+    internal abstract fun bindMockTranslationsRepository(mockTranslationsRepositoryImpl: MockTranslationsRepositoryImpl): TranslationsRepository
 }

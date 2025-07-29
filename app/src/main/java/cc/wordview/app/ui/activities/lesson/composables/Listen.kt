@@ -145,7 +145,7 @@ fun Listen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .testTag("root"),
+            .testTag("listen"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

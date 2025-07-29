@@ -123,7 +123,7 @@ fun Choose(lessonViewModel: LessonViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .testTag("root"),
+            .testTag("choose"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
