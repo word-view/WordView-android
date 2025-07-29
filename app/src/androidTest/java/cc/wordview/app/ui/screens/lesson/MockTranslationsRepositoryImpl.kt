@@ -15,23 +15,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.screens.register
+package cc.wordview.app.ui.screens.lesson
 
-import cc.wordview.app.ui.activities.auth.viewmodel.register.RegisterRepository
+import cc.wordview.app.api.entity.Translation
+import cc.wordview.app.ui.activities.lesson.viewmodel.TranslationsRepository
 import com.android.volley.RequestQueue
 import javax.inject.Inject
 
-class MockRegisterRepositoryImpl @Inject constructor() : RegisterRepository {
-    override var onSucceed: (String) -> Unit = {}
+class MockTranslationsRepositoryImpl @Inject constructor() : TranslationsRepository {
+    override var onSucceed: (List<Translation>) -> Unit = {}
     override var onFail: (String, Int) -> Unit = { _: String, _: Int -> }
-
-    override var endpoint: String = ""
+    override fun getTranslations(lang: String, words: List<String>) {}
     override lateinit var queue: RequestQueue
-
-    override fun register(username: String, email: String, password: String) {
-        when (email) {
-            "success@test.com" -> onSucceed("eyJ...")
-            "existing.email@test.com" -> onFail("This email is already in use ", 400)
-        }
-    }
 }

@@ -176,7 +176,7 @@ fun Drag(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .testTag("root"),
+            .testTag("drag"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {

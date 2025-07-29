@@ -124,7 +124,7 @@ fun MeaningPresenter(
         modifier = Modifier
             .fillMaxSize()
             .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-            .testTag("root"),
+            .testTag("meaning-presenter"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -133,19 +133,19 @@ fun MeaningPresenter(
             modifier = Modifier
                 .size(130.dp)
                 .alpha(alpha.value)
-                .testTag("word"),
+                .testTag("word-image"),
             model = image,
             contentDescription = null
         )
         Space(12.dp)
         Text(
-            modifier = Modifier.alpha(alpha.value),
+            modifier = Modifier.alpha(alpha.value).testTag("word"),
             text = currentWord.tokenWord.word,
             textAlign = TextAlign.Center,
             style = if (lang == Language.JAPANESE) Typography.displayLarge else Typography.displayMedium,
         )
         Text(
-            modifier = Modifier.alpha(alpha.value),
+            modifier = Modifier.alpha(alpha.value).testTag("translated-word"),
             text = getTranslated(),
             textAlign = TextAlign.Center,
             style = Typography.bodyLarge,

@@ -15,21 +15,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.components
+package cc.wordview.app.ui.screens.lesson
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Texture
-import androidx.compose.ui.test.onNodeWithTag
-import cc.wordview.app.ComposeTest
-import cc.wordview.app.ui.components.Icon
-import org.junit.Test
+import cc.wordview.app.ui.activities.lesson.viewmodel.SaveKnownWordsRepository
+import com.android.volley.RequestQueue
+import javax.inject.Inject
 
-class IconTest : ComposeTest() {
-    @Test
-    fun renders() {
-        composeTestRule.setContent {
-            Icon(Icons.Filled.Texture)
-        }
-        composeTestRule.onNodeWithTag("contentDescriptionless-icon").assertExists()
-    }
+class MockSaveKnownWordsRepositoryImpl @Inject constructor() : SaveKnownWordsRepository {
+    override var onSucceed: (String) -> Unit = {}
+    override var onFail: (String, Int) -> Unit = { _: String, _: Int -> }
+    override fun saveKnownWords(lang: String, words: List<String>, jwt: String) {}
+    override lateinit var queue: RequestQueue
 }

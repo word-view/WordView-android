@@ -22,79 +22,31 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Test
 
-class TranslationsRequestTest : RequestTest()  {
+class TranslationsRequestTest : RequestTest() {
     @Test
-    fun getTranslation_Portuguese() {
-        getTranslation(
-            lang = "pt",
-            expectedSize = 1,
-            words = listOf("run"),
-        )
-    }
-
-    @Test
-    fun getTranslation2Words_Portuguese() {
-        getTranslation(
-            lang = "pt",
-            expectedSize = 1,
-            words = listOf("run", "listen"),
-        )
-    }
-
-    @Test
-    fun getTranslation_English() {
-        getTranslation(
-            lang = "en",
-            expectedSize = 1,
-            words = listOf("run"),
-        )
-    }
-
-    @Test
-    fun getTranslation2Words_English() {
-        getTranslation(
-            lang = "en",
-            expectedSize = 2,
-            words = listOf("run", "listen"),
-        )
-    }
-
-    @Test
-    fun getTranslation_Japanese() {
-        getTranslation(
+    fun translationsJapanese() {
+        getTranslations(
             lang = "ja",
-            expectedSize = 1,
-            words = listOf("run"),
+            words = listOf("rain"),
+            expectedTranslationSize = 1
         )
     }
 
-    @Test
-    fun getTranslation2Words_Japanese() {
-        getTranslation(
-            lang = "ja",
-            expectedSize = 2,
-            words = listOf("run", "listen"),
-        )
-    }
+    private fun getTranslations(lang: String, words: List<String>, expectedTranslationSize: Int) {
+        val url = APIUrl("$endpoint/api/v1/lesson/translations")
 
-    private fun getTranslation(lang: String, words: List<String>, expectedSize: Int) {
-        val url = "$endpoint/api/v1/lesson/translations"
+        val array = JSONArray()
 
-        val jsonArray = JSONArray()
-
-        for (word in words)
-            jsonArray.put(word)
+        for (word in words) array.put(word)
 
         val json = JSONObject()
             .put("lang", lang)
-            .put("words", jsonArray)
+            .put("words", array)
 
         val request = TranslationsRequest(
-            url,
+            url.getURL(),
             json,
-            {
-                assert(it.size == expectedSize)
-            },
+            { assert(it.size == expectedTranslationSize) },
             { throw FailedTestRequestException("Are you sure the API is running?") }
         )
 

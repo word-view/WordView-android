@@ -145,7 +145,7 @@ fun Listen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .testTag("root"),
+            .testTag("listen"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -224,7 +224,8 @@ fun Listen(
             modifier = Modifier
                 .scale(if (isCorrect != null) resultScale else mainTextScale)
                 .alpha(if (isCorrect != null) 1f else mainTextAlpha)
-                .padding(bottom = 16.dp),
+                .padding(bottom = 16.dp)
+                .testTag("reveal-text"),
         )
 
         Column(
@@ -248,7 +249,7 @@ fun Listen(
                                 IconItem(
                                     word = word,
                                     size = 48.dp,
-                                    testTag = "icon-item-alternative-${word.parent}"
+                                    testTag = "icon-item-alternative"
                                 )
                             }
                         }
@@ -256,7 +257,8 @@ fun Listen(
                     enabled = buttonsEnabled,
                     modifier = Modifier
                         .scale(wordCardScale(word))
-                        .alpha(wordCardAlpha(word)),
+                        .alpha(wordCardAlpha(word))
+                        .testTag("alternative"),
                     onClick = {
                         buttonsEnabled = false
                         selectedWord = word

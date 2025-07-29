@@ -81,7 +81,7 @@ sealed class LessonNav(val route: String) {
     }
 
     companion object {
-        val screens = listOf(
+        var screens = listOf(
             IconDrag, WordDrag,
             Choose, Choose, // Choose needs to be repeated 2 times to make the proportions equivalent to the Drag
             ListenIcon, ListenWord,

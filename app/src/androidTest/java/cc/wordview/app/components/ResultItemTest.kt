@@ -17,7 +17,14 @@
 
 package cc.wordview.app.components
 
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -34,7 +41,14 @@ import kotlin.time.Duration.Companion.seconds
 class ResultItemTest : ComposeTest() {
     private fun setup(result: VideoSearchResult, onClick: Runnable) {
         composeTestRule.setContent {
-            ResultItem(result = result, onClick = { onClick.run() })
+            var textVisible by remember { mutableStateOf(false) }
+
+            if (textVisible) Text("Text")
+
+            ResultItem(result = result, onClick = {
+                textVisible = true
+                onClick.run()
+            })
         }
     }
 
@@ -86,12 +100,14 @@ class ResultItemTest : ComposeTest() {
         assertWorksAndDisplayCorrectly(result)
     }
 
+    @OptIn(ExperimentalTestApi::class)
     private fun assertWorksAndDisplayCorrectly(result: VideoSearchResult) {
         val onClick = mock(Runnable::class.java)
         setup(result, onClick)
 
         assertResultItemDisplaysContent(result)
         composeTestRule.onNodeWithTag("result-item").performClick()
+        composeTestRule.waitUntilAtLeastOneExists(hasText("Text"), 2_000)
         verify(onClick).run()
     }
 
