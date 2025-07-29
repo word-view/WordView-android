@@ -27,7 +27,7 @@ class TranslationsRequestTest : RequestTest() {
     fun translationsJapanese() {
         getTranslations(
             lang = "ja",
-            words = listOf("listen"),
+            words = listOf("rain"),
             expectedTranslationSize = 1
         )
     }
