@@ -19,7 +19,7 @@ package cc.wordview.app.ui.activities.home.composables.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cc.wordview.app.api.entity.Video
+import cc.wordview.app.api.entity.HomeCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,27 +34,22 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository,
 ) : ViewModel() {
-    private val _editorsPick = MutableStateFlow(ArrayList<Video>())
-    private val _editorsPickLoading = MutableStateFlow(true)
+    private val _homeCategories = MutableStateFlow(ArrayList<HomeCategory>())
 
-    val editorsPick = _editorsPick.asStateFlow()
-    val editorsPickLoading = _editorsPickLoading.asStateFlow()
+    val homeCategories = _homeCategories.asStateFlow()
 
     private var _snackBarMessage = MutableSharedFlow<String>()
     val snackBarMessage = _snackBarMessage.asSharedFlow()
 
     fun getHome() {
-        updateEditorsPick(arrayListOf())
-        _editorsPickLoading.update { true }
+        updateHomeCategories(arrayListOf())
 
         homeRepository.apply {
             onSucceed = {
-                updateEditorsPick(it)
-                _editorsPickLoading.update { false }
+                updateHomeCategories(it)
             }
 
             onFail = { s, i ->
-                _editorsPickLoading.update { false }
                 Timber.e("Failed to request home videos \n\t message=$s, status=$i")
                 emitMessage(s)
             }
@@ -63,8 +58,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateEditorsPick(videos: ArrayList<Video>) {
-        _editorsPick.update { videos }
+    fun updateHomeCategories(videos: ArrayList<HomeCategory>) {
+        _homeCategories.update { videos }
     }
 
     private fun emitMessage(msg: String) {

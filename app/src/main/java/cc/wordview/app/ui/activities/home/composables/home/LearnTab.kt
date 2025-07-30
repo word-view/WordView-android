@@ -19,13 +19,11 @@ package cc.wordview.app.ui.activities.home.composables.home
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -48,7 +46,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -58,20 +55,20 @@ import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.player.PlayerActivity
-import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.SongCard
+import cc.wordview.app.ui.components.Space
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.horizontalFadingEdges
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewModel = hiltViewModel()) {
-    val editorsPick by viewModel.editorsPick.collectAsStateWithLifecycle()
-    val editorsPickLoading by viewModel.editorsPickLoading.collectAsStateWithLifecycle()
+    val categories by viewModel.homeCategories.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     var isRefreshing by remember { mutableStateOf(false) }
@@ -88,7 +85,7 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
         onRefresh = {
             coroutineScope.launch {
                 isRefreshing = true
-                viewModel.updateEditorsPick(arrayListOf())
+                viewModel.updateHomeCategories(arrayListOf())
                 viewModel.getHome()
                 isRefreshing = false
             }
@@ -109,22 +106,15 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
                 .padding(PaddingValues(top = 17.dp))
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = stringResource(R.string.editors_pick),
-                fontFamily = poppinsFamily,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center,
-                style = Typography.titleLarge,
-                modifier = Modifier.padding(start = 17.dp)
-            )
-            if (editorsPickLoading) {
-                Box(
-                    modifier = Modifier.fillMaxWidth().height(120.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator(48.dp)
-                }
-            } else {
+            for (category in categories) {
+                Text(
+                    text = getStringForId(category.id),
+                    fontFamily = poppinsFamily,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+                    style = Typography.titleLarge,
+                    modifier = Modifier.padding(start = 17.dp)
+                )
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -134,7 +124,7 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
                     item { Spacer(Modifier.size(6.dp)) }
 
                     var i = 0
-                    items(editorsPick, key = { it.id }) {
+                    items(category.entries, key = { it.id }) {
                         i += 1
                         SongCard(
                             modifier = Modifier
@@ -152,7 +142,18 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
 
                     item { Spacer(Modifier.size(128.dp)) }
                 }
+                Space(24.dp)
             }
         }
+    }
+}
+
+@Composable
+private fun getStringForId(id: String): String {
+    val context = LocalContext.current
+
+    return when (id) {
+        "editors-pick" -> context.getString(R.string.editors_pick)
+        else -> id
     }
 }

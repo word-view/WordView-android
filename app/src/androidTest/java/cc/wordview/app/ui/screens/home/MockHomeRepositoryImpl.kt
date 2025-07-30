@@ -17,13 +17,14 @@
 
 package cc.wordview.app.ui.screens.home
 
+import cc.wordview.app.api.entity.HomeCategory
 import cc.wordview.app.api.entity.Video
 import cc.wordview.app.ui.activities.home.composables.home.HomeRepository
 import com.android.volley.RequestQueue
 import javax.inject.Inject
 
 class MockHomeRepositoryImpl @Inject constructor() : HomeRepository {
-    override var onSucceed: (ArrayList<Video>) -> Unit = { }
+    override var onSucceed: (ArrayList<HomeCategory>) -> Unit = { }
     override var onFail: (String, Int) -> Unit = { _: String, _: Int -> }
 
     override var endpoint: String = ""
@@ -32,23 +33,28 @@ class MockHomeRepositoryImpl @Inject constructor() : HomeRepository {
 
     override fun getHomeVideos() {
         onSucceed(arrayListOf(
-            Video(
-                id = "ZnUEeXpxBJ0",
-                title =	"Aquarela",
-                artist = "Toquinho" ,
-                cover =	"https://i.ytimg.com/vi_webp/ZnUEeXpxBJ0/maxresdefault.webp"
-            ),
-            Video(
-                id = "ZpT9VCUS54s",
-                title =	"Suisei no parade",
-                artist = "majiko",
-                cover =	"https://i.ytimg.com/vi_webp/ZpT9VCUS54s/maxresdefault.webp"
-            ),
-            Video(
-                id = "HCTunqv1Xt4",
-                title = "When im sixty four",
-                artist = "The Beatles",
-                cover = "https://i.ytimg.com/vi_webp/HCTunqv1Xt4/maxresdefault.webp"
+            HomeCategory(
+                id = "editors-pick",
+                entries = listOf(
+                    Video(
+                        id = "ZnUEeXpxBJ0",
+                        title =	"Aquarela",
+                        artist = "Toquinho" ,
+                        cover =	"https://i.ytimg.com/vi_webp/ZnUEeXpxBJ0/maxresdefault.webp"
+                    ),
+                    Video(
+                        id = "ZpT9VCUS54s",
+                        title =	"Suisei no parade",
+                        artist = "majiko",
+                        cover =	"https://i.ytimg.com/vi_webp/ZpT9VCUS54s/maxresdefault.webp"
+                    ),
+                    Video(
+                        id = "HCTunqv1Xt4",
+                        title = "When im sixty four",
+                        artist = "The Beatles",
+                        cover = "https://i.ytimg.com/vi_webp/HCTunqv1Xt4/maxresdefault.webp"
+                    )
+                )
             ),
         ))
     }

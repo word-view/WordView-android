@@ -15,20 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.api
+package cc.wordview.app.api.entity
 
-import cc.wordview.app.api.request.HomeRequest
-import org.junit.Test
-
-class HomeRequestTest : RequestTest() {
-    @Test
-    fun getHome() {
-        val request = HomeRequest(
-            "$endpoint/api/v1/home",
-            { assert(it.size == 1) },
-            { _, _ -> throw FailedTestRequestException("Are you sure the API is running?") }
-        )
-
-        makeRequest(request)
-    }
-}
+data class HomeCategory(
+    val id: String,
+    val entries: List<Video>
+)
