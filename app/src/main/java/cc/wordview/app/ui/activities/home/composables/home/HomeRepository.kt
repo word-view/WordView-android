@@ -18,10 +18,10 @@
 package cc.wordview.app.ui.activities.home.composables.home
 
 import cc.wordview.app.api.ApiRequestRepository
-import cc.wordview.app.api.entity.Video
+import cc.wordview.app.api.entity.HomeCategory
 
 interface HomeRepository : ApiRequestRepository {
-    var onSucceed: (ArrayList<Video>) -> Unit
+    var onSucceed: (ArrayList<HomeCategory>) -> Unit
     var onFail: (String, Int) -> Unit
 
     fun getHomeVideos()

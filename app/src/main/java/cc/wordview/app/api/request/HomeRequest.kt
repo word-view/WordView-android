@@ -17,31 +17,40 @@
 
 package cc.wordview.app.api.request
 
+import cc.wordview.app.api.entity.HomeCategory
 import cc.wordview.app.api.wordViewRetryPolicy
 import cc.wordview.app.api.entity.Video
 import com.android.volley.toolbox.StringRequest
+import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import timber.log.Timber
 
 class HomeRequest(
     url: String,
-    onSuccess: (ArrayList<Video>) -> Unit,
+    onSuccess: (ArrayList<HomeCategory>) -> Unit,
     onError: (String, Int) -> Unit,
 ) : StringRequest(
     Method.GET,
     url,
     {
-        val videos = arrayListOf<Video>()
-        
-        val homeResponse = JsonParser.parseString(it).asJsonObject
-        val editorsPick = homeResponse.getAsJsonArray("editors-pick")
+        val homeCategoryList = arrayListOf<HomeCategory>()
 
-        for (jsonElement in editorsPick) {
-            videos.add(Gson().fromJson(jsonElement, Video::class.java))
+        val homeResponse = JsonParser.parseString(it).asJsonObject
+        val categories = homeResponse.getAsJsonArray("categories")
+
+        for (category in categories) {
+            val id = category.asJsonObject.get("id").asString
+            val entries = category.asJsonObject.get("entries").toString()
+
+            val typeToken = object : TypeToken<List<Video>>() {}.type
+
+            val parsedEntries = Gson().fromJson<List<Video>>(entries, typeToken)
+
+            homeCategoryList.add(HomeCategory(id, parsedEntries))
         }
 
-        onSuccess(videos)
+        onSuccess(homeCategoryList)
     },
     {
         val statusCode = it.networkResponse?.statusCode
