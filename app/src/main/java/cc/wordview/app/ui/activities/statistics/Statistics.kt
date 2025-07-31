@@ -182,7 +182,7 @@ fun Statistics(viewModel: StatisticsViewModel = hiltViewModel()) {
                 style = Typography.titleLarge,
             )
             Column(Modifier.fillMaxWidth()) {
-                for (word in words) {
+                for (word in words.distinct()) {
                     Card(
                         modifier = Modifier
                             .testTag("result-item")

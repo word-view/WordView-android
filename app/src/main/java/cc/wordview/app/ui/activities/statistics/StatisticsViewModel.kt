@@ -53,7 +53,7 @@ class StatisticsViewModel @Inject constructor(
 
     fun load() {
         tts = PlayerToLessonCommunicator.tts
-        _words.value = PlayerToLessonCommunicator.wordsToRevise.value
+        _words.value = PlayerToLessonCommunicator.wordsToRevise.value.distinctBy { it.tokenWord.word } as ArrayList<ReviseWord>
         _wordsLearnedAmount.update { LessonToStatisticsCommunicator.wordsLearnedAmount }
         _wordsPracticedAmount.value = PlayerToLessonCommunicator.wordsToRevise.value.size
     }
