@@ -222,4 +222,6 @@ class LessonViewModel @Inject constructor(
             )
         }
     }
+
+    fun getKnownWordsAmount() = _knownWords.value.size
 }

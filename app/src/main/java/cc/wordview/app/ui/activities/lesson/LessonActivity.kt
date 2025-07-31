@@ -46,14 +46,17 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.extensions.setOrientationSensorPortrait
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
+import cc.wordview.app.ui.activities.statistics.StatisticsActivity
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.Icon
 import cc.wordview.app.ui.components.LessonQuitDialog
 import cc.wordview.app.ui.components.OneTimeEffect
+import cc.wordview.app.ui.dtos.LessonToStatisticsCommunicator
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.Language
 import dagger.hilt.android.AndroidEntryPoint
@@ -106,6 +109,14 @@ class LessonActivity : WordViewActivity() {
                         activity.finish()
                     }
 
+                    fun goToStatistics() {
+                        ReviseTimer.pause()
+                        LessonToStatisticsCommunicator.wordsLearnedAmount = viewModel.getKnownWordsAmount()
+                        viewModel.cleanWords()
+                        context.openActivity<StatisticsActivity>()
+                        activity.finish()
+                    }
+
                     if (openQuitConfirm) {
                         ReviseTimer.pause()
                         LessonQuitDialog(
@@ -127,7 +138,7 @@ class LessonActivity : WordViewActivity() {
 
                     LaunchedEffect(timerFinished) {
                         if (timerFinished) {
-                            leave()
+                            goToStatistics()
                         }
                     }
 
