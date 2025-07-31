@@ -218,7 +218,7 @@ class PlayerViewModel @Inject constructor(
                     }
                 }
 
-                val isTimerFinished = ReviseTimer.timeRemaining == 0L
+                val isTimerFinished = ReviseTimer.timeRemaining < 1000L
                 val wordsToRevise = PlayerToLessonCommunicator.wordsToRevise.value
 
                 if (isTimerFinished) {
