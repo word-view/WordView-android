@@ -50,12 +50,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cc.wordview.app.R
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.components.Icon
@@ -92,7 +94,7 @@ fun Statistics(viewModel: StatisticsViewModel = hiltViewModel()) {
                 ),
                 title = {
                     Text(
-                        text = "Lesson Results",
+                        text = stringResource(R.string.lesson_results),
                         fontFamily = poppinsFamily,
                     )
                 },
@@ -115,7 +117,7 @@ fun Statistics(viewModel: StatisticsViewModel = hiltViewModel()) {
         ) {
             Space(24.dp)
             Text(
-                text = "Statistics",
+                text = stringResource(R.string.statistics),
                 fontFamily = poppinsFamily,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
@@ -137,7 +139,7 @@ fun Statistics(viewModel: StatisticsViewModel = hiltViewModel()) {
                         style = Typography.headlineSmall,
                     )
                     Text(
-                        text = "Words learned",
+                        text = stringResource(R.string.words_learned),
                         fontFamily = poppinsFamily,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
@@ -153,7 +155,7 @@ fun Statistics(viewModel: StatisticsViewModel = hiltViewModel()) {
                         style = Typography.headlineSmall,
                     )
                     Text(
-                        text = "Accuracy",
+                        text = stringResource(R.string.accuracy),
                         fontFamily = poppinsFamily,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
@@ -169,7 +171,7 @@ fun Statistics(viewModel: StatisticsViewModel = hiltViewModel()) {
                         style = Typography.headlineSmall,
                     )
                     Text(
-                        text = "Praticed words",
+                        text = stringResource(R.string.praticed_words),
                         fontFamily = poppinsFamily,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
@@ -179,7 +181,7 @@ fun Statistics(viewModel: StatisticsViewModel = hiltViewModel()) {
             }
             Space(24.dp)
             Text(
-                text = "Words",
+                text = stringResource(R.string.words),
                 fontFamily = poppinsFamily,
                 fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
@@ -197,7 +199,9 @@ fun Statistics(viewModel: StatisticsViewModel = hiltViewModel()) {
                         ),
                         shape = DefaultRoundedCornerShape,
                     ) {
-                        Row(Modifier.fillMaxSize().padding(start = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Row(Modifier
+                            .fillMaxSize()
+                            .padding(start = 20.dp), verticalAlignment = Alignment.CenterVertically) {
                             val image = ImageCacheManager.getCachedImage(word.tokenWord.parent)
                             AsyncImage(
                                 modifier = Modifier.size(48.dp),

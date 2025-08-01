@@ -38,4 +38,10 @@
     <string name="incorrect_credentials">Incorrect credentials</string>
     <string name="search">Search</string>
     <string name="could_not_connect_to_the_server">Could not connect to the server</string>
+    <string name="lesson_results">Lesson Results</string>
+    <string name="statistics">Statistics</string>
+    <string name="words_learned">Words learned</string>
+    <string name="accuracy">Accuracy</string>
+    <string name="praticed_words">Praticed words</string>
+    <string name="words">Words</string>
 </resources>

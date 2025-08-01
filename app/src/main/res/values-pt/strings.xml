@@ -37,4 +37,10 @@
     <string name="incorrect_credentials">Credenciais incorretas</string>
     <string name="search">Pesquisar</string>
     <string name="could_not_connect_to_the_server">Não foi possível conectar-se ao servidor</string>
+    <string name="lesson_results">Resultados da aula</string>
+    <string name="statistics">Estatísticas</string>
+    <string name="words_learned">Palavras aprendidas</string>
+    <string name="accuracy">Taxa de acerto</string>
+    <string name="praticed_words">Palavras praticadas</string>
+    <string name="words">Palavras</string>
 </resources>
