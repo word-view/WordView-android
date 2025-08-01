@@ -21,9 +21,11 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.extensions.without
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +39,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchRepository: SearchRepository
+    private val searchRepository: SearchRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _searching = MutableStateFlow(false)
     private val _animateSearch = MutableStateFlow(true)
@@ -75,7 +78,14 @@ class SearchViewModel @Inject constructor(
                     setSearchResults(results)
                 } catch (e: Throwable) {
                     Timber.e(e)
-                    onError(e.message ?: e.toString())
+
+                    val message = if ((e.message ?: e.toString()).contains("No address associated")) {
+                        context.getString(R.string.no_connection)
+                    } else {
+                        e.message ?: e.toString()
+                    }
+
+                    onError(message)
                 }
             }
         }
