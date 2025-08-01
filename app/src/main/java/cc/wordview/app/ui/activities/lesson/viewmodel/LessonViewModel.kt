@@ -24,7 +24,7 @@ import androidx.lifecycle.ViewModel
 import cc.wordview.app.R
 import cc.wordview.app.api.entity.Translation
 import cc.wordview.app.api.getStoredJwt
-import cc.wordview.app.misc.PlayerToLessonCommunicator
+import cc.wordview.app.ui.dtos.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.gengolex.Language
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -222,4 +222,6 @@ class LessonViewModel @Inject constructor(
             )
         }
     }
+
+    fun getKnownWordsAmount() = _knownWords.value.size
 }

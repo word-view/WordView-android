@@ -33,7 +33,7 @@ import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
-import cc.wordview.app.misc.PlayerToLessonCommunicator
+import cc.wordview.app.ui.dtos.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.ReviseTimer
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.gengolex.Language
@@ -218,7 +218,7 @@ class PlayerViewModel @Inject constructor(
                     }
                 }
 
-                val isTimerFinished = ReviseTimer.timeRemaining == 0L
+                val isTimerFinished = ReviseTimer.timeRemaining < 1000L
                 val wordsToRevise = PlayerToLessonCommunicator.wordsToRevise.value
 
                 if (isTimerFinished) {
