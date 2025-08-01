@@ -43,4 +43,5 @@
     <string name="accuracy">Taxa de acerto</string>
     <string name="praticed_words">Palavras praticadas</string>
     <string name="words">Palavras</string>
+    <string name="no_connection">Sem conexão</string>
 </resources>

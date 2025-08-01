@@ -17,10 +17,13 @@
 
 package cc.wordview.app.ui.activities.home.composables.home
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.R
 import cc.wordview.app.api.entity.HomeCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -33,6 +36,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _homeCategories = MutableStateFlow(ArrayList<HomeCategory>())
 
@@ -51,7 +55,12 @@ class HomeViewModel @Inject constructor(
 
             onFail = { s, i ->
                 Timber.e("Failed to request home videos \n\t message=$s, status=$i")
-                emitMessage(s)
+                
+                if (s.contains("UnknownHostException:")) {
+                    emitMessage(context.getString(R.string.no_connection))
+                } else {
+                    emitMessage(s)
+                }
             }
 
             getHomeVideos()
