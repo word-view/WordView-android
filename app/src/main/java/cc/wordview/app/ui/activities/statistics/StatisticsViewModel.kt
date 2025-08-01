@@ -20,6 +20,7 @@ package cc.wordview.app.ui.activities.statistics
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import androidx.lifecycle.ViewModel
+import cc.wordview.app.extensions.percentageOf
 import cc.wordview.app.ui.dtos.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.app.ui.dtos.LessonToStatisticsCommunicator
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.update
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
@@ -56,6 +58,18 @@ class StatisticsViewModel @Inject constructor(
         _words.value = PlayerToLessonCommunicator.wordsToRevise.value.distinctBy { it.tokenWord.word } as ArrayList<ReviseWord>
         _wordsLearnedAmount.update { LessonToStatisticsCommunicator.wordsLearnedAmount }
         _wordsPracticedAmount.value = PlayerToLessonCommunicator.wordsToRevise.value.size
+
+        var corrects = 0L
+        var misses = 0L
+
+        for (word in _words.value) {
+            corrects += word.corrects
+            misses += word.misses
+        }
+
+        val total = corrects + misses
+
+        _accuracyPercentage.update { total.percentageOf(corrects).roundToInt() }
     }
 
     fun ttsSpeak(word: String, locale: Locale) {
