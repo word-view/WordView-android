@@ -17,6 +17,9 @@
 
 package cc.wordview.app.ui.dtos
 
+import cc.wordview.app.api.entity.Translation
+
 object LessonToStatisticsCommunicator {
     var wordsLearnedAmount = 0
+    var translations: ArrayList<Translation> = arrayListOf()
 }

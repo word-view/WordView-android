@@ -20,6 +20,7 @@ package cc.wordview.app.ui.activities.statistics
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import androidx.lifecycle.ViewModel
+import cc.wordview.app.api.entity.Translation
 import cc.wordview.app.extensions.percentageOf
 import cc.wordview.app.ui.dtos.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
@@ -41,6 +42,7 @@ class StatisticsViewModel @Inject constructor(
     private val _wordsLearnedAmount = MutableStateFlow(0)
     private val _accuracyPercentage = MutableStateFlow(0)
     private val _wordsPracticedAmount = MutableStateFlow(0)
+    private val _translations = MutableStateFlow(ArrayList<Translation>())
 
     private val _words = MutableStateFlow(arrayListOf<ReviseWord>())
 
@@ -58,6 +60,7 @@ class StatisticsViewModel @Inject constructor(
         _words.value = PlayerToLessonCommunicator.wordsToRevise.value.distinctBy { it.tokenWord.word } as ArrayList<ReviseWord>
         _wordsLearnedAmount.update { LessonToStatisticsCommunicator.wordsLearnedAmount }
         _wordsPracticedAmount.value = PlayerToLessonCommunicator.wordsToRevise.value.size
+        _translations.update { LessonToStatisticsCommunicator.translations }
 
         var corrects = 0L
         var misses = 0L
@@ -85,5 +88,14 @@ class StatisticsViewModel @Inject constructor(
                 null
             )
         }
+    }
+
+    fun getTranslation(reviseWord: ReviseWord): String {
+        for (translation in _translations.value) {
+            if (translation.parent == reviseWord.tokenWord.parent)
+                return translation.translation
+        }
+
+        return reviseWord.tokenWord.parent
     }
 }

@@ -79,6 +79,7 @@ class LessonActivity : WordViewActivity() {
                     val currentScreen by viewModel.currentScreen.collectAsStateWithLifecycle()
                     val timer by viewModel.timer.collectAsStateWithLifecycle()
                     val timerFinished by viewModel.timerFinished.collectAsStateWithLifecycle()
+                    val translations by viewModel.translations.collectAsStateWithLifecycle()
 
                     val activity = LocalActivity.current!!
                     val context = LocalContext.current
@@ -112,6 +113,7 @@ class LessonActivity : WordViewActivity() {
                     fun goToStatistics() {
                         ReviseTimer.pause()
                         LessonToStatisticsCommunicator.wordsLearnedAmount = viewModel.getKnownWordsAmount()
+                        LessonToStatisticsCommunicator.translations = translations
                         viewModel.cleanWords()
                         context.openActivity<StatisticsActivity>()
                         activity.finish()
