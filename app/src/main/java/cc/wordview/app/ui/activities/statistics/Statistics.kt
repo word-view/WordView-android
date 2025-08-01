@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -47,6 +48,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
+import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.components.Icon
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.Space
@@ -62,6 +65,7 @@ import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.gengolex.Language
+import coil3.compose.AsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
@@ -187,17 +191,24 @@ fun Statistics(viewModel: StatisticsViewModel = hiltViewModel()) {
                         modifier = Modifier
                             .testTag("result-item")
                             .fillMaxWidth()
-                            .height(60.dp),
+                            .height(68.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         ),
                         shape = DefaultRoundedCornerShape,
                     ) {
-                        Row(Modifier.fillMaxSize()) {
+                        Row(Modifier.fillMaxSize().padding(start = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+                            val image = ImageCacheManager.getCachedImage(word.tokenWord.parent)
+                            AsyncImage(
+                                modifier = Modifier.size(48.dp),
+                                model = image,
+                                contentDescription = null
+                            )
+
                             Column(Modifier
                                 .fillMaxHeight()
                                 .fillMaxWidth(0.5f)
-                                .padding(start = 20.dp), verticalArrangement = Arrangement.Center) {
+                                .padding(start = 12.dp), verticalArrangement = Arrangement.Center) {
                                 Text(
                                     text = word.tokenWord.word,
                                     style = Typography.bodyLarge,
