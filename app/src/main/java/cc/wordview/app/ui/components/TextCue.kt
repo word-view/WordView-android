@@ -50,10 +50,11 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                 for (word in cue.words) {
                     if (word.parent == "") continue
 
-                    if (text.startsWith(word.word, currentIndex)) {
+                    if (text.lowercase().startsWith(word.word, currentIndex)) {
                         IdentifiedWord(
                             modifier = Modifier.padding(horizontal = 2.dp),
                             word = word,
+                            currentIndex = currentIndex,
                             text = text,
                         )
                         currentIndex += word.word.length
