@@ -32,7 +32,8 @@ class IdentifiedWordTest : ComposeTest() {
                 ProvidePreferenceLocals {
                     IdentifiedWord(
                         word = word,
-                        text = text
+                        text = text,
+                        currentIndex = 0
                     )
                 }
             }

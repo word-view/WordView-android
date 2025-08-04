@@ -32,9 +32,11 @@ import cc.wordview.gengolex.word.Word
 import coil3.compose.AsyncImage
 
 @Composable
-fun IdentifiedWord(word: Word, text: String, modifier: Modifier = Modifier) {
+fun IdentifiedWord(word: Word, text: String, currentIndex: Int, modifier: Modifier = Modifier) {
     var textRowWidthPx by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current
+
+    val currentWordIsUppercased = text[currentIndex].toString() == text[currentIndex].toString().uppercase()
 
     Column(
         modifier = modifier,
@@ -68,7 +70,11 @@ fun IdentifiedWord(word: Word, text: String, modifier: Modifier = Modifier) {
                             else
                                 MaterialTheme.colorScheme.surfaceVariant
                         ),
-                    text = char.toString(),
+                    text = if (i == 0 && currentWordIsUppercased)  {
+                        char.toString().uppercase()
+                    } else {
+                        char.toString()
+                    },
                     fontSize = getFontSize(text),
                     color = MaterialTheme.colorScheme.inverseSurface
                 )
