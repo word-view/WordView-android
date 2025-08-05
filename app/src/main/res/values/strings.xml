@@ -45,4 +45,7 @@
     <string name="praticed_words">Praticed words</string>
     <string name="words">Words</string>
     <string name="no_connection">No connection</string>
+    <string name="portuguese">Portuguese</string>
+    <string name="english">English</string>
+    <string name="japanese">Japanese</string>
 </resources>

@@ -1,13 +1,36 @@
 package cc.wordview.app.extensions
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import cc.wordview.app.R
 import cc.wordview.gengolex.Language
 
 fun Language.displayName(): String {
     return name.lowercase().capitalize()
+}
+
+@Composable
+fun Language.localizedDisplayName(): String {
+    return when (this.tag) {
+        "pt" -> stringResource(R.string.portuguese)
+        "en" -> stringResource(R.string.english)
+        "ja" -> stringResource(R.string.japanese)
+        //
+        else -> ""
+    }
+}
+
+fun Language.localizedDisplayName(context: Context): String {
+    return when (this.tag) {
+        "pt" -> context.getString(R.string.portuguese)
+        "en" -> context.getString(R.string.english)
+        "ja" -> context.getString(R.string.japanese)
+        //
+        else -> ""
+    }
 }
 
 @Composable

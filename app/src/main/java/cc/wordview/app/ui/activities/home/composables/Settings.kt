@@ -37,6 +37,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.navigation.NavHostController
@@ -44,6 +45,7 @@ import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.extensions.displayName
 import cc.wordview.app.extensions.goBack
+import cc.wordview.app.extensions.localizedDisplayName
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.gengolex.Language
@@ -54,6 +56,8 @@ import me.zhanghai.compose.preference.switchPreference
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(navController: NavHostController) {
+    val context = LocalContext.current
+
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
@@ -110,7 +114,7 @@ fun Settings(navController: NavHostController) {
 
                     valueToText = { value ->
                         buildAnnotatedString {
-                            append(Language.byTag(value).displayName())
+                            append(Language.byTag(value).localizedDisplayName(context))
                         }
                     },
 
@@ -124,7 +128,7 @@ fun Settings(navController: NavHostController) {
                         Text(
                             text = stringResource(
                                 R.string.the_language_that_you_want_to_learn,
-                                Language.byTag(it).displayName()
+                                Language.byTag(it).localizedDisplayName()
                             )
                         )
                     },

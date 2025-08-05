@@ -44,4 +44,7 @@
     <string name="praticed_words">Palavras praticadas</string>
     <string name="words">Palavras</string>
     <string name="no_connection">Sem conexão</string>
+    <string name="portuguese">Português</string>
+    <string name="english">Inglês</string>
+    <string name="japanese">Japonês</string>
 </resources>
