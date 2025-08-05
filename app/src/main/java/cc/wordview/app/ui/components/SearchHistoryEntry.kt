@@ -24,6 +24,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -39,8 +41,9 @@ fun SearchHistoryEntry(modifier: Modifier = Modifier, entry: String, onClick: ()
                 onClick = onClick,
                 onLongClick = onLongClick
             ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0f)),
     ) {
-        Row(Modifier.padding(12.dp)) {
+        Row(Modifier.padding(12.dp).padding(horizontal = 12.dp)) {
             Icon(Icons.Filled.History)
             Space(24.dp)
             Text(entry)
