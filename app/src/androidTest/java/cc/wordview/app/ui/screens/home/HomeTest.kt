@@ -67,6 +67,10 @@ class HomeTest {
         composeTestRule.onAllNodesWithTag("song-card")
             .assertCountEquals(3)
 
+        composeTestRule.onNodeWithTag("lang-flag")
+            .assertExists()
+            .assertIsDisplayed()
+
         composeTestRule.onNodeWithTag("settings")
             .assertExists()
             .assertIsDisplayed()
