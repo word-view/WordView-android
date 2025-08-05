@@ -189,6 +189,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                             onLongClick = { viewModel.removeSearch(context, entry) }
                         )
                     }
+                    item { Space(248.dp) }
                 }
             }
         }
