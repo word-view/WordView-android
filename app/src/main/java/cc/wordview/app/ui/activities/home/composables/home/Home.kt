@@ -104,7 +104,7 @@ fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltVi
                 },
                 actions = {
                     IconButton(
-                        modifier = Modifier.testTag("settings"),
+                        modifier = Modifier.testTag("lang-flag"),
                         onClick = {},
                         enabled = false
                     ) {
