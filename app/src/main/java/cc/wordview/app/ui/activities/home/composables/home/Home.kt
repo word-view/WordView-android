@@ -18,7 +18,9 @@
 package cc.wordview.app.ui.activities.home.composables.home
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -42,16 +44,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.api.getStoredJwt
+import cc.wordview.app.extensions.getFlag
+import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.home.HomeNav
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ProfilePicture
 import cc.wordview.app.ui.theme.redhatFamily
+import cc.wordview.gengolex.Language
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -63,6 +70,9 @@ fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltVi
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val message by viewModel.snackBarMessage.collectAsState(initial = "")
+
+    val langTag = AppSettings.language.get()
+    val lang = Language.byTag(langTag)
 
     LaunchedEffect(Unit) {
         viewModel.snackBarMessage.collect {
@@ -93,6 +103,17 @@ fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltVi
                     )
                 },
                 actions = {
+                    IconButton(
+                        modifier = Modifier.testTag("settings"),
+                        onClick = {},
+                        enabled = false
+                    ) {
+                        Image(
+                            modifier = Modifier.size(24.dp),
+                            painter = lang.getFlag(),
+                            contentDescription = null
+                        )
+                    }
                     IconButton(
                         modifier = Modifier.testTag("settings"),
                         onClick = { navHostController.navigate(HomeNav.Settings.route) }) {
