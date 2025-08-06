@@ -38,7 +38,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -83,6 +85,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.components.SearchHistoryEntry
+import cc.wordview.app.ui.components.Space
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
@@ -166,7 +169,10 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                     .fillMaxWidth(0.97F)
                     .testTag("search-bar"),
             ) {
-                LazyColumn(Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     items(searchHistory.reversed(), key = { it }) { entry ->
                         SearchHistoryEntry(
                             modifier = Modifier.animateItem(
@@ -183,6 +189,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                             onLongClick = { viewModel.removeSearch(context, entry) }
                         )
                     }
+                    item { Space(248.dp) }
                 }
             }
         }
