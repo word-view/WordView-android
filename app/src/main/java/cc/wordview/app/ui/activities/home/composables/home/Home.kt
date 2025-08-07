@@ -105,14 +105,6 @@ fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltVi
                 },
                 actions = {
                     IconButton(
-                        modifier = Modifier.testTag("history"),
-                        onClick = { navHostController.navigate(HomeNav.History.route) }) {
-                        Icon(
-                            imageVector = Icons.Filled.History,
-                            contentDescription = "History"
-                        )
-                    }
-                    IconButton(
                         modifier = Modifier.testTag("lang-flag"),
                         onClick = {},
                         enabled = false
@@ -133,7 +125,8 @@ fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltVi
                     }
                     ProfilePicture(
                         modifier = Modifier.testTag("profile-picture"),
-                        onClick = { navHostController.navigate(HomeNav.Profile.route) }
+                        onNavigateToProfile = { navHostController.navigate(HomeNav.Profile.route) },
+                        onOpenHistory = { navHostController.navigate(HomeNav.History.route) }
                     )
                 }
             )
