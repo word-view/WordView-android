@@ -18,10 +18,16 @@
 package cc.wordview.app.ui.activities.home.composables.home
 
 import android.content.Context
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.R
+import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.api.entity.HomeCategory
+import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
+import cc.wordview.app.ui.activities.home.composables.history.PLAY_HISTORY
+import cc.wordview.app.ui.activities.home.composables.search.dataStore
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,6 +38,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.collections.plus
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -69,6 +76,19 @@ class HomeViewModel @Inject constructor(
 
     fun updateHomeCategories(videos: ArrayList<HomeCategory>) {
         _homeCategories.update { videos }
+    }
+
+    fun saveVideoToHistory(historyEntry: HistoryEntry) = viewModelScope.launch {
+        val gson = Gson()
+        val historyEntryJson = gson.toJson(historyEntry)
+
+        Timber.v("historyEntryJson=$historyEntryJson")
+
+        context.dataStore.edit { preferences ->
+            val current = preferences[PLAY_HISTORY] ?: emptySet()
+            if (!current.contains(historyEntryJson))
+                preferences[PLAY_HISTORY] = current + historyEntryJson
+        }
     }
 
     private fun emitMessage(msg: String) {

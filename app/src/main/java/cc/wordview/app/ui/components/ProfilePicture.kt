@@ -26,27 +26,37 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.GlobalViewModel
+import cc.wordview.app.R
 import cc.wordview.app.api.getStoredJwt
+import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.auth.AuthActivity
 import cc.wordview.app.ui.activities.player.PlayerActivity
+import kotlin.math.log
 
 @Preview
 @Composable
-fun ProfilePicture(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
+fun ProfilePicture(modifier: Modifier = Modifier, onNavigateToProfile: () -> Unit = {}, onOpenHistory: () -> Unit = {}) {
     val jwt = getStoredJwt()
 
     val context = LocalContext.current
@@ -54,7 +64,16 @@ fun ProfilePicture(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
 
     val user by GlobalViewModel.user.collectAsStateWithLifecycle()
 
+    var showMenu by remember { mutableStateOf(false) }
+
     fun openLoginScreen() {
+        context.openActivity<AuthActivity>()
+        activity?.finish()
+    }
+
+    fun logout() {
+        setStoredJwt(null, context)
+        GlobalViewModel.resetUser()
         context.openActivity<AuthActivity>()
         activity?.finish()
     }
@@ -70,10 +89,7 @@ fun ProfilePicture(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
             .clip(CircleShape)
             .background(if (logged) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.onPrimaryContainer)
             .clickable(
-                onClick = {
-                    if (logged) onClick.invoke()
-                    else openLoginScreen()
-                },
+                onClick = { showMenu = !showMenu },
                 enabled = true,
             ),
         contentAlignment = Alignment.Center
@@ -90,6 +106,46 @@ fun ProfilePicture(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
                 modifier = Modifier.size(24.dp),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primaryContainer
+            )
+        }
+    }
+    DropdownMenu(
+        expanded = showMenu,
+        onDismissRequest = { showMenu = false },
+        offset = DpOffset(x = 64.dp, y = 0.dp)
+    ) {
+        if (logged) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.profile)) },
+                onClick = {
+                    showMenu = false
+                    onNavigateToProfile()
+                }
+            )
+        } else {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.log_in)) },
+                onClick = {
+                    showMenu = false
+                    openLoginScreen()
+                }
+            )
+        }
+        DropdownMenuItem(
+            text = { Text(stringResource(R.string.history)) },
+            onClick = {
+                showMenu = false
+                onOpenHistory()
+            }
+        )
+
+        if (logged) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.log_out)) },
+                onClick = {
+                    showMenu = false
+                    logout()
+                }
             )
         }
     }

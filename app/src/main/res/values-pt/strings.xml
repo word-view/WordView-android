@@ -47,4 +47,7 @@
     <string name="portuguese">Português</string>
     <string name="english">Inglês</string>
     <string name="japanese">Japonês</string>
+    <string name="history">Histórico</string>
+    <string name="log_out">Sair</string>
+    <string name="log_in">Fazer login</string>
 </resources>

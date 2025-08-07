@@ -54,6 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.openActivity
+import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.SongCard
@@ -136,6 +137,12 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
                             language = it.language
                         ) {
                             SongViewModel.setVideo(it.id)
+                            viewModel.saveVideoToHistory(HistoryEntry(
+                                id = it.id,
+                                title = it.title,
+                                artist = it.artist,
+                                thumbnailUrl = it.cover,
+                            ))
                             context.openActivity<PlayerActivity>()
                         }
                     }
