@@ -45,9 +45,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.navigation.NavHostController
+import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.openActivity
@@ -83,7 +85,7 @@ fun History(navController: NavHostController) {
             ),
             title = {
                 Text(
-                    "History",
+                    stringResource(R.string.history),
                     fontFamily = poppinsFamily,
                 )
             },

@@ -39,12 +39,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.GlobalViewModel
+import cc.wordview.app.R
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.extensions.openActivity
@@ -114,7 +116,7 @@ fun ProfilePicture(modifier: Modifier = Modifier, onNavigateToProfile: () -> Uni
     ) {
         if (logged) {
             DropdownMenuItem(
-                text = { Text("Profile") },
+                text = { Text(stringResource(R.string.profile)) },
                 onClick = {
                     showMenu = false
                     onNavigateToProfile()
@@ -122,7 +124,7 @@ fun ProfilePicture(modifier: Modifier = Modifier, onNavigateToProfile: () -> Uni
             )
         } else {
             DropdownMenuItem(
-                text = { Text("Log In") },
+                text = { Text(stringResource(R.string.log_in)) },
                 onClick = {
                     showMenu = false
                     openLoginScreen()
@@ -130,7 +132,7 @@ fun ProfilePicture(modifier: Modifier = Modifier, onNavigateToProfile: () -> Uni
             )
         }
         DropdownMenuItem(
-            text = { Text("History") },
+            text = { Text(stringResource(R.string.history)) },
             onClick = {
                 showMenu = false
                 onOpenHistory()
@@ -139,7 +141,7 @@ fun ProfilePicture(modifier: Modifier = Modifier, onNavigateToProfile: () -> Uni
 
         if (logged) {
             DropdownMenuItem(
-                text = { Text("Log out") },
+                text = { Text(stringResource(R.string.log_out)) },
                 onClick = {
                     showMenu = false
                     logout()

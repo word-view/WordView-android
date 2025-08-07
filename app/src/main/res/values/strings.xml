@@ -48,4 +48,8 @@
     <string name="portuguese">Portuguese</string>
     <string name="english">English</string>
     <string name="japanese">Japanese</string>
+    <string name="history">History</string>
+    <string name="log_out">Log out</string>
+    <string name="log_in">Log In</string>
+    <string name="aaaaaaaaaaaaaaaaaaa">History</string>
 </resources>
