@@ -24,6 +24,9 @@ import androidx.lifecycle.viewModelScope
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.extensions.without
+import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
+import cc.wordview.app.ui.activities.home.composables.history.PLAY_HISTORY
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -110,6 +113,20 @@ class SearchViewModel @Inject constructor(
             val current = preferences[SEARCH_HISTORY] ?: emptySet()
             if (!current.contains(searchEntry))
                 preferences[SEARCH_HISTORY] = current + searchEntry
+        }
+    }
+
+    fun saveVideoToHistory(searchResult: VideoSearchResult) = viewModelScope.launch {
+        val gson = Gson()
+        val historyEntry = HistoryEntry.fromSearchResult(searchResult)
+        val historyEntryJson = gson.toJson(historyEntry)
+
+        Timber.v("historyEntryJson=$historyEntryJson")
+
+        context.dataStore.edit { preferences ->
+            val current = preferences[PLAY_HISTORY] ?: emptySet()
+            if (!current.contains(historyEntryJson))
+                preferences[PLAY_HISTORY] = current + historyEntryJson
         }
     }
 

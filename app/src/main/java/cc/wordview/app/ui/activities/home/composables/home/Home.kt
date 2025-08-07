@@ -22,6 +22,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -103,6 +104,14 @@ fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltVi
                     )
                 },
                 actions = {
+                    IconButton(
+                        modifier = Modifier.testTag("history"),
+                        onClick = { navHostController.navigate(HomeNav.History.route) }) {
+                        Icon(
+                            imageVector = Icons.Filled.History,
+                            contentDescription = "History"
+                        )
+                    }
                     IconButton(
                         modifier = Modifier.testTag("lang-flag"),
                         onClick = {},

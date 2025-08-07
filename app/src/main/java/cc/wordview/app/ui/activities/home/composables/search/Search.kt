@@ -264,6 +264,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                             ), result = it
                         ) {
                             SongViewModel.setVideo(it.id)
+                            viewModel.saveVideoToHistory(it)
                             context.openActivity<PlayerActivity>()
                         }
                     }
