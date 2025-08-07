@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.api.getStoredJwt
+import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.auth.AuthActivity
 import cc.wordview.app.ui.activities.player.PlayerActivity
@@ -64,6 +65,13 @@ fun ProfilePicture(modifier: Modifier = Modifier, onNavigateToProfile: () -> Uni
     var showMenu by remember { mutableStateOf(false) }
 
     fun openLoginScreen() {
+        context.openActivity<AuthActivity>()
+        activity?.finish()
+    }
+
+    fun logout() {
+        setStoredJwt(null, context)
+        GlobalViewModel.resetUser()
         context.openActivity<AuthActivity>()
         activity?.finish()
     }
@@ -128,6 +136,16 @@ fun ProfilePicture(modifier: Modifier = Modifier, onNavigateToProfile: () -> Uni
                 onOpenHistory()
             }
         )
+
+        if (logged) {
+            DropdownMenuItem(
+                text = { Text("Log out") },
+                onClick = {
+                    showMenu = false
+                    logout()
+                }
+            )
+        }
     }
     Space(10.0.dp)
 }
