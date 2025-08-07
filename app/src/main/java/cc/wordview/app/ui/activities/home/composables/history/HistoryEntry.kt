@@ -24,7 +24,7 @@ data class HistoryEntry(
     val title: String,
     val artist: String,
     val thumbnailUrl: String,
-    val unixWatchedAt: Long = 0,
+    val unixWatchedAt: Long = System.currentTimeMillis(),
 ) {
     companion object {
         fun fromSearchResult(vsr: VideoSearchResult): HistoryEntry {
@@ -33,7 +33,6 @@ data class HistoryEntry(
                 title = vsr.title,
                 artist = vsr.channel,
                 thumbnailUrl = vsr.thumbnails.first().url,
-                unixWatchedAt = System.currentTimeMillis()
             )
         }
     }

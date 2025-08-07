@@ -17,11 +17,9 @@
 
 package cc.wordview.app.ui.activities.home.composables.history
 
-import android.content.Context
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -48,10 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavHostController
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.goBack
@@ -66,7 +61,6 @@ import kotlin.uuid.Uuid
 import com.google.gson.Gson
 import kotlin.uuid.ExperimentalUuidApi
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "play_history")
 val PLAY_HISTORY = stringSetPreferencesKey("play_history")
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalMaterial3Api::class)

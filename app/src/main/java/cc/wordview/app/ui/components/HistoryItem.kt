@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.components
 
+import android.annotation.SuppressLint
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -42,7 +43,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -53,6 +53,7 @@ import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
@@ -100,7 +101,7 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
                     text = result.title,
                     style = Typography.titleLarge,
                     textAlign = TextAlign.Left,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Normal,
                     softWrap = false,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -115,6 +116,18 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
+                val sdf = java.text.SimpleDateFormat("yyyy/MM/dd")
+                val date = java.util.Date(result.unixWatchedAt)
+
+                Text(
+                    text = "Watched at ${sdf.format(date)}",
+                    style = Typography.titleSmall,
+                    textAlign = TextAlign.Left,
+                    color = MaterialTheme.colorScheme.onBackground.copy(0.5f),
+                    fontWeight = FontWeight.Light,
+                    softWrap = false,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }
