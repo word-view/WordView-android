@@ -6,10 +6,10 @@ Any help is welcome, if you think you can help with something, take a look at [g
 
 To start developing, you will need to have [APIWordView](https://github.com/word-view/APIWordView) running:
 ```sh
-    // clone the repo
+    # clone the repo
     git clone https://github.com/word-view/APIWordView
 
-    // start the server
+    # start the server
     cd ./APIWordView
     ./mvnw spring-boot:run
 ```
