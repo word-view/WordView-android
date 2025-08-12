@@ -45,7 +45,7 @@ import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.openActivity
-import cc.wordview.app.ui.activities.home.composables.search.dataStore
+import cc.wordview.app.dataStore
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.HistoryItem

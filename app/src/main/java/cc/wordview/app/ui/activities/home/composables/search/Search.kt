@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.activities.home.composables.search
 
-import android.content.Context
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -65,8 +64,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
@@ -78,8 +75,8 @@ import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import cc.wordview.app.dataStore
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.components.SearchHistoryEntry
 import cc.wordview.app.ui.components.Space
@@ -88,7 +85,6 @@ import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "search_history")
 val SEARCH_HISTORY = stringSetPreferencesKey("search_history")
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)

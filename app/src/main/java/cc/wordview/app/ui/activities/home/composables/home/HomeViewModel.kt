@@ -22,11 +22,10 @@ import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.R
-import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.api.entity.HomeCategory
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import cc.wordview.app.ui.activities.home.composables.history.PLAY_HISTORY
-import cc.wordview.app.ui.activities.home.composables.search.dataStore
+import cc.wordview.app.dataStore
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
