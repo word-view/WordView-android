@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.activities.home.composables.search
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -38,9 +37,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -131,7 +128,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
             query,
             onSuccess = {
                 coroutineScope.launch { listState.scrollToItem(0) }
-                viewModel.saveSearch(context, query)
+                viewModel.saveSearch(query)
                 viewModel.setState(SearchState.COMPLETE)
             },
             onError = {
@@ -186,7 +183,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                                 viewModel.setQuery(entry)
                                 search(entry)
                             },
-                            onLongClick = { viewModel.removeSearch(context, entry) }
+                            onLongClick = { viewModel.removeSearch(entry) }
                         )
                     }
                     item { Space(248.dp) }
