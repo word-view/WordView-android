@@ -31,7 +31,7 @@ data class HistoryEntry(
             return HistoryEntry(
                 id = vsr.id,
                 title = vsr.title,
-                artist = vsr.channel,
+                artist = vsr.artist,
                 thumbnailUrl = vsr.thumbnails.first().url,
             )
         }

@@ -117,7 +117,7 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
                     }
 
                     Text(
-                        text = result.channel,
+                        text = result.artist,
                         style = Typography.labelSmall,
                         textAlign = TextAlign.Left,
                         softWrap = false,

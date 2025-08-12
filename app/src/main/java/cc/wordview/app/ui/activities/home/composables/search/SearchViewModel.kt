@@ -141,7 +141,7 @@ class SearchViewModel @Inject constructor(
             parsed.add(VideoSearchResult(
                 id = getIdFromUrl(item.url),
                 title = item.name,
-                channel = item.uploaderName,
+                artist = item.uploaderName,
                 thumbnails = item.thumbnails,
                 channelIsVerified = item.isUploaderVerified,
                 duration = item.duration,
@@ -158,7 +158,7 @@ class SearchViewModel @Inject constructor(
             parsed.add(VideoSearchResult(
                 id = getIdFromUrl(item.url),
                 title = item.name,
-                channel = item.uploaderName,
+                artist = item.uploaderName,
                 thumbnails = item.thumbnails,
                 channelIsVerified = item.isUploaderVerified,
                 duration = item.duration,

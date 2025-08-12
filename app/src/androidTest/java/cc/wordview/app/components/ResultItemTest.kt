@@ -116,7 +116,7 @@ class ResultItemTest : ComposeTest() {
             .assertExists()
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithText(result.channel)
+        composeTestRule.onNodeWithText(result.artist)
             .assertExists()
             .assertIsDisplayed()
 
@@ -141,7 +141,7 @@ class ResultItemTest : ComposeTest() {
         return VideoSearchResult(
             id = id,
             title = title,
-            channel = channel,
+            artist = channel,
             duration = duration,
             thumbnails = listOf(Image(thumbnailUrl, 32, 32, Image.ResolutionLevel.LOW)),
             channelIsVerified = isVerified
