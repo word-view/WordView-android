@@ -35,7 +35,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.components.SongCard
-import cc.wordview.gengolex.Language
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -44,7 +43,6 @@ class SongCardTest : ComposeTest() {
     private fun setup(
         artist: String,
         trackName: String,
-        language: Language? = null,
         onClick: Runnable
     ) {
         composeTestRule.setContent {
@@ -56,8 +54,7 @@ class SongCardTest : ComposeTest() {
                 modifier = Modifier.testTag("song-card"),
                 thumbnail = "",
                 artist = artist,
-                trackName = trackName,
-                language = language
+                trackName = trackName
             ) {
                 textVisible = true
                 onClick.run()
@@ -105,26 +102,5 @@ class SongCardTest : ComposeTest() {
         composeTestRule.onNode(hasClickAction()).performClick()
         composeTestRule.waitUntilAtLeastOneExists(hasText("Text"), 2_000)
         verify(onClickMock).run()
-    }
-
-    @Test
-    fun displaysPortugueseCountryFlag() {
-        setup(artist = "Test Artist", trackName = "Test Track", language = Language.PORTUGUESE, onClick = {})
-
-        composeTestRule.onNodeWithTag("${Language.PORTUGUESE} icon", useUnmergedTree = true).assertIsDisplayed()
-    }
-
-    @Test
-    fun displaysJapaneseCountryFlag() {
-        setup(artist = "Test Artist", trackName = "Test Track", language = Language.JAPANESE, onClick = {})
-
-        composeTestRule.onNodeWithTag("${Language.JAPANESE} icon", useUnmergedTree = true).assertIsDisplayed()
-    }
-
-    @Test
-    fun displaysEnglishCountryFlag() {
-        setup(artist = "Test Artist", trackName = "Test Track", language = Language.ENGLISH, onClick = {})
-
-        composeTestRule.onNodeWithTag("${Language.ENGLISH} icon", useUnmergedTree = true).assertIsDisplayed()
     }
 }

@@ -62,7 +62,6 @@ import cc.wordview.app.ui.components.Space
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.horizontalFadingEdges
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,16 +132,17 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
                                 .animateItem(fadeInSpec = tween(durationMillis = i * 500)),
                             thumbnail = it.cover,
                             artist = it.artist,
-                            trackName = it.title,
-                            language = it.language
+                            trackName = it.title
                         ) {
                             SongViewModel.setVideo(it.id)
-                            viewModel.saveVideoToHistory(HistoryEntry(
-                                id = it.id,
-                                title = it.title,
-                                artist = it.artist,
-                                thumbnailUrl = it.cover,
-                            ))
+                            viewModel.saveVideoToHistory(
+                                HistoryEntry(
+                                    id = it.id,
+                                    title = it.title,
+                                    artist = it.artist,
+                                    thumbnailUrl = it.cover,
+                                )
+                            )
                             context.openActivity<PlayerActivity>()
                         }
                     }
