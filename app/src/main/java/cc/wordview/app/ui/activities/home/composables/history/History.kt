@@ -89,6 +89,7 @@ fun History(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             state = listState
         ) {
+            item { Spacer(Modifier.size(16.dp)) }
             var i = 0
 
             items(playHistory.toList().reversed(), key = { Uuid.random() }) {
@@ -110,6 +111,8 @@ fun History(navController: NavHostController) {
                 }
                 Spacer(Modifier.size(16.dp))
             }
+
+            item { Spacer(Modifier.size(128.dp)) }
         }
     }
 }
