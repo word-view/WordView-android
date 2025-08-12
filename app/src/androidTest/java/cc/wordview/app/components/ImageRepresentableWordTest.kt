@@ -19,18 +19,18 @@ package cc.wordview.app.components
 
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ComposeTest
-import cc.wordview.app.ui.components.IdentifiedWord
+import cc.wordview.app.ui.components.ImageRepresentableWord
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.word.Word
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Test
 
-class IdentifiedWordTest : ComposeTest() {
+class ImageRepresentableWordTest : ComposeTest() {
     private fun setup(word: Word, text: String) {
         composeTestRule.setContent {
             WordViewTheme {
                 ProvidePreferenceLocals {
-                    IdentifiedWord(
+                    ImageRepresentableWord(
                         word = word,
                         text = text,
                         currentIndex = 0
