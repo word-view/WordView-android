@@ -26,11 +26,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.SkipNext
@@ -50,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -94,10 +98,14 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
 
     val activity = LocalActivity.current!!
     val context = LocalContext.current
+    val density = LocalDensity.current
 
     val composerMode = AppSettings.composerMode.get()
 
     val mediaSession = remember { WordViewMediaSession(context, player) }
+
+    val cutoutLeft = WindowInsets.displayCutout.getLeft(density, LayoutDirection.Ltr)
+    val cutoutRight = WindowInsets.displayCutout.getLeft(density, LayoutDirection.Ltr)
 
     LaunchedEffect(finalized) {
         if (finalized) {
@@ -161,7 +169,10 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
                         )
                     )
             )
-            PlayerTopBar(Modifier.padding(horizontal = 58.dp)) {
+            PlayerTopBar(Modifier
+                .padding(start = WindowInsets.displayCutout.getLeft(density, LayoutDirection.Ltr).dp / 2)
+                .padding(end = WindowInsets.displayCutout.getRight(density, LayoutDirection.Ltr).dp / 2),
+                ) {
                 IconButton(
                     onClick = { back() },
                     modifier = Modifier.testTag("back-button"),
@@ -185,7 +196,8 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
             Seekbar(
                 Modifier
                     .padding(top = TopAppBarDefaults.TopAppBarExpandedHeight)
-                    .padding(horizontal = 58.dp),
+                    .padding(start = WindowInsets.displayCutout.getLeft(density, LayoutDirection.Ltr).dp / 2)
+                    .padding(end = WindowInsets.displayCutout.getRight(density, LayoutDirection.Ltr).dp / 2),
                 composerMode,
                 currentPosition,
                 player.getDuration(),
