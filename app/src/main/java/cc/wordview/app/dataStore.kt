@@ -15,25 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.activities.home.composables.history
+package cc.wordview.app
 
-import cc.wordview.app.api.VideoSearchResult
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 
-data class HistoryEntry(
-    val id: String,
-    val title: String,
-    val artist: String,
-    val thumbnailUrl: String,
-    val unixWatchedAt: Long = System.currentTimeMillis(),
-) {
-    companion object {
-        fun fromSearchResult(vsr: VideoSearchResult): HistoryEntry {
-            return HistoryEntry(
-                id = vsr.id,
-                title = vsr.title,
-                artist = vsr.artist,
-                thumbnailUrl = vsr.thumbnails.first().url,
-            )
-        }
-    }
-}
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "search_history")

@@ -30,16 +30,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -57,6 +53,7 @@ import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.auth.AuthActivity
+import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.Space
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,20 +72,9 @@ fun Profile(navController: NavHostController = rememberNavController()) {
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        TopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                titleContentColor = LocalContentColor.current
-            ),
+        BackTopAppBar(
             title = {},
-            navigationIcon = {
-                IconButton(onClick = { navController.goBack() }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Go back"
-                    )
-                }
-            }
+            onClickBack = { navController.goBack() }
         )
     }) { innerPadding ->
         Column(

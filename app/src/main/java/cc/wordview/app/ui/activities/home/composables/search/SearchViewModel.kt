@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
+import cc.wordview.app.dataStore
 import cc.wordview.app.extensions.without
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import cc.wordview.app.ui.activities.home.composables.history.PLAY_HISTORY
@@ -43,7 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val appContext: Context
 ) : ViewModel() {
     private val _searching = MutableStateFlow(false)
     private val _animateSearch = MutableStateFlow(true)
@@ -83,7 +84,7 @@ class SearchViewModel @Inject constructor(
                     Timber.e(e)
 
                     val message = if ((e.message ?: e.toString()).contains("No address associated")) {
-                        context.getString(R.string.no_connection)
+                        appContext.getString(R.string.no_connection)
                     } else {
                         e.message ?: e.toString()
                     }
@@ -108,30 +109,27 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun saveSearch(context: Context, searchEntry: String) = viewModelScope.launch {
-        context.dataStore.edit { preferences ->
+    fun saveSearch(query: String) = viewModelScope.launch {
+        appContext.dataStore.edit { preferences ->
             val current = preferences[SEARCH_HISTORY] ?: emptySet()
-            if (!current.contains(searchEntry))
-                preferences[SEARCH_HISTORY] = current + searchEntry
+            if (!current.contains(query))
+                preferences[SEARCH_HISTORY] = current + query
         }
     }
 
     fun saveVideoToHistory(searchResult: VideoSearchResult) = viewModelScope.launch {
         val gson = Gson()
-        val historyEntry = HistoryEntry.fromSearchResult(searchResult)
-        val historyEntryJson = gson.toJson(historyEntry)
+        val historyEntryJson = gson.toJson(HistoryEntry.fromSearchResult(searchResult))
 
-        Timber.v("historyEntryJson=$historyEntryJson")
-
-        context.dataStore.edit { preferences ->
+        appContext.dataStore.edit { preferences ->
             val current = preferences[PLAY_HISTORY] ?: emptySet()
             if (!current.contains(historyEntryJson))
                 preferences[PLAY_HISTORY] = current + historyEntryJson
         }
     }
 
-    fun removeSearch(context: Context, searchEntry: String) = viewModelScope.launch {
-        context.dataStore.edit { preferences ->
+    fun removeSearch(searchEntry: String) = viewModelScope.launch {
+        appContext.dataStore.edit { preferences ->
             val current = preferences[SEARCH_HISTORY] ?: emptySet()
             preferences[SEARCH_HISTORY] = current.without(searchEntry)
         }
@@ -144,7 +142,7 @@ class SearchViewModel @Inject constructor(
             parsed.add(VideoSearchResult(
                 id = getIdFromUrl(item.url),
                 title = item.name,
-                channel = item.uploaderName,
+                artist = item.uploaderName,
                 thumbnails = item.thumbnails,
                 channelIsVerified = item.isUploaderVerified,
                 duration = item.duration,
@@ -161,7 +159,7 @@ class SearchViewModel @Inject constructor(
             parsed.add(VideoSearchResult(
                 id = getIdFromUrl(item.url),
                 title = item.name,
-                channel = item.uploaderName,
+                artist = item.uploaderName,
                 thumbnails = item.thumbnails,
                 channelIsVerified = item.isUploaderVerified,
                 duration = item.duration,

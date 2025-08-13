@@ -22,7 +22,7 @@ import org.schabi.newpipe.extractor.Image
 class VideoSearchResult(
     var id: String = "",
     var title: String = "",
-    var channel: String = "",
+    var artist: String = "",
     var duration: Long = 0,
     var thumbnails: List<Image>,
     var channelIsVerified: Boolean = false,

@@ -27,17 +27,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,8 +45,9 @@ import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.extensions.goBack
 import cc.wordview.app.extensions.openActivity
-import cc.wordview.app.ui.activities.home.composables.search.dataStore
+import cc.wordview.app.dataStore
 import cc.wordview.app.ui.activities.player.PlayerActivity
+import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.HistoryItem
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
@@ -78,25 +71,14 @@ fun History(navController: NavHostController) {
     val gson = remember { Gson() }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        TopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                titleContentColor = LocalContentColor.current
-            ),
+        BackTopAppBar(
             title = {
                 Text(
                     stringResource(R.string.history),
                     fontFamily = poppinsFamily,
                 )
             },
-            navigationIcon = {
-                IconButton(onClick = { navController.goBack() }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Go back"
-                    )
-                }
-            }
+            onClickBack = { navController.goBack() }
         )
     }) { innerPadding ->
         LazyColumn(
@@ -107,6 +89,7 @@ fun History(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             state = listState
         ) {
+            item { Spacer(Modifier.size(16.dp)) }
             var i = 0
 
             items(playHistory.toList().reversed(), key = { Uuid.random() }) {
@@ -128,6 +111,8 @@ fun History(navController: NavHostController) {
                 }
                 Spacer(Modifier.size(16.dp))
             }
+
+            item { Spacer(Modifier.size(128.dp)) }
         }
     }
 }

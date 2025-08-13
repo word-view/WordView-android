@@ -32,7 +32,7 @@ import cc.wordview.gengolex.word.Word
 import coil3.compose.AsyncImage
 
 @Composable
-fun IdentifiedWord(word: Word, text: String, currentIndex: Int, modifier: Modifier = Modifier) {
+fun ImageRepresentableWord(word: Word, text: String, currentIndex: Int, modifier: Modifier = Modifier) {
     var textRowWidthPx by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current
 

@@ -27,11 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cc.wordview.app.subtitle.WordViewCue
 
 @Composable
@@ -51,7 +48,7 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                     if (word.parent == "") continue
 
                     if (text.lowercase().startsWith(word.word, currentIndex)) {
-                        IdentifiedWord(
+                        ImageRepresentableWord(
                             modifier = Modifier.padding(horizontal = 2.dp),
                             word = word,
                             currentIndex = currentIndex,

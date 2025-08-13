@@ -17,8 +17,6 @@
 
 package cc.wordview.app.ui.activities.home.composables.search
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -38,9 +36,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -68,8 +64,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
@@ -81,8 +75,8 @@ import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import cc.wordview.app.dataStore
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.components.SearchHistoryEntry
 import cc.wordview.app.ui.components.Space
@@ -91,7 +85,6 @@ import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "search_history")
 val SEARCH_HISTORY = stringSetPreferencesKey("search_history")
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
@@ -131,7 +124,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
             query,
             onSuccess = {
                 coroutineScope.launch { listState.scrollToItem(0) }
-                viewModel.saveSearch(context, query)
+                viewModel.saveSearch(query)
                 viewModel.setState(SearchState.COMPLETE)
             },
             onError = {
@@ -186,7 +179,7 @@ fun Search(viewModel: SearchViewModel = hiltViewModel()) {
                                 viewModel.setQuery(entry)
                                 search(entry)
                             },
-                            onLongClick = { viewModel.removeSearch(context, entry) }
+                            onLongClick = { viewModel.removeSearch(entry) }
                         )
                     }
                     item { Space(248.dp) }

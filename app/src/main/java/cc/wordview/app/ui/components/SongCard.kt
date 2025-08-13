@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -37,9 +36,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,7 +44,6 @@ import androidx.compose.ui.zIndex
 import cc.wordview.app.R
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
-import cc.wordview.gengolex.Language
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -58,7 +54,6 @@ fun SongCard(
     thumbnail: String,
     artist: String,
     trackName: String,
-    language: Language? = null,
     onClick: () -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -79,14 +74,6 @@ fun SongCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(Modifier.size(120.dp)) {
-                if (language != null) Image(
-                    modifier = Modifier
-                        .size(28.dp)
-                        .align(Alignment.TopEnd)
-                        .testTag("$language icon"),
-                    painter = getIconForLang(language),
-                    contentDescription = null
-                )
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
@@ -129,14 +116,5 @@ fun SongCard(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun getIconForLang(language: Language): Painter {
-    return when (language) {
-        Language.ENGLISH -> painterResource(id = R.drawable.us)
-        Language.JAPANESE -> painterResource(id = R.drawable.ja)
-        Language.PORTUGUESE -> painterResource(id = R.drawable.br)
     }
 }
