@@ -196,6 +196,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
             Seekbar(
                 Modifier
                     .padding(top = TopAppBarDefaults.TopAppBarExpandedHeight)
+                    .padding(horizontal = 6.dp)
                     .padding(start = WindowInsets.displayCutout.getLeft(density, LayoutDirection.Ltr).dp / 2)
                     .padding(end = WindowInsets.displayCutout.getRight(density, LayoutDirection.Ltr).dp / 2),
                 composerMode,
