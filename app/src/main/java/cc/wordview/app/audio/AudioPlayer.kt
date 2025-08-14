@@ -39,6 +39,8 @@ import androidx.core.net.toUri
 class AudioPlayer {
     private lateinit var player: ExoPlayer
 
+    lateinit var mediaSession: WordViewMediaSession
+
     private var job: Job? = null
 
     var onPositionChange: (Int, Int) -> Unit = { position: Int, bufferedPercentage: Int -> }
@@ -73,6 +75,9 @@ class AudioPlayer {
             val mediaItem = MediaItem.fromUri(url.toUri())
 
             player.setMediaItem(mediaItem)
+
+            mediaSession = WordViewMediaSession(context, this)
+
             player.prepare()
             onPrepared()
         } catch (e: Exception) {
@@ -84,6 +89,7 @@ class AudioPlayer {
     fun stop() {
         try {
             player.stop()
+            mediaSession.release()
         } catch (e: UninitializedPropertyAccessException) {
             Timber.w("Called stop too early (ignoring): ${e.message}")
         }

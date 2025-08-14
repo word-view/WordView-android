@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.activities.player.composables
 
-import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
@@ -33,7 +32,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.SkipNext
@@ -47,7 +45,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -62,11 +59,9 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.audio.WordViewMediaSession
 import cc.wordview.app.extensions.getCleanUploaderName
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.lesson.LessonActivity
-import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.ui.components.FadeInAsyncImage
@@ -85,7 +80,6 @@ import cc.wordview.app.ui.components.TextCue
 fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     val player by viewModel.player.collectAsStateWithLifecycle()
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
-    val cues by viewModel.cues.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
@@ -102,15 +96,9 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
 
     val composerMode = AppSettings.composerMode.get()
 
-    val mediaSession = remember { WordViewMediaSession(context, player) }
-
-    val cutoutLeft = WindowInsets.displayCutout.getLeft(density, LayoutDirection.Ltr)
-    val cutoutRight = WindowInsets.displayCutout.getLeft(density, LayoutDirection.Ltr)
-
     LaunchedEffect(finalized) {
         if (finalized) {
             player.stop()
-            mediaSession.release()
             context.openActivity<LessonActivity>()
             activity.finish()
         }
@@ -118,7 +106,6 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
 
     fun back() {
         player.stop()
-        mediaSession.release()
         activity.finish()
     }
 
