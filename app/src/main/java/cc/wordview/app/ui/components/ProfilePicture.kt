@@ -17,7 +17,6 @@
 
 package cc.wordview.app.ui.components
 
-import android.content.Intent
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,8 +48,8 @@ import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.R
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.setStoredJwt
+import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.OneTimeEffect
-import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.auth.AuthActivity
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import kotlin.math.log

@@ -59,8 +59,8 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.extensions.getCleanUploaderName
-import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.lesson.LessonActivity
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.ui.components.CircularProgressIndicator

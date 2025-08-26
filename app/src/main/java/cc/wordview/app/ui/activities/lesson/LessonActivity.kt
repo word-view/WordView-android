@@ -46,8 +46,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.extensions.openActivity
-import cc.wordview.app.extensions.setOrientationSensorPortrait
+import cc.wordview.app.components.extensions.openActivity
+import cc.wordview.app.components.extensions.setOrientationSensorPortrait
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel

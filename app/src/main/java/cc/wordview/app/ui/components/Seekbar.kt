@@ -40,8 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.extensions.fillMaxWidth
-import cc.wordview.app.extensions.percentageOf
+import cc.wordview.app.components.extensions.fillMaxWidth
+import cc.wordview.app.components.extensions.percentageOf
 import cc.wordview.app.ui.theme.Typography
 
 @Composable

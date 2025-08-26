@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.extensions.random
+import cc.wordview.app.components.extensions.random
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.app.ui.activities.lesson.viewmodel.Answer

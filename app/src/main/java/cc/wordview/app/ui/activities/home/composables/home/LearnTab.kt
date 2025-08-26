@@ -53,8 +53,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
+import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.OneTimeEffect
-import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.SongCard

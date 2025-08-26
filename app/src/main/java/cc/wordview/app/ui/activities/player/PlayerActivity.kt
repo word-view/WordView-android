@@ -35,7 +35,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.extensions.setOrientationSensorLandscape
+import cc.wordview.app.components.extensions.setOrientationSensorLandscape
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.dtos.PlayerToLessonCommunicator
