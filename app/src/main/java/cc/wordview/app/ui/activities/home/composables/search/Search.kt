@@ -75,7 +75,7 @@ import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
 import androidx.datastore.preferences.core.stringSetPreferencesKey
-import cc.wordview.app.components.OneTimeEffect
+import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.dataStore
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.components.SearchHistoryEntry

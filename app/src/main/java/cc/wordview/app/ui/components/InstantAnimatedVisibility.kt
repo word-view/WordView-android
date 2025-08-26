@@ -24,7 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import cc.wordview.app.components.OneTimeEffect
+import cc.wordview.app.components.ui.OneTimeEffect
 
 /**
  * Instantly animates the appearance and disappearance of its content

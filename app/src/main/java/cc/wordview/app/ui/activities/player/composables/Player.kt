@@ -68,7 +68,7 @@ import cc.wordview.app.ui.components.FadeInAsyncImage
 import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.components.NoTimeLeftDialog
 import cc.wordview.app.ui.components.NotEnoughWordsDialog
-import cc.wordview.app.components.OneTimeEffect
+import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.PlayerTopBar
 import cc.wordview.app.ui.components.Seekbar
