@@ -53,10 +53,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.api.getStoredJwt
+import cc.wordview.app.components.OneTimeEffect
 import cc.wordview.app.extensions.getFlag
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.home.HomeNav
-import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ProfilePicture
 import cc.wordview.app.ui.theme.redhatFamily
 import cc.wordview.gengolex.Language

@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "cc.wordview.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "cc.wordview.app"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "0.1.0"
 
@@ -88,6 +88,7 @@ dependencies {
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.gengolex)
+    implementation(libs.components)
     implementation(libs.volley)
     implementation(libs.gson)
     implementation(libs.coil)

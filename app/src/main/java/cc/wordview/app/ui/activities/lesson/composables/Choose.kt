@@ -28,7 +28,7 @@ import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.app.ui.activities.lesson.viewmodel.Answer
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
-import cc.wordview.app.ui.components.OneTimeEffect
+import cc.wordview.app.components.OneTimeEffect
 import cc.wordview.app.ui.components.Space
 import cc.wordview.app.ui.components.WordCard
 import cc.wordview.app.ui.theme.Typography

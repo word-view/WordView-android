@@ -60,7 +60,7 @@ import cc.wordview.app.R
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.components.Icon
-import cc.wordview.app.ui.components.OneTimeEffect
+import cc.wordview.app.components.OneTimeEffect
 import cc.wordview.app.ui.components.Space
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography

@@ -45,7 +45,7 @@ import cc.wordview.app.ui.activities.player.composables.Player
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerState
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.ui.components.CircularProgressIndicator
-import cc.wordview.app.ui.components.OneTimeEffect
+import cc.wordview.app.components.OneTimeEffect
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.Language
 import dagger.hilt.android.AndroidEntryPoint

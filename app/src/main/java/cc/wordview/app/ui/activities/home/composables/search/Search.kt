@@ -70,12 +70,12 @@ import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.CircularProgressIndicator
-import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import cc.wordview.app.components.OneTimeEffect
 import cc.wordview.app.dataStore
 import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.components.SearchHistoryEntry
