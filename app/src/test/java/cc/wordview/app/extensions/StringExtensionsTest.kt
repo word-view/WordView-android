@@ -16,6 +16,9 @@
  */
 
 package cc.wordview.app.extensions
+
+import cc.wordview.app.components.extensions.asURLEncoded
+import cc.wordview.app.components.extensions.capitalize
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows

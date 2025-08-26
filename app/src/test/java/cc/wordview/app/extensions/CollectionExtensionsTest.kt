@@ -17,6 +17,7 @@
 
 package cc.wordview.app.extensions
 
+import cc.wordview.app.components.extensions.random
 import org.junit.jupiter.api.Assertions
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows
