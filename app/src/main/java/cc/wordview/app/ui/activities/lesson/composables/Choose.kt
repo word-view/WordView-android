@@ -30,7 +30,7 @@ import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.app.ui.activities.lesson.viewmodel.Answer
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.components.ui.OneTimeEffect
-import cc.wordview.app.ui.components.Space
+import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.components.WordCard
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.gengolex.Language

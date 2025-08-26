@@ -50,9 +50,8 @@ import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.OneTimeEffect
+import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.activities.auth.AuthActivity
-import cc.wordview.app.ui.activities.player.PlayerActivity
-import kotlin.math.log
 
 @Preview
 @Composable

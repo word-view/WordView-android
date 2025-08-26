@@ -52,14 +52,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.components.extensions.openActivity
+import cc.wordview.app.components.ui.CircularProgressIndicator
+import cc.wordview.app.components.ui.FormTextField
+import cc.wordview.app.components.ui.Icon
+import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.activities.auth.composables.FormValidation.Email
 import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
 import cc.wordview.app.ui.components.AuthForm
-import cc.wordview.app.ui.components.CircularProgressIndicator
-import cc.wordview.app.ui.components.FormTextField
-import cc.wordview.app.ui.components.Icon
-import cc.wordview.app.ui.components.Space
 import kotlinx.coroutines.launch
 
 @Composable

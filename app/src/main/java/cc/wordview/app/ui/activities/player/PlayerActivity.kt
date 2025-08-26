@@ -36,6 +36,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.components.extensions.setOrientationSensorLandscape
+import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.dtos.PlayerToLessonCommunicator
@@ -44,7 +45,6 @@ import cc.wordview.app.ui.activities.player.composables.ErrorScreen
 import cc.wordview.app.ui.activities.player.composables.Player
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerState
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
-import cc.wordview.app.ui.components.CircularProgressIndicator
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.Language

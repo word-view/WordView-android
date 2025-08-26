@@ -30,6 +30,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cc.wordview.app.components.ui.Icon
+import cc.wordview.app.components.ui.Space
 
 @Composable
 fun SearchHistoryEntry(modifier: Modifier = Modifier, entry: String, onClick: () -> Unit = {}, onLongClick: () -> Unit = {}) {

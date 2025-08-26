@@ -38,9 +38,9 @@ import androidx.navigation.NavHostController
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.components.extensions.goBack
+import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.extensions.localizedDisplayName
 import cc.wordview.app.misc.AppSettings
-import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.gengolex.Language
 import me.zhanghai.compose.preference.ListPreferenceType

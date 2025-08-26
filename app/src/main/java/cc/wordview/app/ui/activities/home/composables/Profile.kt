@@ -52,9 +52,9 @@ import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.components.extensions.goBack
 import cc.wordview.app.components.extensions.openActivity
+import cc.wordview.app.components.ui.BackTopAppBar
+import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.activities.auth.AuthActivity
-import cc.wordview.app.ui.components.BackTopAppBar
-import cc.wordview.app.ui.components.Space
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

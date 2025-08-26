@@ -17,11 +17,8 @@
 
 package cc.wordview.app.api
 
-import cc.wordview.app.BuildConfig
-import cc.wordview.app.ComposeTest
 import cc.wordview.app.api.request.LyricsRequest
-import cc.wordview.app.extensions.asURLEncoded
-import com.android.volley.toolbox.Volley
+import cc.wordview.app.components.extensions.asURLEncoded
 import org.junit.Test
 
 class LyricsRequestTest : RequestTest() {

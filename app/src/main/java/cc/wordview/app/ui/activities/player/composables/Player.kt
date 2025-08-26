@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -60,16 +59,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.SongViewModel
 import cc.wordview.app.components.extensions.openActivity
+import cc.wordview.app.components.ui.CircularProgressIndicator
+import cc.wordview.app.components.ui.CrossfadeIconButton
+import cc.wordview.app.components.ui.FadeInAsyncImage
 import cc.wordview.app.extensions.getCleanUploaderName
 import cc.wordview.app.ui.activities.lesson.LessonActivity
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
-import cc.wordview.app.ui.components.CircularProgressIndicator
-import cc.wordview.app.ui.components.FadeInAsyncImage
 import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.components.NoTimeLeftDialog
 import cc.wordview.app.ui.components.NotEnoughWordsDialog
 import cc.wordview.app.components.ui.OneTimeEffect
-import cc.wordview.app.ui.components.PlayerButton
 import cc.wordview.app.ui.components.PlayerTopBar
 import cc.wordview.app.ui.components.Seekbar
 import cc.wordview.app.ui.components.TextCue
@@ -200,13 +199,13 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    PlayerButton(
+                    CrossfadeIconButton(
                         modifier = Modifier.testTag("skip-back"),
                         icon = Icons.Filled.SkipPrevious,
                         size = 72.dp,
                         onClick = { player.skipBack() }
                     )
-                    PlayerButton(
+                    CrossfadeIconButton(
                         modifier = Modifier
                             .testTag("toggle-play")
                             .alpha(if (isBuffering) 0.0f else 1.0f),
@@ -214,7 +213,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
                         size = 80.dp,
                         onClick = { player.togglePlay() }
                     )
-                    PlayerButton(
+                    CrossfadeIconButton(
                         modifier = Modifier.testTag("skip-forward"),
                         icon = Icons.Filled.SkipNext,
                         size = 72.dp,
