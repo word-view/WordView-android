@@ -27,8 +27,8 @@ import cc.wordview.app.BuildConfig
 import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.request.AuthenticatedStringRequest
-import cc.wordview.app.audio.AudioPlayerListener
-import cc.wordview.app.audio.AudioPlayer
+import cc.wordview.app.components.media.AudioPlayer
+import cc.wordview.app.components.media.AudioPlayerListener
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
