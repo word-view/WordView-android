@@ -30,16 +30,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.SongViewModel
 import cc.wordview.app.components.extensions.fillMaxWidth
 import cc.wordview.app.components.extensions.percentageOf
 import cc.wordview.app.ui.theme.Typography
@@ -47,13 +43,13 @@ import cc.wordview.app.ui.theme.Typography
 @Composable
 fun Seekbar(
     modifier: Modifier = Modifier,
-    composerMode: Boolean = false,
+    displayAdvancedInformation: Boolean = false,
     currentPosition: Long,
     duration: Long,
+    videoId: String,
     @IntRange(from = 0, to = 100) bufferingProgress: Int,
 ) {
     val progress = duration.percentageOf(currentPosition)
-    val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
 
     Column(modifier.testTag("seekbar")) {
         Box(
@@ -93,7 +89,7 @@ fun Seekbar(
                 fontSize = 14.sp
             )
         }
-        if (composerMode) {
+        if (displayAdvancedInformation) {
             Box(
                 Modifier
                     .padding(horizontal = 36.dp)

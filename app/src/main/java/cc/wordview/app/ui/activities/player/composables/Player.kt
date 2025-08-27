@@ -88,6 +88,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
 
     val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
+    val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
 
     val activity = LocalActivity.current!!
     val context = LocalContext.current
@@ -180,15 +181,16 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
                 }
             }
             Seekbar(
-                Modifier
+                modifier = Modifier
                     .padding(top = TopAppBarDefaults.TopAppBarExpandedHeight)
                     .padding(horizontal = 6.dp)
                     .padding(start = WindowInsets.displayCutout.getLeft(density, LayoutDirection.Ltr).dp / 2)
                     .padding(end = WindowInsets.displayCutout.getRight(density, LayoutDirection.Ltr).dp / 2),
-                composerMode,
-                currentPosition,
-                player.getDuration(),
-                bufferedPercentage
+                displayAdvancedInformation = composerMode,
+                currentPosition = currentPosition,
+                duration = player.getDuration(),
+                videoId = videoId,
+                bufferingProgress = bufferedPercentage
             )
             Box(
                 modifier = Modifier.fillMaxSize(),
