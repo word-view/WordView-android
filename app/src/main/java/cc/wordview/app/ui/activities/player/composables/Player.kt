@@ -62,15 +62,15 @@ import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.components.ui.CrossfadeIconButton
 import cc.wordview.app.components.ui.FadeInAsyncImage
+import cc.wordview.app.components.ui.FadeOutBox
 import cc.wordview.app.extensions.getCleanUploaderName
 import cc.wordview.app.ui.activities.lesson.LessonActivity
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
-import cc.wordview.app.ui.components.FadeOutBox
 import cc.wordview.app.ui.components.NoTimeLeftDialog
 import cc.wordview.app.ui.components.NotEnoughWordsDialog
 import cc.wordview.app.components.ui.OneTimeEffect
-import cc.wordview.app.ui.components.PlayerTopBar
-import cc.wordview.app.ui.components.Seekbar
+import cc.wordview.app.components.ui.PlayerTopBar
+import cc.wordview.app.components.ui.Seekbar
 import cc.wordview.app.ui.components.TextCue
 
 
