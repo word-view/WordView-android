@@ -43,11 +43,11 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.extensions.goBack
-import cc.wordview.app.extensions.openActivity
+import cc.wordview.app.components.extensions.goBack
+import cc.wordview.app.components.extensions.openActivity
+import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.dataStore
 import cc.wordview.app.ui.activities.player.PlayerActivity
-import cc.wordview.app.ui.components.BackTopAppBar
 import cc.wordview.app.ui.components.HistoryItem
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges

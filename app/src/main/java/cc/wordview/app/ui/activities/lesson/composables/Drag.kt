@@ -43,12 +43,12 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.extensions.detectTapGestures
-import cc.wordview.app.extensions.dragGestures
+import cc.wordview.app.components.extensions.detectTapGestures
+import cc.wordview.app.components.extensions.dragGestures
 import cc.wordview.app.ui.activities.lesson.LessonNav
 import cc.wordview.app.ui.activities.lesson.viewmodel.Answer
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
-import cc.wordview.app.ui.components.OneTimeEffect
+import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.gengolex.word.Word
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

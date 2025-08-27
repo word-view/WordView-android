@@ -53,12 +53,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.extensions.openActivity
+import cc.wordview.app.components.extensions.openActivity
+import cc.wordview.app.components.ui.OneTimeEffect
+import cc.wordview.app.components.ui.SongCard
+import cc.wordview.app.components.ui.SongCardPlaceholders
+import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import cc.wordview.app.ui.activities.player.PlayerActivity
-import cc.wordview.app.ui.components.OneTimeEffect
-import cc.wordview.app.ui.components.SongCard
-import cc.wordview.app.ui.components.Space
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.horizontalFadingEdges
@@ -132,6 +133,10 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
                                 .animateItem(fadeInSpec = tween(durationMillis = i * 500)),
                             thumbnail = it.cover,
                             artist = it.artist,
+                            songCardPlaceholders = SongCardPlaceholders(
+                                noConnectionWhite = R.drawable.nonet,
+                                noConnectionDark = R.drawable.nonet_dark
+                            ),
                             trackName = it.title
                         ) {
                             SongViewModel.setVideo(it.id)

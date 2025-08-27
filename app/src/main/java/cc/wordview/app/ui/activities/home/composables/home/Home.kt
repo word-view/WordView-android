@@ -22,7 +22,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,7 +44,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,10 +51,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.api.getStoredJwt
+import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.extensions.getFlag
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.home.HomeNav
-import cc.wordview.app.ui.components.OneTimeEffect
 import cc.wordview.app.ui.components.ProfilePicture
 import cc.wordview.app.ui.theme.redhatFamily
 import cc.wordview.gengolex.Language

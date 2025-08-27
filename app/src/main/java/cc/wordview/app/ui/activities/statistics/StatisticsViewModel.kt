@@ -21,7 +21,7 @@ import android.content.Context
 import android.speech.tts.TextToSpeech
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.api.entity.Translation
-import cc.wordview.app.extensions.percentageOf
+import cc.wordview.app.components.extensions.percentageOf
 import cc.wordview.app.ui.dtos.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.app.ui.dtos.LessonToStatisticsCommunicator

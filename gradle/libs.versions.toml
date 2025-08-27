@@ -4,6 +4,7 @@ accompanistSystemuicontroller = "0.31.2-alpha"
 agp = "8.9.1"
 coil = "3.2.0"
 coilCompose = "3.2.0"
+components = "1.2.0"
 composefadingedges = "1.0.4"
 composeResources = "1.0.0-alpha01"
 coreSplashscreen = "1.0.1"
@@ -56,6 +57,7 @@ androidx-security-crypto = { module = "androidx.security:security-crypto", versi
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
+components = { module = "com.github.word-view:Components", version.ref = "components" }
 compose-resources = { module = "com.github.ygorluizfrazao:compose-resources", version.ref = "composeResources" }
 composefadingedges = { module = "com.github.GIGAMOLE:ComposeFadingEdges", version.ref = "composefadingedges" }
 gengolex = { module = "com.github.word-view:Gengolex", version.ref = "gengolex" }

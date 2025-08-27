@@ -23,8 +23,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
+import cc.wordview.app.components.extensions.without
 import cc.wordview.app.dataStore
-import cc.wordview.app.extensions.without
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import cc.wordview.app.ui.activities.home.composables.history.PLAY_HISTORY
 import com.google.gson.Gson

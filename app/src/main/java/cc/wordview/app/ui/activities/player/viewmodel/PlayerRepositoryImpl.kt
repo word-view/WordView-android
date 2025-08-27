@@ -20,9 +20,8 @@ package cc.wordview.app.ui.activities.player.viewmodel
 import android.content.Context
 import cc.wordview.app.api.APIUrl
 import cc.wordview.app.api.request.LyricsRequest
-import cc.wordview.app.extensions.asURLEncoded
+import cc.wordview.app.components.extensions.asURLEncoded
 import cc.wordview.app.extractor.VideoStreamInterface
-import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
