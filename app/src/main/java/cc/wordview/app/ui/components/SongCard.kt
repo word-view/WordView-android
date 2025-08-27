@@ -41,7 +41,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import cc.wordview.app.R
 import cc.wordview.app.ui.theme.DefaultRoundedCornerShape
 import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
@@ -54,6 +53,7 @@ fun SongCard(
     thumbnail: String,
     artist: String,
     trackName: String,
+    songCardPlaceholders: SongCardPlaceholders,
     onClick: () -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -89,7 +89,7 @@ fun SongCard(
                     AsyncImage(
                         model = thumbnail,
                         placeholder = null,
-                        error = painterResource(id = if (isSystemInDarkTheme()) R.drawable.nonet else R.drawable.nonet_dark),
+                        error = painterResource(id = if (isSystemInDarkTheme()) songCardPlaceholders.noConnectionWhite else songCardPlaceholders.noConnectionDark),
                         contentDescription = "$trackName Cover",
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.FillHeight,

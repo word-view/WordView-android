@@ -34,7 +34,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.ComposeTest
+import cc.wordview.app.R
 import cc.wordview.app.ui.components.SongCard
+import cc.wordview.app.ui.components.SongCardPlaceholders
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -54,6 +56,10 @@ class SongCardTest : ComposeTest() {
                 modifier = Modifier.testTag("song-card"),
                 thumbnail = "",
                 artist = artist,
+                songCardPlaceholders = SongCardPlaceholders(
+                    noConnectionWhite = R.drawable.nonet,
+                    noConnectionDark = R.drawable.nonet_dark
+                ),
                 trackName = trackName
             ) {
                 textVisible = true
