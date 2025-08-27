@@ -22,7 +22,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,11 +31,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import cc.wordview.app.extensions.alpha
-import cc.wordview.app.misc.AppSettings
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -45,12 +42,11 @@ fun FadeOutBox(
     modifier: Modifier = Modifier,
     duration: Int,
     stagnationTime: Int,
+    disabled: Boolean = false,
     content: @Composable () -> Unit
 ) {
     var visible by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
-
-    val composerMode = AppSettings.composerMode.get()
 
     val fade by animateFloatAsState(
         if (visible) 1f else 0f,
@@ -60,7 +56,7 @@ fun FadeOutBox(
             if (visible) {
                 coroutineScope.launch {
                     delay(stagnationTime.toLong())
-                    if (!composerMode) visible = false
+                    if (!disabled) visible = false
                 }
             }
         })
@@ -68,7 +64,7 @@ fun FadeOutBox(
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             delay(500)
-            if (!composerMode) visible = false
+            if (!disabled) visible = false
         }
     }
 
