@@ -17,13 +17,18 @@
 
 package cc.wordview.app.ui.screens.home
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.api.entity.User
-import cc.wordview.app.ui.activities.home.composables.Profile
+import cc.wordview.app.ui.activities.home.composables.ProfileScreen
+import com.composegears.tiamat.Navigation
+import com.composegears.tiamat.navigationPlatformDefault
+import com.composegears.tiamat.rememberNavController
 import org.junit.Before
 import org.junit.Test
 
@@ -39,7 +44,20 @@ class ProfileTest : ComposeTest() {
 
     @Test
     fun renders() {
-        composeTestRule.setContent { Profile() }
+        composeTestRule.setContent {
+            val navController = rememberNavController(
+                key = "testNavController",
+                startDestination = ProfileScreen,
+                configuration = {},
+                destinations = arrayOf(ProfileScreen),
+            )
+
+            Navigation(
+                navController = navController,
+                modifier = Modifier.fillMaxSize(),
+                contentTransformProvider = { navigationPlatformDefault(it) }
+            )
+        }
 
         composeTestRule.onNodeWithText("Mock user")
             .assertExists()

@@ -19,22 +19,13 @@ package cc.wordview.app.ui.screens.home
 
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTouchInput
-import androidx.navigation.compose.rememberNavController
-import cc.wordview.app.ComposeTest
 import cc.wordview.app.ui.activities.home.HomeActivity
-import cc.wordview.app.ui.activities.home.composables.home.Home
 import cc.wordview.app.ui.activities.home.composables.home.HomeRepository
-import cc.wordview.app.ui.activities.home.composables.home.LearnTab
-import cc.wordview.app.ui.activities.home.composables.home.Tabs
-import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
-import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
