@@ -21,13 +21,14 @@ import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import cc.wordview.app.ui.activities.WordViewActivity
-import cc.wordview.app.ui.activities.auth.composables.Login
-import cc.wordview.app.ui.activities.auth.composables.Register
+import cc.wordview.app.ui.activities.auth.composables.LoginScreen
+import cc.wordview.app.ui.activities.auth.composables.RegisterScreen
 import cc.wordview.app.ui.theme.WordViewTheme
+import com.composegears.tiamat.Navigation
+import com.composegears.tiamat.navigationNone
 import dagger.hilt.android.AndroidEntryPoint
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 
@@ -39,19 +40,21 @@ class AuthActivity : WordViewActivity() {
         enableEdgeToEdge()
         setContent {
             BackHandler {}
+
+            val authNavController = com.composegears.tiamat.rememberNavController(
+                key = "authNavController",
+                startDestination = LoginScreen,
+                configuration = {},
+                destinations = arrayOf(LoginScreen, RegisterScreen),
+            )
+
             WordViewTheme {
                 ProvidePreferenceLocals {
-                    val navController = rememberNavController()
-
-                    NavHost(navController = navController, startDestination = "login") {
-                        composable("login") {
-                            Login(navController)
-                        }
-
-                        composable("register") {
-                            Register(navController)
-                        }
-                    }
+                    Navigation(
+                        navController = authNavController,
+                        modifier = Modifier.fillMaxSize(),
+                        contentTransformProvider = { navigationNone() }
+                    )
                 }
             }
         }

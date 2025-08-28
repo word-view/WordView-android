@@ -31,7 +31,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,12 +44,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.components.ui.FormTextField
@@ -61,14 +57,16 @@ import cc.wordview.app.ui.activities.auth.composables.FormValidation.Password
 import cc.wordview.app.ui.activities.auth.viewmodel.register.RegisterViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
 import cc.wordview.app.ui.components.AuthForm
+import com.composegears.tiamat.NavDestination
+import com.composegears.tiamat.navController
+import com.composegears.tiamat.navDestination
 import kotlinx.coroutines.launch
+import kotlin.Unit
 
-@Composable
-@Preview
-fun Register(
-    navController: NavHostController = rememberNavController(),
-    viewModel: RegisterViewModel = hiltViewModel()
-) {
+val RegisterScreen: NavDestination<Unit> by navDestination {
+    val navController = navController()
+    val viewModel: RegisterViewModel = hiltViewModel()
+
     var username by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -181,7 +179,7 @@ fun Register(
                 Space(12.dp)
                 FilledTonalButton(
                     modifier = Modifier.fillMaxWidth(.5f),
-                    onClick = { navController.navigate("login") }
+                    onClick = { navController.navigate(LoginScreen) }
                 ) {
                     Text("Log in")
                 }
