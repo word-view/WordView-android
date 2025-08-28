@@ -36,7 +36,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -48,22 +47,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.extensions.getFlag
 import cc.wordview.app.misc.AppSettings
-import cc.wordview.app.ui.activities.home.HomeNav
+import cc.wordview.app.ui.activities.home.composables.ProfileScreen
+import cc.wordview.app.ui.activities.home.composables.SettingsScreen
+import cc.wordview.app.ui.activities.home.composables.history.HistoryScreen
+import cc.wordview.app.ui.activities.home.composables.search.SearchScreen
 import cc.wordview.app.ui.components.ProfilePicture
 import cc.wordview.app.ui.theme.redhatFamily
 import cc.wordview.gengolex.Language
+import com.composegears.tiamat.NavDestination
+import com.composegears.tiamat.navController
+import com.composegears.tiamat.navDestination
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
+val HomeScreen: NavDestination<Unit> by navDestination {
+    val navController = navController()
+    val viewModel: HomeViewModel = hiltViewModel()
+
     val jwt = getStoredJwt()
 
     val snackBarHostState = remember { SnackbarHostState() }
@@ -115,7 +121,7 @@ fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltVi
                     }
                     IconButton(
                         modifier = Modifier.testTag("settings"),
-                        onClick = { navHostController.navigate(HomeNav.Settings.route) }) {
+                        onClick = { navController.navigate(SettingsScreen) }) {
                         Icon(
                             imageVector = Icons.Filled.Settings,
                             contentDescription = "Settings"
@@ -123,8 +129,8 @@ fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltVi
                     }
                     ProfilePicture(
                         modifier = Modifier.testTag("profile-picture"),
-                        onNavigateToProfile = { navHostController.navigate(HomeNav.Profile.route) },
-                        onOpenHistory = { navHostController.navigate(HomeNav.History.route) }
+                        onNavigateToProfile = { navController.navigate(ProfileScreen) },
+                        onOpenHistory = { navController.navigate(HistoryScreen) }
                     )
                 }
             )
@@ -133,7 +139,7 @@ fun Home(navHostController: NavHostController, viewModel: HomeViewModel = hiltVi
             ExtendedFloatingActionButton(
                 modifier = Modifier.testTag("search"),
                 text = { Text(text = stringResource(R.string.search)) },
-                onClick = { navHostController.navigate(HomeNav.Search.route) },
+                onClick = { navController.navigate(SearchScreen) },
                 icon = {
                     Icon(
                         imageVector = Icons.Filled.Search,

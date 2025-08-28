@@ -46,19 +46,20 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.api.setStoredJwt
-import cc.wordview.app.components.extensions.goBack
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.activities.auth.AuthActivity
+import com.composegears.tiamat.NavController
+import com.composegears.tiamat.NavDestination
+import com.composegears.tiamat.navController
+import com.composegears.tiamat.navDestination
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Profile(navController: NavHostController = rememberNavController()) {
+val ProfileScreen: NavDestination<Unit> by navDestination {
+    val navController = navController()
+
     val user by GlobalViewModel.user.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
@@ -74,7 +75,7 @@ fun Profile(navController: NavHostController = rememberNavController()) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         BackTopAppBar(
             title = {},
-            onClickBack = { navController.goBack() }
+            onClickBack = { navController.back() }
         )
     }) { innerPadding ->
         Column(

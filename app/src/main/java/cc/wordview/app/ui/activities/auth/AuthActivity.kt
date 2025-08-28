@@ -27,7 +27,6 @@ import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.auth.composables.Login
 import cc.wordview.app.ui.activities.auth.composables.Register
-import cc.wordview.app.ui.activities.home.HomeNav
 import cc.wordview.app.ui.theme.WordViewTheme
 import dagger.hilt.android.AndroidEntryPoint
 import me.zhanghai.compose.preference.ProvidePreferenceLocals

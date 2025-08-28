@@ -20,11 +20,18 @@ package cc.wordview.app.ui.activities.home
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import cc.wordview.app.ui.activities.WordViewActivity
+import cc.wordview.app.ui.activities.home.composables.ProfileScreen
+import cc.wordview.app.ui.activities.home.composables.SettingsScreen
+import cc.wordview.app.ui.activities.home.composables.history.HistoryScreen
+import cc.wordview.app.ui.activities.home.composables.home.HomeScreen
+import cc.wordview.app.ui.activities.home.composables.search.SearchScreen
 import cc.wordview.app.ui.theme.WordViewTheme
+import com.composegears.tiamat.Navigation
+import com.composegears.tiamat.navigationPlatformDefault
+import com.composegears.tiamat.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 
@@ -35,17 +42,26 @@ class HomeActivity : WordViewActivity() {
 
         enableEdgeToEdge()
         setContent {
+            val rootNavController = rememberNavController(
+                key = "rootNavController",
+                startDestination = HomeScreen,
+                configuration = {},
+                destinations = arrayOf(
+                    HomeScreen,
+                    SearchScreen,
+                    ProfileScreen,
+                    SettingsScreen,
+                    HistoryScreen
+                ),
+            )
+
             WordViewTheme {
                 ProvidePreferenceLocals {
-                    val navController = rememberNavController()
-
-                    NavHost(navController = navController, startDestination = "home") {
-                        for (screen in HomeNav.screens) {
-                            composable(screen.route) {
-                                screen.Composable(navHostController = navController)
-                            }
-                        }
-                    }
+                    Navigation(
+                        navController = rootNavController,
+                        modifier = Modifier.fillMaxSize(),
+                        contentTransformProvider = { navigationPlatformDefault(it) }
+                    )
                 }
             }
         }
