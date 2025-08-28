@@ -4,6 +4,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.0"
+    id("io.github.composegears.tiamat.destinations.compiler") version "1.5.1"
 }
 
 android {
@@ -104,6 +105,8 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.okhttp)
+    implementation(libs.tiamat)
+    implementation(libs.tiamat.destinations)
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)

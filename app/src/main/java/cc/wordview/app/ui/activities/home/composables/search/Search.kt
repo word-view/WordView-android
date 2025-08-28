@@ -80,6 +80,8 @@ import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.dataStore
 import cc.wordview.app.ui.components.SearchHistoryEntry
+import com.composegears.tiamat.NavDestination
+import com.composegears.tiamat.navDestination
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
@@ -88,8 +90,9 @@ import kotlin.uuid.Uuid
 val SEARCH_HISTORY = stringSetPreferencesKey("search_history")
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
-@Composable
-fun Search(viewModel: SearchViewModel = hiltViewModel()) {
+val SearchScreen: NavDestination<Unit> by navDestination {
+    val viewModel: SearchViewModel = hiltViewModel()
+
     val query by viewModel.query.collectAsStateWithLifecycle()
     val results by viewModel.searchResults.collectAsStateWithLifecycle()
     val searching by viewModel.searching.collectAsStateWithLifecycle()

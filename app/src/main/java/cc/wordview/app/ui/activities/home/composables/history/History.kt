@@ -27,10 +27,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -40,16 +38,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringSetPreferencesKey
-import androidx.navigation.NavHostController
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
-import cc.wordview.app.components.extensions.goBack
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.dataStore
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.HistoryItem
 import cc.wordview.app.ui.theme.poppinsFamily
+import com.composegears.tiamat.NavDestination
+import com.composegears.tiamat.navController
+import com.composegears.tiamat.navDestination
 import com.gigamole.composefadingedges.verticalFadingEdges
 import kotlinx.coroutines.flow.map
 import kotlin.uuid.Uuid
@@ -58,9 +57,9 @@ import kotlin.uuid.ExperimentalUuidApi
 
 val PLAY_HISTORY = stringSetPreferencesKey("play_history")
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalMaterial3Api::class)
-@Composable
-fun History(navController: NavHostController) {
+@OptIn(ExperimentalUuidApi::class)
+val HistoryScreen: NavDestination<Unit> by navDestination {
+    val navController = navController()
     val listState = rememberLazyListState()
 
     val context = LocalContext.current
@@ -78,7 +77,7 @@ fun History(navController: NavHostController) {
                     fontFamily = poppinsFamily,
                 )
             },
-            onClickBack = { navController.goBack() }
+            onClickBack = { navController.back() }
         )
     }) { innerPadding ->
         LazyColumn(

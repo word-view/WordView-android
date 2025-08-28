@@ -25,31 +25,30 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Carpenter
 import androidx.compose.material.icons.outlined.NetworkPing
 import androidx.compose.material.icons.outlined.Translate
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.navigation.NavHostController
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
-import cc.wordview.app.components.extensions.goBack
 import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.extensions.localizedDisplayName
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.gengolex.Language
+import com.composegears.tiamat.NavDestination
+import com.composegears.tiamat.navController
+import com.composegears.tiamat.navDestination
 import me.zhanghai.compose.preference.ListPreferenceType
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.switchPreference
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Settings(navController: NavHostController) {
+val SettingsScreen: NavDestination<Unit> by navDestination {
+    val navController = navController()
+
     val context = LocalContext.current
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
@@ -60,7 +59,7 @@ fun Settings(navController: NavHostController) {
                     fontFamily = poppinsFamily,
                 )
             },
-            onClickBack = { navController.goBack() }
+            onClickBack = { navController.back() }
         )
     }) { innerPadding ->
         Box(
