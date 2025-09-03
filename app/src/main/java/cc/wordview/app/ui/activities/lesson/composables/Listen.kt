@@ -22,9 +22,11 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +54,7 @@ import cc.wordview.gengolex.word.Word
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Listen(
     mode: LessonMode? = null,
@@ -142,18 +145,19 @@ fun Listen(
         label = "resultScale"
     )
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .testTag("listen"),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        contentAlignment = Alignment.Center
     ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(256.dp)
                 .padding(bottom = 12.dp)
+                .padding(top = TopAppBarDefaults.TopAppBarExpandedHeight + 64.dp)
+                .align(Alignment.TopCenter)
         ) {
             if (!canListen) {
                 val infiniteTransition = rememberInfiniteTransition(label = "waves")
@@ -217,22 +221,22 @@ fun Listen(
             }
         }
 
-        Text(
-            text = if (revealedText && selectedWord != null) selectedWord!!.word else mainText,
-            textAlign = TextAlign.Center,
-            style = if (lang == Language.JAPANESE) Typography.displayLarge else Typography.displayMedium,
-            modifier = Modifier
-                .scale(if (isCorrect != null) resultScale else mainTextScale)
-                .alpha(if (isCorrect != null) 1f else mainTextAlpha)
-                .padding(bottom = 16.dp)
-                .testTag("reveal-text"),
-        )
-
         Column(
-            modifier = Modifier.padding(top = 48.dp),
+            modifier = Modifier.padding(top = 48.dp).align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Text(
+                text = if (revealedText && selectedWord != null) selectedWord!!.word else mainText,
+                textAlign = TextAlign.Center,
+                style = if (lang == Language.JAPANESE) Typography.displayLarge else Typography.displayMedium,
+                modifier = Modifier
+                    .scale(if (isCorrect != null) resultScale else mainTextScale)
+                    .alpha(if (isCorrect != null) 1f else mainTextAlpha)
+                    .padding(bottom = 16.dp)
+                    .testTag("reveal-text"),
+            )
+            Space(64.dp)
             for (word in alternatives) {
                 WordButton(
                     text = {
