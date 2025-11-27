@@ -96,7 +96,6 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
                 modifier = Modifier.align(Alignment.TopCenter),
                 isRefreshing = isRefreshing,
                 state = state,
-                threshold = 100.dp
             )
         }
     ) {
