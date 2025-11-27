@@ -4,7 +4,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.2.21"
-    id("io.github.composegears.tiamat.destinations.compiler") version "1.5.1"
+    id("io.github.composegears.tiamat.destinations.compiler") version "2.0.0"
 }
 
 android {
