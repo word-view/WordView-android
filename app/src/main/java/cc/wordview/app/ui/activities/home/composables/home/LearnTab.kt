@@ -145,6 +145,7 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
                                     title = it.title,
                                     artist = it.artist,
                                     thumbnailUrl = it.cover,
+                                    duration = 0, // TODO: Hardcode the durations later
                                 )
                             )
                             context.openActivity<PlayerActivity>()
