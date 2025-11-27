@@ -24,6 +24,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,15 +44,17 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.R
+import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 @SuppressLint("SimpleDateFormat")
 @Composable
@@ -68,7 +71,7 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
         modifier = modifier
             .testTag("history-item")
             .fillMaxWidth()
-            .height(100.dp),
+            .height(80.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
@@ -78,7 +81,7 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
         Row {
             Surface(
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(80.dp)
                     .padding(8.dp),
                 shape = RoundedCornerShape(5.dp)
             ) {
@@ -99,35 +102,49 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
             Column(Modifier.padding(8.dp)) {
                 Text(
                     text = result.title,
-                    style = Typography.titleLarge,
+                    style = Typography.labelMedium,
                     textAlign = TextAlign.Left,
-                    fontWeight = FontWeight.Normal,
                     softWrap = false,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = result.artist,
-                        style = Typography.titleMedium,
+                        style = Typography.labelSmall,
                         textAlign = TextAlign.Left,
-                        fontWeight = FontWeight.Light,
                         softWrap = false,
                         modifier = Modifier.fillMaxWidth(),
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
-                val sdf = java.text.SimpleDateFormat("yyyy/MM/dd")
-                val date = java.util.Date(result.unixWatchedAt)
+                Spacer(Modifier.size(3.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (result.duration > 0) {
+                        Text(
+                            modifier = Modifier
+                                .background(
+                                    MaterialTheme.colorScheme.surfaceContainer,
+                                    RoundedCornerShape(5.dp)
+                                )
+                                .padding(3.dp),
+                            text = "${result.duration.seconds}",
+                            style = Typography.labelSmall
+                        )
+                        Space(6.dp)
+                    }
 
-                Text(
-                    text = "Watched at ${sdf.format(date)}",
-                    style = Typography.titleSmall,
-                    textAlign = TextAlign.Left,
-                    color = MaterialTheme.colorScheme.onBackground.copy(0.5f),
-                    fontWeight = FontWeight.Light,
-                    softWrap = false,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                    val sdf = java.text.SimpleDateFormat("dd/MM/yyyy")
+                    val date = java.util.Date(result.unixWatchedAt)
+
+                    Text(
+                        text = stringResource(R.string.watched_at, sdf.format(date)),
+                        style = Typography.bodySmall,
+                        textAlign = TextAlign.Left,
+                        softWrap = false,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.inverseSurface
+                    )
+                }
             }
         }
     }
