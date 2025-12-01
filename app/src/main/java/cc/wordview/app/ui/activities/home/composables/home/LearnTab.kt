@@ -81,6 +81,7 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
     }
 
     PullToRefreshBox(
+        modifier = Modifier.padding(innerPadding),
         state = state,
         isRefreshing = isRefreshing,
         onRefresh = {
@@ -102,7 +103,6 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .padding(PaddingValues(top = 17.dp))
                 .verticalScroll(rememberScrollState())
         ) {
