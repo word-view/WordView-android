@@ -41,6 +41,7 @@ timber = "5.0.1"
 uiTestJunit4 = "1.9.5"
 uiTestManifest = "1.9.5"
 volley = "1.2.1"
+shimmer = "1.0.0"
 
 [libraries]
 accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayout" }
@@ -97,6 +98,7 @@ tools-desugar_jdk_libs_nio = { module = "com.android.tools:desugar_jdk_libs_nio"
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
 ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestManifest" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
+compose-shimmer = { module = "me.vponomarenko:compose-shimmer", version.ref = "shimmer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

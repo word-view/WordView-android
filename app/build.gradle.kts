@@ -107,6 +107,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.tiamat)
     implementation(libs.tiamat.destinations)
+    implementation(libs.compose.shimmer)
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)

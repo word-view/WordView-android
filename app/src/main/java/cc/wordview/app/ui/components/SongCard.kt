@@ -47,6 +47,7 @@ import cc.wordview.app.components.ui.AsyncImagePlaceholders
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import me.vponomarenko.compose.shimmer.shimmer
 
 /**
  * A composable function that displays a card representing a song with a thumbnail, track name, and artist.
@@ -94,8 +95,9 @@ fun SongCard(
                     Box(
                         Modifier
                             .zIndex(-1f)
-                            .alpha(0.1f)
-                            .background(MaterialTheme.colorScheme.onBackground)
+                            .shimmer()
+                            .background(MaterialTheme.colorScheme.surfaceContainer)
+
                     )
                     AsyncImage(
                         model = thumbnail,

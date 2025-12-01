@@ -54,6 +54,7 @@ import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import me.vponomarenko.compose.shimmer.shimmer
 import kotlin.time.Duration.Companion.seconds
 
 @SuppressLint("SimpleDateFormat")
@@ -88,8 +89,8 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
                 Box(
                     Modifier
                         .zIndex(-1f)
-                        .alpha(0.1f)
-                        .background(MaterialTheme.colorScheme.onBackground)
+                        .shimmer()
+                        .background(MaterialTheme.colorScheme.surfaceContainer)
                 )
                 AsyncImage(
                     model = result.thumbnailUrl,
