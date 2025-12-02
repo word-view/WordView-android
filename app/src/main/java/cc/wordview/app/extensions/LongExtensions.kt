@@ -15,15 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.api.entity
+package cc.wordview.app.extensions
 
-import cc.wordview.gengolex.Language
-
-data class Video(
-    val id: String = "",
-    val title: String = "",
-    val artist: String = "",
-    val cover: String = "",
-    val duration: Long = 0,
-    val language: Language? = null,
-)
+fun Long.toMinutesSeconds(): String {
+    val minutes = this / 60
+    val seconds = this % 60
+    return String.format("%02d:%02d", minutes, seconds)
+}

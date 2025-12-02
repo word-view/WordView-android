@@ -24,6 +24,7 @@ data class HistoryEntry(
     val title: String,
     val artist: String,
     val thumbnailUrl: String,
+    val duration: Long,
     val unixWatchedAt: Long = System.currentTimeMillis(),
 ) {
     companion object {
@@ -32,6 +33,7 @@ data class HistoryEntry(
                 id = vsr.id,
                 title = vsr.title,
                 artist = vsr.artist,
+                duration = vsr.duration,
                 thumbnailUrl = vsr.thumbnails.first().url,
             )
         }

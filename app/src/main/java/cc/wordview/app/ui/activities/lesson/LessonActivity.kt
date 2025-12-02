@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timelapse
@@ -56,6 +57,7 @@ import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.statistics.StatisticsActivity
 import cc.wordview.app.ui.components.LessonQuitDialog
 import cc.wordview.app.components.ui.OneTimeEffect
+import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.ui.dtos.LessonToStatisticsCommunicator
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.Language
@@ -148,7 +150,7 @@ class LessonActivity : WordViewActivity() {
                         BackHandler { openQuitConfirm = true }
                         BackTopAppBar(title = {
                             Row(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.End,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {

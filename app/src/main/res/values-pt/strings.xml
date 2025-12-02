@@ -50,4 +50,6 @@
     <string name="history">Histórico</string>
     <string name="log_out">Sair</string>
     <string name="log_in">Fazer login</string>
+    <string name="watched_at">Visto em %1$s</string>
+    <string name="great_compatibility">Ótima compatibilidade</string>
 </resources>

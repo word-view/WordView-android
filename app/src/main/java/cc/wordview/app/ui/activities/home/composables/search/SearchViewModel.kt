@@ -21,12 +21,16 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.components.extensions.without
 import cc.wordview.app.dataStore
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import cc.wordview.app.ui.activities.home.composables.history.PLAY_HISTORY
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -40,6 +44,7 @@ import kotlinx.coroutines.withContext
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.collections.listOf
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
@@ -51,12 +56,14 @@ class SearchViewModel @Inject constructor(
     private val _query = MutableStateFlow("")
     private val _searchResults = MutableStateFlow(ArrayList<VideoSearchResult>())
     private val _state = MutableStateFlow(SearchState.NONE)
+    private val _serverLyricsIds = MutableStateFlow(listOf<String>())
 
     val searching = _searching.asStateFlow()
     val animateSearch = _animateSearch.asStateFlow()
     val query = _query.asStateFlow()
     val searchResults = _searchResults.asStateFlow()
     val state = _state.asStateFlow()
+    val serverLyricsIds = _serverLyricsIds.asStateFlow()
 
     fun setState(value: SearchState) {
         _state.update { value }
@@ -93,6 +100,32 @@ class SearchViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun listLyricsIds() {
+        val queue = Volley.newRequestQueue(appContext)
+        val endpoint = BuildConfig.API_BASE_URL
+        val url = "$endpoint/api/v1/lyrics/list"
+
+        val request = JsonArrayRequest(
+            Request.Method.GET,
+            url,
+            null,
+            { jsonArray ->
+                // Convert JSONArray → List<String>
+                val list = List(jsonArray.length()) { i ->
+                    jsonArray.getString(i)
+                }
+                _serverLyricsIds.update { list }
+
+                Timber.i("${_serverLyricsIds.value.size}")
+            },
+            { error ->
+                Timber.e("Failed to download server lyrics", error)
+            }
+        )
+
+        queue.add(request)
     }
 
     fun searchNextPage(query: String) {

@@ -17,38 +17,33 @@
 
 package cc.wordview.app.ui.components
 
-import android.annotation.SuppressLint
-import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import cc.wordview.app.R
-import cc.wordview.app.extensions.marquee
+import cc.wordview.app.components.ui.AsyncImagePlaceholders
 import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
@@ -56,46 +51,62 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.vponomarenko.compose.shimmer.shimmer
 
-@SuppressLint("SimpleDateFormat")
+/**
+ * A composable function that displays a card representing a song with a thumbnail, track name, and artist.
+ *
+ * @param modifier The [Modifier] to be applied to the card for layout customization. Defaults to an empty [Modifier].
+ * @param thumbnail The URL or path to the song's thumbnail image.
+ * @param artist The name of the artist to be displayed.
+ * @param trackName The name of the track to be displayed.
+ * @param asyncImagePlaceholders [AsyncImagePlaceholders] object providing resource IDs for error placeholders (e.g., no connection images).
+ * @param onClick The callback invoked when the card is clicked, executed after a 120ms delay. Defaults to an empty lambda.
+ */
 @Composable
-fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: () -> Unit) {
+fun SongCard(
+    modifier: Modifier = Modifier,
+    thumbnail: String,
+    artist: String,
+    trackName: String,
+    duration: Long,
+    asyncImagePlaceholders: AsyncImagePlaceholders,
+    onClick: () -> Unit = {}
+) {
     val coroutineScope = rememberCoroutineScope()
 
-    fun onClickResult() = coroutineScope.launch {
+    fun onClickCard() = coroutineScope.launch {
         // delay so that the animation can be seen
         delay(120)
         onClick()
     }
 
     Card(
-        modifier = modifier
-            .testTag("history-item")
-            .fillMaxWidth()
-            .height(80.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background,
-        ),
-        shape = RoundedCornerShape(0.dp),
-        onClick = { onClickResult() }
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
+        onClick = { onClickCard() }
     ) {
-        Row {
-            Box {
+        Column(
+            modifier = Modifier.padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(Modifier.size(120.dp)) {
                 Surface(
                     modifier = Modifier
-                        .size(80.dp)
-                        .padding(8.dp),
-                    shape = RoundedCornerShape(5.dp)
+                        .fillMaxSize()
+                        .zIndex(-1f),
+                    shape = RoundedCornerShape(20.dp)
                 ) {
                     Box(
                         Modifier
                             .zIndex(-1f)
                             .shimmer()
                             .background(MaterialTheme.colorScheme.surfaceContainer)
+
                     )
                     AsyncImage(
-                        model = result.thumbnailUrl,
-                        error = painterResource(id = if (isSystemInDarkTheme()) R.drawable.nonet else R.drawable.nonet_dark),
-                        contentDescription = "${result.title} cover",
+                        model = thumbnail,
+                        placeholder = null,
+                        error = painterResource(id = if (isSystemInDarkTheme()) asyncImagePlaceholders.noConnectionWhite else asyncImagePlaceholders.noConnectionDark),
+                        contentDescription = "$trackName Cover",
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.FillHeight,
                     )
@@ -103,49 +114,33 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
                 Text(
                     modifier = Modifier
                         .background(
-                            MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.7f),
+                            MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f),
                             RoundedCornerShape(5.dp)
                         )
                         .padding(vertical = 3.dp, horizontal = 6.dp)
                         .align(Alignment.BottomEnd),
-                    text = result.duration.toMinutesSeconds(),
-                    style = Typography.labelSmall
+                    text = duration.toMinutesSeconds(),
+                    style = Typography.labelMedium
                 )
             }
-            Column(Modifier.padding(8.dp)) {
+            Column(
+                Modifier
+                    .width(120.dp)
+                    .padding(top = 5.dp)
+            ) {
                 Text(
-                    text = result.title,
-                    style = Typography.labelMedium,
+                    text = trackName,
+                    style = typography.labelMedium,
                     textAlign = TextAlign.Left,
-                    softWrap = false,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .marquee()
+                    modifier = Modifier.fillMaxWidth(),
                 )
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = result.artist,
-                        style = Typography.labelSmall,
-                        textAlign = TextAlign.Left,
-                        softWrap = false,
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.inverseSurface
-                    )
-                }
-                Spacer(Modifier.size(3.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    val sdf = java.text.SimpleDateFormat("dd/MM/yyyy")
-                    val date = java.util.Date(result.unixWatchedAt)
-
-                    Text(
-                        text = stringResource(R.string.watched_at, sdf.format(date)),
-                        style = Typography.bodySmall,
-                        textAlign = TextAlign.Left,
-                        softWrap = false,
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.inverseSurface
-                    )
-                }
+                Text(
+                    text = artist,
+                    style = typography.labelSmall,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.inverseSurface
+                )
             }
         }
     }
