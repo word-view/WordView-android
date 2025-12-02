@@ -15,15 +15,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.api.entity
+package cc.wordview.app.extensions
 
-import cc.wordview.gengolex.Language
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.ui.Modifier
 
-data class Video(
-    val id: String = "",
-    val title: String = "",
-    val artist: String = "",
-    val cover: String = "",
-    val duration: Long = 0,
-    val language: Language? = null,
-)
+/**
+ * Applies an pre-configured animated marquee to display
+ * overflowing text
+ */
+fun Modifier.marquee(): Modifier {
+    return this.basicMarquee(
+        initialDelayMillis = 3_000,
+        repeatDelayMillis = 3_000
+    )
+}

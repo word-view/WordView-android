@@ -19,6 +19,7 @@ package cc.wordview.app.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,24 +43,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
+import cc.wordview.app.extensions.marquee
+import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.vponomarenko.compose.shimmer.shimmer
-import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick: () -> Unit) {
+fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, isLyricsProvidedByWordView: Boolean = false, onClick: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
 
     fun onClickResult() = coroutineScope.launch {
@@ -79,24 +82,37 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
         onClick = { onClickResult() }
     ) {
         Row {
-            Surface(
-                modifier = Modifier
-                    .size(80.dp)
-                    .padding(8.dp),
-                shape = RoundedCornerShape(5.dp)
-            ) {
-                Box(
-                    Modifier
-                        .zIndex(-1f)
-                        .shimmer()
-                        .background(MaterialTheme.colorScheme.surfaceContainer)
-                )
-                AsyncImage(
-                    model = result.thumbnails.first().url,
-                    error = painterResource(id = if (isSystemInDarkTheme()) R.drawable.nonet else R.drawable.nonet_dark),
-                    contentDescription = "${result.title} cover",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillHeight,
+            Box {
+                Surface(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(8.dp),
+                    shape = RoundedCornerShape(5.dp)
+                ) {
+                    Box(
+                        Modifier
+                            .zIndex(-1f)
+                            .shimmer()
+                            .background(MaterialTheme.colorScheme.surfaceContainer)
+                    )
+                    AsyncImage(
+                        model = result.thumbnails.first().url,
+                        error = painterResource(id = if (isSystemInDarkTheme()) R.drawable.nonet else R.drawable.nonet_dark),
+                        contentDescription = "${result.title} cover",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.FillHeight,
+                    )
+                }
+                Text(
+                    modifier = Modifier
+                        .background(
+                            MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.7f),
+                            RoundedCornerShape(5.dp)
+                        )
+                        .padding(vertical = 3.dp, horizontal = 6.dp)
+                        .align(Alignment.BottomEnd),
+                    text = result.duration.toMinutesSeconds(),
+                    style = Typography.labelSmall
                 )
             }
             Column(Modifier.padding(8.dp)) {
@@ -105,7 +121,9 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
                     style = Typography.labelMedium,
                     textAlign = TextAlign.Left,
                     softWrap = false,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .marquee()
                 )
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     if (result.channelIsVerified) {
@@ -126,17 +144,29 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
-                Spacer(Modifier.size(3.dp))
-                Text(
-                    modifier = Modifier
-                        .background(
-                            MaterialTheme.colorScheme.surfaceContainer,
-                            RoundedCornerShape(5.dp)
+                Spacer(Modifier.size(6.dp))
+                if (isLyricsProvidedByWordView) {
+                    Row(
+                        Modifier
+                            .background(
+                                MaterialTheme.colorScheme.inversePrimary.copy(alpha = 0.6f),
+                                RoundedCornerShape(20.dp)
+                            )
+                            .padding(vertical = 3.dp, horizontal = 6.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.CheckCircle,
+                            modifier = Modifier.size(12.dp),
+                            contentDescription = "Checked"
                         )
-                        .padding(3.dp),
-                    text = "${result.duration.seconds}",
-                    style = Typography.labelSmall
-                )
+                        Spacer(Modifier.size(2.dp))
+                        Text(
+                            text = stringResource(R.string.great_compatibility),
+                            style = Typography.labelSmall
+                        )
+                    }
+                }
             }
         }
     }
