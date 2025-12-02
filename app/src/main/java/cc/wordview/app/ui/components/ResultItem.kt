@@ -50,11 +50,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
+import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.vponomarenko.compose.shimmer.shimmer
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -79,24 +81,37 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
         onClick = { onClickResult() }
     ) {
         Row {
-            Surface(
-                modifier = Modifier
-                    .size(80.dp)
-                    .padding(8.dp),
-                shape = RoundedCornerShape(5.dp)
-            ) {
-                Box(
-                    Modifier
-                        .zIndex(-1f)
-                        .shimmer()
-                        .background(MaterialTheme.colorScheme.surfaceContainer)
-                )
-                AsyncImage(
-                    model = result.thumbnails.first().url,
-                    error = painterResource(id = if (isSystemInDarkTheme()) R.drawable.nonet else R.drawable.nonet_dark),
-                    contentDescription = "${result.title} cover",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillHeight,
+            Box {
+                Surface(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(8.dp),
+                    shape = RoundedCornerShape(5.dp)
+                ) {
+                    Box(
+                        Modifier
+                            .zIndex(-1f)
+                            .shimmer()
+                            .background(MaterialTheme.colorScheme.surfaceContainer)
+                    )
+                    AsyncImage(
+                        model = result.thumbnails.first().url,
+                        error = painterResource(id = if (isSystemInDarkTheme()) R.drawable.nonet else R.drawable.nonet_dark),
+                        contentDescription = "${result.title} cover",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.FillHeight,
+                    )
+                }
+                Text(
+                    modifier = Modifier
+                        .background(
+                            MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.7f),
+                            RoundedCornerShape(5.dp)
+                        )
+                        .padding(vertical = 3.dp, horizontal = 6.dp)
+                        .align(Alignment.BottomEnd),
+                    text = result.duration.toMinutesSeconds(),
+                    style = Typography.labelSmall
                 )
             }
             Column(Modifier.padding(8.dp)) {
@@ -127,16 +142,6 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
                     )
                 }
                 Spacer(Modifier.size(3.dp))
-                Text(
-                    modifier = Modifier
-                        .background(
-                            MaterialTheme.colorScheme.surfaceContainer,
-                            RoundedCornerShape(5.dp)
-                        )
-                        .padding(3.dp),
-                    text = "${result.duration.seconds}",
-                    style = Typography.labelSmall
-                )
             }
         }
     }

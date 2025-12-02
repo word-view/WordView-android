@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.R
 import cc.wordview.app.components.ui.Space
+import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
@@ -80,24 +81,37 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
         onClick = { onClickResult() }
     ) {
         Row {
-            Surface(
-                modifier = Modifier
-                    .size(80.dp)
-                    .padding(8.dp),
-                shape = RoundedCornerShape(5.dp)
-            ) {
-                Box(
-                    Modifier
-                        .zIndex(-1f)
-                        .shimmer()
-                        .background(MaterialTheme.colorScheme.surfaceContainer)
-                )
-                AsyncImage(
-                    model = result.thumbnailUrl,
-                    error = painterResource(id = if (isSystemInDarkTheme()) R.drawable.nonet else R.drawable.nonet_dark),
-                    contentDescription = "${result.title} cover",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillHeight,
+            Box {
+                Surface(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(8.dp),
+                    shape = RoundedCornerShape(5.dp)
+                ) {
+                    Box(
+                        Modifier
+                            .zIndex(-1f)
+                            .shimmer()
+                            .background(MaterialTheme.colorScheme.surfaceContainer)
+                    )
+                    AsyncImage(
+                        model = result.thumbnailUrl,
+                        error = painterResource(id = if (isSystemInDarkTheme()) R.drawable.nonet else R.drawable.nonet_dark),
+                        contentDescription = "${result.title} cover",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.FillHeight,
+                    )
+                }
+                Text(
+                    modifier = Modifier
+                        .background(
+                            MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.7f),
+                            RoundedCornerShape(5.dp)
+                        )
+                        .padding(vertical = 3.dp, horizontal = 6.dp)
+                        .align(Alignment.BottomEnd),
+                    text = result.duration.toMinutesSeconds(),
+                    style = Typography.labelSmall
                 )
             }
             Column(Modifier.padding(8.dp)) {
@@ -120,20 +134,6 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
                 }
                 Spacer(Modifier.size(3.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (result.duration > 0) {
-                        Text(
-                            modifier = Modifier
-                                .background(
-                                    MaterialTheme.colorScheme.surfaceContainer,
-                                    RoundedCornerShape(5.dp)
-                                )
-                                .padding(3.dp),
-                            text = "${result.duration.seconds}",
-                            style = Typography.labelSmall
-                        )
-                        Space(6.dp)
-                    }
-
                     val sdf = java.text.SimpleDateFormat("dd/MM/yyyy")
                     val date = java.util.Date(result.unixWatchedAt)
 

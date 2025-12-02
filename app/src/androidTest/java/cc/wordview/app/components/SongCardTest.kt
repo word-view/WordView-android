@@ -42,6 +42,7 @@ class SongCardTest : ComposeTest() {
                     noConnectionWhite = R.drawable.nonet,
                     noConnectionDark = R.drawable.nonet_dark
                 ),
+                duration = 120,
                 trackName = trackName
             ) {
                 textVisible = true
