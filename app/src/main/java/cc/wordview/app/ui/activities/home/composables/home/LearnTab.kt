@@ -144,6 +144,7 @@ fun LearnTab(
                                 .animateItem(fadeInSpec = tween(durationMillis = i * 500)),
                             thumbnail = it.cover,
                             artist = it.artist,
+                            duration = it.duration,
                             asyncImagePlaceholders = AsyncImagePlaceholders(
                                 noConnectionWhite = R.drawable.nonet,
                                 noConnectionDark = R.drawable.nonet_dark
@@ -157,7 +158,7 @@ fun LearnTab(
                                     title = it.title,
                                     artist = it.artist,
                                     thumbnailUrl = it.cover,
-                                    duration = 0, // TODO: Hardcode the durations later
+                                    duration = it.duration, // TODO: Hardcode the durations later
                                 )
                             )
                             context.openActivity<PlayerActivity>()

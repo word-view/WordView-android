@@ -44,6 +44,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
+import cc.wordview.app.extensions.toMinutesSeconds
+import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -65,6 +67,7 @@ fun SongCard(
     thumbnail: String,
     artist: String,
     trackName: String,
+    duration: Long,
     asyncImagePlaceholders: AsyncImagePlaceholders,
     onClick: () -> Unit = {}
 ) {
@@ -108,6 +111,17 @@ fun SongCard(
                         contentScale = ContentScale.FillHeight,
                     )
                 }
+                Text(
+                    modifier = Modifier
+                        .background(
+                            MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f),
+                            RoundedCornerShape(5.dp)
+                        )
+                        .padding(vertical = 3.dp, horizontal = 6.dp)
+                        .align(Alignment.BottomEnd),
+                    text = duration.toMinutesSeconds(),
+                    style = Typography.labelMedium
+                )
             }
             Column(
                 Modifier
