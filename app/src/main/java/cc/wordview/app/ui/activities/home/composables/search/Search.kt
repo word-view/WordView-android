@@ -43,7 +43,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -98,6 +97,7 @@ val SearchScreen: NavDestination<Unit> by navDestination {
     val searching by viewModel.searching.collectAsStateWithLifecycle()
     val animateSearch by viewModel.animateSearch.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val serverLyricsIds by viewModel.serverLyricsIds.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
     var errorMessage by rememberSaveable { mutableStateOf("") }
@@ -109,6 +109,10 @@ val SearchScreen: NavDestination<Unit> by navDestination {
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    OneTimeEffect {
+        viewModel.listLyricsIds()
+    }
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
@@ -257,7 +261,9 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                                     stiffness = Spring.StiffnessLow,
                                     dampingRatio = Spring.DampingRatioMediumBouncy
                                 )
-                            ), result = it
+                            ),
+                            isLyricsProvidedByWordView = serverLyricsIds.contains(it.id),
+                            result = it
                         ) {
                             SongViewModel.setVideo(it.id)
                             viewModel.saveVideoToHistory(it)

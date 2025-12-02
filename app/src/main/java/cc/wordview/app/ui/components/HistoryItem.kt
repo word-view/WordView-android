@@ -20,7 +20,6 @@ package cc.wordview.app.ui.components
 import android.annotation.SuppressLint
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +40,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -50,14 +48,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.R
-import cc.wordview.app.components.ui.Space
+import cc.wordview.app.extensions.marquee
 import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.vponomarenko.compose.shimmer.shimmer
-import kotlin.time.Duration.Companion.seconds
 
 @SuppressLint("SimpleDateFormat")
 @Composable
@@ -123,10 +120,7 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
                     softWrap = false,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .basicMarquee(
-                            initialDelayMillis = 3_000,
-                            repeatDelayMillis = 3_000
-                        ),
+                        .marquee()
                 )
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Text(

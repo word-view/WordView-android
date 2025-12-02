@@ -18,8 +18,8 @@
 package cc.wordview.app.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -42,26 +43,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
+import cc.wordview.app.extensions.marquee
 import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.vponomarenko.compose.shimmer.shimmer
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick: () -> Unit) {
+fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, isLyricsProvidedByWordView: Boolean = false, onClick: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
 
     fun onClickResult() = coroutineScope.launch {
@@ -123,10 +123,7 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
                     softWrap = false,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .basicMarquee(
-                            initialDelayMillis = 3_000,
-                            repeatDelayMillis = 3_000
-                        ),
+                        .marquee()
                 )
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     if (result.channelIsVerified) {
@@ -147,7 +144,29 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
                         color = MaterialTheme.colorScheme.inverseSurface
                     )
                 }
-                Spacer(Modifier.size(3.dp))
+                Spacer(Modifier.size(6.dp))
+                if (isLyricsProvidedByWordView) {
+                    Row(
+                        Modifier
+                            .background(
+                                MaterialTheme.colorScheme.inversePrimary.copy(alpha = 0.6f),
+                                RoundedCornerShape(20.dp)
+                            )
+                            .padding(vertical = 3.dp, horizontal = 6.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.CheckCircle,
+                            modifier = Modifier.size(12.dp),
+                            contentDescription = "Checked"
+                        )
+                        Spacer(Modifier.size(2.dp))
+                        Text(
+                            text = stringResource(R.string.great_compatibility),
+                            style = Typography.labelSmall
+                        )
+                    }
+                }
             }
         }
     }
