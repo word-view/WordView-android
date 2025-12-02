@@ -54,6 +54,7 @@ import cc.wordview.app.ui.theme.Typography
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import me.vponomarenko.compose.shimmer.shimmer
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -87,8 +88,8 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
                 Box(
                     Modifier
                         .zIndex(-1f)
-                        .alpha(0.1f)
-                        .background(MaterialTheme.colorScheme.onBackground)
+                        .shimmer()
+                        .background(MaterialTheme.colorScheme.surfaceContainer)
                 )
                 AsyncImage(
                     model = result.thumbnails.first().url,

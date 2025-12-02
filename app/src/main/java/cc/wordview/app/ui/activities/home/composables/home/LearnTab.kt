@@ -19,8 +19,11 @@ package cc.wordview.app.ui.activities.home.composables.home
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,8 +33,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
@@ -59,16 +64,21 @@ import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import cc.wordview.app.ui.activities.player.PlayerActivity
+import cc.wordview.app.ui.components.MetaHomeInterface
 import cc.wordview.app.ui.components.SongCard
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.horizontalFadingEdges
 import kotlinx.coroutines.launch
+import me.vponomarenko.compose.shimmer.shimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewModel = hiltViewModel()) {
+fun LearnTab(
+    innerPadding: PaddingValues = PaddingValues(),
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     val categories by viewModel.homeCategories.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
@@ -81,6 +91,7 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
     }
 
     PullToRefreshBox(
+        modifier = Modifier.padding(innerPadding),
         state = state,
         isRefreshing = isRefreshing,
         onRefresh = {
@@ -102,10 +113,11 @@ fun LearnTab(innerPadding: PaddingValues = PaddingValues(), viewModel: HomeViewM
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .padding(PaddingValues(top = 17.dp))
                 .verticalScroll(rememberScrollState())
         ) {
+            /** Loading effect **/
+            if (categories.isEmpty()) MetaHomeInterface(Modifier.shimmer())
             for (category in categories) {
                 Text(
                     text = getStringForId(category.id),
