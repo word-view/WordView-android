@@ -20,6 +20,7 @@ package cc.wordview.app.ui.components
 import android.annotation.SuppressLint
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -120,7 +121,12 @@ fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: ()
                     style = Typography.labelMedium,
                     textAlign = TextAlign.Left,
                     softWrap = false,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .basicMarquee(
+                            initialDelayMillis = 3_000,
+                            repeatDelayMillis = 3_000
+                        ),
                 )
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Text(

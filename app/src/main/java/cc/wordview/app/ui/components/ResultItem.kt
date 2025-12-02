@@ -18,6 +18,7 @@
 package cc.wordview.app.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -120,7 +121,12 @@ fun ResultItem(modifier: Modifier = Modifier, result: VideoSearchResult, onClick
                     style = Typography.labelMedium,
                     textAlign = TextAlign.Left,
                     softWrap = false,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .basicMarquee(
+                            initialDelayMillis = 3_000,
+                            repeatDelayMillis = 3_000
+                        ),
                 )
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     if (result.channelIsVerified) {
