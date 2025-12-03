@@ -63,7 +63,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.SongViewModel
@@ -97,7 +97,7 @@ val SearchScreen: NavDestination<Unit> by navDestination {
     val searching by viewModel.searching.collectAsStateWithLifecycle()
     val animateSearch by viewModel.animateSearch.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val serverLyricsIds by viewModel.serverLyricsIds.collectAsStateWithLifecycle()
+    val providedLyricsIds by viewModel.providedLyrics.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
     var errorMessage by rememberSaveable { mutableStateOf("") }
@@ -111,7 +111,7 @@ val SearchScreen: NavDestination<Unit> by navDestination {
     val coroutineScope = rememberCoroutineScope()
 
     OneTimeEffect {
-        viewModel.listLyricsIds()
+        viewModel.getProvidedLyrics()
     }
 
     LaunchedEffect(listState) {
@@ -262,7 +262,7 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                                     dampingRatio = Spring.DampingRatioMediumBouncy
                                 )
                             ),
-                            isLyricsProvidedByWordView = serverLyricsIds.contains(it.id),
+                            isLyricsProvided = providedLyricsIds.contains(it.id),
                             result = it
                         ) {
                             SongViewModel.setVideo(it.id)

@@ -27,6 +27,7 @@ class SongCardTest : ComposeTest() {
     private fun setup(
         artist: String,
         trackName: String,
+        duration: Long = 120,
         onClick: Runnable
     ) {
         composeTestRule.setContent {
@@ -42,7 +43,7 @@ class SongCardTest : ComposeTest() {
                     noConnectionWhite = R.drawable.nonet,
                     noConnectionDark = R.drawable.nonet_dark
                 ),
-                duration = 120,
+                duration = duration,
                 trackName = trackName
             ) {
                 textVisible = true
@@ -81,6 +82,42 @@ class SongCardTest : ComposeTest() {
         composeTestRule.onNodeWithText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut accumsan arcu ut fermentum viverra. Nulla et nulla ante. Donec vitae sem ac arcu maximus viverra vel vel neque")
             .assertIsDisplayed()
         composeTestRule.onNodeWithTag("song-card").assertWidthIsEqualTo(140.dp)
+    }
+
+    @Test
+    fun duration1Minute() {
+        setup(
+            trackName = "Test Track",
+            artist = "Test Artist",
+            duration = 60,
+            onClick = {})
+
+        composeTestRule.onNodeWithText("01:00")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun duration2Minutes() {
+        setup(
+            trackName = "Test Track",
+            artist = "Test Artist",
+            duration = 120,
+            onClick = {})
+
+        composeTestRule.onNodeWithText("02:00")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun duration2Minutes2seconds() {
+        setup(
+            trackName = "Test Track",
+            artist = "Test Artist",
+            duration = 122,
+            onClick = {})
+
+        composeTestRule.onNodeWithText("02:02")
+            .assertIsDisplayed()
     }
 
     @OptIn(ExperimentalTestApi::class)

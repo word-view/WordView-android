@@ -56,14 +56,14 @@ class SearchViewModel @Inject constructor(
     private val _query = MutableStateFlow("")
     private val _searchResults = MutableStateFlow(ArrayList<VideoSearchResult>())
     private val _state = MutableStateFlow(SearchState.NONE)
-    private val _serverLyricsIds = MutableStateFlow(listOf<String>())
+    private val _providedLyrics = MutableStateFlow(listOf<String>())
 
     val searching = _searching.asStateFlow()
     val animateSearch = _animateSearch.asStateFlow()
     val query = _query.asStateFlow()
     val searchResults = _searchResults.asStateFlow()
     val state = _state.asStateFlow()
-    val serverLyricsIds = _serverLyricsIds.asStateFlow()
+    val providedLyrics = _providedLyrics.asStateFlow()
 
     fun setState(value: SearchState) {
         _state.update { value }
@@ -102,7 +102,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun listLyricsIds() {
+    fun getProvidedLyrics() {
         val queue = Volley.newRequestQueue(appContext)
         val endpoint = BuildConfig.API_BASE_URL
         val url = "$endpoint/api/v1/lyrics/list"
@@ -112,16 +112,13 @@ class SearchViewModel @Inject constructor(
             url,
             null,
             { jsonArray ->
-                // Convert JSONArray → List<String>
-                val list = List(jsonArray.length()) { i ->
-                    jsonArray.getString(i)
-                }
-                _serverLyricsIds.update { list }
+                val list = List(jsonArray.length()) { jsonArray.getString(it) }
+                _providedLyrics.update { list }
 
-                Timber.i("${_serverLyricsIds.value.size}")
+                Timber.v("providedLyrics.size=${_providedLyrics.value.size}")
             },
             { error ->
-                Timber.e("Failed to download server lyrics", error)
+                Timber.e("Failed to download server lyrics: ${error.message}")
             }
         )
 
