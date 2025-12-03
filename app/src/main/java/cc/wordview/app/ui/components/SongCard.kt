@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,25 +30,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
 import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
-import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import me.vponomarenko.compose.shimmer.shimmer
 
 /**
  * A composable function that displays a card representing a song with a thumbnail, track name, and artist.
@@ -89,28 +82,15 @@ fun SongCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(Modifier.size(120.dp)) {
-                Surface(
+                RemoteImage(
                     modifier = Modifier
                         .fillMaxSize()
                         .zIndex(-1f),
-                    shape = RoundedCornerShape(20.dp)
-                ) {
-                    Box(
-                        Modifier
-                            .zIndex(-1f)
-                            .shimmer()
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
-
-                    )
-                    AsyncImage(
-                        model = thumbnail,
-                        placeholder = null,
-                        error = painterResource(id = if (isSystemInDarkTheme()) asyncImagePlaceholders.noConnectionWhite else asyncImagePlaceholders.noConnectionDark),
-                        contentDescription = "$trackName Cover",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.FillHeight,
-                    )
-                }
+                    shape = RoundedCornerShape(20.dp),
+                    model = thumbnail,
+                    asyncImagePlaceholders = asyncImagePlaceholders,
+                    contentDescriptor = "$trackName Cover"
+                )
                 Text(
                     modifier = Modifier
                         .background(
