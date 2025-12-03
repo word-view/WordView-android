@@ -153,7 +153,7 @@ fun LearnTab(
                                     title = it.title,
                                     artist = it.artist,
                                     thumbnailUrl = it.cover,
-                                    duration = it.duration, // TODO: Hardcode the durations later
+                                    duration = it.duration,
                                 )
                             )
                             context.openActivity<PlayerActivity>()
