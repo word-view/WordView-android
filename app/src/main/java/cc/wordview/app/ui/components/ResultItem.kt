@@ -57,7 +57,7 @@ import kotlinx.coroutines.launch
 fun ResultItem(
     modifier: Modifier = Modifier,
     result: VideoSearchResult,
-    isLyricsProvidedByWordView: Boolean = false,
+    isLyricsProvided: Boolean = false,
     onClick: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -135,7 +135,7 @@ fun ResultItem(
                     )
                 }
                 Spacer(Modifier.size(6.dp))
-                if (isLyricsProvidedByWordView) {
+                if (isLyricsProvided) {
                     Row(
                         Modifier
                             .background(
