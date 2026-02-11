@@ -32,7 +32,7 @@ navigationRuntimeKtx = "2.9.6"
 navigationCompose = "2.9.6"
 media3Common = "1.8.0"
 lifecycleRuntimeComposeAndroid = "2.10.0"
-newpipeextractor = "v0.24.6"
+newpipeextractor = "v0.25.2"
 okhttp = "5.3.2"
 securityCrypto = "1.1.0"
 tiamat = "1.5.1"
@@ -89,7 +89,7 @@ androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", nam
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 compose-preference = { module = "me.zhanghai.compose.preference:library", version.ref = "compose-preference" }
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
-newpipeextractor = { module = "com.github.TeamNewPipe.NewPipeExtractor:NewPipeExtractor", version.ref = "newpipeextractor" }
+newpipeextractor = { module = "com.github.TeamNewPipe:NewPipeExtractor", version.ref = "newpipeextractor" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 tiamat-destinations = { module = "io.github.composegears:tiamat-destinations", version.ref = "tiamatDestinations" }
 tiamat = { module = "io.github.composegears:tiamat", version.ref = "tiamat" }
