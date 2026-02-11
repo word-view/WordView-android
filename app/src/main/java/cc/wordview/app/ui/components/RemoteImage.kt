@@ -50,7 +50,8 @@ fun RemoteImage(
     shape: Shape = RectangleShape,
     model: Any? = null,
     contentDescriptor: String? = null,
-    asyncImagePlaceholders: AsyncImagePlaceholders
+    asyncImagePlaceholders: AsyncImagePlaceholders,
+    contentScale: ContentScale = ContentScale.FillHeight
 ) {
     Surface(
         modifier = modifier,
@@ -68,7 +69,7 @@ fun RemoteImage(
             error = painterResource(id = if (isSystemInDarkTheme()) asyncImagePlaceholders.noConnectionWhite else asyncImagePlaceholders.noConnectionDark),
             contentDescription = contentDescriptor,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillHeight,
+            contentScale = contentScale,
         )
     }
 }
