@@ -59,9 +59,10 @@ import cc.wordview.app.ui.activities.home.composables.search.SearchScreen
 import cc.wordview.app.ui.components.ProfilePicture
 import cc.wordview.app.ui.theme.redhatFamily
 import cc.wordview.gengolex.Language
-import com.composegears.tiamat.NavDestination
-import com.composegears.tiamat.navController
-import com.composegears.tiamat.navDestination
+import com.composegears.tiamat.compose.navController
+import com.composegears.tiamat.compose.navDestination
+import com.composegears.tiamat.compose.navigate
+import com.composegears.tiamat.navigation.NavDestination
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

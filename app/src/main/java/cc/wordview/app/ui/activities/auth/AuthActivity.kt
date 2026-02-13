@@ -27,8 +27,9 @@ import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.auth.composables.LoginScreen
 import cc.wordview.app.ui.activities.auth.composables.RegisterScreen
 import cc.wordview.app.ui.theme.WordViewTheme
-import com.composegears.tiamat.Navigation
-import com.composegears.tiamat.navigationNone
+import com.composegears.tiamat.compose.Navigation
+import com.composegears.tiamat.compose.navigationNone
+import com.composegears.tiamat.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 
@@ -41,11 +42,10 @@ class AuthActivity : WordViewActivity() {
         setContent {
             BackHandler {}
 
-            val authNavController = com.composegears.tiamat.rememberNavController(
+            val authNavController = rememberNavController(
                 key = "authNavController",
                 startDestination = LoginScreen,
                 configuration = {},
-                destinations = arrayOf(LoginScreen, RegisterScreen),
             )
 
             WordViewTheme {
@@ -53,6 +53,7 @@ class AuthActivity : WordViewActivity() {
                     Navigation(
                         navController = authNavController,
                         modifier = Modifier.fillMaxSize(),
+                        destinations = arrayOf(LoginScreen, RegisterScreen),
                         contentTransformProvider = { navigationNone() }
                     )
                 }

@@ -56,9 +56,10 @@ import cc.wordview.app.ui.activities.auth.composables.FormValidation.Email
 import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
 import cc.wordview.app.ui.components.AuthForm
-import com.composegears.tiamat.NavDestination
-import com.composegears.tiamat.navController
-import com.composegears.tiamat.navDestination
+import com.composegears.tiamat.compose.navController
+import com.composegears.tiamat.compose.navDestination
+import com.composegears.tiamat.compose.navigate
+import com.composegears.tiamat.navigation.NavDestination
 import kotlinx.coroutines.launch
 
 val LoginScreen: NavDestination<Unit> by navDestination {

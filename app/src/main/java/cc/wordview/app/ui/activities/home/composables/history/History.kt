@@ -46,9 +46,10 @@ import cc.wordview.app.dataStore
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.HistoryItem
 import cc.wordview.app.ui.theme.poppinsFamily
-import com.composegears.tiamat.NavDestination
-import com.composegears.tiamat.navController
-import com.composegears.tiamat.navDestination
+import com.composegears.tiamat.compose.back
+import com.composegears.tiamat.compose.navController
+import com.composegears.tiamat.compose.navDestination
+import com.composegears.tiamat.navigation.NavDestination
 import com.gigamole.composefadingedges.verticalFadingEdges
 import kotlinx.coroutines.flow.map
 import kotlin.uuid.Uuid

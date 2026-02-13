@@ -39,9 +39,10 @@ import cc.wordview.app.extensions.localizedDisplayName
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.gengolex.Language
-import com.composegears.tiamat.NavDestination
-import com.composegears.tiamat.navController
-import com.composegears.tiamat.navDestination
+import com.composegears.tiamat.compose.back
+import com.composegears.tiamat.compose.navController
+import com.composegears.tiamat.compose.navDestination
+import com.composegears.tiamat.navigation.NavDestination
 import me.zhanghai.compose.preference.ListPreferenceType
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.switchPreference
@@ -122,7 +123,7 @@ val SettingsScreen: NavDestination<Unit> by navDestination {
                     },
                     type = ListPreferenceType.ALERT_DIALOG
                 )
-                @Suppress("KotlinConstantConditions")
+                @Suppress("KotlinConstantConditions", "SimplifyBooleanWithConstants")
                 if (BuildConfig.BUILD_TYPE == "debug") {
                     switchPreference(
                         key = AppSettings.composerMode.key,
