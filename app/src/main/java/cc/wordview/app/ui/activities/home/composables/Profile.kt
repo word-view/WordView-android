@@ -52,10 +52,10 @@ import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.activities.auth.AuthActivity
-import com.composegears.tiamat.NavController
-import com.composegears.tiamat.NavDestination
-import com.composegears.tiamat.navController
-import com.composegears.tiamat.navDestination
+import com.composegears.tiamat.compose.back
+import com.composegears.tiamat.compose.navController
+import com.composegears.tiamat.compose.navDestination
+import com.composegears.tiamat.navigation.NavDestination
 
 val ProfileScreen: NavDestination<Unit> by navDestination {
     val navController = navController()

@@ -1,13 +1,14 @@
+import com.android.build.api.dsl.ApplicationExtension
+
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    id("kotlin-kapt")
+    alias(libs.plugins.legacy.kapt)
     id("com.google.dagger.hilt.android")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.2.21"
-    id("io.github.composegears.tiamat.destinations.compiler") version "1.5.1"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.3.10"
+    id("io.github.composegears.tiamat.destinations.compiler") version "2.2.0"
 }
 
-android {
+configure<ApplicationExtension> {
     namespace = "cc.wordview.app"
     compileSdk = 36
 
@@ -42,26 +43,30 @@ android {
             defaultConfig.versionName += "-dev"
         }
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
 
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
     buildFeatures {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+}
+
+kotlin {
+    compilerOptions {
+        languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8
     }
 }
 

@@ -29,9 +29,9 @@ import cc.wordview.app.ui.activities.home.composables.history.HistoryScreen
 import cc.wordview.app.ui.activities.home.composables.home.HomeScreen
 import cc.wordview.app.ui.activities.home.composables.search.SearchScreen
 import cc.wordview.app.ui.theme.WordViewTheme
-import com.composegears.tiamat.Navigation
-import com.composegears.tiamat.navigationPlatformDefault
-import com.composegears.tiamat.rememberNavController
+import com.composegears.tiamat.compose.Navigation
+import com.composegears.tiamat.compose.navigationPlatformDefault
+import com.composegears.tiamat.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 
@@ -46,13 +46,6 @@ class HomeActivity : WordViewActivity() {
                 key = "rootNavController",
                 startDestination = HomeScreen,
                 configuration = {},
-                destinations = arrayOf(
-                    HomeScreen,
-                    SearchScreen,
-                    ProfileScreen,
-                    SettingsScreen,
-                    HistoryScreen
-                ),
             )
 
             WordViewTheme {
@@ -60,7 +53,14 @@ class HomeActivity : WordViewActivity() {
                     Navigation(
                         navController = rootNavController,
                         modifier = Modifier.fillMaxSize(),
-                        contentTransformProvider = { navigationPlatformDefault(it) }
+                        contentTransformProvider = { navigationPlatformDefault(it) },
+                        destinations = arrayOf(
+                            HomeScreen,
+                            SearchScreen,
+                            ProfileScreen,
+                            SettingsScreen,
+                            HistoryScreen
+                        )
                     )
                 }
             }

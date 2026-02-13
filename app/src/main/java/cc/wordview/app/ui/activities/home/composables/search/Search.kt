@@ -79,8 +79,8 @@ import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.dataStore
 import cc.wordview.app.ui.components.SearchHistoryEntry
-import com.composegears.tiamat.NavDestination
-import com.composegears.tiamat.navDestination
+import com.composegears.tiamat.compose.navDestination
+import com.composegears.tiamat.navigation.NavDestination
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
