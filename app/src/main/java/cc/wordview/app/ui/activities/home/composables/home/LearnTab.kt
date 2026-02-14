@@ -66,6 +66,7 @@ import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.horizontalFadingEdges
 import kotlinx.coroutines.launch
 import me.vponomarenko.compose.shimmer.shimmer
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
@@ -170,10 +171,8 @@ fun LearnTab(
 
 @Composable
 private fun getStringForId(id: String): String {
-    val context = LocalContext.current
-
     return when (id) {
-        "editors-pick" -> context.getString(R.string.editors_pick)
+        "editors-pick" -> stringResource(R.string.editors_pick)
         else -> id
     }
 }
