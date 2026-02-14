@@ -21,6 +21,7 @@ import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
 import cc.wordview.app.extensions.AlphaKey
 
+@Suppress("unused")
 fun hasAlpha(expectedAlpha: Float): SemanticsMatcher {
     return SemanticsMatcher("has alpha value of $expectedAlpha") { node ->
         node.config.getOrNull(AlphaKey) == expectedAlpha

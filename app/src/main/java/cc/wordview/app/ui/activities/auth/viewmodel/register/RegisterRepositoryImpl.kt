@@ -19,7 +19,6 @@ package cc.wordview.app.ui.activities.auth.viewmodel.register
 
 import android.content.Context
 import cc.wordview.app.api.request.AuthRequest
-import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONObject

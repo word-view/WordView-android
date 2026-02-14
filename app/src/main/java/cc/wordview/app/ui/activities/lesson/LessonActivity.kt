@@ -57,7 +57,6 @@ import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.activities.statistics.StatisticsActivity
 import cc.wordview.app.ui.components.LessonQuitDialog
 import cc.wordview.app.components.ui.OneTimeEffect
-import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.ui.dtos.LessonToStatisticsCommunicator
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.Language

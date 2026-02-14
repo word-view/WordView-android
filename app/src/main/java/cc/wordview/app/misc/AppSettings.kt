@@ -49,6 +49,6 @@ class Setting<T>(val key: String, val defaultValue: T) {
     * @param preferences The preferences that will be used
     */
    fun get(preferences: Preferences): T {
-      return preferences.get<T>(key) ?: defaultValue
+      return preferences.get(key) ?: defaultValue
    }
 }

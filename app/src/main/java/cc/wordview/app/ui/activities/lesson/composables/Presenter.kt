@@ -46,7 +46,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.R
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.activities.lesson.viewmodel.Answer
@@ -68,7 +67,7 @@ fun Presenter(
     var visible by remember { mutableStateOf(false) }
 
     val langTag = AppSettings.language.get()
-    val context = LocalContext.current
+    LocalContext.current
 
     val scaleIn = animateFloatAsState(
         if (visible) 1f else 0.01f,

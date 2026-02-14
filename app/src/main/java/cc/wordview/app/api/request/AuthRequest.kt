@@ -18,7 +18,6 @@
 package cc.wordview.app.api.request
 
 import cc.wordview.app.api.wordViewRetryPolicy
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import org.json.JSONObject
 import timber.log.Timber
@@ -35,7 +34,7 @@ class AuthRequest(
     onSuccess(it)
 }, {
     val statusCode = it.networkResponse?.statusCode
-    val responseData = it.networkResponse?.data?.let { String(it) }
+    val responseData = it.networkResponse?.data?.let { it -> String(it) }
 
     onError(statusCode, responseData)
 }) {

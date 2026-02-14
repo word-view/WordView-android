@@ -54,7 +54,7 @@ class HomeRequest(
     },
     {
         val statusCode = it.networkResponse?.statusCode
-        val responseData = it.networkResponse?.data?.let { String(it) }
+        val responseData = it.networkResponse?.data?.let { it -> String(it) }
         val errorTitle = scrapeErrorFromResponseData(responseData)
 
         onError(it.message ?: "Request failed with status code $statusCode\n$errorTitle", statusCode ?: 0)

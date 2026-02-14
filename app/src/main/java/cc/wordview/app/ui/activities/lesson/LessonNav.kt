@@ -26,6 +26,7 @@ import cc.wordview.app.ui.activities.lesson.composables.Presenter
 import cc.wordview.app.ui.activities.lesson.composables.Choose
 import cc.wordview.app.ui.activities.lesson.composables.Listen
 
+@Suppress("unused", "unused")
 sealed class LessonNav(val route: String) {
     @Composable
     open fun Composable(innerPadding: PaddingValues) {
@@ -105,8 +106,5 @@ sealed class LessonNav(val route: String) {
                 .random()
         }
 
-        fun getRandomScreen(toFilter: LessonNav): LessonNav {
-            return screens.filter { s -> s.route != toFilter.route }.random()
-        }
     }
 }

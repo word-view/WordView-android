@@ -18,7 +18,6 @@
 package cc.wordview.app.api.request
 
 import cc.wordview.app.api.wordViewRetryPolicy
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import com.google.gson.JsonParser
 import timber.log.Timber
@@ -36,7 +35,7 @@ class LyricsRequest(
     },
     {
         val statusCode = it.networkResponse?.statusCode
-        val responseData = it.networkResponse?.data?.let { String(it) }
+        val responseData = it.networkResponse?.data?.let { it -> String(it) }
         val errorTitle = scrapeErrorFromResponseData(responseData)
 
         onError(it.message ?: "Request failed with status code $statusCode\n$errorTitle", statusCode ?: 0)

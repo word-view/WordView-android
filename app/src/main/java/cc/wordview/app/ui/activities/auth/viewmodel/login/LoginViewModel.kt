@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.activities.auth.viewmodel.login
 
 import android.content.Context
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.R
