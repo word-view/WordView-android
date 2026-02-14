@@ -9,7 +9,7 @@ import cc.wordview.app.R
 import cc.wordview.gengolex.Language
 
 fun Language.displayName(): String {
-    return name.lowercase().capitalize()
+    return name.lowercase().replaceFirstChar { it.uppercaseChar() }
 }
 
 @Composable
