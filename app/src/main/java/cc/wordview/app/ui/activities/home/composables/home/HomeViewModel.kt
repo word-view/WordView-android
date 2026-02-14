@@ -62,7 +62,7 @@ class HomeViewModel @Inject constructor(
             onFail = { s, i ->
                 Timber.e("Failed to request home videos \n\t message=$s, status=$i")
                 
-                if (s.contains("UnknownHostException:")) {
+                if (s.contains("UnknownHostException:") || s.contains("ConnectException:") ) {
                     emitMessage(context.getString(R.string.no_connection))
                 } else {
                     emitMessage(s)
