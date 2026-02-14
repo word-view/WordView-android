@@ -92,10 +92,8 @@ fun LearnTab(
         isRefreshing = isRefreshing,
         onRefresh = {
             coroutineScope.launch {
-                isRefreshing = true
                 viewModel.updateHomeCategories(arrayListOf())
                 viewModel.getHome()
-                isRefreshing = false
             }
         },
         indicator = {
