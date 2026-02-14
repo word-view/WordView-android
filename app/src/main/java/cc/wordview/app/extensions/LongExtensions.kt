@@ -17,6 +17,9 @@
 
 package cc.wordview.app.extensions
 
+import android.annotation.SuppressLint
+
+@SuppressLint("DefaultLocale")
 fun Long.toMinutesSeconds(): String {
     val minutes = this / 60
     val seconds = this % 60
