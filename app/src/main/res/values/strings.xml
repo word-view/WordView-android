@@ -53,4 +53,5 @@
     <string name="log_in">Log In</string>
     <string name="watched_at">Watched at %1$s</string>
     <string name="great_compatibility">Great compatibility</string>
+    <string name="failed_to_complete_search">Failed to complete search</string>
 </resources>

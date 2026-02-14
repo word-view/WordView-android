@@ -223,7 +223,7 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                     )
                     Spacer(Modifier.size(15.dp))
                     Text(
-                        text = "Failed to complete search",
+                        text = stringResource(R.string.failed_to_complete_search),
                         textAlign = TextAlign.Center,
                         style = Typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
