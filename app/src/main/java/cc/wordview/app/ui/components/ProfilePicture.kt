@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.GlobalViewModel
+import cc.wordview.app.misc.UserViewModel
 import cc.wordview.app.R
 import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.setStoredJwt
@@ -61,7 +61,7 @@ fun ProfilePicture(modifier: Modifier = Modifier, onNavigateToProfile: () -> Uni
     val context = LocalContext.current
     val activity = LocalActivity.current
 
-    val user by GlobalViewModel.user.collectAsStateWithLifecycle()
+    val user by UserViewModel.user.collectAsStateWithLifecycle()
 
     var showMenu by remember { mutableStateOf(false) }
 
@@ -72,12 +72,12 @@ fun ProfilePicture(modifier: Modifier = Modifier, onNavigateToProfile: () -> Uni
 
     fun logout() {
         setStoredJwt(null, context)
-        GlobalViewModel.resetUser()
+        UserViewModel.resetUser()
         context.openActivity<AuthActivity>()
         activity?.finish()
     }
 
-    OneTimeEffect { GlobalViewModel.makeMeRequest(jwt, context) }
+    OneTimeEffect { UserViewModel.makeMeRequest(jwt, context) }
 
     val logged = user != null
 

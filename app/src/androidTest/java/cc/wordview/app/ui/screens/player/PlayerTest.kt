@@ -24,7 +24,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import cc.wordview.app.SongViewModel
+import cc.wordview.app.misc.SongViewModel
 import cc.wordview.app.ui.activities.home.HomeActivity
 import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository

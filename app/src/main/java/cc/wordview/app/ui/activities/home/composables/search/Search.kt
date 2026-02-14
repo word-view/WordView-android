@@ -66,7 +66,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
-import cc.wordview.app.SongViewModel
+import cc.wordview.app.misc.SongViewModel
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.theme.Typography

@@ -34,7 +34,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.SongViewModel
+import cc.wordview.app.misc.SongViewModel
 import cc.wordview.app.components.extensions.setOrientationSensorLandscape
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.extractor.VideoStream

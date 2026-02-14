@@ -57,7 +57,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
-import cc.wordview.app.SongViewModel
+import cc.wordview.app.misc.SongViewModel
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.components.ui.CrossfadeIconButton

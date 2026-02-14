@@ -39,7 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import cc.wordview.app.R
-import cc.wordview.app.SongViewModel
+import cc.wordview.app.misc.SongViewModel
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.dataStore

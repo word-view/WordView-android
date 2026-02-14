@@ -15,10 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app
+package cc.wordview.app.misc
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import cc.wordview.app.BuildConfig
 import cc.wordview.app.api.entity.User
 import cc.wordview.app.api.request.MeRequest
 import com.android.volley.toolbox.Volley
@@ -27,7 +28,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
 
-object GlobalViewModel : ViewModel() {
+object UserViewModel : ViewModel() {
     private val _user = MutableStateFlow<User?>(null)
 
     val user = _user.asStateFlow()

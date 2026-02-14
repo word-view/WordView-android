@@ -23,7 +23,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ComposeTest
-import cc.wordview.app.GlobalViewModel
+import cc.wordview.app.misc.UserViewModel
 import cc.wordview.app.api.entity.User
 import cc.wordview.app.ui.activities.home.composables.ProfileScreen
 import com.composegears.tiamat.compose.Navigation
@@ -35,7 +35,7 @@ import org.junit.Test
 class ProfileTest : ComposeTest() {
     @Before
     fun setup() {
-        GlobalViewModel.setUser(User(
+        UserViewModel.setUser(User(
             id = "1",
             username = "Mock user",
             email = "mock.user@gmail.com"

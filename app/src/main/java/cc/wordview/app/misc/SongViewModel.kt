@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app
+package cc.wordview.app.misc
 
 import androidx.lifecycle.ViewModel
 import cc.wordview.app.extractor.VideoStream

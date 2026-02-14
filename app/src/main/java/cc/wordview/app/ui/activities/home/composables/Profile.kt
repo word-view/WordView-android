@@ -44,7 +44,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.GlobalViewModel
+import cc.wordview.app.misc.UserViewModel
 import cc.wordview.app.api.setStoredJwt
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.BackTopAppBar
@@ -58,14 +58,14 @@ import com.composegears.tiamat.navigation.NavDestination
 val ProfileScreen: NavDestination<Unit> by navDestination {
     val navController = navController()
 
-    val user by GlobalViewModel.user.collectAsStateWithLifecycle()
+    val user by UserViewModel.user.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val activity = LocalActivity.current
 
     fun logout() {
         setStoredJwt(null, context)
-        GlobalViewModel.resetUser()
+        UserViewModel.resetUser()
         context.openActivity<AuthActivity>()
         activity?.finish()
     }
