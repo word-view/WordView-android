@@ -26,9 +26,9 @@ import cc.wordview.app.ComposeTest
 import cc.wordview.app.GlobalViewModel
 import cc.wordview.app.api.entity.User
 import cc.wordview.app.ui.activities.home.composables.ProfileScreen
-import com.composegears.tiamat.Navigation
-import com.composegears.tiamat.navigationPlatformDefault
-import com.composegears.tiamat.rememberNavController
+import com.composegears.tiamat.compose.Navigation
+import com.composegears.tiamat.compose.navigationPlatformDefault
+import com.composegears.tiamat.compose.rememberNavController
 import org.junit.Before
 import org.junit.Test
 
@@ -49,13 +49,13 @@ class ProfileTest : ComposeTest() {
                 key = "testNavController",
                 startDestination = ProfileScreen,
                 configuration = {},
-                destinations = arrayOf(ProfileScreen),
             )
 
             Navigation(
                 navController = navController,
                 modifier = Modifier.fillMaxSize(),
-                contentTransformProvider = { navigationPlatformDefault(it) }
+                contentTransformProvider = { navigationPlatformDefault(it) },
+                destinations = arrayOf(ProfileScreen),
             )
         }
 
