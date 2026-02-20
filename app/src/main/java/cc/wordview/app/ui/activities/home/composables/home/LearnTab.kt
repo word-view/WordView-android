@@ -67,6 +67,7 @@ import com.gigamole.composefadingedges.horizontalFadingEdges
 import kotlinx.coroutines.launch
 import me.vponomarenko.compose.shimmer.shimmer
 import androidx.compose.ui.res.stringResource
+import cc.wordview.app.database.entity.ViewedVideo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
@@ -147,7 +148,7 @@ fun LearnTab(
                         ) {
                             SongViewModel.setVideo(it.id)
                             viewModel.saveVideoToHistory(
-                                HistoryEntry(
+                                ViewedVideo(
                                     id = it.id,
                                     title = it.title,
                                     artist = it.artist,

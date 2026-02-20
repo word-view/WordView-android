@@ -26,8 +26,9 @@ import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.components.extensions.without
 import cc.wordview.app.dataStore
+import cc.wordview.app.database.RoomAccess
+import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
-import cc.wordview.app.ui.activities.home.composables.history.PLAY_HISTORY
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
@@ -147,15 +148,12 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun saveVideoToHistory(searchResult: VideoSearchResult) = viewModelScope.launch {
-        val gson = Gson()
-        val historyEntryJson = gson.toJson(HistoryEntry.fromSearchResult(searchResult))
+    fun saveVideoToHistory(searchResult: VideoSearchResult) = viewModelScope.launch(Dispatchers.IO) {
+        val database = RoomAccess.getDatabase()
+        val video = ViewedVideo.fromSearchResult(searchResult);
 
-        appContext.dataStore.edit { preferences ->
-            val current = preferences[PLAY_HISTORY] ?: emptySet()
-            if (!current.contains(historyEntryJson))
-                preferences[PLAY_HISTORY] = current + historyEntryJson
-        }
+        Timber.v("video=${video}")
+        database.viewedVideoDao().insertAll(video)
     }
 
     fun removeSearch(searchEntry: String) = viewModelScope.launch {

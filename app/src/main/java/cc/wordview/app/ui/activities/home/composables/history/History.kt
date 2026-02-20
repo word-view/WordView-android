@@ -29,20 +29,20 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import cc.wordview.app.R
 import cc.wordview.app.misc.SongViewModel
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.BackTopAppBar
-import cc.wordview.app.dataStore
+import cc.wordview.app.components.ui.OneTimeEffect
+import cc.wordview.app.database.RoomAccess
+import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.HistoryItem
 import cc.wordview.app.ui.theme.poppinsFamily
@@ -51,12 +51,12 @@ import com.composegears.tiamat.compose.navController
 import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.navigation.NavDestination
 import com.gigamole.composefadingedges.verticalFadingEdges
-import kotlinx.coroutines.flow.map
 import kotlin.uuid.Uuid
-import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.collections.mutableListOf
 import kotlin.uuid.ExperimentalUuidApi
-
-val PLAY_HISTORY = stringSetPreferencesKey("play_history")
 
 @OptIn(ExperimentalUuidApi::class)
 val HistoryScreen: NavDestination<Unit> by navDestination {
@@ -65,10 +65,14 @@ val HistoryScreen: NavDestination<Unit> by navDestination {
 
     val context = LocalContext.current
 
-    val playHistoryFlow = remember { context.dataStore.data.map { it[PLAY_HISTORY] ?: emptySet() } }
-    val playHistory by playHistoryFlow.collectAsState(initial = emptySet())
+    var history = remember { mutableStateListOf<ViewedVideo>() }
 
-    val gson = remember { Gson() }
+    OneTimeEffect {
+        CoroutineScope(Dispatchers.IO).launch {
+            val database = RoomAccess.getDatabase()
+            history.addAll(database.viewedVideoDao().getAll())
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         BackTopAppBar(
@@ -92,9 +96,7 @@ val HistoryScreen: NavDestination<Unit> by navDestination {
             item { Spacer(Modifier.size(16.dp)) }
             var i = 0
 
-            items(playHistory.toList().reversed(), key = { Uuid.random() }) {
-                val entry = gson.fromJson(it, HistoryEntry::class.java)
-
+            items(history.toList().reversed(), key = { Uuid.random() }) {
                 i += 1
                 HistoryItem(
                     modifier = Modifier.animateItem(
@@ -104,9 +106,9 @@ val HistoryScreen: NavDestination<Unit> by navDestination {
                             dampingRatio = Spring.DampingRatioMediumBouncy
                         )
                     ),
-                    result = entry
+                    result = it
                 ) {
-                    SongViewModel.setVideo(entry.id)
+                    SongViewModel.setVideo(it.id)
                     context.openActivity<PlayerActivity>()
                 }
                 Spacer(Modifier.size(16.dp))

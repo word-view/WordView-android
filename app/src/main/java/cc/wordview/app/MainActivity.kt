@@ -21,13 +21,20 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import cc.wordview.app.database.RoomAccess
+import cc.wordview.app.extractor.DownloaderImpl
+import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.activities.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
+import org.schabi.newpipe.extractor.NewPipe
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        RoomAccess.open(applicationContext)
 
         installSplashScreen()
 
