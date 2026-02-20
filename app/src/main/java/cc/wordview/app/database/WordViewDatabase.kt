@@ -17,12 +17,26 @@
 
 package cc.wordview.app.database
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.room.Database
+import androidx.room.DatabaseConfiguration
 import androidx.room.RoomDatabase
+import cc.wordview.app.database.entity.SearchQuery
+import cc.wordview.app.database.entity.SearchQueryDAO
 import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.database.entity.ViewedVideoDAO
 
-@Database(entities = [ViewedVideo::class], version = 1)
+@Database(entities = [ViewedVideo::class, SearchQuery::class], version = 1)
 abstract class WordViewDatabase : RoomDatabase() {
     abstract fun viewedVideoDao(): ViewedVideoDAO
+
+    abstract fun searchQueryDao(): SearchQueryDAO
+
+    @SuppressLint("LogNotTimber", "RestrictedApi")
+    override fun init(configuration: DatabaseConfiguration) {
+        super.init(configuration)
+
+        Log.i("WordViewDatabase", "Opened database at $path")
+    }
 }

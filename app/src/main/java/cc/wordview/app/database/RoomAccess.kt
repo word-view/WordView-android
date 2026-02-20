@@ -17,25 +17,26 @@
 
 package cc.wordview.app.database
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import androidx.room.Room
 import cc.wordview.app.BuildConfig
-import timber.log.Timber
 
 object RoomAccess {
     private lateinit var database: WordViewDatabase
 
-    @SuppressLint("RestrictedApi", "LogNotTimber")
-    fun open(context: Context) {
-        database = Room.databaseBuilder(
-            context,
-            WordViewDatabase::class.java,
-            "app-${BuildConfig.BUILD_TYPE}"
-        ).build()
-
-        Log.i("RoomAccess", "Opened database at ${database.path}")
+    fun open(context: Context, inMemory: Boolean = false) {
+        database = if (inMemory) {
+            Room.inMemoryDatabaseBuilder(
+                context,
+                WordViewDatabase::class.java
+            ).build()
+        } else {
+            Room.databaseBuilder(
+                context,
+                WordViewDatabase::class.java,
+                "app-${BuildConfig.BUILD_TYPE}"
+            ).build()
+        }
     }
 
     fun getDatabase(): WordViewDatabase {

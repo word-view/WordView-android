@@ -18,15 +18,13 @@
 package cc.wordview.app.ui.activities.home.composables.search
 
 import android.content.Context
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
-import cc.wordview.app.components.extensions.without
-import cc.wordview.app.dataStore
 import cc.wordview.app.database.RoomAccess
+import cc.wordview.app.database.entity.SearchQuery
 import cc.wordview.app.database.entity.ViewedVideo
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
@@ -138,12 +136,24 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun saveSearch(query: String) = viewModelScope.launch {
-        appContext.dataStore.edit { preferences ->
-            val current = preferences[SEARCH_HISTORY] ?: emptySet()
-            if (!current.contains(query))
-                preferences[SEARCH_HISTORY] = current + query
+    fun saveSearch(searchQuery: String) = viewModelScope.launch(Dispatchers.IO) {
+        val database = RoomAccess.getDatabase()
+        val existingSearch = database.searchQueryDao().findByQuery(searchQuery)
+
+        if (existingSearch == null) {
+            database.searchQueryDao().insertAll(
+                SearchQuery(
+                    query = searchQuery,
+                    timesSearched = 1
+                )
+            )
+            return@launch
         }
+
+        database.searchQueryDao().updateTimesSearched(
+            existingSearch.uid,
+            existingSearch.timesSearched++
+        )
     }
 
     fun saveVideoToHistory(searchResult: VideoSearchResult) = viewModelScope.launch(Dispatchers.IO) {
@@ -155,10 +165,10 @@ class SearchViewModel @Inject constructor(
     }
 
     fun removeSearch(searchEntry: String) = viewModelScope.launch {
-        appContext.dataStore.edit { preferences ->
-            val current = preferences[SEARCH_HISTORY] ?: emptySet()
-            preferences[SEARCH_HISTORY] = current.without(searchEntry)
-        }
+//        appContext.dataStore.edit { preferences ->
+//            val current = preferences[SEARCH_HISTORY] ?: emptySet()
+//            preferences[SEARCH_HISTORY] = current.without(searchEntry)
+//        }
     }
 
     private fun setSearchResults(resultList: List<StreamInfoItem>) {

@@ -44,8 +44,8 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -72,21 +72,19 @@ import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.Space
-import cc.wordview.app.dataStore
+import cc.wordview.app.database.RoomAccess
+import cc.wordview.app.database.entity.SearchQuery
 import cc.wordview.app.ui.components.SearchHistoryEntry
 import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.navigation.NavDestination
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-
-val SEARCH_HISTORY = stringSetPreferencesKey("search_history")
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 val SearchScreen: NavDestination<Unit> by navDestination {
@@ -104,14 +102,22 @@ val SearchScreen: NavDestination<Unit> by navDestination {
 
     val context = LocalContext.current
 
-    val searchHistoryFlow = remember { context.dataStore.data.map { it[SEARCH_HISTORY] ?: emptySet() } }
-    val searchHistory by searchHistoryFlow.collectAsState(initial = emptySet())
-
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
+    var searchHistory = remember { mutableStateListOf<SearchQuery>() }
+
+    fun loadSearchHistory() =  coroutineScope.launch(Dispatchers.IO) {
+        if (searchHistory.isNotEmpty())
+            searchHistory.clear()
+
+        val database = RoomAccess.getDatabase()
+        searchHistory.addAll(database.searchQueryDao().getAll())
+    }
+
     OneTimeEffect {
         viewModel.getProvidedLyrics()
+        loadSearchHistory()
     }
 
     LaunchedEffect(listState) {
@@ -149,7 +155,10 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                         modifier = Modifier.testTag("search-input-field"),
                         query = query,
                         onQueryChange = { viewModel.setQuery(it) },
-                        onSearch = { search(it) },
+                        onSearch = {
+                            search(it)
+                            loadSearchHistory()
+                        },
                         expanded = searching,
                         onExpandedChange = { viewModel.setSearching(it) },
                         enabled = true,
@@ -173,7 +182,7 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(searchHistory.reversed(), key = { it }) { entry ->
+                    items(searchHistory.reversed(), key = { it.uid }) { entry ->
                         SearchHistoryEntry(
                             modifier = Modifier.animateItem(
                                 placementSpec = spring(
@@ -181,12 +190,12 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                                     dampingRatio = Spring.DampingRatioMediumBouncy
                                 )
                             ),
-                            entry = entry,
+                            entry = entry.query,
                             onClick = {
-                                viewModel.setQuery(entry)
-                                search(entry)
+                                viewModel.setQuery(entry.query)
+                                search(entry.query)
                             },
-                            onLongClick = { viewModel.removeSearch(entry) }
+                            onLongClick = { viewModel.removeSearch(entry.query) }
                         )
                     }
                     item { Space(248.dp) }
