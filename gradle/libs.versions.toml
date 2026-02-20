@@ -34,6 +34,7 @@ media3Common = "1.9.2"
 lifecycleRuntimeComposeAndroid = "2.10.0"
 newpipeextractor = "v0.25.2"
 okhttp = "5.3.2"
+roomRuntime = "2.8.4"
 securityCrypto = "1.1.0"
 tiamat = "2.2.0"
 tiamatDestinations = "2.2.0"
@@ -56,6 +57,8 @@ androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", versi
 androidx-media3-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "media3Extractor" }
 androidx-media3-extractor = { module = "androidx.media3:media3-extractor", version.ref = "media3Extractor" }
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3Extractor" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }

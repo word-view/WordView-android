@@ -2,8 +2,8 @@ import com.android.build.api.dsl.ApplicationExtension
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.legacy.kapt)
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.compose") version "2.3.10"
     id("io.github.composegears.tiamat.destinations.compiler") version "2.2.0"
 }
@@ -113,7 +113,10 @@ dependencies {
     implementation(libs.tiamat)
     implementation(libs.tiamat.destinations)
     implementation(libs.compose.shimmer)
-    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.hilt.android.compiler)
+    ksp("androidx.room:room-compiler:2.8.4")
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.mockito.android)
@@ -123,12 +126,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.ui.test.junit4)
     androidTestImplementation(libs.hilt.android.testing)
-    kaptAndroidTest(libs.hilt.android.compiler.v244)
+    kspAndroidTest(libs.hilt.android.compiler.v244)
     debugImplementation(libs.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-}
-
-kapt {
-    correctErrorTypes = true
 }
