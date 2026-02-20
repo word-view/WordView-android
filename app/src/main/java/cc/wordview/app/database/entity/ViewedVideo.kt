@@ -19,14 +19,11 @@ package cc.wordview.app.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import cc.wordview.app.api.VideoSearchResult
-import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
-import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

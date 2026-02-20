@@ -57,7 +57,6 @@ import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.Space
-import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.MetaHomeInterface
 import cc.wordview.app.ui.components.SongCard

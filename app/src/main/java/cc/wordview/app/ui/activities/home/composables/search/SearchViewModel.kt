@@ -28,11 +28,9 @@ import cc.wordview.app.components.extensions.without
 import cc.wordview.app.dataStore
 import cc.wordview.app.database.RoomAccess
 import cc.wordview.app.database.entity.ViewedVideo
-import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

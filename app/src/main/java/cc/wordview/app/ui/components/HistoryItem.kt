@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.components
 
 import android.annotation.SuppressLint
-import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
