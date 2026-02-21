@@ -101,4 +101,21 @@ class SearchQueryDatabaseTest {
 
         assert(updatedQuery?.timesSearched == 2)
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun deleteSearchQuery() {
+        val query = SearchQuery(
+            query = "Search query",
+            timesSearched = 1
+        )
+
+        searchQueryDAO.insertAll(query)
+
+        val savedQuery = searchQueryDAO.findByQuery(query.query)!!
+
+        searchQueryDAO.delete(savedQuery)
+
+        assert(searchQueryDAO.getAll().isEmpty())
+    }
 }
