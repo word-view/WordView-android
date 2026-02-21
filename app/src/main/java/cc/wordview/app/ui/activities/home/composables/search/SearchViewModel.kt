@@ -32,6 +32,7 @@ import com.android.volley.toolbox.Volley
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,6 +55,7 @@ class SearchViewModel @Inject constructor(
     private val _searchResults = MutableStateFlow(ArrayList<VideoSearchResult>())
     private val _state = MutableStateFlow(SearchState.NONE)
     private val _providedLyrics = MutableStateFlow(listOf<String>())
+    private val _searchHistory = MutableStateFlow(listOf<SearchQuery>())
 
     val searching = _searching.asStateFlow()
     val animateSearch = _animateSearch.asStateFlow()
@@ -61,6 +63,7 @@ class SearchViewModel @Inject constructor(
     val searchResults = _searchResults.asStateFlow()
     val state = _state.asStateFlow()
     val providedLyrics = _providedLyrics.asStateFlow()
+    val searchHistory = _searchHistory.asStateFlow()
 
     fun setState(value: SearchState) {
         _state.update { value }
@@ -74,6 +77,14 @@ class SearchViewModel @Inject constructor(
         _query.update { query }
     }
 
+    fun getSearchHistory() = viewModelScope.launch(Dispatchers.IO) {
+        if (_searchHistory.value.isNotEmpty())
+            _searchHistory.update { listOf() }
+
+        val database = RoomAccess.getDatabase()
+        _searchHistory.update { database.searchQueryDao().getAll() }
+    }
+
     fun search(query: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         _animateSearch.update { true }
         viewModelScope.launch {
@@ -84,6 +95,7 @@ class SearchViewModel @Inject constructor(
                     // if the search results are instantly populated the animation won't work
                     delay(50L)
                     setSearchResults(results)
+                    getSearchHistory()
                 } catch (e: Throwable) {
                     Timber.e(e)
 

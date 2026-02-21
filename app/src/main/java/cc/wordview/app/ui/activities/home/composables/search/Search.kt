@@ -96,6 +96,7 @@ val SearchScreen: NavDestination<Unit> by navDestination {
     val animateSearch by viewModel.animateSearch.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val providedLyricsIds by viewModel.providedLyrics.collectAsStateWithLifecycle()
+    val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
     var errorMessage by rememberSaveable { mutableStateOf("") }
@@ -105,19 +106,13 @@ val SearchScreen: NavDestination<Unit> by navDestination {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    var searchHistory = remember { mutableStateListOf<SearchQuery>() }
-
-    fun loadSearchHistory() =  coroutineScope.launch(Dispatchers.IO) {
-        if (searchHistory.isNotEmpty())
-            searchHistory.clear()
-
-        val database = RoomAccess.getDatabase()
-        searchHistory.addAll(database.searchQueryDao().getAll())
-    }
 
     OneTimeEffect {
         viewModel.getProvidedLyrics()
-        loadSearchHistory()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getSearchHistory()
     }
 
     LaunchedEffect(listState) {
@@ -155,10 +150,7 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                         modifier = Modifier.testTag("search-input-field"),
                         query = query,
                         onQueryChange = { viewModel.setQuery(it) },
-                        onSearch = {
-                            search(it)
-                            loadSearchHistory()
-                        },
+                        onSearch = { search(it) },
                         expanded = searching,
                         onExpandedChange = { viewModel.setSearching(it) },
                         enabled = true,
