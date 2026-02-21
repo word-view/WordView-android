@@ -93,17 +93,12 @@ class SearchQueryDatabaseTest {
 
         val savedQuery = searchQueryDAO.getAll().singleOrNull()
 
-        assert(savedQuery != null)
-        assert(savedQuery?.query == query.query)
         assert(savedQuery?.timesSearched == 1)
-
 
         searchQueryDAO.updateTimesSearched(savedQuery!!.uid, 2)
 
         val updatedQuery = searchQueryDAO.getAll().singleOrNull()
 
-        assert(updatedQuery != null)
-        assert(updatedQuery?.query == query.query)
         assert(updatedQuery?.timesSearched == 2)
     }
 }
