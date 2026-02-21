@@ -38,7 +38,9 @@ class SearchQueryDatabaseTest {
     fun createDatabase() {
         val context = ApplicationProvider.getApplicationContext<Context>()
 
-        database = Room.inMemoryDatabaseBuilder(context, WordViewDatabase::class.java).build()
+        RoomAccess.open(context, inMemory = true)
+
+        database = RoomAccess.getDatabase()
         searchQueryDAO = database.searchQueryDao()
     }
 
