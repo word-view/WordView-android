@@ -49,5 +49,5 @@ interface SearchQueryDAO {
     fun insertAll(vararg searchQueries: SearchQuery)
 
     @Delete
-    fun delete(user: SearchQuery)
+    fun delete(query: SearchQuery)
 }
