@@ -175,11 +175,12 @@ class SearchViewModel @Inject constructor(
         database.viewedVideoDao().insertAll(video)
     }
 
-    fun removeSearch(searchEntry: String) = viewModelScope.launch {
-//        appContext.dataStore.edit { preferences ->
-//            val current = preferences[SEARCH_HISTORY] ?: emptySet()
-//            preferences[SEARCH_HISTORY] = current.without(searchEntry)
-//        }
+    fun removeSearch(searchQuery: String) = viewModelScope.launch(Dispatchers.IO) {
+        val database = RoomAccess.getDatabase()
+        val search = database.searchQueryDao().findByQuery(searchQuery) ?: return@launch
+
+        database.searchQueryDao().delete(search)
+        getSearchHistory()
     }
 
     private fun setSearchResults(resultList: List<StreamInfoItem>) {
