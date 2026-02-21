@@ -177,9 +177,11 @@ class SearchViewModel @Inject constructor(
     }
 
     fun removeSearch(searchQuery: String) = viewModelScope.launch(Dispatchers.IO) {
-        val search = searchQueryDao.findByQuery(searchQuery) ?: return@launch
+        val search = searchQueryDao.findByQuery(searchQuery)
 
-        searchQueryDao.delete(search)
+        if (search != null)
+            searchQueryDao.delete(search)
+
         getSearchHistory()
     }
 
