@@ -64,6 +64,9 @@ class SearchViewModel @Inject constructor(
     val providedLyrics = _providedLyrics.asStateFlow()
     val searchHistory = _searchHistory.asStateFlow()
 
+    private val searchQueryDao = RoomAccess.getDatabase().searchQueryDao()
+    private val viewedVideoDao = RoomAccess.getDatabase().viewedVideoDao()
+
     fun setState(value: SearchState) {
         _state.update { value }
     }
@@ -148,11 +151,10 @@ class SearchViewModel @Inject constructor(
     }
 
     fun saveSearch(searchQuery: String) = viewModelScope.launch(Dispatchers.IO) {
-        val database = RoomAccess.getDatabase()
-        val existingSearch = database.searchQueryDao().findByQuery(searchQuery)
+        val existingSearch = searchQueryDao.findByQuery(searchQuery)
 
         if (existingSearch == null) {
-            database.searchQueryDao().insertAll(
+            searchQueryDao.insertAll(
                 SearchQuery(
                     query = searchQuery,
                     timesSearched = 1
@@ -161,25 +163,23 @@ class SearchViewModel @Inject constructor(
             return@launch
         }
 
-        database.searchQueryDao().updateTimesSearched(
+        searchQueryDao.updateTimesSearched(
             existingSearch.uid,
             existingSearch.timesSearched++
         )
     }
 
     fun saveVideoToHistory(searchResult: VideoSearchResult) = viewModelScope.launch(Dispatchers.IO) {
-        val database = RoomAccess.getDatabase()
         val video = ViewedVideo.fromSearchResult(searchResult)
 
         Timber.v("video=${video}")
-        database.viewedVideoDao().insertAll(video)
+        viewedVideoDao.insertAll(video)
     }
 
     fun removeSearch(searchQuery: String) = viewModelScope.launch(Dispatchers.IO) {
-        val database = RoomAccess.getDatabase()
-        val search = database.searchQueryDao().findByQuery(searchQuery) ?: return@launch
+        val search = searchQueryDao.findByQuery(searchQuery) ?: return@launch
 
-        database.searchQueryDao().delete(search)
+        searchQueryDao.delete(search)
         getSearchHistory()
     }
 
