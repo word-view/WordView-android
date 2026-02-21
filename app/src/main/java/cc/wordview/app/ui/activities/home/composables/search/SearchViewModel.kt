@@ -32,7 +32,6 @@ import com.android.volley.toolbox.Volley
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -170,7 +169,7 @@ class SearchViewModel @Inject constructor(
 
     fun saveVideoToHistory(searchResult: VideoSearchResult) = viewModelScope.launch(Dispatchers.IO) {
         val database = RoomAccess.getDatabase()
-        val video = ViewedVideo.fromSearchResult(searchResult);
+        val video = ViewedVideo.fromSearchResult(searchResult)
 
         Timber.v("video=${video}")
         database.viewedVideoDao().insertAll(video)

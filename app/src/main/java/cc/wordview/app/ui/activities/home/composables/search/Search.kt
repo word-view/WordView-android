@@ -45,7 +45,6 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -76,12 +75,9 @@ import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.Space
-import cc.wordview.app.database.RoomAccess
-import cc.wordview.app.database.entity.SearchQuery
 import cc.wordview.app.ui.components.SearchHistoryEntry
 import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.navigation.NavDestination
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
