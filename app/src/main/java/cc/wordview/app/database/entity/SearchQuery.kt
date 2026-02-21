@@ -17,7 +17,6 @@
 
 package cc.wordview.app.database.entity
 
-import androidx.lifecycle.LiveData
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
