@@ -19,6 +19,7 @@ package cc.wordview.app.ui.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import cc.wordview.app.database.RoomAccess
 import cc.wordview.app.extractor.DownloaderImpl
 import cc.wordview.app.misc.ImageCacheManager
 import org.schabi.newpipe.extractor.NewPipe
@@ -31,6 +32,8 @@ abstract class WordViewActivity : ComponentActivity() {
         // If no trees were planted, we can assume that
         // this activity was started separately
         if (Timber.treeCount == 0) {
+            RoomAccess.open(applicationContext)
+
             DownloaderImpl.init(null)
             NewPipe.init(DownloaderImpl.getInstance())
 

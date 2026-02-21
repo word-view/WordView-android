@@ -18,20 +18,17 @@
 package cc.wordview.app.ui.activities.home.composables.search
 
 import android.content.Context
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
-import cc.wordview.app.components.extensions.without
-import cc.wordview.app.dataStore
-import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
-import cc.wordview.app.ui.activities.home.composables.history.PLAY_HISTORY
+import cc.wordview.app.database.RoomAccess
+import cc.wordview.app.database.entity.SearchQuery
+import cc.wordview.app.database.entity.ViewedVideo
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -57,6 +54,7 @@ class SearchViewModel @Inject constructor(
     private val _searchResults = MutableStateFlow(ArrayList<VideoSearchResult>())
     private val _state = MutableStateFlow(SearchState.NONE)
     private val _providedLyrics = MutableStateFlow(listOf<String>())
+    private val _searchHistory = MutableStateFlow(listOf<SearchQuery>())
 
     val searching = _searching.asStateFlow()
     val animateSearch = _animateSearch.asStateFlow()
@@ -64,6 +62,10 @@ class SearchViewModel @Inject constructor(
     val searchResults = _searchResults.asStateFlow()
     val state = _state.asStateFlow()
     val providedLyrics = _providedLyrics.asStateFlow()
+    val searchHistory = _searchHistory.asStateFlow()
+
+    private val searchQueryDao = RoomAccess.getDatabase().searchQueryDao()
+    private val viewedVideoDao = RoomAccess.getDatabase().viewedVideoDao()
 
     fun setState(value: SearchState) {
         _state.update { value }
@@ -77,6 +79,14 @@ class SearchViewModel @Inject constructor(
         _query.update { query }
     }
 
+    fun getSearchHistory() = viewModelScope.launch(Dispatchers.IO) {
+        if (_searchHistory.value.isNotEmpty())
+            _searchHistory.update { listOf() }
+
+        val database = RoomAccess.getDatabase()
+        _searchHistory.update { database.searchQueryDao().getAll() }
+    }
+
     fun search(query: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         _animateSearch.update { true }
         viewModelScope.launch {
@@ -87,6 +97,7 @@ class SearchViewModel @Inject constructor(
                     // if the search results are instantly populated the animation won't work
                     delay(50L)
                     setSearchResults(results)
+                    getSearchHistory()
                 } catch (e: Throwable) {
                     Timber.e(e)
 
@@ -139,30 +150,39 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun saveSearch(query: String) = viewModelScope.launch {
-        appContext.dataStore.edit { preferences ->
-            val current = preferences[SEARCH_HISTORY] ?: emptySet()
-            if (!current.contains(query))
-                preferences[SEARCH_HISTORY] = current + query
+    fun saveSearch(searchQuery: String) = viewModelScope.launch(Dispatchers.IO) {
+        val existingSearch = searchQueryDao.findByQuery(searchQuery)
+
+        if (existingSearch == null) {
+            searchQueryDao.insertAll(
+                SearchQuery(
+                    query = searchQuery,
+                    timesSearched = 1
+                )
+            )
+            return@launch
         }
+
+        searchQueryDao.updateTimesSearched(
+            existingSearch.uid,
+            existingSearch.timesSearched++
+        )
     }
 
-    fun saveVideoToHistory(searchResult: VideoSearchResult) = viewModelScope.launch {
-        val gson = Gson()
-        val historyEntryJson = gson.toJson(HistoryEntry.fromSearchResult(searchResult))
+    fun saveVideoToHistory(searchResult: VideoSearchResult) = viewModelScope.launch(Dispatchers.IO) {
+        val video = ViewedVideo.fromSearchResult(searchResult)
 
-        appContext.dataStore.edit { preferences ->
-            val current = preferences[PLAY_HISTORY] ?: emptySet()
-            if (!current.contains(historyEntryJson))
-                preferences[PLAY_HISTORY] = current + historyEntryJson
-        }
+        Timber.v("video=${video}")
+        viewedVideoDao.insertAll(video)
     }
 
-    fun removeSearch(searchEntry: String) = viewModelScope.launch {
-        appContext.dataStore.edit { preferences ->
-            val current = preferences[SEARCH_HISTORY] ?: emptySet()
-            preferences[SEARCH_HISTORY] = current.without(searchEntry)
-        }
+    fun removeSearch(searchQuery: String) = viewModelScope.launch(Dispatchers.IO) {
+        val search = searchQueryDao.findByQuery(searchQuery)
+
+        if (search != null)
+            searchQueryDao.delete(search)
+
+        getSearchHistory()
     }
 
     private fun setSearchResults(resultList: List<StreamInfoItem>) {

@@ -18,7 +18,6 @@
 package cc.wordview.app.ui.components
 
 import android.annotation.SuppressLint
-import cc.wordview.app.ui.activities.home.composables.history.HistoryEntry
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.R
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
+import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.extensions.marquee
 import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
@@ -51,7 +51,7 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("SimpleDateFormat")
 @Composable
-fun HistoryItem(modifier: Modifier = Modifier, result: HistoryEntry, onClick: () -> Unit) {
+fun HistoryItem(modifier: Modifier = Modifier, result: ViewedVideo, onClick: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
 
     fun onClickResult() = coroutineScope.launch {

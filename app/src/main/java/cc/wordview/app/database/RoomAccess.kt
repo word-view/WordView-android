@@ -15,27 +15,31 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.activities.home.composables.history
+package cc.wordview.app.database
 
-import cc.wordview.app.api.VideoSearchResult
+import android.content.Context
+import androidx.room.Room
+import cc.wordview.app.BuildConfig
 
-data class HistoryEntry(
-    val id: String,
-    val title: String,
-    val artist: String,
-    val thumbnailUrl: String,
-    val duration: Long,
-    val unixWatchedAt: Long = System.currentTimeMillis(),
-) {
-    companion object {
-        fun fromSearchResult(vsr: VideoSearchResult): HistoryEntry {
-            return HistoryEntry(
-                id = vsr.id,
-                title = vsr.title,
-                artist = vsr.artist,
-                duration = vsr.duration,
-                thumbnailUrl = vsr.thumbnails.first().url,
-            )
+object RoomAccess {
+    private lateinit var database: WordViewDatabase
+
+    fun open(context: Context, inMemory: Boolean = false) {
+        database = if (inMemory) {
+            Room.inMemoryDatabaseBuilder(
+                context,
+                WordViewDatabase::class.java
+            ).build()
+        } else {
+            Room.databaseBuilder(
+                context,
+                WordViewDatabase::class.java,
+                "app-${BuildConfig.BUILD_TYPE}"
+            ).build()
         }
+    }
+
+    fun getDatabase(): WordViewDatabase {
+        return database
     }
 }
