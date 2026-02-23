@@ -48,8 +48,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.subscribe
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -256,8 +260,13 @@ class PlayerViewModel @Inject constructor(
         // unless something really odd happens the last saved history should be
         // always the song that the player is reproducing
         val song = viewedVideoDao.getAll().last()
-        Timber.i("Saving the current position in seconds '${currentPosition.value.toSeconds()}' to the watched history")
-        viewedVideoDao.updateWatchedUntil(song.uid, currentPosition.value.toSeconds())
+
+        val position = currentPosition.value.toSeconds()
+
+        if (position > 0L) {
+            Timber.v("Saving the current position '$position' to the watched history")
+            viewedVideoDao.updateWatchedUntil(song.uid, position)
+        }
     }
 
     private fun setCues(cues: ArrayList<WordViewCue>) {
