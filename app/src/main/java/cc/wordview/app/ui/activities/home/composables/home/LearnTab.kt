@@ -98,6 +98,7 @@ fun LearnTab(
             coroutineScope.launch {
                 viewModel.updateHomeCategories(arrayListOf())
                 viewModel.getHome()
+                viewModel.getLastWatchedVideo()
             }
         },
         indicator = {
