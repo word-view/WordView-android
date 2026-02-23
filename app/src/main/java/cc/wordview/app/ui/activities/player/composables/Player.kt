@@ -106,6 +106,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
 
     fun back() {
         player.stop()
+        viewModel.saveCurrentPosition()
         activity.finish()
     }
 
