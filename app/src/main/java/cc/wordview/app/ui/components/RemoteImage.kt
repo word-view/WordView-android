@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.zIndex
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
@@ -54,7 +55,7 @@ fun RemoteImage(
     contentScale: ContentScale = ContentScale.FillHeight
 ) {
     Surface(
-        modifier = modifier,
+        modifier = modifier.testTag("remote-image"),
         shape = shape
     ) {
         Box(

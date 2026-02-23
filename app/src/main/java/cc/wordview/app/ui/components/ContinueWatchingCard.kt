@@ -43,17 +43,17 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.R
 import cc.wordview.app.components.extensions.fillMaxWidth
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
+import cc.wordview.app.components.ui.formatTime
+import cc.wordview.app.database.entity.ViewedVideo
 
 @Composable
-@Preview
-fun ContinueWatchingCard(modifier: Modifier = Modifier) {
+fun ContinueWatchingCard(modifier: Modifier = Modifier, viewedVideo: ViewedVideo, onClick: () -> Unit = {}) {
     val targetWidth = 64f
     val animatedWidth = remember { Animatable(0f) }
 
@@ -64,12 +64,11 @@ fun ContinueWatchingCard(modifier: Modifier = Modifier) {
         )
     }
 
-
     Card(
         modifier = modifier
             .height(192.dp)
             .fillMaxWidth(),
-        onClick = {}
+        onClick = onClick
     ) {
         Box {
             Row(
@@ -94,7 +93,7 @@ fun ContinueWatchingCard(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
                     .zIndex(-1f),
                 contentScale = ContentScale.FillWidth,
-                model = "https://i.ytimg.com/vi_webp/6gluNoLVKiQ/maxresdefault.webp",
+                model = viewedVideo.thumbnailUrl,
                 asyncImagePlaceholders = AsyncImagePlaceholders(
                     noConnectionWhite = R.drawable.nonet,
                     noConnectionDark = R.drawable.nonet_dark
@@ -122,13 +121,13 @@ fun ContinueWatchingCard(modifier: Modifier = Modifier) {
                 ) {
                     Column {
                         Text(
-                            text = "Eleanor Rigby",
+                            text = viewedVideo.title,
                             style = typography.titleLarge,
                             textAlign = TextAlign.Left,
                             modifier = Modifier.fillMaxWidth(),
                         )
                         Text(
-                            text = "The Beatles",
+                            text = viewedVideo.artist,
                             style = typography.titleSmall,
                             textAlign = TextAlign.Left,
                             modifier = Modifier.fillMaxWidth(),
@@ -150,7 +149,7 @@ fun ContinueWatchingCard(modifier: Modifier = Modifier) {
                             modifier = Modifier
                                 .padding(4.dp)
                                 .padding(horizontal = 8.dp),
-                            text = "1:10 / 3:20",
+                            text = "0:10 / ${formatTime(viewedVideo.duration)}",
                             style = typography.labelSmall,
                             textAlign = TextAlign.Right,
                             fontSize = 14.sp
