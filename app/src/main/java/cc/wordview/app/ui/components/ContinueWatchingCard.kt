@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -81,7 +82,7 @@ fun ContinueWatchingCard(modifier: Modifier = Modifier, viewedVideo: ViewedVideo
                     .width(IntrinsicSize.Max),
             ) {
                 Text(
-                    text = "Continue watching",
+                    text = stringResource(R.string.continue_watching),
                     style = typography.labelMedium,
                     textAlign = TextAlign.Left,
                     modifier = Modifier.fillMaxWidth(),
