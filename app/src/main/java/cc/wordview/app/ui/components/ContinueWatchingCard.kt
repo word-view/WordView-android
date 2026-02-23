@@ -49,19 +49,19 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.R
 import cc.wordview.app.components.extensions.fillMaxWidth
+import cc.wordview.app.components.extensions.percentageOf
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
-import cc.wordview.app.components.ui.formatTime
 import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.extensions.toMinutesSeconds
 
 @Composable
 fun ContinueWatchingCard(modifier: Modifier = Modifier, viewedVideo: ViewedVideo, onClick: () -> Unit = {}) {
-    val targetWidth = 64f
+    val targetWidth = viewedVideo.duration.percentageOf(viewedVideo.watchedUntil)
     val animatedWidth = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
         animatedWidth.animateTo(
-            targetValue = targetWidth,
+            targetValue = targetWidth.toFloat(),
             animationSpec = tween(durationMillis = 600, easing = LinearOutSlowInEasing)
         )
     }
@@ -151,7 +151,7 @@ fun ContinueWatchingCard(modifier: Modifier = Modifier, viewedVideo: ViewedVideo
                             modifier = Modifier
                                 .padding(4.dp)
                                 .padding(horizontal = 8.dp),
-                            text = "0:10 / ${viewedVideo.duration.toMinutesSeconds()}",
+                            text = "${viewedVideo.watchedUntil.toMinutesSeconds()} / ${viewedVideo.duration.toMinutesSeconds()}",
                             style = typography.labelSmall,
                             textAlign = TextAlign.Right,
                             fontSize = 14.sp
