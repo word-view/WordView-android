@@ -53,4 +53,5 @@
     <string name="watched_at">Visto em %1$s</string>
     <string name="great_compatibility">Ótima compatibilidade</string>
     <string name="failed_to_complete_search">Não foi possível fazer a pesquisa</string>
+    <string name="continue_watching">Continuar assistindo</string>
 </resources>

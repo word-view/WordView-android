@@ -29,6 +29,9 @@ import cc.wordview.app.api.getStoredJwt
 import cc.wordview.app.api.request.AuthenticatedStringRequest
 import cc.wordview.app.components.media.AudioPlayer
 import cc.wordview.app.components.media.AudioPlayerListener
+import cc.wordview.app.database.RoomAccess
+import cc.wordview.app.extensions.toMinutesSeconds
+import cc.wordview.app.extensions.toSeconds
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
@@ -45,8 +48,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.subscribe
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -91,6 +99,8 @@ class PlayerViewModel @Inject constructor(
     val noTimeLeft = _noTimeLeft.asStateFlow()
     val errorMessage = _errorMessage.asStateFlow()
     val statusCode = _statusCode.asStateFlow()
+
+    private val viewedVideoDao = RoomAccess.getDatabase().viewedVideoDao()
 
     // tracks the steps to consider that the player is
     // prepared to start playing (audio ready, lyrics ready, dictionary ready)
@@ -240,6 +250,22 @@ class PlayerViewModel @Inject constructor(
             onPrepared = { computeAndCheckReady() }
 
             initialize(videoStreamUrl, appContext, listener)
+        }
+    }
+
+    /**
+     * Updates the watchedUntil of the song to the current position of the player
+     */
+    fun saveCurrentPosition() = viewModelScope.launch(Dispatchers.IO) {
+        // unless something really odd happens the last saved history should be
+        // always the song that the player is reproducing
+        val song = viewedVideoDao.getAll().last()
+
+        val position = currentPosition.value.toSeconds()
+
+        if (position > 0L) {
+            Timber.i("Saving the current position '$position' to the watched history")
+            viewedVideoDao.updateWatchedUntil(song.uid, position)
         }
     }
 

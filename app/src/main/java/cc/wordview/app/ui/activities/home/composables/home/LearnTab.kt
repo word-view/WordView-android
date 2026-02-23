@@ -37,6 +37,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,6 +68,7 @@ import kotlinx.coroutines.launch
 import me.vponomarenko.compose.shimmer.shimmer
 import androidx.compose.ui.res.stringResource
 import cc.wordview.app.database.entity.ViewedVideo
+import cc.wordview.app.ui.components.ContinueWatchingCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
@@ -76,14 +78,16 @@ fun LearnTab(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val categories by viewModel.homeCategories.collectAsStateWithLifecycle()
+    val lastWatchedVideo by viewModel.lastWatchedVideo.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     var isRefreshing by remember { mutableStateOf(false) }
     val state = rememberPullToRefreshState()
     val coroutineScope = rememberCoroutineScope()
 
-    OneTimeEffect {
+    LaunchedEffect(Unit) {
         viewModel.getHome()
+        viewModel.getLastWatchedVideo()
     }
 
     PullToRefreshBox(
@@ -94,6 +98,7 @@ fun LearnTab(
             coroutineScope.launch {
                 viewModel.updateHomeCategories(arrayListOf())
                 viewModel.getHome()
+                viewModel.getLastWatchedVideo()
             }
         },
         indicator = {
@@ -110,8 +115,23 @@ fun LearnTab(
                 .padding(PaddingValues(top = 17.dp))
                 .verticalScroll(rememberScrollState())
         ) {
-            /** Loading effect **/
-            if (categories.isEmpty()) MetaHomeInterface(Modifier.shimmer())
+            if (categories.isEmpty())
+                MetaHomeInterface(Modifier.shimmer())
+
+            // showing the card when the categories are not loaded might
+            // seem weird. Also in case the user has no internet connection
+            // showing the card is useless because he will not be able to open it
+            if (categories.isNotEmpty() && lastWatchedVideo != null) {
+                ContinueWatchingCard(
+                    modifier = Modifier.padding(horizontal = 17.dp),
+                    viewedVideo = lastWatchedVideo!!,
+                    onClick = {
+                        SongViewModel.setVideo(lastWatchedVideo!!.id)
+                        context.openActivity<PlayerActivity>()
+                    }
+                )
+            }
+
             for (category in categories) {
                 Text(
                     text = getStringForId(category.id),
@@ -119,7 +139,7 @@ fun LearnTab(
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
                     style = Typography.titleLarge,
-                    modifier = Modifier.padding(start = 17.dp)
+                    modifier = Modifier.padding(start = 17.dp, top = 17.dp)
                 )
                 LazyRow(
                     modifier = Modifier

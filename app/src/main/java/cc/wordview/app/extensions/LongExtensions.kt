@@ -25,3 +25,7 @@ fun Long.toMinutesSeconds(): String {
     val seconds = this % 60
     return String.format("%02d:%02d", minutes, seconds)
 }
+
+fun Long.toSeconds(): Long {
+    return this / 1000
+}

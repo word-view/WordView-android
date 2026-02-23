@@ -42,11 +42,15 @@ class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _homeCategories = MutableStateFlow(ArrayList<HomeCategory>())
+    private val _lastWatchedVideo = MutableStateFlow<ViewedVideo?>(null)
 
     val homeCategories = _homeCategories.asStateFlow()
+    val lastWatchedVideo = _lastWatchedVideo.asStateFlow()
 
     private var _snackBarMessage = MutableSharedFlow<String>()
     val snackBarMessage = _snackBarMessage.asSharedFlow()
+
+    private val viewedVideoDao = RoomAccess.getDatabase().viewedVideoDao()
 
     fun getHome() {
         updateHomeCategories(arrayListOf())
@@ -75,9 +79,15 @@ class HomeViewModel @Inject constructor(
     }
 
     fun saveVideoToHistory(video: ViewedVideo) = viewModelScope.launch(Dispatchers.IO) {
-        val database = RoomAccess.getDatabase()
         Timber.v("video=${video}")
-        database.viewedVideoDao().insertAll(video)
+        viewedVideoDao.insertAll(video)
+    }
+
+    fun getLastWatchedVideo() = viewModelScope.launch(Dispatchers.IO) {
+        val history = viewedVideoDao.getAll()
+
+        if (history.isNotEmpty())
+            _lastWatchedVideo.update { history.last() }
     }
 
     private fun emitMessage(msg: String) {

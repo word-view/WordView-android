@@ -138,6 +138,11 @@ class PlayerActivity : WordViewActivity() {
         }
     }
 
+    override fun onStop() {
+        viewModel.saveCurrentPosition()
+        super.onStop()
+    }
+
     override fun onDestroy() {
         if (isFinishing) {
             SongViewModel.setVideoStream(VideoStream())
