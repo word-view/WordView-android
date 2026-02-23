@@ -52,6 +52,7 @@ import cc.wordview.app.components.extensions.fillMaxWidth
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
 import cc.wordview.app.components.ui.formatTime
 import cc.wordview.app.database.entity.ViewedVideo
+import cc.wordview.app.extensions.toMinutesSeconds
 
 @Composable
 fun ContinueWatchingCard(modifier: Modifier = Modifier, viewedVideo: ViewedVideo, onClick: () -> Unit = {}) {
@@ -150,7 +151,7 @@ fun ContinueWatchingCard(modifier: Modifier = Modifier, viewedVideo: ViewedVideo
                             modifier = Modifier
                                 .padding(4.dp)
                                 .padding(horizontal = 8.dp),
-                            text = "0:10 / ${formatTime(viewedVideo.duration)}",
+                            text = "0:10 / ${viewedVideo.duration.toMinutesSeconds()}",
                             style = typography.labelSmall,
                             textAlign = TextAlign.Right,
                             fontSize = 14.sp
