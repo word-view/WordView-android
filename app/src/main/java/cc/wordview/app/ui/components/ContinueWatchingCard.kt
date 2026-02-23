@@ -95,7 +95,7 @@ fun ContinueWatchingCard(modifier: Modifier = Modifier, viewedVideo: ViewedVideo
                     .fillMaxWidth()
                     .zIndex(-1f),
                 contentScale = ContentScale.FillWidth,
-                model = viewedVideo.thumbnailUrl,
+                model = "https://i.ytimg.com/vi_webp/${viewedVideo.id}/maxresdefault.webp",
                 asyncImagePlaceholders = AsyncImagePlaceholders(
                     noConnectionWhite = R.drawable.nonet,
                     noConnectionDark = R.drawable.nonet_dark
