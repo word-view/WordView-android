@@ -35,6 +35,7 @@ data class ViewedVideo @OptIn(ExperimentalUuidApi::class) constructor(
     @ColumnInfo(name = "artist") val artist: String,
     @ColumnInfo(name = "thumbnail_url") val thumbnailUrl: String,
     @ColumnInfo(name = "duration") val duration: Long,
+    @ColumnInfo(name = "watched_until") val watchedUntil: Long = 0,
     @ColumnInfo(name = "unix_watched_at") val unixWatchedAt: Long = System.currentTimeMillis(),
 ) {
     companion object {
@@ -57,4 +58,7 @@ interface ViewedVideoDAO {
 
     @Insert
     fun insertAll(vararg viewedVideo: ViewedVideo)
+
+    @Query("UPDATE viewedvideo SET watched_until = :value WHERE uid = :uid")
+    fun updateWatchedUntil(uid: String, value: Long)
 }

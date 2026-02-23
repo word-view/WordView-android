@@ -68,5 +68,29 @@ class ViewedVideoDatabaseTest {
         assert(savedVideo?.artist == video.artist)
         assert(savedVideo?.thumbnailUrl == video.thumbnailUrl)
         assert(savedVideo?.duration == video.duration)
+        assert(savedVideo?.watchedUntil == 0L)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun updatesWatchedUntil() {
+        val video = ViewedVideo(
+            id = "0a10a10a",
+            title = "Song title",
+            artist = "Song artist",
+            thumbnailUrl = "https://api.wordview.cc/a.png",
+            duration = 120
+        )
+        viewedVideoDAO.insertAll(video)
+
+        val savedVideo = viewedVideoDAO.getAll().singleOrNull()
+
+        assert(savedVideo!!.watchedUntil == 0L)
+
+        viewedVideoDAO.updateWatchedUntil(savedVideo.uid, 60)
+
+        val updatedVideo = viewedVideoDAO.getAll().singleOrNull()
+
+        assert(updatedVideo!!.watchedUntil == 60L)
     }
 }
