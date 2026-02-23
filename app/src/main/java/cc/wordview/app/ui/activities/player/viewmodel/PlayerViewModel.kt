@@ -264,7 +264,7 @@ class PlayerViewModel @Inject constructor(
         val position = currentPosition.value.toSeconds()
 
         if (position > 0L) {
-            Timber.v("Saving the current position '$position' to the watched history")
+            Timber.i("Saving the current position '$position' to the watched history")
             viewedVideoDao.updateWatchedUntil(song.uid, position)
         }
     }
