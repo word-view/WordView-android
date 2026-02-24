@@ -61,7 +61,6 @@ class PlayerViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
-    private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
     private val _lyrics = MutableStateFlow(Lyrics("", Parser(Language.ENGLISH)))
     private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
     private val _player = MutableStateFlow(AudioPlayer())
@@ -155,10 +154,8 @@ class PlayerViewModel @Inject constructor(
             addDictionary(lang.dictionaryName, dictionary)
 
             parseLyrics(lyrics)
-
-            setCues(_lyrics.value)
-
             computeAndCheckReady()
+
             preloadImages()
         }
 
@@ -205,7 +202,7 @@ class PlayerViewModel @Inject constructor(
             onPlaybackEnd = {
                 player.value.stop()
 
-                for (cue in _cues.value) {
+                for (cue in _lyrics.value) {
                     for (word in cue.words) {
                         if (word.parent == "") continue
 
@@ -257,10 +254,6 @@ class PlayerViewModel @Inject constructor(
             Timber.i("Saving the current position '$position' to the watched history")
             viewedVideoDao.updateWatchedUntil(song.uid, position)
         }
-    }
-
-    private fun setCues(cues: ArrayList<WordViewCue>) {
-        _cues.update { cues }
     }
 
     private fun playIconPause() {
