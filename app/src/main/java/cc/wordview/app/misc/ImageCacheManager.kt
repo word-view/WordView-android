@@ -77,6 +77,10 @@ object ImageCacheManager {
         }
     }
 
+    fun isQueued(key: String): Boolean {
+        return imageRequestQueue.any { img -> img.memoryCacheKey == key }
+    }
+
     suspend fun executeAllInQueue() {
         val queue = imageRequestQueue.toList()
 

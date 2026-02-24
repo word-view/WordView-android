@@ -190,6 +190,7 @@ class PlayerViewModel @Inject constructor(
 
     private fun preloadImage(parent: String) = viewModelScope.launch(Dispatchers.IO) {
         if (parent == "") return@launch
+        if (ImageCacheManager.isQueued(parent)) return@launch
 
         val request = ImageRequest.Builder(appContext)
             .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
