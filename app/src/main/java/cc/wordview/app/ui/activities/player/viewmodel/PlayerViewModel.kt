@@ -162,28 +162,30 @@ class PlayerViewModel @Inject constructor(
         playerRepository.onSucceed = { lyrics, dictionary ->
             parseLyrics(lyrics)
             setCues(_lyrics.value)
-
             computeAndCheckReady()
-
-            initParser(lang)
-            addDictionary(lang.dictionaryName, dictionary)
-
-            for (cue in _lyrics.value) {
-                val wordsFound = _parser.value.findWords(cue.text)
-
-                for (word in wordsFound) {
-                    preloadImage(word.parent)
-                    cue.words.add(word)
-                }
-            }
-
-            CoroutineScope(Dispatchers.IO).launch {
-                ImageCacheManager.onQueueCompleted = { computeAndCheckReady() }
-                ImageCacheManager.executeAllInQueue()
-            }
+            parseWords(lang, dictionary)
         }
 
         playerRepository.getLyrics(id, lang.tag, video)
+    }
+
+    private fun parseWords(lang: Language, dictionary: String) {
+        initParser(lang)
+        addDictionary(lang.dictionaryName, dictionary)
+
+        for (cue in _lyrics.value) {
+            val wordsFound = _parser.value.findWords(cue.text)
+
+            for (word in wordsFound) {
+                preloadImage(word.parent)
+                cue.words.add(word)
+            }
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            ImageCacheManager.onQueueCompleted = { computeAndCheckReady() }
+            ImageCacheManager.executeAllInQueue()
+        }
     }
 
     private fun preloadImage(parent: String) = viewModelScope.launch(Dispatchers.IO) {
