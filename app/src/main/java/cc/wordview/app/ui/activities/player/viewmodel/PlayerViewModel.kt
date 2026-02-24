@@ -30,7 +30,6 @@ import cc.wordview.app.api.request.AuthenticatedStringRequest
 import cc.wordview.app.components.media.AudioPlayer
 import cc.wordview.app.components.media.AudioPlayerListener
 import cc.wordview.app.database.RoomAccess
-import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.extensions.toSeconds
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
@@ -48,20 +47,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.subscribe
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.system.measureTimeMillis
-import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
@@ -71,7 +62,7 @@ class PlayerViewModel @Inject constructor(
 ) : ViewModel() {
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
     private val _cues = MutableStateFlow(ArrayList<WordViewCue>())
-    private val _lyrics = MutableStateFlow(Lyrics(""))
+    private val _lyrics = MutableStateFlow(Lyrics("", Parser(Language.ENGLISH)))
     private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
     private val _player = MutableStateFlow(AudioPlayer())
     private val _currentCue = MutableStateFlow(WordViewCue())
@@ -160,25 +151,24 @@ class PlayerViewModel @Inject constructor(
             setPlayerState(PlayerState.ERROR)
         }
         playerRepository.onSucceed = { lyrics, dictionary ->
+            initParser(lang)
+            addDictionary(lang.dictionaryName, dictionary)
+
             parseLyrics(lyrics)
+
             setCues(_lyrics.value)
+
             computeAndCheckReady()
-            parseWords(lang, dictionary)
+            preloadImages()
         }
 
         playerRepository.getLyrics(id, lang.tag, video)
     }
 
-    private fun parseWords(lang: Language, dictionary: String) {
-        initParser(lang)
-        addDictionary(lang.dictionaryName, dictionary)
-
+    private fun preloadImages() {
         for (cue in _lyrics.value) {
-            val wordsFound = _parser.value.findWords(cue.text)
-
-            for (word in wordsFound) {
-                preloadImage(word.parent)
-                cue.words.add(word)
+            for (word in cue.words) {
+                enqueueImage(word.parent)
             }
         }
 
@@ -188,7 +178,7 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    private fun preloadImage(parent: String) = viewModelScope.launch(Dispatchers.IO) {
+    private fun enqueueImage(parent: String) = viewModelScope.launch(Dispatchers.IO) {
         if (parent == "") return@launch
         if (ImageCacheManager.isQueued(parent)) return@launch
 
@@ -282,7 +272,7 @@ class PlayerViewModel @Inject constructor(
     }
 
     private fun parseLyrics(lyrics: String) {
-        _lyrics.update { Lyrics(lyrics) }
+        _lyrics.update { Lyrics(lyrics, _parser.value) }
     }
 
     private fun initParser(language: Language) {

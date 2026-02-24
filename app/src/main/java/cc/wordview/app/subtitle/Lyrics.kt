@@ -21,11 +21,12 @@ import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.extractor.text.SubtitleParser
 import androidx.media3.extractor.text.webvtt.WebvttParser
+import cc.wordview.gengolex.Parser
 import timber.log.Timber
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(UnstableApi::class)
-class Lyrics(vttLyrics: String) : ArrayList<WordViewCue>() {
+class Lyrics(vttLyrics: String, parser: Parser) : ArrayList<WordViewCue>() {
     init {
         if (vttLyrics.isNotEmpty()) {
             WebvttParser().parse(
@@ -39,6 +40,7 @@ class Lyrics(vttLyrics: String) : ArrayList<WordViewCue>() {
                             text,
                             normalize(result.startTimeUs.milliseconds.inWholeMilliseconds),
                             normalize(result.endTimeUs.milliseconds.inWholeMilliseconds),
+                            parser.findWords(text)
                         )
                     )
                 }
@@ -46,7 +48,6 @@ class Lyrics(vttLyrics: String) : ArrayList<WordViewCue>() {
             Timber.d("Parsed ${this.size} cues")
         }
     }
-
     fun getCueAt(position: Int): WordViewCue {
         for (cue in this) {
             if (position >= cue.startTimeMs && position <= cue.endTimeMs) return cue
