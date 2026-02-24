@@ -166,14 +166,11 @@ class PlayerViewModel @Inject constructor(
             initParser(lang)
             addDictionary(lang.dictionaryName, dictionary)
 
-            val words = ArrayList<String>()
-
             for (cue in _lyrics.value) {
                 val wordsFound = _parser.value.findWords(cue.text)
 
                 for (word in wordsFound) {
                     preloadImage(word.parent)
-                    words.add(word.word)
                     cue.words.add(word)
                 }
             }
