@@ -60,6 +60,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.system.measureTimeMillis
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
@@ -184,17 +186,15 @@ class PlayerViewModel @Inject constructor(
         playerRepository.getLyrics(id, lang.tag, video)
     }
 
-    private fun preloadImage(parent: String) = viewModelScope.launch {
+    private fun preloadImage(parent: String) = viewModelScope.launch(Dispatchers.IO) {
         if (parent == "") return@launch
 
-        withContext(Dispatchers.IO) {
-            val request = ImageRequest.Builder(appContext)
-                .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
-                .allowHardware(true)
-                .memoryCacheKey(parent)
+        val request = ImageRequest.Builder(appContext)
+            .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
+            .allowHardware(true)
+            .memoryCacheKey(parent)
 
-            ImageCacheManager.enqueue(request)
-        }
+        ImageCacheManager.enqueue(request)
     }
 
     fun initAudio(videoStreamUrl: String) = viewModelScope.launch {
