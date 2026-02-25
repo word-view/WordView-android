@@ -183,7 +183,7 @@ class PlayerViewModel @Inject constructor(
             .allowHardware(true)
             .memoryCacheKey(parent)
 
-        ImageCacheManager.enqueue(parent, request)
+        ImageCacheManager.enqueue(request)
     }
 
     fun initAudio(videoStreamUrl: String) = viewModelScope.launch {
