@@ -49,7 +49,7 @@ class VideoStream : VideoStreamInterface {
                 .memoryCacheKey("$id-background")
 
             if (getHQThumbnail() == null) {
-                ImageCacheManager.enqueue(request)
+                ImageCacheManager.enqueue("$id-background", request)
             }
         }
 
