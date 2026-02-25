@@ -71,8 +71,6 @@ val HomeScreen: NavDestination<Unit> by navDestination {
     val navController = navController()
     val viewModel: HomeViewModel = hiltViewModel()
 
-    val jwt = getStoredJwt()
-
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val message by viewModel.snackBarMessage.collectAsState(initial = "")
@@ -86,10 +84,6 @@ val HomeScreen: NavDestination<Unit> by navDestination {
                 snackBarHostState.showSnackbar(message, duration = SnackbarDuration.Long)
             }
         }
-    }
-
-    OneTimeEffect {
-        Timber.i("Hello $jwt!")
     }
 
     BackHandler {}
