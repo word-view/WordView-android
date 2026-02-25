@@ -47,9 +47,7 @@ object ImageCacheManager {
         loader = ImageLoader(context)
     }
 
-    fun enqueue(key: String, request: ImageRequest.Builder) {
-        if (isQueued(key)) return
-
+    fun enqueue(request: ImageRequest.Builder) {
         globalImageLoaderScope.launch {
             request.listener(object : ImageRequest.Listener {
                 override fun onStart(request: ImageRequest) {
@@ -77,10 +75,6 @@ object ImageCacheManager {
                 imageRequestQueue.add(builtRequest)
             }
         }
-    }
-
-    private fun isQueued(key: String): Boolean {
-        return imageRequestQueue.any { img -> img.memoryCacheKey == key }
     }
 
     suspend fun executeAllInQueue() {
