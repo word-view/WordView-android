@@ -177,14 +177,13 @@ class PlayerViewModel @Inject constructor(
 
     private fun enqueueImage(parent: String) = viewModelScope.launch(Dispatchers.IO) {
         if (parent == "") return@launch
-        if (ImageCacheManager.isQueued(parent)) return@launch
 
         val request = ImageRequest.Builder(appContext)
             .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
             .allowHardware(true)
             .memoryCacheKey(parent)
 
-        ImageCacheManager.enqueue(request)
+        ImageCacheManager.enqueue(parent, request)
     }
 
     fun initAudio(videoStreamUrl: String) = viewModelScope.launch {
