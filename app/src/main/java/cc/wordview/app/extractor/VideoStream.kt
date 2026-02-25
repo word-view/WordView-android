@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.StreamingService
+import org.schabi.newpipe.extractor.exceptions.ExtractionException
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamType
 
@@ -78,6 +79,9 @@ class VideoStream : VideoStreamInterface {
     }
 
     override fun getStreamURL(): String {
+        if (info.audioStreams.count() == 0)
+            throw ExtractionException("Unable to find any audio streams")
+
         return info.audioStreams[0].content
     }
 
