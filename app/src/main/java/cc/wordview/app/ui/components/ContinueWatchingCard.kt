@@ -44,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -56,6 +55,7 @@ import cc.wordview.app.components.extensions.fillMaxWidth
 import cc.wordview.app.components.extensions.percentageOf
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
 import cc.wordview.app.components.ui.Icon
+import cc.wordview.app.components.ui.RemoteImage
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.extensions.toMinutesSeconds
