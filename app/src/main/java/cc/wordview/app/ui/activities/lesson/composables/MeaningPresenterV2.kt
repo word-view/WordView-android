@@ -75,6 +75,8 @@ fun MeaningPresenterV2() {
 
     var shouldAnimateOut by remember { mutableStateOf(false) }
 
+    val rotateDirection = remember { if (listOf(true, false).random()) -360f else 360f }
+
     LaunchedEffect(Unit) {
         delay(3000L)
         shouldAnimateOut = true
@@ -86,7 +88,7 @@ fun MeaningPresenterV2() {
     )
 
     val rotation by animateFloatAsState(
-        targetValue = if (shouldAnimateOut) -360f else 0f,
+        targetValue = if (shouldAnimateOut) rotateDirection else 0f,
         animationSpec = tween(durationMillis = 1000)
     )
 
