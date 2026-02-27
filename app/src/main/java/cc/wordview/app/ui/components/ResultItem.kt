@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
+import cc.wordview.app.components.ui.RemoteImage
 import cc.wordview.app.extensions.marquee
 import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography

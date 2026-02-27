@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
+import cc.wordview.app.components.ui.RemoteImage
 import cc.wordview.app.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
 import kotlinx.coroutines.delay
