@@ -18,7 +18,7 @@
 package cc.wordview.app.ui.activities.lesson.composables
 
 import android.media.MediaPlayer
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,11 +32,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -53,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cc.wordview.app.R
 import cc.wordview.app.components.ui.BackTopAppBar
-import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.components.FlashingBall
 import cc.wordview.app.ui.components.InstantAnimatedVisibility
@@ -64,6 +60,7 @@ import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import timber.log.Timber
 
 @Composable
 @Preview
@@ -71,31 +68,13 @@ fun MeaningPresenterV2() {
     val windowInfo = LocalWindowInfo.current
     val context = LocalContext.current
 
-    val coroutineScope = rememberCoroutineScope()
-
-    var shouldAnimateOut by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     val rotateDirection = remember { if (listOf(true, false).random()) -360f else 360f }
 
-    LaunchedEffect(Unit) {
-        delay(3000L)
-        shouldAnimateOut = true
-    }
-
-    val scale by animateFloatAsState(
-        targetValue = if (shouldAnimateOut) 0f else 1f,
-        animationSpec = tween(durationMillis = 1200)
-    )
-
-    val rotation by animateFloatAsState(
-        targetValue = if (shouldAnimateOut) rotateDirection else 0f,
-        animationSpec = tween(durationMillis = 1000)
-    )
-
-    val alpha by animateFloatAsState(
-        targetValue = if (shouldAnimateOut) 0f else 1f,
-        animationSpec = tween(durationMillis = 750)
-    )
+    val scale = remember { Animatable(1f) }
+    val rotation = remember { Animatable(0f) }
+    val alpha = remember { Animatable(1f) }
 
     val mediaPlayer = remember {
         MediaPlayer.create(context, R.raw.discovery)
@@ -106,11 +85,38 @@ fun MeaningPresenterV2() {
         mediaPlayer.start()
     }
 
-    OneTimeEffect {
-        coroutineScope.launch {
-            delay((200 * "World".count()).toLong())
-            play()
+    LaunchedEffect(Unit) {
+        scale.snapTo(1f)
+        rotation.snapTo(0f)
+        alpha.snapTo(1f)
+
+        delay((200 * "World".count()).toLong())
+        play()
+
+        delay(2000L)
+
+        scope.launch {
+            scale.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = 1200)
+            )
         }
+        scope.launch {
+            rotation.animateTo(
+                targetValue = rotateDirection,
+                animationSpec = tween(durationMillis = 1000)
+            )
+        }
+        val alphaAnim = scope.launch {
+            alpha.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = 750)
+            )
+        }
+
+        // if the user cant see anything anymore we are safe to
+        // proceed without causing any visual glitches
+        alphaAnim.invokeOnCompletion { Timber.i("Complete!") }
     }
 
     ProvidePreferenceLocals {
@@ -134,11 +140,11 @@ fun MeaningPresenterV2() {
                         .padding()
                         .fillMaxSize()
                         .graphicsLayer {
-                            scaleX = scale
-                            scaleY = scale
-                            rotationZ = rotation
+                            scaleX = scale.value
+                            scaleY = scale.value
+                            rotationZ = rotation.value
                         }
-                        .alpha(alpha)
+                        .alpha(alpha.value)
                         .testTag("meaning-presenter"),
                     contentAlignment = Alignment.Center
                 ) {
