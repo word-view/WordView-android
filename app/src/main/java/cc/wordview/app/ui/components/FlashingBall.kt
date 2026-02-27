@@ -44,7 +44,7 @@ fun FlashingBall(modifier: Modifier = Modifier, color: Color? = null, delayTime:
         delay(delayTime)
 
         flashAlpha.animateTo(
-            targetValue = 0.7f,
+            targetValue = 0.3f,
             animationSpec = tween(
                 delayMillis = 500,
                 durationMillis = 150,
