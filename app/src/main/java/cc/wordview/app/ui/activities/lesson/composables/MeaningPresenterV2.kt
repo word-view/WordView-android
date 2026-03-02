@@ -66,10 +66,8 @@ import kotlinx.coroutines.launch
 @Composable
 @Preview
 fun MeaningPresenterV2(
-    innerPadding: PaddingValues = PaddingValues.Zero,
     viewModel: LessonViewModel = hiltViewModel()
 ) {
-    val windowInfo = LocalWindowInfo.current
     val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
@@ -136,19 +134,6 @@ fun MeaningPresenterV2(
         alphaAnim.invokeOnCompletion {
             viewModel.postPresent()
         }
-    }
-
-    Box(modifier = Modifier
-        .padding(innerPadding)
-        .fillMaxHeight()
-        .width((windowInfo.containerSize.width * 2).dp)
-        .blur(300.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        FlashingBall(
-            color = Color(0xFFFFFF00),
-            delayTime = (100 * currentWord.tokenWord.word.count()).toLong()
-        )
     }
 
     Box(

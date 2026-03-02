@@ -78,7 +78,7 @@ sealed class LessonNav(val route: String) {
     data object MeaningPresenter : LessonNav("meaning-presenter") {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
-            MeaningPresenterV2(innerPadding)
+            MeaningPresenterV2()
         }
     }
 
