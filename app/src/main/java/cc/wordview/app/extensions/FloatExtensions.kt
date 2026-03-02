@@ -15,16 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app
+package cc.wordview.app.extensions
 
-import androidx.compose.ui.semantics.getOrNull
-import androidx.compose.ui.test.SemanticsMatcher
-import cc.wordview.app.extensions.AlphaKey
-import cc.wordview.app.extensions.almostEquals
-
-@Suppress("unused")
-fun hasAlpha(expectedAlpha: Float): SemanticsMatcher {
-    return SemanticsMatcher("has alpha value of $expectedAlpha") { node ->
-        node.config.getOrNull(AlphaKey)?.almostEquals(expectedAlpha, .25f) ?: false
-    }
+fun Float.almostEquals(other: Float, epsilon: Float = 1e-6f): Boolean {
+    return kotlin.math.abs(this - other) < epsilon
 }
