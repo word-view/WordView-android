@@ -49,7 +49,11 @@ fun TypeText(
 
     OneTimeEffect {
         CoroutineScope(Dispatchers.Main).launch {
-            delay(500)
+            // if size is 1 the word is likely to be an ideogram,
+            // applying the delay in this case makes the animation weird.
+            if (text.length > 1) {
+                delay(500)
+            }
 
             text.forEachIndexed { charIndex, _ ->
                 partText = text.substring(startIndex = 0, endIndex = charIndex + 1)
