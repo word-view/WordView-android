@@ -30,8 +30,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cc.wordview.app.extensions.alpha
 import kotlinx.coroutines.delay
 
 @Composable
@@ -61,7 +64,11 @@ fun FlashingBall(modifier: Modifier = Modifier, color: Color? = null, delayTime:
     }
 
     Canvas(
-        modifier = modifier.size(size = ballSize).alpha(flashAlpha.value)
+        modifier = modifier
+            .testTag("flashing-ball")
+            .size(size = ballSize)
+            .alpha(flashAlpha.value)
+            .semantics { alpha = flashAlpha.value }
     ) {
         val radius = size.minDimension / 2f
         val center = Offset(size.width / 2f, size.height / 2f)
