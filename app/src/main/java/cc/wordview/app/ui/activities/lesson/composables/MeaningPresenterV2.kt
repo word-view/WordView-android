@@ -22,16 +22,17 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -48,23 +49,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
-import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.components.ui.Space
+import cc.wordview.app.misc.ImageCacheManager
+import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
 import cc.wordview.app.ui.components.FlashingBall
 import cc.wordview.app.ui.components.InstantAnimatedVisibility
 import cc.wordview.app.ui.components.TypeText
 import cc.wordview.app.ui.theme.Typography
-import cc.wordview.app.ui.theme.WordViewTheme
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import timber.log.Timber
 
 @Composable
 @Preview
-fun MeaningPresenterV2() {
+fun MeaningPresenterV2(
+    innerPadding: PaddingValues = PaddingValues.Zero,
+    viewModel: LessonViewModel = hiltViewModel()
+) {
     val windowInfo = LocalWindowInfo.current
     val context = LocalContext.current
 
@@ -85,12 +89,25 @@ fun MeaningPresenterV2() {
         mediaPlayer.start()
     }
 
+    val currentWord by viewModel.currentWord.collectAsStateWithLifecycle()
+    val translations by viewModel.translations.collectAsStateWithLifecycle()
+
+    fun getTranslated(): String {
+        val parent = currentWord.tokenWord.parent
+        var toReturn = parent
+        for (translationEntry in translations) {
+            if (translationEntry.parent == parent)
+                toReturn = translationEntry.translation
+        }
+        return toReturn
+    }
+
     LaunchedEffect(Unit) {
         scale.snapTo(1f)
         rotation.snapTo(0f)
         alpha.snapTo(1f)
 
-        delay((200 * "World".count()).toLong())
+        delay((200 * currentWord.tokenWord.word.count()).toLong())
         play()
 
         delay(2000L)
@@ -116,68 +133,64 @@ fun MeaningPresenterV2() {
 
         // if the user cant see anything anymore we are safe to
         // proceed without causing any visual glitches
-        alphaAnim.invokeOnCompletion { Timber.i("Complete!") }
+        alphaAnim.invokeOnCompletion {
+            viewModel.postPresent()
+        }
     }
 
-    ProvidePreferenceLocals {
-        WordViewTheme(darkTheme = true) {
-            Scaffold(topBar = { BackTopAppBar(title = {}) {} }) { innerPadding ->
-                Box(modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxHeight()
-                    .width((windowInfo.containerSize.width * 2).dp)
-                    .blur(300.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    FlashingBall(
-                        color = Color(0xFFFFFF00),
-                        delayTime = (100 * "World".count()).toLong()
-                    )
-                }
+    Box(modifier = Modifier
+        .padding(innerPadding)
+        .fillMaxHeight()
+        .width((windowInfo.containerSize.width * 2).dp)
+        .blur(300.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        FlashingBall(
+            color = Color(0xFFFFFF00),
+            delayTime = (100 * currentWord.tokenWord.word.count()).toLong()
+        )
+    }
 
-                Box(
-                    modifier = Modifier
-                        .padding()
-                        .fillMaxSize()
-                        .graphicsLayer {
-                            scaleX = scale.value
-                            scaleY = scale.value
-                            rotationZ = rotation.value
-                        }
-                        .alpha(alpha.value)
-                        .testTag("meaning-presenter"),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-//                        val image = ImageCacheManager.getCachedImage(currentWord.tokenWord.parent)
-                        AsyncImage(
-                            modifier = Modifier
-                                .size(260.dp)
-                                .testTag("word-image"),
-                            model = "https://api.wordview.cc/api/v1/image?parent=world",
-                            contentDescription = null
-                        )
-                        Space(12.dp)
-                        TypeText(
-                            text = "World",
-                            textAlign = TextAlign.Center,
-                            style = Typography.displayLarge,
-                        )
-                        // each letter takes 100ms to be "typed"
-                        InstantAnimatedVisibility(delayTime = (200 * "World".count()).toLong()) {
-                            Text(
-                                modifier = Modifier.testTag("translated-word"),
-                                text = "Mundo",
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                                textAlign = TextAlign.Center,
-                                style = Typography.headlineMedium,
-                                fontSize = 24.sp,
-                            )
-                        }
-                    }
-                }
+    Box(
+        modifier = Modifier
+            .padding()
+            .fillMaxSize()
+            .graphicsLayer {
+                scaleX = scale.value
+                scaleY = scale.value
+                rotationZ = rotation.value
+            }
+            .alpha(alpha.value)
+            .testTag("meaning-presenter"),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val image = ImageCacheManager.getCachedImage(currentWord.tokenWord.parent)
+            AsyncImage(
+                modifier = Modifier
+                    .size(260.dp)
+                    .testTag("word-image"),
+                model = image,
+                contentDescription = null
+            )
+            Space(12.dp)
+            TypeText(
+                text = currentWord.tokenWord.word,
+                textAlign = TextAlign.Center,
+                style = Typography.displayLarge,
+            )
+            // each letter takes 100ms to be "typed"
+            InstantAnimatedVisibility(delayTime = (200 * currentWord.tokenWord.word.count()).toLong()) {
+                Text(
+                    modifier = Modifier.testTag("translated-word"),
+                    text = getTranslated(),
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                    textAlign = TextAlign.Center,
+                    style = Typography.headlineMedium,
+                    fontSize = 24.sp,
+                )
             }
         }
     }
