@@ -25,7 +25,6 @@ import cc.wordview.app.ui.activities.lesson.composables.MeaningPresenter
 import cc.wordview.app.ui.activities.lesson.composables.Presenter
 import cc.wordview.app.ui.activities.lesson.composables.Choose
 import cc.wordview.app.ui.activities.lesson.composables.Listen
-import cc.wordview.app.ui.activities.lesson.composables.MeaningPresenterV2
 
 @Suppress("unused", "unused")
 sealed class LessonNav(val route: String) {
@@ -78,7 +77,7 @@ sealed class LessonNav(val route: String) {
     data object MeaningPresenter : LessonNav("meaning-presenter") {
         @Composable
         override fun Composable(innerPadding: PaddingValues) {
-            MeaningPresenterV2()
+            MeaningPresenter()
         }
     }
 

@@ -22,12 +22,9 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,13 +34,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,7 +48,6 @@ import cc.wordview.app.R
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.activities.lesson.viewmodel.LessonViewModel
-import cc.wordview.app.ui.components.FlashingBall
 import cc.wordview.app.ui.components.InstantAnimatedVisibility
 import cc.wordview.app.ui.components.TypeText
 import cc.wordview.app.ui.theme.Typography
@@ -65,7 +57,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 @Preview
-fun MeaningPresenterV2(
+fun MeaningPresenter(
     viewModel: LessonViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
