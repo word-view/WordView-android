@@ -17,9 +17,6 @@
 
 package cc.wordview.app.ui.activities.crash
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,13 +45,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
 import cc.wordview.app.R
 import cc.wordview.app.components.ui.Space
-import timber.log.Timber
-import java.io.File
-import java.io.FileWriter
-
+import cc.wordview.app.log.exportLogs
 @Composable
 fun CrashScreen(
     logs: String,
@@ -139,34 +132,5 @@ fun CrashScreen(
                 }
             }
         }
-    }
-}
-
-private fun exportLogs(context: Context, logs: String) {
-    try {
-        if (logs.isBlank())
-            return
-
-        val logFile = File(context.filesDir, "wvapp_logs_${System.currentTimeMillis()}.txt")
-
-        FileWriter(logFile).use { writer ->
-            writer.write(logs)
-        }
-
-        val contentUri: Uri = FileProvider.getUriForFile(
-            context,
-            "${context.packageName}.fileprovider",
-            logFile
-        )
-
-        val viewIntent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(contentUri, "text/plain")
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-
-        context.startActivity(viewIntent)
-    } catch (e: Exception) {
-        Timber.e(e, "Failed to export logs")
     }
 }
