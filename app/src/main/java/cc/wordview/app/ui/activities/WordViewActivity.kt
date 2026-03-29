@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import cc.wordview.app.database.RoomAccess
 import cc.wordview.app.extractor.DownloaderImpl
+import cc.wordview.app.log.WordViewTree
 import cc.wordview.app.misc.ImageCacheManager
 import org.schabi.newpipe.extractor.NewPipe
 import timber.log.Timber
@@ -39,6 +40,7 @@ abstract class WordViewActivity : ComponentActivity() {
 
             ImageCacheManager.init(baseContext)
 
+            Timber.plant(WordViewTree())
             Timber.plant(Timber.DebugTree())
         }
     }
