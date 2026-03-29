@@ -151,7 +151,7 @@ fun Presenter(
                 val image = ImageCacheManager.getCachedImage(currentWord.tokenWord.parent)
                 AsyncImage(
                     modifier = Modifier
-                        .size(130.dp)
+                        .size(260.dp)
                         .testTag("word")
                         .alpha(fadeInOut.value),
                     model = image,
