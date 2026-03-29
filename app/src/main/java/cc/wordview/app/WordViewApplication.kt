@@ -39,7 +39,7 @@ class WordViewApplication : Application() {
     }
 
     private fun handleUncaughtException(thread: Thread, throwable: Throwable) {
-        Timber.e(throwable, "An unhandled exception has happened on thread $thread")
+        Timber.e(throwable, "An unhandled exception has happened on $thread")
         val logs = (Timber.forest().firstOrNull { it is WordViewTree } as? WordViewTree)?.getLogs()
             ?: "No logs available"
 
