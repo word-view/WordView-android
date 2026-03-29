@@ -33,8 +33,6 @@ abstract class WordViewActivity : ComponentActivity() {
         // If no trees were planted, we can assume that
         // this activity was started separately
         if (Timber.treeCount == 0) {
-            RoomAccess.open(applicationContext)
-
             DownloaderImpl.init(null)
             NewPipe.init(DownloaderImpl.getInstance())
 
@@ -42,6 +40,8 @@ abstract class WordViewActivity : ComponentActivity() {
 
             Timber.plant(WordViewTree())
             Timber.plant(Timber.DebugTree())
+
+            RoomAccess.open(applicationContext)
         }
     }
 }
