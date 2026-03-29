@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Carpenter
+import androidx.compose.material.icons.outlined.ImportExport
 import androidx.compose.material.icons.outlined.NetworkPing
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.Icon
@@ -36,6 +37,8 @@ import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.extensions.localizedDisplayName
+import cc.wordview.app.log.WordViewTree
+import cc.wordview.app.log.exportLogs
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.gengolex.Language
@@ -44,8 +47,11 @@ import com.composegears.tiamat.compose.navController
 import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.navigation.NavDestination
 import me.zhanghai.compose.preference.ListPreferenceType
+import me.zhanghai.compose.preference.basicPreference
 import me.zhanghai.compose.preference.listPreference
+import me.zhanghai.compose.preference.preference
 import me.zhanghai.compose.preference.switchPreference
+import timber.log.Timber
 
 val SettingsScreen: NavDestination<Unit> by navDestination {
     val navController = navController()
@@ -122,6 +128,29 @@ val SettingsScreen: NavDestination<Unit> by navDestination {
                         )
                     },
                     type = ListPreferenceType.ALERT_DIALOG
+                )
+                preference(
+                    key = "export_logs",
+                    title = {
+                        Text(
+                            text = "Export logs"
+                        )
+                    },
+                    summary = {
+                        Text(
+                            text = "Export the application logs up until this point"
+                        )
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.ImportExport,
+                            contentDescription = null
+                        )
+                    },
+                    onClick = {
+                        val logs = (Timber.forest().firstOrNull { it is WordViewTree } as? WordViewTree)?.getLogs() ?: ""
+                        exportLogs(context, logs)
+                    }
                 )
                 @Suppress("KotlinConstantConditions", "SimplifyBooleanWithConstants")
                 if (BuildConfig.BUILD_TYPE == "debug") {
