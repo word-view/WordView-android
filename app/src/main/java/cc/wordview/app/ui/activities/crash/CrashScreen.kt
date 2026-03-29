@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -68,7 +69,7 @@ fun CrashScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.radio),
-                contentDescription = "App crashed",
+                contentDescription = stringResource(R.string.app_crashed),
                 modifier = Modifier
                     .size(120.dp)
                     .padding(bottom = 32.dp),
@@ -76,7 +77,7 @@ fun CrashScreen(
             )
 
             Text(
-                text = "Oops! Something went wrong",
+                text = stringResource(R.string.oops_something_went_wrong),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -86,7 +87,7 @@ fun CrashScreen(
             Space(16.dp)
 
             Text(
-                text = "The app encountered an unexpected error.\n",
+                text = stringResource(R.string.the_app_encountered_an_unexpected_error),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -107,7 +108,7 @@ fun CrashScreen(
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Text(
-                        text = "Restart Application",
+                        text = stringResource(R.string.restart_application),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -126,7 +127,7 @@ fun CrashScreen(
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Text(
-                        text = "Export Crash Logs",
+                        text = stringResource(R.string.export_crash_logs),
                         fontSize = 16.sp
                     )
                 }
