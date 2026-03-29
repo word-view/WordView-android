@@ -26,6 +26,7 @@ import cc.wordview.app.database.entity.SearchQuery
 import cc.wordview.app.database.entity.SearchQueryDAO
 import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.database.entity.ViewedVideoDAO
+import timber.log.Timber
 
 @Database(entities = [ViewedVideo::class, SearchQuery::class], version = 1)
 abstract class WordViewDatabase : RoomDatabase() {
@@ -33,10 +34,9 @@ abstract class WordViewDatabase : RoomDatabase() {
 
     abstract fun searchQueryDao(): SearchQueryDAO
 
-    @SuppressLint("LogNotTimber", "RestrictedApi")
+    @SuppressLint("RestrictedApi")
     override fun init(configuration: DatabaseConfiguration) {
         super.init(configuration)
-
-        Log.i("WordViewDatabase", "Opened database at $path")
+        Timber.i("Opened database at $path")
     }
 }
