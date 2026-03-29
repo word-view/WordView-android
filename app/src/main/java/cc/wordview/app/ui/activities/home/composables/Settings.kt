@@ -133,12 +133,12 @@ val SettingsScreen: NavDestination<Unit> by navDestination {
                     key = "export_logs",
                     title = {
                         Text(
-                            text = "Export logs"
+                            text = stringResource(R.string.export_logs)
                         )
                     },
                     summary = {
                         Text(
-                            text = "Export the application logs up until this point"
+                            text = stringResource(R.string.export_the_application_logs_up_until_this_point)
                         )
                     },
                     icon = {
