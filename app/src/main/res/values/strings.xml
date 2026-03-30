@@ -55,4 +55,11 @@
     <string name="great_compatibility">Great compatibility</string>
     <string name="failed_to_complete_search">Failed to complete search</string>
     <string name="continue_watching">Continue watching</string>
+    <string name="export_logs">Export logs</string>
+    <string name="export_the_application_logs_up_until_this_point">Export the application logs up until this point</string>
+    <string name="app_crashed">App crashed</string>
+    <string name="oops_something_went_wrong">Oops! Something went wrong</string>
+    <string name="the_app_encountered_an_unexpected_error">The app encountered an unexpected error.\n</string>
+    <string name="restart_application">Restart Application</string>
+    <string name="export_crash_logs">Export Crash Logs</string>
 </resources>

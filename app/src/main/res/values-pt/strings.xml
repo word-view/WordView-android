@@ -54,4 +54,11 @@
     <string name="great_compatibility">Ótima compatibilidade</string>
     <string name="failed_to_complete_search">Não foi possível fazer a pesquisa</string>
     <string name="continue_watching">Continuar assistindo</string>
+    <string name="export_logs">Exportar logs</string>
+    <string name="export_the_application_logs_up_until_this_point">Exporta as logs do app</string>
+    <string name="app_crashed">O aplicativo crashou</string>
+    <string name="oops_something_went_wrong">Oops! Algo deu errado</string>
+    <string name="the_app_encountered_an_unexpected_error">O app encontrou um erro inesperado.\n</string>
+    <string name="restart_application">Reiniciar o aplicativo</string>
+    <string name="export_crash_logs">Exportar a log de crash</string>
 </resources>
