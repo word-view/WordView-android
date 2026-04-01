@@ -17,6 +17,8 @@
 
 package cc.wordview.app.components.extensions
 
+import android.annotation.SuppressLint
+
 /**
  * Calculates what percentage [num] is of this [Long] value.
  *
@@ -28,4 +30,15 @@ package cc.wordview.app.components.extensions
 fun Long.percentageOf(num: Long): Double {
     if (num <= 0 || this <= 0) return 0.toDouble()
     return ((num.toDouble() / this) * 100)
+}
+
+@SuppressLint("DefaultLocale")
+fun Long.toMinutesSeconds(): String {
+    val minutes = this / 60
+    val seconds = this % 60
+    return String.format("%02d:%02d", minutes, seconds)
+}
+
+fun Long.toSeconds(): Long {
+    return this / 1000
 }

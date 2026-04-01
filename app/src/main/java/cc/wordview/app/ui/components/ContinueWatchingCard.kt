@@ -58,7 +58,7 @@ import cc.wordview.app.components.ui.Icon
 import cc.wordview.app.components.ui.RemoteImage
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.database.entity.ViewedVideo
-import cc.wordview.app.extensions.toMinutesSeconds
+import cc.wordview.app.components.extensions.toMinutesSeconds
 
 @Composable
 fun ContinueWatchingCard(modifier: Modifier = Modifier, viewedVideo: ViewedVideo, onClick: () -> Unit = {}) {

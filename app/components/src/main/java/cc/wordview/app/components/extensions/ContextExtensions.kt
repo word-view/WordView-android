@@ -20,8 +20,35 @@ package cc.wordview.app.components.extensions
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import android.os.Parcelable
+import java.io.Serializable
 
 inline fun <reified T : Activity> Context.openActivity() {
     val intent = Intent(this, T::class.java)
     this.startActivity(intent)
+}
+
+inline fun <reified T : Activity> Context.openActivity(
+    vararg extras: Pair<String, Any?>
+) {
+    val intent = Intent(this, T::class.java)
+
+    extras.forEach { (key, value) ->
+        when (value) {
+            is Int -> intent.putExtra(key, value)
+            is Long -> intent.putExtra(key, value)
+            is Float -> intent.putExtra(key, value)
+            is Double -> intent.putExtra(key, value)
+            is Boolean -> intent.putExtra(key, value)
+            is String -> intent.putExtra(key, value)
+            is Bundle -> intent.putExtras(value)
+            is Parcelable -> intent.putExtra(key, value)
+            is Serializable -> intent.putExtra(key, value)
+            null -> { /* ignore null values */ }
+            else -> throw IllegalArgumentException("Unsupported extra type: ${value::class.java.name}")
+        }
+    }
+
+    startActivity(intent)
 }

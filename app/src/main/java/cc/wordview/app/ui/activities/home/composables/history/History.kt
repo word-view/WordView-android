@@ -41,7 +41,7 @@ import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.database.RoomAccess
 import cc.wordview.app.database.entity.ViewedVideo
-import cc.wordview.app.extensions.openActivity
+import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.HistoryItem
 import cc.wordview.app.ui.theme.poppinsFamily

@@ -18,6 +18,7 @@
 package cc.wordview.app.components.extensions
 
 import androidx.annotation.IntRange
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.gestures.PressGestureScope
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -62,4 +63,15 @@ fun Modifier.detectTapGestures(
 fun Modifier.fillMaxWidth(@IntRange(from = 0, to = 100) percentage: Int): Modifier {
     val fraction = (percentage / 100f)
     return this.fillMaxWidth(fraction)
+}
+
+/**
+ * Applies a pre-configured animated marquee to display
+ * overflowing text
+ */
+fun Modifier.marquee(): Modifier {
+    return this.basicMarquee(
+        initialDelayMillis = 3_000,
+        repeatDelayMillis = 3_000
+    )
 }

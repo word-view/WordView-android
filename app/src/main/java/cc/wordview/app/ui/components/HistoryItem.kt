@@ -44,8 +44,8 @@ import cc.wordview.app.R
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
 import cc.wordview.app.components.ui.RemoteImage
 import cc.wordview.app.database.entity.ViewedVideo
-import cc.wordview.app.extensions.marquee
-import cc.wordview.app.extensions.toMinutesSeconds
+import cc.wordview.app.components.extensions.marquee
+import cc.wordview.app.components.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
