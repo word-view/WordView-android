@@ -34,7 +34,6 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.misc.SongViewModel
 import cc.wordview.app.components.extensions.setOrientationSensorLandscape
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.extractor.VideoStream
@@ -63,14 +62,15 @@ class PlayerActivity : WordViewActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val videoId: String = intent.getStringExtra("id")!!
+
         setOrientationSensorLandscape()
         setupWindowInsets()
         enableEdgeToEdge()
         setContent {
             ProvidePreferenceLocals {
                 val state by viewModel.playerState.collectAsStateWithLifecycle()
-                val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
-                val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
+                val videoStream by viewModel.videoStream.collectAsStateWithLifecycle()
                 val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
                 val statusCode by viewModel.statusCode.collectAsStateWithLifecycle()
 
@@ -85,7 +85,7 @@ class PlayerActivity : WordViewActivity() {
 
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
-                            SongViewModel.videoStream.value.init(videoId, context)
+                            viewModel.videoStream.value.init(videoId, context)
 
                             viewModel.initAudio(videoStream.getStreamURL())
                             viewModel.getLyrics(videoId, lang, videoStream)
@@ -106,9 +106,9 @@ class PlayerActivity : WordViewActivity() {
                 WordViewTheme(darkTheme = true) {
                     Scaffold { innerPadding ->
                         when (state) {
-                            PlayerState.READY -> Player(viewModel, innerPadding)
+                            PlayerState.READY -> Player(videoId, viewModel, innerPadding)
 
-                            PlayerState.ERROR -> ErrorScreen(errorMessage, {
+                            PlayerState.ERROR -> ErrorScreen(errorMessage, viewModel, {
                                 Timber.d("Refreshing player")
                                 viewModel.setPlayerState(PlayerState.LOADING)
                                 start()
@@ -145,7 +145,7 @@ class PlayerActivity : WordViewActivity() {
 
     override fun onDestroy() {
         if (isFinishing) {
-            SongViewModel.setVideoStream(VideoStream())
+            viewModel.setVideoStream(VideoStream())
         }
 
         super.onDestroy()
