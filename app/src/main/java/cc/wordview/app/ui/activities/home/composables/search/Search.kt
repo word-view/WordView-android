@@ -73,7 +73,7 @@ import com.gigamole.composefadingedges.verticalFadingEdges
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.Space
-import cc.wordview.app.extensions.openActivity
+import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.ui.components.SearchHistoryEntry
 import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.navigation.NavDestination

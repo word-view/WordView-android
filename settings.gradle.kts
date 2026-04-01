@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "WordView"
 include(":app")
+include(":app:components")

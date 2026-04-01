@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
 import cc.wordview.app.components.ui.RemoteImage
-import cc.wordview.app.extensions.toMinutesSeconds
+import cc.wordview.app.components.extensions.toMinutesSeconds
 import cc.wordview.app.ui.theme.Typography
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

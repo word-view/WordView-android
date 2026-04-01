@@ -15,10 +15,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.extensions
+package cc.wordview.app.components.extensions
 
-import androidx.compose.ui.semantics.SemanticsPropertyKey
-import androidx.compose.ui.semantics.SemanticsPropertyReceiver
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.pm.ActivityInfo
 
-val AlphaKey = SemanticsPropertyKey<Float>("AlphaKey")
-var SemanticsPropertyReceiver.alpha by AlphaKey
+fun Activity.setOrientationSensorLandscape() {
+    this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+}
+
+@SuppressLint("SourceLockedOrientationActivity")
+fun Activity.setOrientationSensorPortrait() {
+    this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+}

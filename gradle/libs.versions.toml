@@ -4,7 +4,6 @@ accompanistSystemuicontroller = "0.36.0"
 agp = "9.0.0"
 coil = "3.3.0"
 coilCompose = "3.3.0"
-components = "1.2.3"
 composefadingedges = "1.0.4"
 composeResources = "1.0.0-alpha01"
 coreSplashscreen = "1.2.0"
@@ -43,6 +42,8 @@ uiTestJunit4 = "1.10.3"
 uiTestManifest = "1.10.3"
 volley = "1.2.1"
 shimmer = "1.0.0"
+appcompat = "1.6.1"
+material = "1.10.0"
 
 [libraries]
 accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayout" }
@@ -64,7 +65,6 @@ androidx-security-crypto = { module = "androidx.security:security-crypto", versi
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
-components = { module = "com.github.word-view:Components", version.ref = "components" }
 compose-resources = { module = "com.github.ygorluizfrazao:compose-resources", version.ref = "composeResources" }
 composefadingedges = { module = "com.github.GIGAMOLE:ComposeFadingEdges", version.ref = "composefadingedges" }
 gengolex = { module = "com.github.word-view:Gengolex", version.ref = "gengolex" }
@@ -103,8 +103,11 @@ ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = 
 ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestManifest" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 compose-shimmer = { module = "me.vponomarenko:compose-shimmer", version.ref = "shimmer" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 legacy-kapt = { id = "com.android.legacy-kapt", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }

@@ -15,9 +15,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.extensions
+package cc.wordview.app.components.extensions
 
 import android.annotation.SuppressLint
+
+/**
+ * Calculates what percentage [num] is of this [Long] value.
+ *
+ * Returns 0.0 if either this value or [num] is less than or equal to zero.
+ *
+ * @param num The number to calculate as a percentage of this value.
+ * @return The percentage that [num] is of this [Long] value, as a [Double].
+ */
+fun Long.percentageOf(num: Long): Double {
+    if (num <= 0 || this <= 0) return 0.toDouble()
+    return ((num.toDouble() / this) * 100)
+}
 
 @SuppressLint("DefaultLocale")
 fun Long.toMinutesSeconds(): String {

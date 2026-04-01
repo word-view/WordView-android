@@ -22,7 +22,7 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import cc.wordview.app.ComposeTest
-import cc.wordview.app.subtitle.WordViewCue
+import cc.wordview.app.components.media.caption.WordViewCue
 import cc.wordview.app.ui.components.TextCue
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.word.Word

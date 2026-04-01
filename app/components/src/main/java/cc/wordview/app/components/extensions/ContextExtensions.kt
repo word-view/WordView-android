@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.extensions
+package cc.wordview.app.components.extensions
 
 import android.app.Activity
 import android.content.Context
@@ -23,6 +23,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import java.io.Serializable
+
+inline fun <reified T : Activity> Context.openActivity() {
+    val intent = Intent(this, T::class.java)
+    this.startActivity(intent)
+}
 
 inline fun <reified T : Activity> Context.openActivity(
     vararg extras: Pair<String, Any?>
@@ -39,7 +44,7 @@ inline fun <reified T : Activity> Context.openActivity(
             is String -> intent.putExtra(key, value)
             is Bundle -> intent.putExtras(value)
             is Parcelable -> intent.putExtra(key, value)
-            is Serializable -> intent.putExtra(key, value)  // fallback
+            is Serializable -> intent.putExtra(key, value)
             null -> { /* ignore null values */ }
             else -> throw IllegalArgumentException("Unsupported extra type: ${value::class.java.name}")
         }

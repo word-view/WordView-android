@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.subtitle
+package cc.wordview.app.components.media.caption
 
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
@@ -53,7 +53,7 @@ class Lyrics(vttLyrics: String, parser: Parser) : ArrayList<WordViewCue>() {
             if (position >= cue.startTimeMs && position <= cue.endTimeMs) return cue
         }
 
-        // a empty cue used to ignore if no cue was found.
+        // an empty cue used to ignore if no cue was found.
         return WordViewCue("", -1, -1)
     }
 

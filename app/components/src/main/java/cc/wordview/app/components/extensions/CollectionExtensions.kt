@@ -15,15 +15,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app
+package cc.wordview.app.components.extensions
 
-import androidx.compose.ui.semantics.getOrNull
-import androidx.compose.ui.test.SemanticsMatcher
-import cc.wordview.app.extensions.AlphaKey
-
-@Suppress("unused")
-fun hasAlpha(expectedAlpha: Float): SemanticsMatcher {
-    return SemanticsMatcher("has alpha value of $expectedAlpha") { node ->
-        node.config.getOrNull(AlphaKey) == expectedAlpha
-    }
+/**
+ * Returns an array containing the specified amount of elements, sorted randomly.
+ *
+ * @param amount The number of elements to return.
+ * @return A list of randomly selected elements from the original list.
+ * @throws IllegalArgumentException if amount is negative.
+ */
+fun <T> Collection<T>.random(amount: Int): List<T> {
+    require(amount >= 0) { "Amount must be non-negative." }
+    return this.shuffled().take(amount)
 }

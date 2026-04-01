@@ -15,18 +15,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.extensions
-
-import androidx.compose.foundation.basicMarquee
-import androidx.compose.ui.Modifier
+package cc.wordview.app.components.extensions
 
 /**
- * Applies an pre-configured animated marquee to display
- * overflowing text
+ * Returns a new [Set] containing all the elements of this set except the specified [value].
+ *
+ * If [value] is not present in the set, the original set is returned unchanged.
+ *
+ * @param value The element to be removed from the set.
+ * @return A new set without the specified [value], or the original set if [value] is not present.
  */
-fun Modifier.marquee(): Modifier {
-    return this.basicMarquee(
-        initialDelayMillis = 3_000,
-        repeatDelayMillis = 3_000
-    )
+fun <T> Set<T>.without(value: T): Set<T> {
+    if (!this.contains(value)) return this
+    return this.filterNot { it == value }.toSet()
 }
