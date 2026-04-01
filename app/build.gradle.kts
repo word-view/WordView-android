@@ -4,7 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.3.10"
+//    id("org.jetbrains.kotlin.plugin.compose") version "2.3.10"
+    alias(libs.plugins.compose.compiler)
     id("io.github.composegears.tiamat.destinations.compiler") version "2.2.0"
     id("kotlin-parcelize")
 }
@@ -49,9 +50,6 @@ configure<ApplicationExtension> {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
 
@@ -95,7 +93,6 @@ dependencies {
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.gengolex)
-    implementation(libs.components)
     implementation(libs.volley)
     implementation(libs.gson)
     implementation(libs.coil)
@@ -116,6 +113,7 @@ dependencies {
     implementation(libs.compose.shimmer)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(project(":app:components"))
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
