@@ -65,16 +65,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
-import cc.wordview.app.misc.SongViewModel
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.ResultItem
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
-import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.Space
+import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.components.SearchHistoryEntry
 import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.navigation.NavDestination
@@ -262,9 +261,10 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                             isLyricsProvided = providedLyricsIds.contains(it.id),
                             result = it
                         ) {
-                            SongViewModel.setVideo(it.id)
                             viewModel.saveVideoToHistory(it)
-                            context.openActivity<PlayerActivity>()
+                            context.openActivity<PlayerActivity>(
+                                "id" to it.id
+                            )
                         }
                     }
                 }

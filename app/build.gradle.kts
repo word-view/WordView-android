@@ -6,6 +6,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.compose") version "2.3.10"
     id("io.github.composegears.tiamat.destinations.compiler") version "2.2.0"
+    id("kotlin-parcelize")
 }
 
 configure<ApplicationExtension> {

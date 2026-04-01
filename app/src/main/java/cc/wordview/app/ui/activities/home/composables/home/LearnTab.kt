@@ -53,10 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
-import cc.wordview.app.misc.SongViewModel
-import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
-import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.MetaHomeInterface
@@ -68,6 +65,7 @@ import kotlinx.coroutines.launch
 import me.vponomarenko.compose.shimmer.shimmer
 import androidx.compose.ui.res.stringResource
 import cc.wordview.app.database.entity.ViewedVideo
+import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.components.ContinueWatchingCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -126,8 +124,9 @@ fun LearnTab(
                     modifier = Modifier.padding(horizontal = 17.dp),
                     viewedVideo = lastWatchedVideo!!,
                     onClick = {
-                        SongViewModel.setVideo(lastWatchedVideo!!.id)
-                        context.openActivity<PlayerActivity>()
+                        context.openActivity<PlayerActivity>(
+                            "id" to lastWatchedVideo!!.id
+                        )
                     }
                 )
             }
@@ -165,7 +164,6 @@ fun LearnTab(
                             ),
                             trackName = it.title
                         ) {
-                            SongViewModel.setVideo(it.id)
                             viewModel.saveVideoToHistory(
                                 ViewedVideo(
                                     id = it.id,
@@ -175,7 +173,9 @@ fun LearnTab(
                                     duration = it.duration,
                                 )
                             )
-                            context.openActivity<PlayerActivity>()
+                            context.openActivity<PlayerActivity>(
+                                "id" to it.id
+                            )
                         }
                     }
 

@@ -31,6 +31,7 @@ import cc.wordview.app.components.media.AudioPlayer
 import cc.wordview.app.components.media.AudioPlayerListener
 import cc.wordview.app.database.RoomAccess
 import cc.wordview.app.extensions.toSeconds
+import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.subtitle.Lyrics
 import cc.wordview.app.subtitle.WordViewCue
@@ -74,6 +75,8 @@ class PlayerViewModel @Inject constructor(
     private val _statusCode = MutableStateFlow(0)
     private val _knownWords = MutableStateFlow(ArrayList<String>())
 
+    private val _videoStream = MutableStateFlow<VideoStreamInterface>(VideoStream())
+
     // Seekbar states
     private val _currentPosition = MutableStateFlow(0L)
     private val _bufferedPercentage = MutableStateFlow(0)
@@ -91,6 +94,7 @@ class PlayerViewModel @Inject constructor(
     val noTimeLeft = _noTimeLeft.asStateFlow()
     val errorMessage = _errorMessage.asStateFlow()
     val statusCode = _statusCode.asStateFlow()
+    val videoStream = _videoStream.asStateFlow()
 
     private val viewedVideoDao = RoomAccess.getDatabase().viewedVideoDao()
 
@@ -285,5 +289,9 @@ class PlayerViewModel @Inject constructor(
 
     fun setErrorMessage(message: String) {
         _errorMessage.update { message }
+    }
+
+    fun setVideoStream(videoStream: VideoStreamInterface) {
+        _videoStream.update { videoStream }
     }
 }

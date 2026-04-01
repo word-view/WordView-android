@@ -57,7 +57,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
-import cc.wordview.app.misc.SongViewModel
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.components.ui.CrossfadeIconButton
@@ -76,7 +75,7 @@ import cc.wordview.app.ui.components.TextCue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
+fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     val player by viewModel.player.collectAsStateWithLifecycle()
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
@@ -86,9 +85,7 @@ fun Player(viewModel: PlayerViewModel, innerPadding: PaddingValues) {
     val noTimeLeft by viewModel.noTimeLeft.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
-
-    val videoStream by SongViewModel.videoStream.collectAsStateWithLifecycle()
-    val videoId by SongViewModel.videoId.collectAsStateWithLifecycle()
+    val videoStream by viewModel.videoStream.collectAsStateWithLifecycle()
 
     val activity = LocalActivity.current!!
     val context = LocalContext.current

@@ -37,12 +37,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.R
-import cc.wordview.app.misc.SongViewModel
-import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.database.RoomAccess
 import cc.wordview.app.database.entity.ViewedVideo
+import cc.wordview.app.extensions.openActivity
 import cc.wordview.app.ui.activities.player.PlayerActivity
 import cc.wordview.app.ui.components.HistoryItem
 import cc.wordview.app.ui.theme.poppinsFamily
@@ -107,8 +106,9 @@ val HistoryScreen: NavDestination<Unit> by navDestination {
                     ),
                     result = it
                 ) {
-                    SongViewModel.setVideo(it.id)
-                    context.openActivity<PlayerActivity>()
+                    context.openActivity<PlayerActivity>(
+                        "id" to it.id
+                    )
                 }
                 Spacer(Modifier.size(16.dp))
             }
