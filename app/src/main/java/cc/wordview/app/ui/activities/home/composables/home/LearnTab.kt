@@ -66,6 +66,7 @@ import me.vponomarenko.compose.shimmer.shimmer
 import androidx.compose.ui.res.stringResource
 import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.extensions.openActivity
+import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.components.ContinueWatchingCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,6 +78,7 @@ fun LearnTab(
 ) {
     val categories by viewModel.homeCategories.collectAsStateWithLifecycle()
     val lastWatchedVideo by viewModel.lastWatchedVideo.collectAsStateWithLifecycle()
+    val learnLangTag = AppSettings.language.get()
     val context = LocalContext.current
 
     var isRefreshing by remember { mutableStateOf(false) }
@@ -84,7 +86,7 @@ fun LearnTab(
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        viewModel.getHome()
+        viewModel.getHome(learnLangTag)
         viewModel.getLastWatchedVideo()
     }
 
@@ -95,7 +97,7 @@ fun LearnTab(
         onRefresh = {
             coroutineScope.launch {
                 viewModel.updateHomeCategories(arrayListOf())
-                viewModel.getHome()
+                viewModel.getHome(learnLangTag)
                 viewModel.getLastWatchedVideo()
             }
         },

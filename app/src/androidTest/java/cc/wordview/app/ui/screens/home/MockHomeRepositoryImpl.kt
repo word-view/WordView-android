@@ -31,7 +31,7 @@ class MockHomeRepositoryImpl @Inject constructor() : HomeRepository {
 
     override lateinit var queue: RequestQueue
 
-    override fun getHomeVideos() {
+    override fun getHomeVideos(langTag: String) {
         onSucceed(arrayListOf(
             HomeCategory(
                 id = "editors-pick",

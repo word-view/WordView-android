@@ -24,5 +24,5 @@ interface HomeRepository : ApiRequestRepository {
     var onSucceed: (ArrayList<HomeCategory>) -> Unit
     var onFail: (String, Int) -> Unit
 
-    fun getHomeVideos()
+    fun getHomeVideos(langTag: String)
 }

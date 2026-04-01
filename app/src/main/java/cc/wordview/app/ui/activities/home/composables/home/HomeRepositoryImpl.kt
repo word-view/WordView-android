@@ -32,9 +32,9 @@ class HomeRepositoryImpl @Inject constructor(
 
     override var queue = Volley.newRequestQueue(context)
 
-    override fun getHomeVideos() {
+    override fun getHomeVideos(langTag: String) {
         val request = HomeRequest(
-            "$endpoint/api/v1/home",
+            "$endpoint/api/v1/home?learnLang=$langTag",
             { onSucceed(it) },
             { message, status -> onFail(message, status) }
         )

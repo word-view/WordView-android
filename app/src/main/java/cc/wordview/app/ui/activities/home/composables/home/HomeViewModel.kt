@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(
 
     private val viewedVideoDao = RoomAccess.getDatabase().viewedVideoDao()
 
-    fun getHome() {
+    fun getHome(langTag: String) {
         updateHomeCategories(arrayListOf())
 
         homeRepository.apply {
@@ -70,7 +70,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
-            getHomeVideos()
+            getHomeVideos(langTag)
         }
     }
 
