@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
-//    id("org.jetbrains.kotlin.plugin.compose") version "2.3.10"
     alias(libs.plugins.compose.compiler)
     id("io.github.composegears.tiamat.destinations.compiler") version "2.2.0"
     id("kotlin-parcelize")
