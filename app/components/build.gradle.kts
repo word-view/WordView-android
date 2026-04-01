@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.gengolex)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ui.test.junit4)
     androidTestImplementation(libs.mockito.android)

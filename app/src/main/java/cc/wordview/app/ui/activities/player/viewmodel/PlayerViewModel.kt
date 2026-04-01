@@ -33,8 +33,8 @@ import cc.wordview.app.database.RoomAccess
 import cc.wordview.app.components.extensions.toSeconds
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.extractor.VideoStreamInterface
-import cc.wordview.app.subtitle.Lyrics
-import cc.wordview.app.subtitle.WordViewCue
+import cc.wordview.app.components.media.caption.Lyrics
+import cc.wordview.app.components.media.caption.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
 import cc.wordview.app.ui.dtos.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.lesson.ReviseTimer

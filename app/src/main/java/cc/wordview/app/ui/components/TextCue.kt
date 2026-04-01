@@ -29,7 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import cc.wordview.app.subtitle.WordViewCue
+import cc.wordview.app.components.media.caption.WordViewCue
 
 @Composable
 fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {

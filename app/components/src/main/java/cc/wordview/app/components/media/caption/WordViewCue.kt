@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.subtitle
+package cc.wordview.app.components.media.caption
 
 import cc.wordview.gengolex.word.Word
 
