@@ -38,7 +38,6 @@ import cc.wordview.app.components.extensions.setOrientationSensorLandscape
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.misc.AppSettings
-import cc.wordview.app.ui.dtos.PlayerToLessonCommunicator
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
 import cc.wordview.app.ui.activities.player.composables.Player
@@ -89,10 +88,6 @@ class PlayerActivity : WordViewActivity() {
 
                             viewModel.initAudio(videoStream.getStreamURL())
                             viewModel.getLyrics(videoId, lang, videoStream)
-                            viewModel.getKnownWords(lang)
-                            viewModel.getLessonTime()
-
-                            PlayerToLessonCommunicator.initTts(context)
                         } catch (e: ExtractionException) {
                             Timber.e(e)
                             viewModel.setErrorMessage(e.message.toString())

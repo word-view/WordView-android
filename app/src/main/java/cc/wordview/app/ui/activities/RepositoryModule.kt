@@ -27,12 +27,6 @@ import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepositoryImpl
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepositoryImpl
-import cc.wordview.app.ui.activities.lesson.viewmodel.SaveKnownWordsRepository
-import cc.wordview.app.ui.activities.lesson.viewmodel.SaveKnownWordsRepositoryImpl
-import cc.wordview.app.ui.activities.lesson.viewmodel.TranslationsRepository
-import cc.wordview.app.ui.activities.lesson.viewmodel.TranslationsRepositoryImpl
-import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
-import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -53,10 +47,6 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    internal abstract fun bindKnownWordsRepository(knownWordsRepositoryImpl: KnownWordsRepositoryImpl): KnownWordsRepository
-
-    @Singleton
-    @Binds
     internal abstract fun bindLoginRepository(loginRepositoryImpl: LoginRepositoryImpl): LoginRepository
 
     @Singleton
@@ -66,12 +56,4 @@ abstract class RepositoryModule {
     @Singleton
     @Binds
     internal abstract fun bindHomeRepository(homeRepositoryImpl: HomeRepositoryImpl): HomeRepository
-
-    @Singleton
-    @Binds
-    internal abstract fun bindSaveKnownWordsRepository(saveKnownWordsRepositoryImpl: SaveKnownWordsRepositoryImpl): SaveKnownWordsRepository
-
-    @Singleton
-    @Binds
-    internal abstract fun bindTranslationsRepository(translationsRepositoryImpl: TranslationsRepositoryImpl): TranslationsRepository
 }

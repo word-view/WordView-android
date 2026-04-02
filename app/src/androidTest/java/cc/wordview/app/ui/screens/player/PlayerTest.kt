@@ -25,7 +25,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import cc.wordview.app.ui.activities.home.HomeActivity
-import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
