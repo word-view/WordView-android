@@ -63,24 +63,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.lesson.LessonActivity"
-            android:exported="true"
-            android:theme="@style/Theme.WordView">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.activities.statistics.StatisticsActivity"
-            android:exported="true"
-            android:theme="@style/Theme.WordView">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".ui.activities.crash.CrashActivity"
             android:exported="true"
             android:theme="@style/Theme.WordView">
