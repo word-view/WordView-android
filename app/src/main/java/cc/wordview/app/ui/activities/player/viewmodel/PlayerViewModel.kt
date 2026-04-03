@@ -91,8 +91,8 @@ class PlayerViewModel @Inject constructor(
             declarePlayerError(PlayerErrorState(message, status))
         }
         playerRepository.onSucceed = { lyrics, dictionary ->
-            initParser(lang)
-            addDictionary(lang.dictionaryName, dictionary)
+            parser = Parser(lang)
+            parser.addDictionary(lang.dictionaryName, dictionary)
 
             parseLyrics(lyrics)
 
@@ -191,14 +191,6 @@ class PlayerViewModel @Inject constructor(
 
     private fun parseLyrics(lyrics: String) {
         _uiState.update { it.copy(lyrics = Lyrics(lyrics, parser)) }
-    }
-
-    private fun initParser(language: Language) {
-        parser = Parser(language)
-    }
-
-    private fun addDictionary(name: String, dictionary: String) {
-        parser.addDictionary(name, dictionary)
     }
 
     private fun setCurrentCue(cue: WordViewCue) {
