@@ -36,7 +36,6 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.components.extensions.setOrientationSensorLandscape
 import cc.wordview.app.components.ui.CircularProgressIndicator
-import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
@@ -44,6 +43,7 @@ import cc.wordview.app.ui.activities.player.composables.Player
 import cc.wordview.app.ui.activities.player.viewmodel.LoadState
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.components.ui.OneTimeEffect
+import cc.wordview.app.ui.activities.player.viewmodel.PlayerErrorState
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.Language
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,10 +68,7 @@ class PlayerActivity : WordViewActivity() {
         enableEdgeToEdge()
         setContent {
             ProvidePreferenceLocals {
-                val state by viewModel.loadState.collectAsStateWithLifecycle()
-                val videoStream by viewModel.videoStream.collectAsStateWithLifecycle()
-                val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
-                val statusCode by viewModel.statusCode.collectAsStateWithLifecycle()
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
                 val langTag = AppSettings.language.get()
 
@@ -84,14 +81,13 @@ class PlayerActivity : WordViewActivity() {
 
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
-                            viewModel.videoStream.value.init(videoId, context)
+                            uiState.videoStream.init(videoId, context)
 
-                            viewModel.initAudio(videoStream.getStreamURL())
-                            viewModel.getLyrics(videoId, lang, videoStream)
+                            viewModel.initAudio(uiState.videoStream.getStreamURL())
+                            viewModel.getLyrics(videoId, lang, uiState.videoStream)
                         } catch (e: ExtractionException) {
                             Timber.e(e)
-                            viewModel.setErrorMessage(e.message.toString())
-                            viewModel.setLoadState(LoadState.ERROR)
+                            viewModel.declarePlayerError(PlayerErrorState(e.message.toString()))
                         }
                     }
                 }
@@ -100,14 +96,14 @@ class PlayerActivity : WordViewActivity() {
 
                 WordViewTheme(darkTheme = true) {
                     Scaffold { innerPadding ->
-                        when (state) {
+                        when (uiState.loadState) {
                             LoadState.READY -> Player(videoId, viewModel, innerPadding)
 
-                            LoadState.ERROR -> ErrorScreen(errorMessage, viewModel, {
+                            LoadState.ERROR -> ErrorScreen(viewModel) {
                                 Timber.d("Refreshing player")
                                 viewModel.setLoadState(LoadState.LOADING)
                                 start()
-                            }, statusCode)
+                            }
 
                             LoadState.LOADING -> Box(
                                 Modifier.fillMaxSize(),
@@ -125,10 +121,10 @@ class PlayerActivity : WordViewActivity() {
     override fun onPause() {
         super.onPause()
 
-        val playerState = viewModel.loadState.value
+        val playerState = viewModel.uiState.value.loadState
 
         if (playerState == LoadState.READY) {
-            val player = viewModel.player.value
+            val player = viewModel.uiState.value.player
             player.pause()
         }
     }
@@ -140,7 +136,7 @@ class PlayerActivity : WordViewActivity() {
 
     override fun onDestroy() {
         if (isFinishing) {
-            viewModel.setVideoStream(VideoStream())
+            viewModel.cleanup()
         }
 
         super.onDestroy()

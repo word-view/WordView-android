@@ -48,7 +48,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.LayoutDirection
@@ -72,40 +71,37 @@ import cc.wordview.app.ui.components.TextCue
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingValues) {
-    val player by viewModel.player.collectAsStateWithLifecycle()
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
-    val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
-    val finalized by viewModel.finalized.collectAsStateWithLifecycle()
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
-    val videoStream by viewModel.videoStream.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val activity = LocalActivity.current!!
     val density = LocalDensity.current
 
     val composerMode = AppSettings.composerMode.get()
 
-    LaunchedEffect(finalized) {
-        if (finalized) {
-            player.stop()
+    LaunchedEffect(uiState.finalized) {
+        if (uiState.finalized) {
+            uiState.player.stop()
         }
     }
 
     fun back() {
-        player.stop()
+        uiState.player.stop()
         activity.finish()
     }
 
     BackHandler { back() }
-    OneTimeEffect { player.togglePlay() }
+    OneTimeEffect { uiState.player.togglePlay() }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .testTag("interface")
     ) {
-        FadeInAsyncImage(videoStream.getHQThumbnail())
+        FadeInAsyncImage(uiState.videoStream.getHQThumbnail())
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -156,11 +152,11 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                 }
                 Column {
                     Text(
-                        text = videoStream.info.name,
+                        text = uiState.videoStream.info.name,
                         fontSize = 18.sp
                     )
                     Text(
-                        text = videoStream.info.getCleanUploaderName(),
+                        text = uiState.videoStream.info.getCleanUploaderName(),
                         fontSize = 12.sp
                     )
                 }
@@ -173,7 +169,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                     .padding(end = WindowInsets.displayCutout.getRight(density, LayoutDirection.Ltr).dp / 2),
                 displayAdvancedInformation = composerMode,
                 currentPosition = currentPosition,
-                duration = player.getDuration(),
+                duration = uiState.player.getDuration(),
                 videoId = videoId,
                 bufferingProgress = bufferedPercentage
             )
@@ -190,21 +186,21 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                         modifier = Modifier.testTag("skip-back"),
                         icon = Icons.Filled.SkipPrevious,
                         size = 72.dp,
-                        onClick = { player.skipBack() }
+                        onClick = { uiState.player.skipBack() }
                     )
                     CrossfadeIconButton(
                         modifier = Modifier
                             .testTag("toggle-play")
                             .alpha(if (isBuffering) 0.0f else 1.0f),
-                        icon = playIcon,
+                        icon = uiState.playIcon,
                         size = 80.dp,
-                        onClick = { player.togglePlay() }
+                        onClick = { uiState.player.togglePlay() }
                     )
                     CrossfadeIconButton(
                         modifier = Modifier.testTag("skip-forward"),
                         icon = Icons.Filled.SkipNext,
                         size = 72.dp,
-                        onClick = { player.skipForward() }
+                        onClick = { uiState.player.skipForward() }
                     )
                 }
             }
