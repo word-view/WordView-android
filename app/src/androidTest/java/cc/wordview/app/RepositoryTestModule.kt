@@ -25,14 +25,8 @@ import cc.wordview.app.ui.screens.player.MockPlayerRepositoryImpl
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.screens.search.MockSearchRepositoryImpl
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
-import cc.wordview.app.ui.activities.lesson.viewmodel.SaveKnownWordsRepository
-import cc.wordview.app.ui.activities.lesson.viewmodel.TranslationsRepository
-import cc.wordview.app.ui.activities.player.viewmodel.KnownWordsRepository
 import cc.wordview.app.ui.screens.home.MockHomeRepositoryImpl
-import cc.wordview.app.ui.screens.lesson.MockSaveKnownWordsRepositoryImpl
-import cc.wordview.app.ui.screens.lesson.MockTranslationsRepositoryImpl
 import cc.wordview.app.ui.screens.login.MockLoginRepositoryImpl
-import cc.wordview.app.ui.screens.player.MockKnownWordsRepositoryImpl
 import cc.wordview.app.ui.screens.register.MockRegisterRepositoryImpl
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
@@ -54,11 +48,6 @@ abstract class RepositoryTestModule {
 
     @Singleton
     @Binds
-    abstract fun bindsMockKnownWordsRepository(mockKnownWordsRepositoryImpl: MockKnownWordsRepositoryImpl): KnownWordsRepository
-
-
-    @Singleton
-    @Binds
     abstract fun bindsMockLoginRepository(mockLoginRepositoryImpl: MockLoginRepositoryImpl): LoginRepository
 
     @Singleton
@@ -68,12 +57,4 @@ abstract class RepositoryTestModule {
     @Singleton
     @Binds
     abstract fun bindsMockHomeRepository(mockHomeRepositoryImpl: MockHomeRepositoryImpl): HomeRepository
-
-    @Singleton
-    @Binds
-    internal abstract fun bindMockSaveKnownWordsRepository(mockSaveKnownWordsRepositoryImpl: MockSaveKnownWordsRepositoryImpl): SaveKnownWordsRepository
-
-    @Singleton
-    @Binds
-    internal abstract fun bindMockTranslationsRepository(mockTranslationsRepositoryImpl: MockTranslationsRepositoryImpl): TranslationsRepository
 }

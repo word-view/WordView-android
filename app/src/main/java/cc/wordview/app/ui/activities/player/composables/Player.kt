@@ -57,16 +57,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.misc.AppSettings
-import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.components.ui.CrossfadeIconButton
 import cc.wordview.app.components.ui.FadeInAsyncImage
 import cc.wordview.app.components.ui.FadeOutBox
 import cc.wordview.app.extensions.getCleanUploaderName
-import cc.wordview.app.ui.activities.lesson.LessonActivity
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
-import cc.wordview.app.ui.components.NoTimeLeftDialog
-import cc.wordview.app.ui.components.NotEnoughWordsDialog
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.PlayerTopBar
 import cc.wordview.app.components.ui.Seekbar
@@ -81,14 +77,11 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
     val playIcon by viewModel.playIcon.collectAsStateWithLifecycle()
     val finalized by viewModel.finalized.collectAsStateWithLifecycle()
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
-    val notEnoughWords by viewModel.notEnoughWords.collectAsStateWithLifecycle()
-    val noTimeLeft by viewModel.noTimeLeft.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
     val videoStream by viewModel.videoStream.collectAsStateWithLifecycle()
 
     val activity = LocalActivity.current!!
-    val context = LocalContext.current
     val density = LocalDensity.current
 
     val composerMode = AppSettings.composerMode.get()
@@ -96,8 +89,6 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
     LaunchedEffect(finalized) {
         if (finalized) {
             player.stop()
-            context.openActivity<LessonActivity>()
-            activity.finish()
         }
     }
 
@@ -107,10 +98,6 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
     }
 
     BackHandler { back() }
-
-    if (notEnoughWords) NotEnoughWordsDialog { back() }
-    if (noTimeLeft) NoTimeLeftDialog { back() }
-
     OneTimeEffect { player.togglePlay() }
 
     Box(

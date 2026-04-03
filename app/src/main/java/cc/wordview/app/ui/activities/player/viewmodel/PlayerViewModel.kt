@@ -24,9 +24,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.BuildConfig
-import cc.wordview.app.api.APIUrl
-import cc.wordview.app.api.getStoredJwt
-import cc.wordview.app.api.request.AuthenticatedStringRequest
 import cc.wordview.app.components.media.AudioPlayer
 import cc.wordview.app.components.media.AudioPlayerListener
 import cc.wordview.app.database.RoomAccess
@@ -36,14 +33,10 @@ import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.components.media.caption.Lyrics
 import cc.wordview.app.components.media.caption.WordViewCue
 import cc.wordview.app.misc.ImageCacheManager
-import cc.wordview.app.ui.dtos.PlayerToLessonCommunicator
-import cc.wordview.app.ui.activities.lesson.ReviseTimer
-import cc.wordview.app.ui.activities.lesson.viewmodel.ReviseWord
 import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
-import com.android.volley.toolbox.Volley
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -58,7 +51,6 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
     private val playerRepository: PlayerRepository,
-    private val knownWordsRepository: KnownWordsRepository,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
     private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
@@ -69,11 +61,8 @@ class PlayerViewModel @Inject constructor(
     private val _playerState = MutableStateFlow(PlayerState.LOADING)
     private val _finalized = MutableStateFlow(false)
     private val _isBuffering = MutableStateFlow(false)
-    private val _notEnoughWords = MutableStateFlow(false)
-    private val _noTimeLeft = MutableStateFlow(false)
     private val _errorMessage = MutableStateFlow("")
     private val _statusCode = MutableStateFlow(0)
-    private val _knownWords = MutableStateFlow(ArrayList<String>())
 
     private val _videoStream = MutableStateFlow<VideoStreamInterface>(VideoStream())
 
@@ -90,8 +79,6 @@ class PlayerViewModel @Inject constructor(
     val playerState = _playerState.asStateFlow()
     val finalized = _finalized.asStateFlow()
     val isBuffering = _isBuffering.asStateFlow()
-    val notEnoughWords = _notEnoughWords.asStateFlow()
-    val noTimeLeft = _noTimeLeft.asStateFlow()
     val errorMessage = _errorMessage.asStateFlow()
     val statusCode = _statusCode.asStateFlow()
     val videoStream = _videoStream.asStateFlow()
@@ -106,41 +93,6 @@ class PlayerViewModel @Inject constructor(
         stepsReady.update { it + 1 }
         if (stepsReady.value == 3)
             setPlayerState(PlayerState.READY)
-    }
-
-    fun getKnownWords(lang: Language) = viewModelScope.launch {
-        val jwt = getStoredJwt(appContext)
-
-        knownWordsRepository.apply {
-            onFail = { message, status ->
-                Timber.e("Failed to request known words \n\tmessage=$message, status=$status")
-            }
-
-            onSucceed = {
-                for (word in it)
-                    _knownWords.value.add(word)
-            }
-
-            jwt?.let { getKnownWords(lang.tag, it) }
-        }
-    }
-
-    fun getLessonTime() {
-        val jwt = getStoredJwt(appContext) ?: return
-        val queue = Volley.newRequestQueue(appContext)
-        val url = APIUrl("${BuildConfig.API_BASE_URL}/api/v1/user/me/lesson_time")
-
-        val request = AuthenticatedStringRequest(
-            url.getURL(),
-            jwt,
-            onSuccess = {
-                Timber.i("Time left: $it")
-                ReviseTimer.timeRemaining = it.toLong()
-                        },
-            onError = { message, status -> Timber.e("Failed to retrieve lesson time: \n\tmessage=$message, status=$status") }
-        )
-
-        queue.add(request)
     }
 
     fun getLyrics(
@@ -204,29 +156,6 @@ class PlayerViewModel @Inject constructor(
 
             onPlaybackEnd = {
                 player.value.stop()
-
-                for (cue in _lyrics.value) {
-                    for (word in cue.words) {
-                        if (word.parent == "") continue
-
-                        val reviseWord = ReviseWord(word)
-
-                        reviseWord.isKnown = _knownWords.value.contains(reviseWord.tokenWord.parent)
-
-                        PlayerToLessonCommunicator.appendWord(reviseWord)
-                    }
-                }
-
-                val isTimerFinished = ReviseTimer.timeRemaining < 1000L
-                val wordsToRevise = PlayerToLessonCommunicator.wordsToRevise.value
-
-                if (isTimerFinished) {
-                    _noTimeLeft.update { true }
-                } else if (wordsToRevise.isEmpty() || wordsToRevise.size < 3) {
-                    _notEnoughWords.update { true }
-                } else {
-                    _finalized.update { true }
-                }
             }
         }
 
