@@ -80,10 +80,10 @@ fun Seekbar(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                modifier = Modifier.padding(4.dp).padding(horizontal = 8.dp),
+                modifier = Modifier.padding(4.dp).padding(horizontal = 6.dp),
                 text = "${formatTime(currentPosition)} / ${formatTime(duration)}",
                 style = typography.labelMedium,
-                fontSize = 14.sp
+                fontSize = 12.sp
             )
         }
         if (displayAdvancedInformation) {
@@ -95,10 +95,10 @@ fun Seekbar(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    modifier = Modifier.padding(4.dp).padding(horizontal = 8.dp),
+                    modifier = Modifier.padding(4.dp).padding(horizontal = 6.dp),
                     text = formatTimeComposerMode(currentPosition),
                     style = typography.labelMedium,
-                    fontSize = 14.sp
+                    fontSize = 12.sp
                 )
             }
             Box(
@@ -109,10 +109,10 @@ fun Seekbar(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    modifier = Modifier.padding(4.dp).padding(horizontal = 8.dp),
+                    modifier = Modifier.padding(4.dp).padding(horizontal = 6.dp),
                     text = "videoID=$videoId",
                     style = typography.labelMedium,
-                    fontSize = 14.sp
+                    fontSize = 12.sp
                 )
             }
         }
