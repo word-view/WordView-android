@@ -53,6 +53,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.LayoutDirection
@@ -70,6 +71,7 @@ import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.PlayerTopBar
 import cc.wordview.app.components.ui.Seekbar
+import cc.wordview.app.components.ui.findBiggerCutout
 import cc.wordview.app.ui.components.TextCue
 
 
@@ -143,7 +145,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
-                                androidx.compose.ui.graphics.Color.Transparent
+                                Color.Transparent
                             )
                         )
                     )
@@ -151,16 +153,8 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
             PlayerTopBar(
                 modifier = Modifier
                     .padding(
-                        start = WindowInsets.displayCutout.getLeft(
-                            density,
-                            LayoutDirection.Ltr
-                        ).dp / 2
-                    )
-                    .padding(
-                        end = WindowInsets.displayCutout.getRight(
-                            density,
-                            LayoutDirection.Ltr
-                        ).dp / 2
+                        start = findBiggerCutout(density).dp / 2,
+                        end = findBiggerCutout(density).dp / 2,
                     ),
                 contentLeft = {
                     IconButton(
@@ -200,16 +194,8 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                     .padding(top = TopAppBarDefaults.TopAppBarExpandedHeight)
                     .padding(horizontal = 6.dp)
                     .padding(
-                        start = WindowInsets.displayCutout.getLeft(
-                            density,
-                            LayoutDirection.Ltr
-                        ).dp / 2
-                    )
-                    .padding(
-                        end = WindowInsets.displayCutout.getRight(
-                            density,
-                            LayoutDirection.Ltr
-                        ).dp / 2
+                        start = findBiggerCutout(density).dp / 2,
+                        end = findBiggerCutout(density).dp / 2,
                     ),
                 displayAdvancedInformation = composerMode,
                 currentPosition = currentPosition,
