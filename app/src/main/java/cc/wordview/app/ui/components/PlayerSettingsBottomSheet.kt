@@ -74,7 +74,9 @@ fun PlayerSettingsBottomSheet(onDismissRequest: () -> Unit = {}) {
                 defaultValue = PlayerSettings.playbackSpeed.defaultValue,
                 values = listOf(
                     1.5f,
+                    1.25f,
                     1.0f,
+                    0.75f,
                     0.5f,
                 ),
                 valueToText = { value ->
