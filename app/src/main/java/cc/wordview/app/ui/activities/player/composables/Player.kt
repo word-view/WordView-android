@@ -88,6 +88,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
 
     val composerMode = AppSettings.composerMode.get()
     val playbackSpeed = PlayerSettings.playbackSpeed.get()
+    val backgroundImage = PlayerSettings.backgroundImage.get()
 
     var captionsEnabled by remember { mutableStateOf(true) }
     var showSettings by remember { mutableStateOf(false) }
@@ -111,7 +112,10 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
             .fillMaxSize()
             .testTag("interface")
     ) {
-        FadeInAsyncImage(uiState.videoStream.getHQThumbnail())
+        FadeInAsyncImage(
+            image = uiState.videoStream.getHQThumbnail(),
+            enabled = backgroundImage,
+        )
 
         if (showSettings) {
             PlayerSettingsBottomSheet(

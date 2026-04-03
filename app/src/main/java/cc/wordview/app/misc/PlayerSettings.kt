@@ -19,4 +19,5 @@ package cc.wordview.app.misc
 
 object PlayerSettings {
     val playbackSpeed = Setting(key = "player_playback_speed", defaultValue = 1.0f)
+    val backgroundImage = Setting(key = "player_background_image", defaultValue = true)
 }

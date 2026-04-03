@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.PhotoSizeSelectActual
 import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,6 +42,7 @@ import cc.wordview.app.misc.PlayerSettings
 import cc.wordview.app.ui.theme.poppinsFamily
 import me.zhanghai.compose.preference.ListPreferenceType
 import me.zhanghai.compose.preference.listPreference
+import me.zhanghai.compose.preference.switchPreference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -106,6 +108,31 @@ fun PlayerSettingsBottomSheet(onDismissRequest: () -> Unit = {}) {
                     )
                 },
                 type = ListPreferenceType.DROPDOWN_MENU,
+            )
+            switchPreference(
+                key = PlayerSettings.backgroundImage.key,
+                defaultValue = PlayerSettings.backgroundImage.defaultValue,
+                title = {
+                    Text(
+                        text = "Background image",
+                        fontFamily = poppinsFamily,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+                summary = {
+                    Text(
+                        text = "Toggles the visibility of the background image",
+                        fontFamily = poppinsFamily,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Outlined.PhotoSizeSelectActual,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                },
             )
         }
     }

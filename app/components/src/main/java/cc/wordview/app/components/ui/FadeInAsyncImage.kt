@@ -25,9 +25,10 @@ import coil3.compose.AsyncImage
  * when the image is displayed.
  *
  * @param image The [Bitmap] image to be displayed. Can be null, in which case no image is shown.
+ * @param enabled If the image is enabled, defaults to `true`
  */
 @Composable
-fun FadeInAsyncImage(image: Bitmap?) {
+fun FadeInAsyncImage(image: Bitmap?, enabled: Boolean = true) {
     var isVisible by rememberSaveable { mutableStateOf(false) }
 
     // This prevents the background from "flashing" due to recompositions (probably)
@@ -36,6 +37,10 @@ fun FadeInAsyncImage(image: Bitmap?) {
     LaunchedEffect(img) {
         isVisible = false
         isVisible = true
+    }
+
+    LaunchedEffect(enabled) {
+        isVisible = enabled
     }
 
     AnimatedVisibility(
