@@ -58,7 +58,7 @@ class PlayerViewModel @Inject constructor(
     private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
     private val _player = MutableStateFlow(AudioPlayer())
     private val _currentCue = MutableStateFlow(WordViewCue())
-    private val _playerState = MutableStateFlow(PlayerState.LOADING)
+    private val _loadState = MutableStateFlow(LoadState.LOADING)
     private val _finalized = MutableStateFlow(false)
     private val _isBuffering = MutableStateFlow(false)
     private val _errorMessage = MutableStateFlow("")
@@ -76,7 +76,7 @@ class PlayerViewModel @Inject constructor(
     val playIcon = _playIcon.asStateFlow()
     val player = _player.asStateFlow()
     val currentCue = _currentCue.asStateFlow()
-    val playerState = _playerState.asStateFlow()
+    val loadState = _loadState.asStateFlow()
     val finalized = _finalized.asStateFlow()
     val isBuffering = _isBuffering.asStateFlow()
     val errorMessage = _errorMessage.asStateFlow()
@@ -92,7 +92,7 @@ class PlayerViewModel @Inject constructor(
     private fun computeAndCheckReady() {
         stepsReady.update { it + 1 }
         if (stepsReady.value == 3)
-            setPlayerState(PlayerState.READY)
+            setLoadState(LoadState.READY)
     }
 
     fun getLyrics(
@@ -103,7 +103,7 @@ class PlayerViewModel @Inject constructor(
         playerRepository.onFail = { message, status ->
             _errorMessage.update { message }
             _statusCode.update { status }
-            setPlayerState(PlayerState.ERROR)
+            setLoadState(LoadState.ERROR)
         }
         playerRepository.onSucceed = { lyrics, dictionary ->
             initParser(lang)
@@ -165,7 +165,7 @@ class PlayerViewModel @Inject constructor(
                 _currentPosition.update { pos.toLong() }
                 _bufferedPercentage.update { bufferedPercentage }
             }
-            onInitializeFail = { setPlayerState(PlayerState.ERROR) }
+            onInitializeFail = { setLoadState(LoadState.ERROR) }
             onPrepared = { computeAndCheckReady() }
 
             initialize(videoStreamUrl, appContext, listener)
@@ -212,8 +212,8 @@ class PlayerViewModel @Inject constructor(
         _currentCue.update { cue }
     }
 
-    fun setPlayerState(playerState: PlayerState) {
-        _playerState.update { playerState }
+    fun setLoadState(loadState: LoadState) {
+        _loadState.update { loadState }
     }
 
     fun setErrorMessage(message: String) {

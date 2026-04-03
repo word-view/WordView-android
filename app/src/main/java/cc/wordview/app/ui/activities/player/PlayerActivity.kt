@@ -41,7 +41,7 @@ import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
 import cc.wordview.app.ui.activities.player.composables.Player
-import cc.wordview.app.ui.activities.player.viewmodel.PlayerState
+import cc.wordview.app.ui.activities.player.viewmodel.LoadState
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.ui.theme.WordViewTheme
@@ -68,7 +68,7 @@ class PlayerActivity : WordViewActivity() {
         enableEdgeToEdge()
         setContent {
             ProvidePreferenceLocals {
-                val state by viewModel.playerState.collectAsStateWithLifecycle()
+                val state by viewModel.loadState.collectAsStateWithLifecycle()
                 val videoStream by viewModel.videoStream.collectAsStateWithLifecycle()
                 val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
                 val statusCode by viewModel.statusCode.collectAsStateWithLifecycle()
@@ -91,7 +91,7 @@ class PlayerActivity : WordViewActivity() {
                         } catch (e: ExtractionException) {
                             Timber.e(e)
                             viewModel.setErrorMessage(e.message.toString())
-                            viewModel.setPlayerState(PlayerState.ERROR)
+                            viewModel.setLoadState(LoadState.ERROR)
                         }
                     }
                 }
@@ -101,15 +101,15 @@ class PlayerActivity : WordViewActivity() {
                 WordViewTheme(darkTheme = true) {
                     Scaffold { innerPadding ->
                         when (state) {
-                            PlayerState.READY -> Player(videoId, viewModel, innerPadding)
+                            LoadState.READY -> Player(videoId, viewModel, innerPadding)
 
-                            PlayerState.ERROR -> ErrorScreen(errorMessage, viewModel, {
+                            LoadState.ERROR -> ErrorScreen(errorMessage, viewModel, {
                                 Timber.d("Refreshing player")
-                                viewModel.setPlayerState(PlayerState.LOADING)
+                                viewModel.setLoadState(LoadState.LOADING)
                                 start()
                             }, statusCode)
 
-                            PlayerState.LOADING -> Box(
+                            LoadState.LOADING -> Box(
                                 Modifier.fillMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
@@ -125,9 +125,9 @@ class PlayerActivity : WordViewActivity() {
     override fun onPause() {
         super.onPause()
 
-        val playerState = viewModel.playerState.value
+        val playerState = viewModel.loadState.value
 
-        if (playerState == PlayerState.READY) {
+        if (playerState == LoadState.READY) {
             val player = viewModel.player.value
             player.pause()
         }

@@ -17,6 +17,6 @@
 
 package cc.wordview.app.ui.activities.player.viewmodel
 
-enum class PlayerState {
+enum class LoadState {
     ERROR, LOADING, READY
 }
