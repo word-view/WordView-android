@@ -117,8 +117,8 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    private fun enqueueImage(parent: String) = viewModelScope.launch(Dispatchers.IO) {
-        if (parent == "") return@launch
+    private fun enqueueImage(parent: String) {
+        if (parent == "") return
 
         val request = ImageRequest.Builder(appContext)
             .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
