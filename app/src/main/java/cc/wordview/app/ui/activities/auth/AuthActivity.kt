@@ -38,9 +38,13 @@ class AuthActivity : WordViewActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val canBack: Boolean = intent.getBooleanExtra("canBack", false)
+
         enableEdgeToEdge()
         setContent {
-            BackHandler {}
+            if (!canBack) {
+                BackHandler {}
+            }
 
             val authNavController = rememberNavController(
                 key = "authNavController",

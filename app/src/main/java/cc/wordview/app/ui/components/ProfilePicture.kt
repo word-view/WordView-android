@@ -66,7 +66,7 @@ fun ProfilePicture(modifier: Modifier = Modifier, onNavigateToProfile: () -> Uni
     var showMenu by remember { mutableStateOf(false) }
 
     fun openLoginScreen() {
-        context.openActivity<AuthActivity>()
+        context.openActivity<AuthActivity>("canBack" to true)
         activity?.finish()
     }
 
