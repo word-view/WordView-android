@@ -15,22 +15,28 @@ import androidx.compose.ui.Modifier
  * A composable function that displays a top bar for the WordView player with customizable content.
  *
  * @param modifier The [Modifier] to be applied to the top bar for layout customization. Defaults to an empty [Modifier].
- * @param content A composable function that defines the content to be displayed within the top bar.
+ * @param contentLeft A composable function that defines the content to be displayed on the left side of the top bar.
+ * @param contentRight A composable function that defines the content to be displayed on the right side of the top bar.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlayerTopBar(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun PlayerTopBar(modifier: Modifier = Modifier, contentLeft: @Composable () -> Unit, contentRight: @Composable () -> Unit) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(TopAppBarDefaults.TopAppBarExpandedHeight),
-        contentAlignment = Alignment.TopStart,
     ) {
         Row(
-            modifier = Modifier.fillMaxHeight(),
+            modifier = Modifier.fillMaxHeight().align(Alignment.TopStart),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            content()
+            contentLeft()
+        }
+        Row(
+            modifier = Modifier.fillMaxHeight().align(Alignment.TopEnd),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            contentRight()
         }
     }
 }

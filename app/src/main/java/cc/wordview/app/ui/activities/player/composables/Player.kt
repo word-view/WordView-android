@@ -33,6 +33,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ClosedCaption
+import androidx.compose.material.icons.filled.ClosedCaptionOff
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,6 +46,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -82,6 +87,8 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
 
     val composerMode = AppSettings.composerMode.get()
 
+    var captionsEnabled by remember { mutableStateOf(true) }
+
     LaunchedEffect(uiState.finalized) {
         if (uiState.finalized) {
             uiState.player.stop()
@@ -107,7 +114,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
-            TextCue(
+            if (captionsEnabled) TextCue(
                 modifier = Modifier
                     .zIndex(1f)
                     .padding(bottom = innerPadding.calculateBottomPadding() + 6.dp)
@@ -121,13 +128,17 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
         }
 
         FadeOutBox(
-            modifier = Modifier.fillMaxSize().testTag("fade-out-box"),
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag("fade-out-box"),
             disabled = composerMode,
             duration = 250,
             stagnationTime = 5000
         ) {
             Box(
-                modifier = Modifier.fillMaxHeight(0.25f).fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxHeight(0.25f)
+                    .fillMaxWidth()
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
@@ -137,36 +148,69 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                         )
                     )
             )
-            PlayerTopBar(Modifier
-                .padding(start = WindowInsets.displayCutout.getLeft(density, LayoutDirection.Ltr).dp / 2)
-                .padding(end = WindowInsets.displayCutout.getRight(density, LayoutDirection.Ltr).dp / 2),
-                ) {
-                IconButton(
-                    onClick = { back() },
-                    modifier = Modifier.testTag("back-button"),
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back"
+            PlayerTopBar(
+                modifier = Modifier
+                    .padding(
+                        start = WindowInsets.displayCutout.getLeft(
+                            density,
+                            LayoutDirection.Ltr
+                        ).dp / 2
                     )
-                }
-                Column {
-                    Text(
-                        text = uiState.videoStream.info.name,
-                        fontSize = 18.sp
-                    )
-                    Text(
-                        text = uiState.videoStream.info.getCleanUploaderName(),
-                        fontSize = 12.sp
-                    )
-                }
-            }
+                    .padding(
+                        end = WindowInsets.displayCutout.getRight(
+                            density,
+                            LayoutDirection.Ltr
+                        ).dp / 2
+                    ),
+                contentLeft = {
+                    IconButton(
+                        onClick = { back() },
+                        modifier = Modifier.testTag("back-button"),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = uiState.videoStream.info.name,
+                            fontSize = 18.sp
+                        )
+                        Text(
+                            text = uiState.videoStream.info.getCleanUploaderName(),
+                            fontSize = 12.sp
+                        )
+                    }
+                },
+                contentRight = {
+                    IconButton(
+                        onClick = { captionsEnabled = !captionsEnabled },
+                        modifier = Modifier.testTag("cc-toggle-button"),
+                    ) {
+                        Icon(
+                            imageVector = if (captionsEnabled) Icons.Filled.ClosedCaption else Icons.Filled.ClosedCaptionOff,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+            )
             Seekbar(
                 modifier = Modifier
                     .padding(top = TopAppBarDefaults.TopAppBarExpandedHeight)
                     .padding(horizontal = 6.dp)
-                    .padding(start = WindowInsets.displayCutout.getLeft(density, LayoutDirection.Ltr).dp / 2)
-                    .padding(end = WindowInsets.displayCutout.getRight(density, LayoutDirection.Ltr).dp / 2),
+                    .padding(
+                        start = WindowInsets.displayCutout.getLeft(
+                            density,
+                            LayoutDirection.Ltr
+                        ).dp / 2
+                    )
+                    .padding(
+                        end = WindowInsets.displayCutout.getRight(
+                            density,
+                            LayoutDirection.Ltr
+                        ).dp / 2
+                    ),
                 displayAdvancedInformation = composerMode,
                 currentPosition = currentPosition,
                 duration = uiState.player.getDuration(),
