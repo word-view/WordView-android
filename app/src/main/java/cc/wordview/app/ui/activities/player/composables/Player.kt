@@ -25,8 +25,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ClosedCaption
 import androidx.compose.material.icons.filled.ClosedCaptionOff
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,7 +55,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -72,8 +70,9 @@ import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.PlayerTopBar
 import cc.wordview.app.components.ui.Seekbar
 import cc.wordview.app.components.ui.findBiggerCutout
+import cc.wordview.app.misc.PlayerSettings
+import cc.wordview.app.ui.components.PlayerSettingsBottomSheet
 import cc.wordview.app.ui.components.TextCue
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,8 +87,10 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
     val density = LocalDensity.current
 
     val composerMode = AppSettings.composerMode.get()
+    val playbackSpeed = PlayerSettings.playbackSpeed.get()
 
     var captionsEnabled by remember { mutableStateOf(true) }
+    var showSettings by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.finalized) {
         if (uiState.finalized) {
@@ -103,7 +104,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
     }
 
     BackHandler { back() }
-    OneTimeEffect { uiState.player.togglePlay() }
+    OneTimeEffect { uiState.player.togglePlay(playbackSpeed) }
 
     Box(
         modifier = Modifier
@@ -111,6 +112,16 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
             .testTag("interface")
     ) {
         FadeInAsyncImage(uiState.videoStream.getHQThumbnail())
+
+        if (showSettings) {
+            PlayerSettingsBottomSheet(
+                onDismissRequest = {
+                    uiState.player.togglePlay(playbackSpeed)
+                    showSettings = false
+                }
+            )
+        }
+
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -185,6 +196,18 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                         Icon(
                             imageVector = if (captionsEnabled) Icons.Filled.ClosedCaption else Icons.Filled.ClosedCaptionOff,
                             contentDescription = "Back"
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            uiState.player.pause()
+                            showSettings = true
+                        },
+                        modifier = Modifier.testTag("settings-toggle-button"),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings"
                         )
                     }
                 },

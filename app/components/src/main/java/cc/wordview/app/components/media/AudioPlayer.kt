@@ -106,6 +106,19 @@ class AudioPlayer {
         }
     }
 
+    /**
+     * Sets the specified playback speed and toggles the player state,
+     * if it is playing it will pause and vice-versa.
+     */
+    fun togglePlay(playbackSpeed: Float) {
+        player.setPlaybackSpeed(playbackSpeed)
+
+        when (player.isPlaying) {
+            true -> pause()
+            false -> play()
+        }
+    }
+
     fun play() {
         player.play()
         startPositionCheck()

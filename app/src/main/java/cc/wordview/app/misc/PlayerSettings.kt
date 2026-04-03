@@ -17,7 +17,6 @@
 
 package cc.wordview.app.misc
 
-object AppSettings {
-   val language = Setting(key = "language", defaultValue = "ja")
-   val composerMode = Setting(key = "composer_mode", defaultValue = false)
+object PlayerSettings {
+    val playbackSpeed = Setting(key = "player_playback_speed", defaultValue = 1.0f)
 }
