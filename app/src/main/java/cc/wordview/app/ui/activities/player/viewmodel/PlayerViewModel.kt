@@ -73,13 +73,12 @@ class PlayerViewModel @Inject constructor(
 
     private val viewedVideoDao = RoomAccess.getDatabase().viewedVideoDao()
 
-    // tracks the steps to consider that the player is
-    // prepared to start playing (audio ready, lyrics ready, dictionary ready)
-    private val stepsReady = MutableStateFlow(0)
+    var lyricsReady: Boolean = false
+    var playerReady: Boolean = false
+    var imagesReady: Boolean = false
 
-    private fun computeAndCheckReady() {
-        stepsReady.update { it + 1 }
-        if (stepsReady.value == 3)
+    private fun checkReady() {
+        if (lyricsReady && playerReady && imagesReady)
             setLoadState(LoadState.READY)
     }
 
@@ -96,7 +95,9 @@ class PlayerViewModel @Inject constructor(
             addDictionary(lang.dictionaryName, dictionary)
 
             parseLyrics(lyrics)
-            computeAndCheckReady()
+
+            lyricsReady = true
+            checkReady()
 
             preloadImages()
         }
@@ -112,7 +113,10 @@ class PlayerViewModel @Inject constructor(
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            ImageCacheManager.onQueueCompleted = { computeAndCheckReady() }
+            ImageCacheManager.onQueueCompleted = {
+                imagesReady = true
+                checkReady()
+            }
             ImageCacheManager.executeAllInQueue()
         }
     }
@@ -152,7 +156,10 @@ class PlayerViewModel @Inject constructor(
                 _bufferedPercentage.update { bufferedPercentage }
             }
             onInitializeFail = { setLoadState(LoadState.ERROR) }
-            onPrepared = { computeAndCheckReady() }
+            onPrepared = {
+                playerReady = true
+                checkReady()
+            }
 
             initialize(videoStreamUrl, appContext, listener)
         }
