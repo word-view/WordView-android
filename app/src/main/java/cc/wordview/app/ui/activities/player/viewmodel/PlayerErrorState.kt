@@ -17,6 +17,10 @@
 
 package cc.wordview.app.ui.activities.player.viewmodel
 
-enum class PlayerState {
-    ERROR, LOADING, READY
-}
+/**
+ * Contains information about an error the player has encountered
+ */
+data class PlayerErrorState(
+    val message: String = "",
+    val code: Int = 0,
+)

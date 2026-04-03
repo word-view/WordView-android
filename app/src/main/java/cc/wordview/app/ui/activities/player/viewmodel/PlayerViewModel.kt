@@ -24,11 +24,9 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cc.wordview.app.BuildConfig
-import cc.wordview.app.components.media.AudioPlayer
 import cc.wordview.app.components.media.AudioPlayerListener
 import cc.wordview.app.database.RoomAccess
 import cc.wordview.app.components.extensions.toSeconds
-import cc.wordview.app.extractor.VideoStream
 import cc.wordview.app.extractor.VideoStreamInterface
 import cc.wordview.app.components.media.caption.Lyrics
 import cc.wordview.app.components.media.caption.WordViewCue
@@ -53,46 +51,35 @@ class PlayerViewModel @Inject constructor(
     private val playerRepository: PlayerRepository,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
-    private val _playIcon = MutableStateFlow(Icons.Filled.PlayArrow)
-    private val _lyrics = MutableStateFlow(Lyrics("", Parser(Language.ENGLISH)))
-    private val _parser = MutableStateFlow(Parser(Language.ENGLISH))
-    private val _player = MutableStateFlow(AudioPlayer())
+    private val _uiState = MutableStateFlow(PlayerUIState())
+    private val _errorState = MutableStateFlow(PlayerErrorState())
+
+    val uiState = _uiState.asStateFlow()
+    val errorState = _errorState.asStateFlow()
+
     private val _currentCue = MutableStateFlow(WordViewCue())
-    private val _playerState = MutableStateFlow(PlayerState.LOADING)
-    private val _finalized = MutableStateFlow(false)
-    private val _isBuffering = MutableStateFlow(false)
-    private val _errorMessage = MutableStateFlow("")
-    private val _statusCode = MutableStateFlow(0)
-
-    private val _videoStream = MutableStateFlow<VideoStreamInterface>(VideoStream())
-
-    // Seekbar states
     private val _currentPosition = MutableStateFlow(0L)
     private val _bufferedPercentage = MutableStateFlow(0)
+    private val _isBuffering = MutableStateFlow(false)
 
+
+    val currentCue = _currentCue.asStateFlow()
     val currentPosition = _currentPosition.asStateFlow()
     val bufferedPercentage = _bufferedPercentage.asStateFlow()
-
-    val playIcon = _playIcon.asStateFlow()
-    val player = _player.asStateFlow()
-    val currentCue = _currentCue.asStateFlow()
-    val playerState = _playerState.asStateFlow()
-    val finalized = _finalized.asStateFlow()
     val isBuffering = _isBuffering.asStateFlow()
-    val errorMessage = _errorMessage.asStateFlow()
-    val statusCode = _statusCode.asStateFlow()
-    val videoStream = _videoStream.asStateFlow()
+
+
+    private var parser = Parser(Language.ENGLISH)
 
     private val viewedVideoDao = RoomAccess.getDatabase().viewedVideoDao()
 
-    // tracks the steps to consider that the player is
-    // prepared to start playing (audio ready, lyrics ready, dictionary ready)
-    private val stepsReady = MutableStateFlow(0)
+    var lyricsReady: Boolean = false
+    var playerReady: Boolean = false
+    var imagesReady: Boolean = false
 
-    private fun computeAndCheckReady() {
-        stepsReady.update { it + 1 }
-        if (stepsReady.value == 3)
-            setPlayerState(PlayerState.READY)
+    private fun checkReady() {
+        if (lyricsReady && playerReady && imagesReady)
+            setLoadState(LoadState.READY)
     }
 
     fun getLyrics(
@@ -101,16 +88,16 @@ class PlayerViewModel @Inject constructor(
         video: VideoStreamInterface
     ) = viewModelScope.launch {
         playerRepository.onFail = { message, status ->
-            _errorMessage.update { message }
-            _statusCode.update { status }
-            setPlayerState(PlayerState.ERROR)
+            declarePlayerError(PlayerErrorState(message, status))
         }
         playerRepository.onSucceed = { lyrics, dictionary ->
-            initParser(lang)
-            addDictionary(lang.dictionaryName, dictionary)
+            parser = Parser(lang)
+            parser.addDictionary(lang.dictionaryName, dictionary)
 
             parseLyrics(lyrics)
-            computeAndCheckReady()
+
+            lyricsReady = true
+            checkReady()
 
             preloadImages()
         }
@@ -119,20 +106,23 @@ class PlayerViewModel @Inject constructor(
     }
 
     private fun preloadImages() {
-        for (cue in _lyrics.value) {
+        for (cue in _uiState.value.lyrics) {
             for (word in cue.words) {
                 enqueueImage(word.parent)
             }
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            ImageCacheManager.onQueueCompleted = { computeAndCheckReady() }
+            ImageCacheManager.onQueueCompleted = {
+                imagesReady = true
+                checkReady()
+            }
             ImageCacheManager.executeAllInQueue()
         }
     }
 
-    private fun enqueueImage(parent: String) = viewModelScope.launch(Dispatchers.IO) {
-        if (parent == "") return@launch
+    private fun enqueueImage(parent: String) {
+        if (parent == "") return
 
         val request = ImageRequest.Builder(appContext)
             .data("${BuildConfig.API_BASE_URL}/api/v1/image?parent=$parent")
@@ -155,18 +145,21 @@ class PlayerViewModel @Inject constructor(
             }
 
             onPlaybackEnd = {
-                player.value.stop()
+                _uiState.value.player.stop()
             }
         }
 
-        player.value.apply {
+        _uiState.value.player.apply {
             onPositionChange = { pos, bufferedPercentage ->
-                setCurrentCue(_lyrics.value.getCueAt(pos))
+                setCurrentCue(_uiState.value.lyrics.getCueAt(pos))
                 _currentPosition.update { pos.toLong() }
                 _bufferedPercentage.update { bufferedPercentage }
             }
-            onInitializeFail = { setPlayerState(PlayerState.ERROR) }
-            onPrepared = { computeAndCheckReady() }
+            onInitializeFail = { setLoadState(LoadState.ERROR) }
+            onPrepared = {
+                playerReady = true
+                checkReady()
+            }
 
             initialize(videoStreamUrl, appContext, listener)
         }
@@ -189,38 +182,37 @@ class PlayerViewModel @Inject constructor(
     }
 
     private fun playIconPause() {
-        _playIcon.update { Icons.Filled.PlayArrow }
+        _uiState.update { it.copy(playIcon = Icons.Filled.PlayArrow) }
     }
 
     private fun playIconPlay() {
-        _playIcon.update { Icons.Filled.Pause }
+        _uiState.update { it.copy(playIcon = Icons.Filled.Pause) }
     }
 
     private fun parseLyrics(lyrics: String) {
-        _lyrics.update { Lyrics(lyrics, _parser.value) }
-    }
-
-    private fun initParser(language: Language) {
-        _parser.update { Parser(language) }
-    }
-
-    private fun addDictionary(name: String, dictionary: String) {
-        _parser.value.addDictionary(name, dictionary)
+        _uiState.update { it.copy(lyrics = Lyrics(lyrics, parser)) }
     }
 
     private fun setCurrentCue(cue: WordViewCue) {
         _currentCue.update { cue }
     }
 
-    fun setPlayerState(playerState: PlayerState) {
-        _playerState.update { playerState }
+    fun setLoadState(loadState: LoadState) {
+        _uiState.update { it.copy(loadState = loadState) }
     }
 
-    fun setErrorMessage(message: String) {
-        _errorMessage.update { message }
+    /**
+     * Declares the error that has happened and directions the player to show it
+     */
+    fun declarePlayerError(errorState: PlayerErrorState) {
+        _errorState.update { errorState }
+        _uiState.update { it.copy(loadState = LoadState.ERROR) }
     }
 
-    fun setVideoStream(videoStream: VideoStreamInterface) {
-        _videoStream.update { videoStream }
+    /**
+     * Performs session cleanups
+     */
+    fun cleanup() {
+        _uiState.update { PlayerUIState() }
     }
 }

@@ -42,8 +42,9 @@ import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.ui.theme.Typography
 
 @Composable
-fun ErrorScreen(message: String, viewModel: PlayerViewModel, refresh: () -> Unit, statusCode: Int) {
-    val videoStream by viewModel.videoStream.collectAsStateWithLifecycle()
+fun ErrorScreen(viewModel: PlayerViewModel, refresh: () -> Unit) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorState.collectAsStateWithLifecycle()
     val activity = LocalActivity.current!!
 
     Column(
@@ -55,7 +56,7 @@ fun ErrorScreen(message: String, viewModel: PlayerViewModel, refresh: () -> Unit
     ) {
         Image(
             modifier = Modifier.size(180.dp),
-            painter = if (statusCode == 404) painterResource(id = R.drawable.nolyrics) else painterResource(id = R.drawable.radio),
+            painter = if (errorState.code == 404) painterResource(id = R.drawable.nolyrics) else painterResource(id = R.drawable.radio),
             contentDescription = null
         )
         Spacer(Modifier.size(8.dp))
@@ -66,10 +67,10 @@ fun ErrorScreen(message: String, viewModel: PlayerViewModel, refresh: () -> Unit
             fontWeight = FontWeight.SemiBold,
         )
         Text(
-            text = if (statusCode == 404) stringResource(
+            text = if (errorState.code == 404) stringResource(
                 R.string.couldn_t_find_any_lyrics_for,
-                videoStream.info.name
-            ) else message,
+                uiState.videoStream.info.name
+            ) else errorState.message,
             textAlign = TextAlign.Center,
             style = Typography.bodySmall,
             fontWeight = FontWeight.Light,
