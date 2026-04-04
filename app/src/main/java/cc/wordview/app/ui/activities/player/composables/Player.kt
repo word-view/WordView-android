@@ -124,6 +124,11 @@ fun Player(
         }
     }
 
+    LaunchedEffect(viewModel.isReady()) {
+        if (viewModel.isReady())
+            uiState.player.togglePlay(playbackSpeed)
+    }
+
     BackHandler { back() }
 
     Box(
