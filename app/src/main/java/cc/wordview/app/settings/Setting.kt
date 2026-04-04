@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.misc
+package cc.wordview.app.settings
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable

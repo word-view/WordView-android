@@ -66,7 +66,7 @@ import me.vponomarenko.compose.shimmer.shimmer
 import androidx.compose.ui.res.stringResource
 import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.components.extensions.openActivity
-import cc.wordview.app.misc.AppSettings
+import cc.wordview.app.settings.AppSettings
 import cc.wordview.app.ui.components.ContinueWatchingCard
 
 @OptIn(ExperimentalMaterial3Api::class)

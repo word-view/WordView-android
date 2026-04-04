@@ -36,7 +36,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.components.extensions.setOrientationSensorLandscape
 import cc.wordview.app.components.ui.CircularProgressIndicator
-import cc.wordview.app.misc.AppSettings
+import cc.wordview.app.settings.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
 import cc.wordview.app.ui.activities.player.composables.Player

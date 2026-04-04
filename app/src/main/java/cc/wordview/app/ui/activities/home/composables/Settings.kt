@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Carpenter
 import androidx.compose.material.icons.outlined.ImportExport
 import androidx.compose.material.icons.outlined.NetworkPing
 import androidx.compose.material.icons.outlined.Translate
@@ -39,7 +38,7 @@ import cc.wordview.app.components.ui.BackTopAppBar
 import cc.wordview.app.extensions.localizedDisplayName
 import cc.wordview.app.log.WordViewTree
 import cc.wordview.app.log.exportLogs
-import cc.wordview.app.misc.AppSettings
+import cc.wordview.app.settings.AppSettings
 import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.gengolex.Language
 import com.composegears.tiamat.compose.back
@@ -47,10 +46,8 @@ import com.composegears.tiamat.compose.navController
 import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.navigation.NavDestination
 import me.zhanghai.compose.preference.ListPreferenceType
-import me.zhanghai.compose.preference.basicPreference
 import me.zhanghai.compose.preference.listPreference
 import me.zhanghai.compose.preference.preference
-import me.zhanghai.compose.preference.switchPreference
 import timber.log.Timber
 
 val SettingsScreen: NavDestination<Unit> by navDestination {

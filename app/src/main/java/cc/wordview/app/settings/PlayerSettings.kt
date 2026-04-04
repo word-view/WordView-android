@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.misc
+package cc.wordview.app.settings
 
 object PlayerSettings {
     val playbackSpeed = Setting(key = "player_playback_speed", defaultValue = 1.0f)

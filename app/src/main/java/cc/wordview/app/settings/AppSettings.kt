@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.misc
+package cc.wordview.app.settings
 
 object AppSettings {
    val language = Setting(key = "language", defaultValue = "ja")

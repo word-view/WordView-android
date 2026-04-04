@@ -20,7 +20,7 @@ package cc.wordview.app.ui.components
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import cc.wordview.app.misc.AppSettings
+import cc.wordview.app.settings.AppSettings
 import cc.wordview.gengolex.Language
 
 @Composable

@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import cc.wordview.app.BuildConfig
 import cc.wordview.app.R
 import cc.wordview.app.components.ui.Space
-import cc.wordview.app.misc.PlayerSettings
+import cc.wordview.app.settings.PlayerSettings
 import cc.wordview.app.ui.theme.poppinsFamily
 import me.zhanghai.compose.preference.ListPreferenceType
 import me.zhanghai.compose.preference.listPreference

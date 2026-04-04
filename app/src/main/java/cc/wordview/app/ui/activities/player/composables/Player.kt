@@ -59,7 +59,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cc.wordview.app.misc.AppSettings
 import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.components.ui.CrossfadeIconButton
 import cc.wordview.app.components.ui.FadeInAsyncImage
@@ -70,7 +69,7 @@ import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.PlayerTopBar
 import cc.wordview.app.components.ui.Seekbar
 import cc.wordview.app.components.ui.findBiggerCutout
-import cc.wordview.app.misc.PlayerSettings
+import cc.wordview.app.settings.PlayerSettings
 import cc.wordview.app.ui.components.TextCue
 
 @OptIn(ExperimentalMaterial3Api::class)
