@@ -40,7 +40,7 @@ import cc.wordview.app.settings.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
 import cc.wordview.app.ui.activities.player.composables.Player
-import cc.wordview.app.ui.activities.player.viewmodel.LoadState
+import cc.wordview.app.ui.activities.player.viewmodel.Display
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerErrorState
@@ -62,6 +62,12 @@ class PlayerActivity : WordViewActivity() {
         super.onCreate(savedInstanceState)
 
         val videoId: String = intent.getStringExtra("id")!!
+
+        // Because having the title and artist empty seems weird in
+        // the player we take these as temporary values from the place
+        // that has opened the player to use while the stream is not ready yet
+        val title: String = intent.getStringExtra("title")!!
+        val artist: String = intent.getStringExtra("artist")!!
 
         setOrientationSensorLandscape()
         setupWindowInsets()
@@ -96,20 +102,19 @@ class PlayerActivity : WordViewActivity() {
 
                 WordViewTheme(darkTheme = true) {
                     Scaffold { innerPadding ->
-                        when (uiState.loadState) {
-                            LoadState.READY -> Player(videoId, viewModel, innerPadding)
+                        when (uiState.display) {
+                            Display.PLAYER -> Player(
+                                videoId,
+                                viewModel,
+                                title,
+                                artist,
+                                innerPadding
+                            )
 
-                            LoadState.ERROR -> ErrorScreen(viewModel) {
+                            Display.ERROR -> ErrorScreen(viewModel) {
                                 Timber.d("Refreshing player")
-                                viewModel.setLoadState(LoadState.LOADING)
+                                viewModel.setDisplay(Display.PLAYER)
                                 start()
-                            }
-
-                            LoadState.LOADING -> Box(
-                                Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(64.dp)
                             }
                         }
                     }
@@ -121,9 +126,14 @@ class PlayerActivity : WordViewActivity() {
     override fun onPause() {
         super.onPause()
 
-        val playerState = viewModel.uiState.value.loadState
+        // For some reason, in some devices onPause seems to be called
+        // when starting an activity, at that point the player is not available
+        if (!viewModel.isReady())
+            return
 
-        if (playerState == LoadState.READY) {
+        val playerState = viewModel.uiState.value.display
+
+        if (playerState == Display.PLAYER) {
             val player = viewModel.uiState.value.player
             player.pause()
         }

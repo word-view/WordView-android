@@ -150,12 +150,10 @@ class AudioPlayer {
     fun getDuration(): Long {
         var duration = 0L
 
-        // For some reason the tests tend to call this from outside the Main thread, this
-        // ensures we are on the main thread to access player.duration
-        if (Looper.myLooper() == Looper.getMainLooper()) {
+        try {
             duration = player.duration
-        } else {
-            Handler(Looper.getMainLooper()).post { duration = player.duration }
+        } catch (_: UninitializedPropertyAccessException) {
+            // ignore, 0 will be returned by default
         }
 
         return duration

@@ -77,9 +77,11 @@ class PlayerViewModel @Inject constructor(
     var playerReady: Boolean = false
     var imagesReady: Boolean = false
 
-    private fun checkReady() {
-        if (lyricsReady && playerReady && imagesReady)
-            setLoadState(LoadState.READY)
+    /**
+     * If everything needed to reproduce the media is ready
+     */
+    fun isReady(): Boolean {
+        return lyricsReady && playerReady && imagesReady
     }
 
     fun getLyrics(
@@ -97,7 +99,6 @@ class PlayerViewModel @Inject constructor(
             parseLyrics(lyrics)
 
             lyricsReady = true
-            checkReady()
 
             preloadImages()
         }
@@ -115,7 +116,6 @@ class PlayerViewModel @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             ImageCacheManager.onQueueCompleted = {
                 imagesReady = true
-                checkReady()
             }
             ImageCacheManager.executeAllInQueue()
         }
@@ -155,10 +155,9 @@ class PlayerViewModel @Inject constructor(
                 _currentPosition.update { pos.toLong() }
                 _bufferedPercentage.update { bufferedPercentage }
             }
-            onInitializeFail = { setLoadState(LoadState.ERROR) }
+            onInitializeFail = { setDisplay(Display.ERROR) }
             onPrepared = {
                 playerReady = true
-                checkReady()
             }
 
             initialize(videoStreamUrl, appContext, listener)
@@ -197,8 +196,8 @@ class PlayerViewModel @Inject constructor(
         _currentCue.update { cue }
     }
 
-    fun setLoadState(loadState: LoadState) {
-        _uiState.update { it.copy(loadState = loadState) }
+    fun setDisplay(display: Display) {
+        _uiState.update { it.copy(display = display) }
     }
 
     /**
@@ -206,7 +205,7 @@ class PlayerViewModel @Inject constructor(
      */
     fun declarePlayerError(errorState: PlayerErrorState) {
         _errorState.update { errorState }
-        _uiState.update { it.copy(loadState = LoadState.ERROR) }
+        _uiState.update { it.copy(display = Display.ERROR) }
     }
 
     /**

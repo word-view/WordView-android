@@ -127,7 +127,9 @@ fun LearnTab(
                     viewedVideo = lastWatchedVideo!!,
                     onClick = {
                         context.openActivity<PlayerActivity>(
-                            "id" to lastWatchedVideo!!.id
+                            "id" to lastWatchedVideo!!.id,
+                            "title" to lastWatchedVideo!!.title,
+                            "artist" to lastWatchedVideo!!.artist
                         )
                     }
                 )
@@ -176,7 +178,9 @@ fun LearnTab(
                                 )
                             )
                             context.openActivity<PlayerActivity>(
-                                "id" to it.id
+                                "id" to it.id,
+                                "title" to it.title,
+                                "artist" to it.artist,
                             )
                         }
                     }

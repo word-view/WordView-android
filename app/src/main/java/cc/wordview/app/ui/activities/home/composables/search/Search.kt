@@ -263,7 +263,9 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                         ) {
                             viewModel.saveVideoToHistory(it)
                             context.openActivity<PlayerActivity>(
-                                "id" to it.id
+                                "id" to it.id,
+                                "title" to it.title,
+                                "artist" to it.artist,
                             )
                         }
                     }

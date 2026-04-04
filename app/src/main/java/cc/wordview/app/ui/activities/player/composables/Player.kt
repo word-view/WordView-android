@@ -74,7 +74,13 @@ import cc.wordview.app.ui.components.TextCue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingValues) {
+fun Player(
+    videoId: String,
+    viewModel: PlayerViewModel,
+    tempTitle: String,
+    tempArtist: String,
+    innerPadding: PaddingValues
+) {
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
@@ -91,19 +97,39 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
     var captionsEnabled by remember { mutableStateOf(true) }
     var showSettings by remember { mutableStateOf(false) }
 
+    fun back() {
+        uiState.player.stop()
+        activity.finish()
+    }
+
+    fun getTitle(): String {
+        return if (viewModel.isReady()) {
+            uiState.videoStream.info.name ?: tempTitle
+        } else {
+            tempTitle
+        }
+    }
+
+    fun getUploaderName(): String {
+        return if (viewModel.isReady()) {
+            uiState.videoStream.info.getCleanUploaderName()
+        } else {
+            tempArtist
+        }
+    }
+
     LaunchedEffect(uiState.finalized) {
         if (uiState.finalized) {
             uiState.player.stop()
         }
     }
 
-    fun back() {
-        uiState.player.stop()
-        activity.finish()
+    LaunchedEffect(viewModel.isReady()) {
+        if (viewModel.isReady())
+            uiState.player.togglePlay(playbackSpeed)
     }
 
     BackHandler { back() }
-    OneTimeEffect { uiState.player.togglePlay(playbackSpeed) }
 
     Box(
         modifier = Modifier
@@ -139,7 +165,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
         }
 
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (isBuffering) CircularProgressIndicator(64.dp)
+            if (isBuffering || !viewModel.isReady()) CircularProgressIndicator(64.dp)
         }
 
         FadeOutBox(
@@ -181,11 +207,11 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                     }
                     Column {
                         Text(
-                            text = uiState.videoStream.info.name,
+                            text = getTitle(),
                             fontSize = 18.sp
                         )
                         Text(
-                            text = uiState.videoStream.info.getCleanUploaderName(),
+                            text = getUploaderName(),
                             fontSize = 12.sp
                         )
                     }
@@ -237,13 +263,13 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CrossfadeIconButton(
+                    if (viewModel.isReady()) CrossfadeIconButton(
                         modifier = Modifier.testTag("skip-back"),
                         icon = Icons.Filled.SkipPrevious,
                         size = 72.dp,
                         onClick = { uiState.player.skipBack() }
                     )
-                    CrossfadeIconButton(
+                    if (viewModel.isReady()) CrossfadeIconButton(
                         modifier = Modifier
                             .testTag("toggle-play")
                             .alpha(if (isBuffering) 0.0f else 1.0f),
@@ -251,7 +277,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                         size = 80.dp,
                         onClick = { uiState.player.togglePlay() }
                     )
-                    CrossfadeIconButton(
+                    if (viewModel.isReady()) CrossfadeIconButton(
                         modifier = Modifier.testTag("skip-forward"),
                         icon = Icons.Filled.SkipNext,
                         size = 72.dp,
