@@ -61,4 +61,8 @@
     <string name="the_app_encountered_an_unexpected_error">O app encontrou um erro inesperado.\n</string>
     <string name="restart_application">Reiniciar o aplicativo</string>
     <string name="export_crash_logs">Exportar a log de crash</string>
+    <string name="toggles_the_visibility_of_the_background_image">Altera a visibilidade da imagem de fundo</string>
+    <string name="background_image">Imagem de fundo</string>
+    <string name="playback_speed">Velocidade de reprodução</string>
+    <string name="player_settings">Configurações do Player</string>
 </resources>

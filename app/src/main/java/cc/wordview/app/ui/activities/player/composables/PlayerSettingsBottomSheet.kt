@@ -65,9 +65,11 @@ fun PlayerSettingsBottomSheet(onDismissRequest: () -> Unit = {}) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Player Settings",
+                text = stringResource(R.string.player_settings),
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(start = 6.dp).weight(1f),
+                modifier = Modifier
+                    .padding(start = 6.dp)
+                    .weight(1f),
                 textAlign = TextAlign.Left
             )
         }
@@ -92,7 +94,7 @@ fun PlayerSettingsBottomSheet(onDismissRequest: () -> Unit = {}) {
                 },
                 title = {
                     Text(
-                        text = "Playback speed",
+                        text = stringResource(R.string.playback_speed),
                         fontFamily = poppinsFamily,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -118,14 +120,14 @@ fun PlayerSettingsBottomSheet(onDismissRequest: () -> Unit = {}) {
                 defaultValue = PlayerSettings.backgroundImage.defaultValue,
                 title = {
                     Text(
-                        text = "Background image",
+                        text = stringResource(R.string.background_image),
                         fontFamily = poppinsFamily,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 summary = {
                     Text(
-                        text = "Toggles the visibility of the background image",
+                        text = stringResource(R.string.toggles_the_visibility_of_the_background_image),
                         fontFamily = poppinsFamily,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )

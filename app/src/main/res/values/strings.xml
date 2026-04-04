@@ -62,4 +62,8 @@
     <string name="the_app_encountered_an_unexpected_error">The app encountered an unexpected error.\n</string>
     <string name="restart_application">Restart Application</string>
     <string name="export_crash_logs">Export Crash Logs</string>
+    <string name="toggles_the_visibility_of_the_background_image">Toggles the visibility of the background image</string>
+    <string name="background_image">Background image</string>
+    <string name="playback_speed">Playback speed</string>
+    <string name="player_settings">Player Settings</string>
 </resources>
