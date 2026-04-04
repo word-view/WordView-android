@@ -77,9 +77,11 @@ class PlayerViewModel @Inject constructor(
     var playerReady: Boolean = false
     var imagesReady: Boolean = false
 
-    private fun checkReady() {
-        if (lyricsReady && playerReady && imagesReady)
-            setDisplay(Display.PLAYER)
+    /**
+     * If everything needed to reproduce the media is ready
+     */
+    fun isReady(): Boolean {
+        return lyricsReady && playerReady && imagesReady
     }
 
     fun getLyrics(
@@ -97,7 +99,6 @@ class PlayerViewModel @Inject constructor(
             parseLyrics(lyrics)
 
             lyricsReady = true
-            checkReady()
 
             preloadImages()
         }
@@ -115,7 +116,6 @@ class PlayerViewModel @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             ImageCacheManager.onQueueCompleted = {
                 imagesReady = true
-                checkReady()
             }
             ImageCacheManager.executeAllInQueue()
         }
@@ -158,7 +158,6 @@ class PlayerViewModel @Inject constructor(
             onInitializeFail = { setDisplay(Display.ERROR) }
             onPrepared = {
                 playerReady = true
-                checkReady()
             }
 
             initialize(videoStreamUrl, appContext, listener)
