@@ -28,5 +28,5 @@ interface VideoStreamInterface {
 
     fun init(id: String, context: Context)
     fun getStreamURL(): String
-    fun getHQThumbnail(): Bitmap?
+    fun getHQThumbnail(): Any
 }

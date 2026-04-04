@@ -28,7 +28,7 @@ import coil3.compose.AsyncImage
  * @param enabled If the image is enabled, defaults to `true`
  */
 @Composable
-fun FadeInAsyncImage(image: Bitmap?, enabled: Boolean = true) {
+fun FadeInAsyncImage(image: Any, enabled: Boolean = true) {
     var isVisible by rememberSaveable { mutableStateOf(false) }
 
     // This prevents the background from "flashing" due to recompositions (probably)

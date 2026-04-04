@@ -85,8 +85,13 @@ class VideoStream : VideoStreamInterface {
         return info.audioStreams[0].content
     }
 
-    override fun getHQThumbnail(): Bitmap? {
-        return ImageCacheManager.getDiskCachedImage("${info.id}-background")
+    override fun getHQThumbnail(): Any {
+        // we try to return a preloaded and cached version of the
+        // thumbnail so the animation can be guaranteed to run smoothly,
+        // if this is not available fallbacking to the URL, even if the
+        // animation is slightly broken is better than having no image
+        return ImageCacheManager.getDiskCachedImage("${info.id}-background") ?:
+            info.thumbnails.last().url
     }
 
     companion object {
