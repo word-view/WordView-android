@@ -48,10 +48,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import cc.wordview.app.R
-import cc.wordview.app.api.getStoredJwt
-import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.extensions.getFlag
-import cc.wordview.app.misc.AppSettings
+import cc.wordview.app.settings.AppSettings
 import cc.wordview.app.ui.activities.home.composables.ProfileScreen
 import cc.wordview.app.ui.activities.home.composables.SettingsScreen
 import cc.wordview.app.ui.activities.home.composables.history.HistoryScreen
@@ -64,7 +62,6 @@ import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.compose.navigate
 import com.composegears.tiamat.navigation.NavDestination
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 val HomeScreen: NavDestination<Unit> by navDestination {

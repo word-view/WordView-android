@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.ComposeTest
+import cc.wordview.app.settings.AppSettings
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.junit.Test
@@ -50,21 +51,6 @@ class AppSettingsTest : ComposeTest() {
             val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
             val langTag = AppSettings.language.get(preferences)
             assert(langTag.length == 2)
-        }
-    }
-
-    @Test
-    fun getComposerMode() {
-        setup {
-            val composerMode = AppSettings.composerMode.get()
-        }
-    }
-
-    @Test
-    fun getComposerModePassingPreferences() {
-        setup {
-            val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-            val composerMode = AppSettings.composerMode.get(preferences)
         }
     }
 }

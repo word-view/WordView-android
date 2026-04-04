@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.misc
+package cc.wordview.app.settings
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
@@ -24,31 +24,26 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import me.zhanghai.compose.preference.LocalPreferenceFlow
 import me.zhanghai.compose.preference.Preferences
 
-object AppSettings {
-   val language = Setting(key = "language", defaultValue = "ja")
-   val composerMode = Setting(key = "composer_mode", defaultValue = false)
-}
-
 class Setting<T>(val key: String, val defaultValue: T) {
-   /**
-    * Returns the saved setting value, if the value was not yet registered, this will
-    * return the `defaultValue`
-    */
-   @SuppressLint("ComposableNaming")
-   @Composable
-   fun get(): T {
-      val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-      return get(preferences)
-   }
+    /**
+     * Returns the saved setting value, if the value was not yet registered, this will
+     * return the `defaultValue`
+     */
+    @SuppressLint("ComposableNaming")
+    @Composable
+    fun get(): T {
+        val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
+        return get(preferences)
+    }
 
-   /**
-    * Using the specified preferences instance, returns the saved
-    * setting value, if the value was not yet registered, this will
-    * return the `defaultValue`
-    *
-    * @param preferences The preferences that will be used
-    */
-   fun get(preferences: Preferences): T {
-      return preferences.get(key) ?: defaultValue
-   }
+    /**
+     * Using the specified preferences instance, returns the saved
+     * setting value, if the value was not yet registered, this will
+     * return the `defaultValue`
+     *
+     * @param preferences The preferences that will be used
+     */
+    fun get(preferences: Preferences): T {
+        return preferences.get(key) ?: defaultValue
+    }
 }
