@@ -79,7 +79,7 @@ class PlayerViewModel @Inject constructor(
 
     private fun checkReady() {
         if (lyricsReady && playerReady && imagesReady)
-            setLoadState(LoadState.READY)
+            setDisplay(Display.READY)
     }
 
     fun getLyrics(
@@ -155,7 +155,7 @@ class PlayerViewModel @Inject constructor(
                 _currentPosition.update { pos.toLong() }
                 _bufferedPercentage.update { bufferedPercentage }
             }
-            onInitializeFail = { setLoadState(LoadState.ERROR) }
+            onInitializeFail = { setDisplay(Display.ERROR) }
             onPrepared = {
                 playerReady = true
                 checkReady()
@@ -197,8 +197,8 @@ class PlayerViewModel @Inject constructor(
         _currentCue.update { cue }
     }
 
-    fun setLoadState(loadState: LoadState) {
-        _uiState.update { it.copy(loadState = loadState) }
+    fun setDisplay(display: Display) {
+        _uiState.update { it.copy(display = display) }
     }
 
     /**
@@ -206,7 +206,7 @@ class PlayerViewModel @Inject constructor(
      */
     fun declarePlayerError(errorState: PlayerErrorState) {
         _errorState.update { errorState }
-        _uiState.update { it.copy(loadState = LoadState.ERROR) }
+        _uiState.update { it.copy(display = Display.ERROR) }
     }
 
     /**
