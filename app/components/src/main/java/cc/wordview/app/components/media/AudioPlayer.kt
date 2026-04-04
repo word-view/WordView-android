@@ -81,7 +81,7 @@ class AudioPlayer {
             player.prepare()
             onPrepared()
         } catch (e: Exception) {
-            Timber.e("Failed to initialize player", e)
+            Timber.e(e, "Failed to initialize player")
             onInitializeFail(e)
         }
     }
