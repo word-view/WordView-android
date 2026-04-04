@@ -97,7 +97,7 @@ class PlayerActivity : WordViewActivity() {
                 WordViewTheme(darkTheme = true) {
                     Scaffold { innerPadding ->
                         when (uiState.display) {
-                            Display.READY -> Player(videoId, viewModel, innerPadding)
+                            Display.PLAYER -> Player(videoId, viewModel, innerPadding)
 
                             Display.ERROR -> ErrorScreen(viewModel) {
                                 Timber.d("Refreshing player")
@@ -123,7 +123,7 @@ class PlayerActivity : WordViewActivity() {
 
         val playerState = viewModel.uiState.value.display
 
-        if (playerState == Display.READY) {
+        if (playerState == Display.PLAYER) {
             val player = viewModel.uiState.value.player
             player.pause()
         }

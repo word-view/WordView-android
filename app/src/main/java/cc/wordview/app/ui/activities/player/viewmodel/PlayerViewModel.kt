@@ -79,7 +79,7 @@ class PlayerViewModel @Inject constructor(
 
     private fun checkReady() {
         if (lyricsReady && playerReady && imagesReady)
-            setDisplay(Display.READY)
+            setDisplay(Display.PLAYER)
     }
 
     fun getLyrics(
