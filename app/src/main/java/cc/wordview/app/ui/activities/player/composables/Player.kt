@@ -138,7 +138,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
         }
 
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (isBuffering) CircularProgressIndicator(64.dp)
+            if (isBuffering || !viewModel.isReady()) CircularProgressIndicator(64.dp)
         }
 
         FadeOutBox(
@@ -245,7 +245,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                     CrossfadeIconButton(
                         modifier = Modifier
                             .testTag("toggle-play")
-                            .alpha(if (isBuffering) 0.0f else 1.0f),
+                            .alpha(if (!viewModel.isReady() || isBuffering) 0.0f else 1.0f),
                         icon = uiState.playIcon,
                         size = 80.dp,
                         onClick = { uiState.player.togglePlay() }
