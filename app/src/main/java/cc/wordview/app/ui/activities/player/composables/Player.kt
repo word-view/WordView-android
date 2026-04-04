@@ -236,7 +236,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CrossfadeIconButton(
+                    if (viewModel.isReady()) CrossfadeIconButton(
                         modifier = Modifier.testTag("skip-back"),
                         icon = Icons.Filled.SkipPrevious,
                         size = 72.dp,
@@ -250,7 +250,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                         size = 80.dp,
                         onClick = { uiState.player.togglePlay() }
                     )
-                    CrossfadeIconButton(
+                    if (viewModel.isReady()) CrossfadeIconButton(
                         modifier = Modifier.testTag("skip-forward"),
                         icon = Icons.Filled.SkipNext,
                         size = 72.dp,
