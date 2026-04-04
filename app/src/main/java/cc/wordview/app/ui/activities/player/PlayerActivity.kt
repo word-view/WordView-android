@@ -63,6 +63,12 @@ class PlayerActivity : WordViewActivity() {
 
         val videoId: String = intent.getStringExtra("id")!!
 
+        // Because having the title and artist empty seems weird in
+        // the player we take these as temporary values from the place
+        // that has opened the player to use while the stream is not ready yet
+        val title: String = intent.getStringExtra("title")!!
+        val artist: String = intent.getStringExtra("artist")!!
+
         setOrientationSensorLandscape()
         setupWindowInsets()
         enableEdgeToEdge()
@@ -97,7 +103,13 @@ class PlayerActivity : WordViewActivity() {
                 WordViewTheme(darkTheme = true) {
                     Scaffold { innerPadding ->
                         when (uiState.display) {
-                            Display.PLAYER -> Player(videoId, viewModel, innerPadding)
+                            Display.PLAYER -> Player(
+                                videoId,
+                                viewModel,
+                                title,
+                                artist,
+                                innerPadding
+                            )
 
                             Display.ERROR -> ErrorScreen(viewModel) {
                                 Timber.d("Refreshing player")

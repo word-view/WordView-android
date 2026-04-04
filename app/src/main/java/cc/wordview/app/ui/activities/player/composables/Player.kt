@@ -74,7 +74,13 @@ import cc.wordview.app.ui.components.TextCue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingValues) {
+fun Player(
+    videoId: String,
+    viewModel: PlayerViewModel,
+    tempTitle: String,
+    tempArtist: String,
+    innerPadding: PaddingValues
+) {
     val currentCue by viewModel.currentCue.collectAsStateWithLifecycle()
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
@@ -91,15 +97,31 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
     var captionsEnabled by remember { mutableStateOf(true) }
     var showSettings by remember { mutableStateOf(false) }
 
+    fun back() {
+        uiState.player.stop()
+        activity.finish()
+    }
+
+    fun getTitle(): String {
+        return if (viewModel.isReady()) {
+            uiState.videoStream.info.name ?: tempTitle
+        } else {
+            tempTitle
+        }
+    }
+
+    fun getUploaderName(): String {
+        return if (viewModel.isReady()) {
+            uiState.videoStream.info.getCleanUploaderName()
+        } else {
+            tempArtist
+        }
+    }
+
     LaunchedEffect(uiState.finalized) {
         if (uiState.finalized) {
             uiState.player.stop()
         }
-    }
-
-    fun back() {
-        uiState.player.stop()
-        activity.finish()
     }
 
     BackHandler { back() }
@@ -180,11 +202,11 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
                     }
                     Column {
                         Text(
-                            text = uiState.videoStream.info.name,
+                            text = getTitle(),
                             fontSize = 18.sp
                         )
                         Text(
-                            text = uiState.videoStream.info.getCleanUploaderName(),
+                            text = getUploaderName(),
                             fontSize = 12.sp
                         )
                     }

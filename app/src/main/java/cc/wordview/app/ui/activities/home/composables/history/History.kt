@@ -107,7 +107,9 @@ val HistoryScreen: NavDestination<Unit> by navDestination {
                     result = it
                 ) {
                     context.openActivity<PlayerActivity>(
-                        "id" to it.id
+                        "id" to it.id,
+                        "title" to it.title,
+                        "artist" to it.artist,
                     )
                 }
                 Spacer(Modifier.size(16.dp))
