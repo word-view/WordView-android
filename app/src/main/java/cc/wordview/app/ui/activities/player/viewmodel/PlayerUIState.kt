@@ -34,7 +34,7 @@ data class PlayerUIState(
     val playIcon: ImageVector = Icons.Filled.PlayArrow,
     val lyrics: Lyrics = Lyrics("", Parser(Language.ENGLISH)),
     val player: AudioPlayer = AudioPlayer(),
-    val display: Display = Display.LOADING,
+    val display: Display = Display.PLAYER,
     val finalized: Boolean = false,
     val videoStream: VideoStream = VideoStream(),
 )

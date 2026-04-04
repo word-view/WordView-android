@@ -101,15 +101,8 @@ class PlayerActivity : WordViewActivity() {
 
                             Display.ERROR -> ErrorScreen(viewModel) {
                                 Timber.d("Refreshing player")
-                                viewModel.setDisplay(Display.LOADING)
+                                viewModel.setDisplay(Display.PLAYER)
                                 start()
-                            }
-
-                            Display.LOADING -> Box(
-                                Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(64.dp)
                             }
                         }
                     }
