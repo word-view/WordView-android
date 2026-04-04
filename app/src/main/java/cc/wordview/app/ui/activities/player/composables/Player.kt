@@ -269,10 +269,10 @@ fun Player(
                         size = 72.dp,
                         onClick = { uiState.player.skipBack() }
                     )
-                    CrossfadeIconButton(
+                    if (viewModel.isReady()) CrossfadeIconButton(
                         modifier = Modifier
                             .testTag("toggle-play")
-                            .alpha(if (!viewModel.isReady() || isBuffering) 0.0f else 1.0f),
+                            .alpha(if (isBuffering) 0.0f else 1.0f),
                         icon = uiState.playIcon,
                         size = 80.dp,
                         onClick = { uiState.player.togglePlay() }
