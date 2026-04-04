@@ -103,7 +103,6 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
     }
 
     BackHandler { back() }
-    OneTimeEffect { uiState.player.togglePlay(playbackSpeed) }
 
     Box(
         modifier = Modifier
