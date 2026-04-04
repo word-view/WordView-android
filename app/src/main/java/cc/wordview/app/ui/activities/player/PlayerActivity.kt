@@ -126,6 +126,11 @@ class PlayerActivity : WordViewActivity() {
     override fun onPause() {
         super.onPause()
 
+        // For some reason, in some devices onPause seems to be called
+        // when starting an activity, at that point the player is not available
+        if (!viewModel.isReady())
+            return
+
         val playerState = viewModel.uiState.value.display
 
         if (playerState == Display.PLAYER) {
