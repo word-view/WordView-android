@@ -53,19 +53,4 @@ class AppSettingsTest : ComposeTest() {
             assert(langTag.length == 2)
         }
     }
-
-    @Test
-    fun getComposerMode() {
-        setup {
-            val composerMode = AppSettings.composerMode.get()
-        }
-    }
-
-    @Test
-    fun getComposerModePassingPreferences() {
-        setup {
-            val preferences by LocalPreferenceFlow.current.collectAsStateWithLifecycle()
-            val composerMode = AppSettings.composerMode.get(preferences)
-        }
-    }
 }
