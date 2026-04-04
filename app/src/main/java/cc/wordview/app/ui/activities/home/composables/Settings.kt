@@ -152,26 +152,6 @@ val SettingsScreen: NavDestination<Unit> by navDestination {
                         exportLogs(context, logs)
                     }
                 )
-                @Suppress("KotlinConstantConditions", "SimplifyBooleanWithConstants")
-                if (BuildConfig.BUILD_TYPE == "debug") {
-                    switchPreference(
-                        key = AppSettings.composerMode.key,
-                        defaultValue = AppSettings.composerMode.defaultValue,
-                        title = {
-                            Text(
-                                text = stringResource(R.string.composer_mode),
-                                fontFamily = poppinsFamily
-                            )
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Outlined.Carpenter,
-                                contentDescription = null
-                            )
-                        },
-                        summary = { Text(text = stringResource(R.string.provides_more_information_in_the_player_that_helps_writing_lyrics)) }
-                    )
-                }
             }
         }
     }

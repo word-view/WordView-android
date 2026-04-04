@@ -85,7 +85,7 @@ fun Player(videoId: String, viewModel: PlayerViewModel, innerPadding: PaddingVal
     val activity = LocalActivity.current!!
     val density = LocalDensity.current
 
-    val composerMode = AppSettings.composerMode.get()
+    val composerMode = PlayerSettings.composerMode.get()
     val playbackSpeed = PlayerSettings.playbackSpeed.get()
     val backgroundImage = PlayerSettings.backgroundImage.get()
 

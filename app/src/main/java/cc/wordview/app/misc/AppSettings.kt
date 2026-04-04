@@ -19,5 +19,4 @@ package cc.wordview.app.misc
 
 object AppSettings {
    val language = Setting(key = "language", defaultValue = "ja")
-   val composerMode = Setting(key = "composer_mode", defaultValue = false)
 }

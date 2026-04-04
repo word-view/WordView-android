@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Hardware
 import androidx.compose.material.icons.outlined.PhotoSizeSelectActual
 import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,9 +35,12 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import cc.wordview.app.BuildConfig
+import cc.wordview.app.R
 import cc.wordview.app.components.ui.Space
 import cc.wordview.app.misc.PlayerSettings
 import cc.wordview.app.ui.theme.poppinsFamily
@@ -134,6 +138,34 @@ fun PlayerSettingsBottomSheet(onDismissRequest: () -> Unit = {}) {
                     )
                 },
             )
+            @Suppress("KotlinConstantConditions", "SimplifyBooleanWithConstants")
+            if (BuildConfig.BUILD_TYPE == "debug") {
+                switchPreference(
+                    key = PlayerSettings.composerMode.key,
+                    defaultValue = PlayerSettings.composerMode.defaultValue,
+                    title = {
+                        Text(
+                            text = stringResource(R.string.composer_mode),
+                            fontFamily = poppinsFamily,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    summary = {
+                        Text(
+                            text = stringResource(R.string.provides_more_information_in_the_player_that_helps_writing_lyrics),
+                            fontFamily = poppinsFamily,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        )
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Hardware,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                )
+            }
         }
     }
 }
