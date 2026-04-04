@@ -71,7 +71,6 @@ import cc.wordview.app.components.ui.PlayerTopBar
 import cc.wordview.app.components.ui.Seekbar
 import cc.wordview.app.components.ui.findBiggerCutout
 import cc.wordview.app.misc.PlayerSettings
-import cc.wordview.app.ui.components.PlayerSettingsBottomSheet
 import cc.wordview.app.ui.components.TextCue
 
 @OptIn(ExperimentalMaterial3Api::class)

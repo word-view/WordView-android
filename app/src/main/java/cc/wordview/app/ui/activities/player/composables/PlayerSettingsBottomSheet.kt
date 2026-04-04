@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.components
+package cc.wordview.app.ui.activities.player.composables
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
