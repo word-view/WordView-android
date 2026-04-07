@@ -76,7 +76,7 @@ fun Seekbar(
         }
         Box(
             Modifier
-                .padding(horizontal = 36.dp)
+                .padding(horizontal = 12.dp)
                 .padding(top = 8.dp)
                 .background(MaterialTheme.colorScheme.background.copy(alpha = 0.5f), RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
@@ -91,7 +91,7 @@ fun Seekbar(
         if (displayAdvancedInformation) {
             Box(
                 Modifier
-                    .padding(horizontal = 36.dp)
+                    .padding(horizontal = 12.dp)
                     .padding(top = 8.dp)
                     .background(MaterialTheme.colorScheme.background.copy(alpha = 0.5f), RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
@@ -105,7 +105,7 @@ fun Seekbar(
             }
             Box(
                 Modifier
-                    .padding(horizontal = 36.dp)
+                    .padding(horizontal = 12.dp)
                     .padding(top = 8.dp)
                     .background(MaterialTheme.colorScheme.background.copy(alpha = 0.5f), RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
