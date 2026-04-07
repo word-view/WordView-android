@@ -259,7 +259,7 @@ fun Player(
                 contentAlignment = Alignment.Center
             ) {
                 Row(
-                    Modifier.fillMaxWidth(0.5f),
+                    Modifier.fillMaxWidth(0.30f),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
