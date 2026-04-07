@@ -65,7 +65,6 @@ import cc.wordview.app.components.ui.FadeInAsyncImage
 import cc.wordview.app.components.ui.FadeOutBox
 import cc.wordview.app.extensions.getCleanUploaderName
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
-import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.components.ui.PlayerTopBar
 import cc.wordview.app.components.ui.Seekbar
 import cc.wordview.app.components.ui.findBiggerCutout
@@ -85,7 +84,7 @@ fun Player(
     val isBuffering by viewModel.isBuffering.collectAsStateWithLifecycle()
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     val ready by viewModel.ready.collectAsStateWithLifecycle()
 
     val activity = LocalActivity.current!!

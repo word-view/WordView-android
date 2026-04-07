@@ -27,10 +27,10 @@ import cc.wordview.gengolex.Language
 import cc.wordview.gengolex.Parser
 
 /**
- * The interface states of player, these are not updated constantly so separating
+ * The states of player, these are not updated constantly so separating
  * them into a single class does not offer a noticeable performance prejudice.
  */
-data class PlayerUIState(
+data class PlayerState(
     val playIcon: ImageVector = Icons.Filled.PlayArrow,
     val lyrics: Lyrics = Lyrics("", Parser(Language.ENGLISH)),
     val player: AudioPlayer = AudioPlayer(),

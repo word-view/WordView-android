@@ -68,7 +68,7 @@ class PlayerActivity : WordViewActivity() {
         enableEdgeToEdge()
         setContent {
             ProvidePreferenceLocals {
-                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                val uiState by viewModel.state.collectAsStateWithLifecycle()
 
                 val langTag = AppSettings.language.get()
 
@@ -125,10 +125,10 @@ class PlayerActivity : WordViewActivity() {
         if (!viewModel.ready.value)
             return
 
-        val playerState = viewModel.uiState.value.display
+        val playerState = viewModel.state.value.display
 
         if (playerState == Display.PLAYER) {
-            val player = viewModel.uiState.value.player
+            val player = viewModel.state.value.player
             player.pause()
         }
     }

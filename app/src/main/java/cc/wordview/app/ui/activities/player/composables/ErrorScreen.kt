@@ -43,7 +43,7 @@ import cc.wordview.app.ui.theme.Typography
 
 @Composable
 fun ErrorScreen(viewModel: PlayerViewModel, refresh: () -> Unit) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     val errorState by viewModel.errorState.collectAsStateWithLifecycle()
     val activity = LocalActivity.current!!
 

@@ -51,10 +51,10 @@ class PlayerViewModel @Inject constructor(
     private val playerRepository: PlayerRepository,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(PlayerUIState())
+    private val _state = MutableStateFlow(PlayerState())
     private val _errorState = MutableStateFlow(PlayerErrorState())
 
-    val uiState = _uiState.asStateFlow()
+    val state = _state.asStateFlow()
     val errorState = _errorState.asStateFlow()
 
     private val _currentCue = MutableStateFlow(WordViewCue())
@@ -112,7 +112,7 @@ class PlayerViewModel @Inject constructor(
     }
 
     private fun preloadImages() {
-        for (cue in _uiState.value.lyrics) {
+        for (cue in _state.value.lyrics) {
             for (word in cue.words) {
                 enqueueImage(word.parent)
             }
@@ -151,13 +151,13 @@ class PlayerViewModel @Inject constructor(
             }
 
             onPlaybackEnd = {
-                _uiState.value.player.stop()
+                _state.value.player.stop()
             }
         }
 
-        _uiState.value.player.apply {
+        _state.value.player.apply {
             onPositionChange = { pos, bufferedPercentage ->
-                setCurrentCue(_uiState.value.lyrics.getCueAt(pos))
+                setCurrentCue(_state.value.lyrics.getCueAt(pos))
                 _currentPosition.update { pos.toLong() }
                 _bufferedPercentage.update { bufferedPercentage }
             }
@@ -188,15 +188,15 @@ class PlayerViewModel @Inject constructor(
     }
 
     private fun playIconPause() {
-        _uiState.update { it.copy(playIcon = Icons.Filled.PlayArrow) }
+        _state.update { it.copy(playIcon = Icons.Filled.PlayArrow) }
     }
 
     private fun playIconPlay() {
-        _uiState.update { it.copy(playIcon = Icons.Filled.Pause) }
+        _state.update { it.copy(playIcon = Icons.Filled.Pause) }
     }
 
     private fun parseLyrics(lyrics: String) {
-        _uiState.update { it.copy(lyrics = Lyrics(lyrics, parser)) }
+        _state.update { it.copy(lyrics = Lyrics(lyrics, parser)) }
     }
 
     private fun setCurrentCue(cue: WordViewCue) {
@@ -204,7 +204,7 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun setDisplay(display: Display) {
-        _uiState.update { it.copy(display = display) }
+        _state.update { it.copy(display = display) }
     }
 
     /**
@@ -212,13 +212,13 @@ class PlayerViewModel @Inject constructor(
      */
     fun declarePlayerError(errorState: PlayerErrorState) {
         _errorState.update { errorState }
-        _uiState.update { it.copy(display = Display.ERROR) }
+        _state.update { it.copy(display = Display.ERROR) }
     }
 
     /**
      * Performs session cleanups
      */
     fun cleanup() {
-        _uiState.update { PlayerUIState() }
+        _state.update { PlayerState() }
     }
 }
