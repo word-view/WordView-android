@@ -86,6 +86,7 @@ fun Player(
     val currentPosition by viewModel.currentPosition.collectAsStateWithLifecycle()
     val bufferedPercentage by viewModel.bufferedPercentage.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val ready by viewModel.ready.collectAsStateWithLifecycle()
 
     val activity = LocalActivity.current!!
     val density = LocalDensity.current
@@ -103,7 +104,7 @@ fun Player(
     }
 
     fun getTitle(): String {
-        return if (viewModel.isReady()) {
+        return if (ready) {
             uiState.videoStream.info.name ?: tempTitle
         } else {
             tempTitle
@@ -111,7 +112,7 @@ fun Player(
     }
 
     fun getUploaderName(): String {
-        return if (viewModel.isReady()) {
+        return if (ready) {
             uiState.videoStream.info.getCleanUploaderName()
         } else {
             tempArtist
@@ -124,9 +125,8 @@ fun Player(
         }
     }
 
-    LaunchedEffect(viewModel.isReady()) {
-        if (viewModel.isReady())
-            uiState.player.togglePlay(playbackSpeed)
+    LaunchedEffect(ready) {
+        if (ready) uiState.player.togglePlay(playbackSpeed)
     }
 
     BackHandler { back() }
@@ -165,7 +165,7 @@ fun Player(
         }
 
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (isBuffering || !viewModel.isReady()) CircularProgressIndicator(64.dp)
+            if (isBuffering || !ready) CircularProgressIndicator(64.dp)
         }
 
         FadeOutBox(
@@ -263,13 +263,13 @@ fun Player(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (viewModel.isReady()) CrossfadeIconButton(
+                    if (ready) CrossfadeIconButton(
                         modifier = Modifier.testTag("skip-back"),
                         icon = Icons.Filled.SkipPrevious,
                         size = 72.dp,
                         onClick = { uiState.player.skipBack() }
                     )
-                    if (viewModel.isReady()) CrossfadeIconButton(
+                    if (ready) CrossfadeIconButton(
                         modifier = Modifier
                             .testTag("toggle-play")
                             .alpha(if (isBuffering) 0.0f else 1.0f),
@@ -277,7 +277,7 @@ fun Player(
                         size = 80.dp,
                         onClick = { uiState.player.togglePlay() }
                     )
-                    if (viewModel.isReady()) CrossfadeIconButton(
+                    if (ready) CrossfadeIconButton(
                         modifier = Modifier.testTag("skip-forward"),
                         icon = Icons.Filled.SkipNext,
                         size = 72.dp,

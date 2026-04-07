@@ -22,20 +22,14 @@ import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.components.extensions.setOrientationSensorLandscape
-import cc.wordview.app.components.ui.CircularProgressIndicator
 import cc.wordview.app.settings.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
@@ -128,7 +122,7 @@ class PlayerActivity : WordViewActivity() {
 
         // For some reason, in some devices onPause seems to be called
         // when starting an activity, at that point the player is not available
-        if (!viewModel.isReady())
+        if (!viewModel.ready.value)
             return
 
         val playerState = viewModel.uiState.value.display

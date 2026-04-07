@@ -61,12 +61,14 @@ class PlayerViewModel @Inject constructor(
     private val _currentPosition = MutableStateFlow(0L)
     private val _bufferedPercentage = MutableStateFlow(0)
     private val _isBuffering = MutableStateFlow(false)
+    private val _ready = MutableStateFlow(false)
 
 
     val currentCue = _currentCue.asStateFlow()
     val currentPosition = _currentPosition.asStateFlow()
     val bufferedPercentage = _bufferedPercentage.asStateFlow()
     val isBuffering = _isBuffering.asStateFlow()
+    val ready = _ready.asStateFlow()
 
 
     private var parser = Parser(Language.ENGLISH)
@@ -78,10 +80,12 @@ class PlayerViewModel @Inject constructor(
     var imagesReady: Boolean = false
 
     /**
-     * If everything needed to reproduce the media is ready
+     * Checks if everything is ready and if so sets the `_ready` to true
      */
-    fun isReady(): Boolean {
-        return lyricsReady && playerReady && imagesReady
+    private fun checkReady() {
+        if (lyricsReady && playerReady && imagesReady) {
+            _ready.update { true }
+        }
     }
 
     fun getLyrics(
@@ -99,6 +103,7 @@ class PlayerViewModel @Inject constructor(
             parseLyrics(lyrics)
 
             lyricsReady = true
+            checkReady()
 
             preloadImages()
         }
@@ -116,6 +121,7 @@ class PlayerViewModel @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             ImageCacheManager.onQueueCompleted = {
                 imagesReady = true
+                checkReady()
             }
             ImageCacheManager.executeAllInQueue()
         }
@@ -158,6 +164,7 @@ class PlayerViewModel @Inject constructor(
             onInitializeFail = { setDisplay(Display.ERROR) }
             onPrepared = {
                 playerReady = true
+                checkReady()
             }
 
             initialize(videoStreamUrl, appContext, listener)
