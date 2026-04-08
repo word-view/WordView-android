@@ -21,12 +21,12 @@ import cc.wordview.app.ui.activities.RepositoryModule
 import cc.wordview.app.ui.activities.auth.viewmodel.login.LoginRepository
 import cc.wordview.app.ui.activities.auth.viewmodel.register.RegisterRepository
 import cc.wordview.app.ui.activities.home.composables.home.HomeRepository
-import cc.wordview.app.ui.screens.player.MockPlayerRepositoryImpl
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerRepository
 import cc.wordview.app.ui.screens.search.MockSearchRepositoryImpl
 import cc.wordview.app.ui.activities.home.composables.search.SearchRepository
 import cc.wordview.app.ui.screens.home.MockHomeRepositoryImpl
 import cc.wordview.app.ui.screens.login.MockLoginRepositoryImpl
+import cc.wordview.app.ui.screens.player.MockPlayerRepositoryImpl
 import cc.wordview.app.ui.screens.register.MockRegisterRepositoryImpl
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn

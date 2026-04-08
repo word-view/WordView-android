@@ -31,11 +31,6 @@ class MockPlayerRepositoryImpl @Inject constructor() : PlayerRepository {
     override lateinit var queue: RequestQueue
 
     override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
-        if (mocklyrics == "fail_trigger") {
-            onFail(mocklyrics, 0)
-        } else {
-            val (lyrics, dictionary) = parseLyricsAndDictionary(mocklyrics)
-            onSucceed(lyrics, dictionary)
-        }
+        
     }
 }
