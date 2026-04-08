@@ -22,9 +22,31 @@ import org.junit.Test
 
 class HomeRequestTest : RequestTest() {
     @Test
-    fun getHome() {
+    fun getHomeEn() {
         val request = HomeRequest(
-            "$endpoint/api/v1/home",
+            "$endpoint/api/v1/home?learnLang=en",
+            { assert(it.size == 1) },
+            { _, _ -> throw FailedTestRequestException("Are you sure the API is running?") }
+        )
+
+        makeRequest(request)
+    }
+
+    @Test
+    fun getHomeJa() {
+        val request = HomeRequest(
+            "$endpoint/api/v1/home?learnLang=ja",
+            { assert(it.size == 1) },
+            { _, _ -> throw FailedTestRequestException("Are you sure the API is running?") }
+        )
+
+        makeRequest(request)
+    }
+
+    @Test
+    fun getHomePt() {
+        val request = HomeRequest(
+            "$endpoint/api/v1/home?learnLang=pt",
             { assert(it.size == 1) },
             { _, _ -> throw FailedTestRequestException("Are you sure the API is running?") }
         )

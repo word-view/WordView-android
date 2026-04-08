@@ -40,8 +40,8 @@ class SongCardTest : ComposeTest() {
                 thumbnail = "",
                 artist = artist,
                 asyncImagePlaceholders = AsyncImagePlaceholders(
-                    noConnectionWhite = R.drawable.nonet,
-                    noConnectionDark = R.drawable.nonet_dark
+                    noConnectionWhite = cc.wordview.app.R.drawable.nonet,
+                    noConnectionDark = cc.wordview.app.R.drawable.nonet_dark
                 ),
                 duration = duration,
                 trackName = trackName
