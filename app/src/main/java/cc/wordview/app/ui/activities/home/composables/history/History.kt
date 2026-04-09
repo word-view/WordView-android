@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,9 +37,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.components.ui.BackTopAppBar
-import cc.wordview.app.components.ui.OneTimeEffect
 import cc.wordview.app.database.RoomAccess
 import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.components.extensions.openActivity
@@ -51,9 +54,8 @@ import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.navigation.NavDestination
 import com.gigamole.composefadingedges.verticalFadingEdges
 import kotlin.uuid.Uuid
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -62,13 +64,16 @@ val HistoryScreen: NavDestination<Unit> by navDestination {
     val listState = rememberLazyListState()
 
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     var history = remember { mutableStateListOf<ViewedVideo>() }
 
-    OneTimeEffect {
-        CoroutineScope(Dispatchers.IO).launch {
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
             val database = RoomAccess.getDatabase()
-            history.addAll(database.viewedVideoDao().getAll())
+            val videos = withContext(Dispatchers.IO) { database.viewedVideoDao().getAll() }
+            history.clear()
+            history.addAll(videos)
         }
     }
 
