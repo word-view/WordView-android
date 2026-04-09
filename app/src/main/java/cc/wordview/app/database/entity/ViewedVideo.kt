@@ -48,6 +48,16 @@ data class ViewedVideo @OptIn(ExperimentalUuidApi::class) constructor(
                 thumbnailUrl = vsr.thumbnails.first().url,
             )
         }
+
+        fun clone(vv: ViewedVideo): ViewedVideo {
+            return ViewedVideo(
+                id = vv.id,
+                title = vv.title,
+                artist = vv.artist,
+                duration = vv.duration,
+                thumbnailUrl = vv.thumbnailUrl,
+            )
+        }
     }
 }
 

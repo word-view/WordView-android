@@ -53,8 +53,10 @@ import com.composegears.tiamat.compose.navController
 import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.navigation.NavDestination
 import com.gigamole.composefadingedges.verticalFadingEdges
+import kotlinx.coroutines.CoroutineScope
 import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -67,6 +69,13 @@ val HistoryScreen: NavDestination<Unit> by navDestination {
     val lifecycleOwner = LocalLifecycleOwner.current
 
     var history = remember { mutableStateListOf<ViewedVideo>() }
+
+    fun saveVideoToHistory(item: ViewedVideo) {
+        val viewedVideoDao = RoomAccess.getDatabase().viewedVideoDao()
+        CoroutineScope(Dispatchers.IO).launch {
+            viewedVideoDao.insertAll(ViewedVideo.clone(item))
+        }
+    }
 
     LaunchedEffect(lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -111,6 +120,7 @@ val HistoryScreen: NavDestination<Unit> by navDestination {
                     ),
                     result = it
                 ) {
+                    saveVideoToHistory(it)
                     context.openActivity<PlayerActivity>(
                         "id" to it.id,
                         "title" to it.title,
