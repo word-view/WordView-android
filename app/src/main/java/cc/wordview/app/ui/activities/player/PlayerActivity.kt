@@ -33,7 +33,7 @@ import cc.wordview.app.components.extensions.setOrientationSensorLandscape
 import cc.wordview.app.settings.AppSettings
 import cc.wordview.app.ui.activities.WordViewActivity
 import cc.wordview.app.ui.activities.player.composables.ErrorScreen
-import cc.wordview.app.ui.activities.player.composables.Player
+import cc.wordview.app.ui.activities.player.composables.AudioPlayer
 import cc.wordview.app.ui.activities.player.viewmodel.Display
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.components.ui.OneTimeEffect
@@ -97,7 +97,7 @@ class PlayerActivity : WordViewActivity() {
                 WordViewTheme(darkTheme = true) {
                     Scaffold { innerPadding ->
                         when (uiState.display) {
-                            Display.PLAYER -> Player(
+                            Display.AUDIO_PLAYER -> AudioPlayer(
                                 videoId,
                                 viewModel,
                                 title,
@@ -107,7 +107,7 @@ class PlayerActivity : WordViewActivity() {
 
                             Display.ERROR -> ErrorScreen(viewModel) {
                                 Timber.d("Refreshing player")
-                                viewModel.setDisplay(Display.PLAYER)
+                                viewModel.setDisplay(Display.AUDIO_PLAYER)
                                 start()
                             }
                         }
@@ -127,7 +127,7 @@ class PlayerActivity : WordViewActivity() {
 
         val playerState = viewModel.state.value.display
 
-        if (playerState == Display.PLAYER) {
+        if (playerState == Display.AUDIO_PLAYER) {
             val player = viewModel.state.value.player
             player.pause()
         }

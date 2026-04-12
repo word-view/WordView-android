@@ -73,7 +73,7 @@ import cc.wordview.app.ui.components.TextCue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Player(
+fun AudioPlayer(
     videoId: String,
     viewModel: PlayerViewModel,
     tempTitle: String,

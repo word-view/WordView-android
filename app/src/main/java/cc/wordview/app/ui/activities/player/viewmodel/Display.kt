@@ -21,5 +21,5 @@ package cc.wordview.app.ui.activities.player.viewmodel
  * What should the player be showing
  */
 enum class Display {
-    ERROR, PLAYER
+    ERROR, AUDIO_PLAYER
 }
