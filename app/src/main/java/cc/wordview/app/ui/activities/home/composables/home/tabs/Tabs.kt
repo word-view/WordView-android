@@ -15,10 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.activities.home.composables.home
+package cc.wordview.app.ui.activities.home.composables.home.tabs
 
 sealed class Tabs(val route : String) {
-    data object Learn : Tabs("learn_tab")
-    data object Explore : Tabs("explore_tab")
-    data object Profile : Tabs("profile_tab")
+    data object Music : Tabs("music_tab")
+    data object Video : Tabs("video_tab")
 }

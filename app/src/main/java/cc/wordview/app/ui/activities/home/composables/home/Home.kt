@@ -29,6 +29,8 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -42,19 +44,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import cc.wordview.app.R
 import cc.wordview.app.extensions.getFlag
 import cc.wordview.app.settings.AppSettings
 import cc.wordview.app.ui.activities.home.composables.ProfileScreen
 import cc.wordview.app.ui.activities.home.composables.SettingsScreen
 import cc.wordview.app.ui.activities.home.composables.history.HistoryScreen
+import cc.wordview.app.ui.activities.home.composables.home.tabs.BottomNavigationItem
+import cc.wordview.app.ui.activities.home.composables.home.tabs.MusicTab
+import cc.wordview.app.ui.activities.home.composables.home.tabs.Tabs
+import cc.wordview.app.ui.activities.home.composables.home.tabs.VideoTab
 import cc.wordview.app.ui.activities.home.composables.search.SearchScreen
 import cc.wordview.app.ui.components.ProfilePicture
+import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.app.ui.theme.redhatFamily
 import cc.wordview.gengolex.Language
 import com.composegears.tiamat.compose.navController
@@ -67,6 +81,12 @@ import kotlinx.coroutines.launch
 val HomeScreen: NavDestination<Unit> by navDestination {
     val navController = navController()
     val viewModel: HomeViewModel = hiltViewModel()
+
+    val tabNavController = rememberNavController()
+    val navBackStackEntry by tabNavController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    val orientation = LocalConfiguration.current.orientation
 
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -139,9 +159,50 @@ val HomeScreen: NavDestination<Unit> by navDestination {
                     )
                 }
             )
-
+        },
+        bottomBar = {
+            NavigationBar() {
+                BottomNavigationItem().bottomNavigationItems(LocalContext.current)
+                    .forEachIndexed { _, navigationItem ->
+                        NavigationBarItem(
+                            modifier = Modifier.testTag("${navigationItem.route}-tab"),
+                            selected = navigationItem.route == currentDestination?.route,
+                            label = {
+                                Text(
+                                    navigationItem.name,
+                                    fontFamily = poppinsFamily
+                                )
+                            },
+                            icon = {
+                                Icon(
+                                    navigationItem.icon,
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = {
+                                tabNavController.navigate(navigationItem.route) {
+                                    popUpTo(tabNavController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
+                    }
+            }
         }
     ) { innerPadding ->
-        LearnTab(innerPadding)
+        NavHost(
+            navController = tabNavController,
+            startDestination = Tabs.Music.route,
+        ) {
+            composable(Tabs.Music.route) {
+                MusicTab(innerPadding)
+            }
+            composable(Tabs.Video.route) {
+                VideoTab(innerPadding)
+            }
+        }
     }
 }

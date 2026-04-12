@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.wordview.app.ui.activities.home.composables.home
+package cc.wordview.app.ui.activities.home.composables.home.tabs
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.tween
@@ -67,12 +67,13 @@ import androidx.compose.ui.res.stringResource
 import cc.wordview.app.database.entity.ViewedVideo
 import cc.wordview.app.components.extensions.openActivity
 import cc.wordview.app.settings.AppSettings
+import cc.wordview.app.ui.activities.home.composables.home.HomeViewModel
 import cc.wordview.app.ui.components.ContinueWatchingCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun LearnTab(
+fun MusicTab(
     innerPadding: PaddingValues = PaddingValues(),
     viewModel: HomeViewModel = hiltViewModel()
 ) {
