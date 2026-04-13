@@ -266,6 +266,7 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                                 "id" to it.id,
                                 "title" to it.title,
                                 "artist" to it.artist,
+                                "mode" to "audio"
                             )
                         }
                     }

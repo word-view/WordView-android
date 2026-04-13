@@ -86,8 +86,6 @@ val HomeScreen: NavDestination<Unit> by navDestination {
     val navBackStackEntry by tabNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    val orientation = LocalConfiguration.current.orientation
-
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val message by viewModel.snackBarMessage.collectAsState(initial = "")

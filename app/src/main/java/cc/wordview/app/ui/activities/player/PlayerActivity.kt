@@ -63,6 +63,9 @@ class PlayerActivity : WordViewActivity() {
         val title: String = intent.getStringExtra("title")!!
         val artist: String = intent.getStringExtra("artist")!!
 
+        // The mode that the player should open, video or audio only
+        val mode: String = intent.getStringExtra("mode")!!
+
         setOrientationSensorLandscape()
         setupWindowInsets()
         enableEdgeToEdge()

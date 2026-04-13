@@ -130,7 +130,8 @@ fun MusicTab(
                         context.openActivity<PlayerActivity>(
                             "id" to lastWatchedVideo!!.id,
                             "title" to lastWatchedVideo!!.title,
-                            "artist" to lastWatchedVideo!!.artist
+                            "artist" to lastWatchedVideo!!.artist,
+                            "mode" to "audio"
                         )
                     }
                 )
@@ -182,6 +183,7 @@ fun MusicTab(
                                 "id" to it.id,
                                 "title" to it.title,
                                 "artist" to it.artist,
+                                "mode" to "audio"
                             )
                         }
                     }
