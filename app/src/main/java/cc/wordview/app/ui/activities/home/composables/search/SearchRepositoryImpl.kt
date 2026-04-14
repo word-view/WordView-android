@@ -26,10 +26,10 @@ import javax.inject.Inject
 class SearchRepositoryImpl @Inject constructor() : SearchRepository {
     private var nextPage: Page? = null
 
-    override fun search(query: String): List<StreamInfoItem> {
+    override fun search(query: String, contentFilter: List<String>): List<StreamInfoItem> {
         nextPage = null
 
-        val queryHandler = YTService.searchQHFactory.fromQuery(query, listOf("music_songs"), "")
+        val queryHandler = YTService.searchQHFactory.fromQuery(query, contentFilter, "")
         val search = SearchInfo.getInfo(YTService, queryHandler)
         nextPage = search.nextPage
 
@@ -42,10 +42,10 @@ class SearchRepositoryImpl @Inject constructor() : SearchRepository {
         return items
     }
 
-    override fun searchNextPage(query: String): List<StreamInfoItem> {
+    override fun searchNextPage(query: String, contentFilter: List<String>): List<StreamInfoItem> {
         if (nextPage == null) return emptyList()
 
-        val queryHandler = YTService.searchQHFactory.fromQuery(query, listOf("music_songs"), "")
+        val queryHandler = YTService.searchQHFactory.fromQuery(query, contentFilter, "")
         val search = SearchInfo.getMoreItems(YTService, queryHandler, nextPage!!)
         nextPage = search.nextPage
 

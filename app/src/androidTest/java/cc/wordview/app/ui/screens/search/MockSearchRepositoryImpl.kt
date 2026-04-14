@@ -32,7 +32,7 @@ class MockSearchRepositoryImpl @Inject constructor() : SearchRepository {
         songConstructor("https://www.youtube.com/watch?v=jg09lNupc1s", "Readymade", "Ado"),
     )
 
-    override fun search(query: String): List<StreamInfoItem> {
+    override fun search(query: String, contentFilter: List<String>): List<StreamInfoItem> {
         return when (query) {
             "single" -> listOf(samples.first())
             "multi" -> samples
@@ -40,7 +40,7 @@ class MockSearchRepositoryImpl @Inject constructor() : SearchRepository {
             else -> emptyList()
         }
     }
-    override fun searchNextPage(query: String): List<StreamInfoItem> {
+    override fun searchNextPage(query: String, contentFilter: List<String>): List<StreamInfoItem> {
         return emptyList()
     }
 

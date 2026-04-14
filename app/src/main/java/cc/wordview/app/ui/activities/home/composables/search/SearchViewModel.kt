@@ -87,12 +87,13 @@ class SearchViewModel @Inject constructor(
         _searchHistory.update { database.searchQueryDao().getAll() }
     }
 
-    fun search(query: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun search(query: String, music: Boolean = true, onSuccess: () -> Unit, onError: (String) -> Unit) {
         _animateSearch.update { true }
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
-                    val results = searchRepository.search(query)
+                    val filters = if (music) listOf("music_songs") else emptyList()
+                    val results = searchRepository.search(query, filters)
                     onSuccess()
                     // if the search results are instantly populated the animation won't work
                     delay(50L)
@@ -136,12 +137,13 @@ class SearchViewModel @Inject constructor(
         queue.add(request)
     }
 
-    fun searchNextPage(query: String) {
+    fun searchNextPage(query: String, music: Boolean = true) {
         _animateSearch.update { false }
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
-                    val results = searchRepository.searchNextPage(query)
+                    val filters = if (music) listOf("music_songs") else emptyList()
+                    val results = searchRepository.searchNextPage(query, filters)
                     appendSearchResults(results)
                 } catch (e: Throwable) {
                     Timber.e(e)
