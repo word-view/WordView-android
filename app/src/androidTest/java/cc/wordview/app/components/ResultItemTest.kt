@@ -31,7 +31,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import cc.wordview.app.ComposeTest
 import cc.wordview.app.api.VideoSearchResult
-import cc.wordview.app.ui.components.ResultItem
+import cc.wordview.app.ui.components.MusicResultItem
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -45,7 +45,7 @@ class ResultItemTest : ComposeTest() {
 
             if (textVisible) Text("Text")
 
-            ResultItem(result = result, onClick = {
+            MusicResultItem(result = result, onClick = {
                 textVisible = true
                 onClick.run()
             })

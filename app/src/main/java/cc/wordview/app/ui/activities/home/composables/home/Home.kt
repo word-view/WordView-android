@@ -44,7 +44,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -66,7 +65,8 @@ import cc.wordview.app.ui.activities.home.composables.home.tabs.BottomNavigation
 import cc.wordview.app.ui.activities.home.composables.home.tabs.MusicTab
 import cc.wordview.app.ui.activities.home.composables.home.tabs.Tabs
 import cc.wordview.app.ui.activities.home.composables.home.tabs.VideoTab
-import cc.wordview.app.ui.activities.home.composables.search.SearchScreen
+import cc.wordview.app.ui.activities.home.composables.search.MusicSearchScreen
+import cc.wordview.app.ui.activities.home.composables.search.VideoSearchScreen
 import cc.wordview.app.ui.components.ProfilePicture
 import cc.wordview.app.ui.theme.poppinsFamily
 import cc.wordview.app.ui.theme.redhatFamily
@@ -76,6 +76,7 @@ import com.composegears.tiamat.compose.navDestination
 import com.composegears.tiamat.compose.navigate
 import com.composegears.tiamat.navigation.NavDestination
 import kotlinx.coroutines.launch
+import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeMusicSongOrVideoInfoItemExtractor
 
 @OptIn(ExperimentalMaterial3Api::class)
 val HomeScreen: NavDestination<Unit> by navDestination {
@@ -149,7 +150,13 @@ val HomeScreen: NavDestination<Unit> by navDestination {
             ExtendedFloatingActionButton(
                 modifier = Modifier.testTag("search"),
                 text = { Text(text = stringResource(R.string.search)) },
-                onClick = { navController.navigate(SearchScreen) },
+                onClick = {
+                    val currentRoute = tabNavController.currentDestination!!.route
+                    when (currentRoute) {
+                        Tabs.Music.route -> navController.navigate(MusicSearchScreen)
+                        Tabs.Video.route -> navController.navigate(VideoSearchScreen)
+                    }
+                },
                 icon = {
                     Icon(
                         imageVector = Icons.Filled.Search,

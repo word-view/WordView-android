@@ -27,7 +27,8 @@ import cc.wordview.app.ui.activities.home.composables.ProfileScreen
 import cc.wordview.app.ui.activities.home.composables.SettingsScreen
 import cc.wordview.app.ui.activities.home.composables.history.HistoryScreen
 import cc.wordview.app.ui.activities.home.composables.home.HomeScreen
-import cc.wordview.app.ui.activities.home.composables.search.SearchScreen
+import cc.wordview.app.ui.activities.home.composables.search.MusicSearchScreen
+import cc.wordview.app.ui.activities.home.composables.search.VideoSearchScreen
 import cc.wordview.app.ui.theme.WordViewTheme
 import com.composegears.tiamat.compose.Navigation
 import com.composegears.tiamat.compose.navigationPlatformDefault
@@ -56,7 +57,8 @@ class HomeActivity : WordViewActivity() {
                         contentTransformProvider = { navigationPlatformDefault(it) },
                         destinations = arrayOf(
                             HomeScreen,
-                            SearchScreen,
+                            MusicSearchScreen,
+                            VideoSearchScreen,
                             ProfileScreen,
                             SettingsScreen,
                             HistoryScreen

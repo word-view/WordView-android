@@ -66,7 +66,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.ui.activities.player.PlayerActivity
-import cc.wordview.app.ui.components.ResultItem
+import cc.wordview.app.ui.components.MusicResultItem
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
@@ -82,7 +82,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
-val SearchScreen: NavDestination<Unit> by navDestination {
+val MusicSearchScreen: NavDestination<Unit> by navDestination {
     val viewModel: SearchViewModel = hiltViewModel()
 
     val query by viewModel.query.collectAsStateWithLifecycle()
@@ -250,7 +250,7 @@ val SearchScreen: NavDestination<Unit> by navDestination {
                     items(results, key = { Uuid.random() }) {
                         i += 1
                         Spacer(Modifier.size(16.dp))
-                        ResultItem(
+                        MusicResultItem(
                             modifier = Modifier.animateItem(
                                 fadeInSpec = if (animateSearch) tween(durationMillis = i * 250) else null,
                                 placementSpec = spring(

@@ -23,10 +23,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -46,16 +48,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.R
 import cc.wordview.app.api.VideoSearchResult
+import cc.wordview.app.components.extensions.fillMaxWidth
 import cc.wordview.app.components.ui.AsyncImagePlaceholders
 import cc.wordview.app.components.ui.RemoteImage
 import cc.wordview.app.components.extensions.marquee
 import cc.wordview.app.components.extensions.toMinutesSeconds
+import cc.wordview.app.components.ui.Space
 import cc.wordview.app.ui.theme.Typography
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun ResultItem(
+fun VideoResultItem(
     modifier: Modifier = Modifier,
     result: VideoSearchResult,
     isLyricsProvided: Boolean = false,
@@ -72,21 +76,19 @@ fun ResultItem(
     Card(
         modifier = modifier
             .testTag("result-item")
-            .fillMaxWidth()
-            .height(80.dp),
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
         shape = RoundedCornerShape(0.dp),
         onClick = { onClickResult() }
     ) {
-        Row {
+        Column {
             Box {
                 RemoteImage(
                     modifier = Modifier
-                        .size(80.dp)
-                        .padding(8.dp),
-                    shape = RoundedCornerShape(5.dp),
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f),
                     model = result.thumbnails.first().url,
                     contentDescriptor = "${result.title} cover",
                     asyncImagePlaceholders = AsyncImagePlaceholders(
@@ -101,7 +103,7 @@ fun ResultItem(
                             RoundedCornerShape(5.dp)
                         )
                         .padding(vertical = 3.dp, horizontal = 6.dp)
-                        .align(Alignment.BottomEnd),
+                        .align(Alignment.BottomEnd,),
                     text = result.duration.toMinutesSeconds(),
                     style = Typography.labelSmall
                 )
@@ -111,11 +113,10 @@ fun ResultItem(
                     text = result.title,
                     style = Typography.labelMedium,
                     textAlign = TextAlign.Left,
-                    softWrap = false,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .marquee()
                 )
+                Space(6.dp)
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     if (result.channelIsVerified) {
                         Icon(
