@@ -116,7 +116,12 @@ class PlayerViewModel @Inject constructor(
         lang: Language
     ) = viewModelScope.launch {
         playerRepository.onFail = { message, status ->
-            declarePlayerError(PlayerErrorState(message, status))
+            // ignore errors allowing the player to follow normally
+            lyricsReady = true
+            // ready images as well
+            imagesReady = true
+
+            checkReady()
         }
         playerRepository.onSucceed = { subtitle, dictionary ->
             parser = Parser(lang)

@@ -27,6 +27,7 @@ interface VideoStreamInterface {
     var cleanTrackName: String
 
     fun init(id: String, context: Context)
-    fun getStreamURL(): String
+    fun getAudioStreamURL(): String
     fun getHQThumbnail(): Any?
+    fun getVideoStreamURL(): String
 }

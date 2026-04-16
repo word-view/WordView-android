@@ -159,6 +159,10 @@ class AudioPlayer {
         return duration
     }
 
+    fun getExoPlayer(): ExoPlayer {
+        return player
+    }
+
     private fun startPositionCheck() {
         job = CoroutineScope(Dispatchers.Main).launch {
             while (isActive && player.isPlaying) {

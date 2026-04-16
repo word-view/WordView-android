@@ -17,6 +17,7 @@
 
 package cc.wordview.app.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -27,12 +28,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import cc.wordview.app.components.media.caption.WordViewCue
 
 @Composable
-fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
+fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier, background: Boolean = false) {
     Column(Modifier.wrapContentWidth(Alignment.Start)) {
         Row(
             modifier = modifier.fillMaxHeight(),
@@ -63,7 +65,8 @@ fun TextCue(cue: WordViewCue, modifier: Modifier = Modifier) {
                 if (!foundWord) {
                     Text(
                         modifier = Modifier
-                            .testTag("text-cue-word"),
+                            .testTag("text-cue-word")
+                            .background(color = if (background) MaterialTheme.colorScheme.surface else Color.Transparent),
                         text = text[currentIndex].toString(),
                         fontSize = getFontSize(text),
                         color = MaterialTheme.colorScheme.inverseSurface

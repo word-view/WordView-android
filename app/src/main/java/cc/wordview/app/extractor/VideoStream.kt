@@ -18,7 +18,6 @@
 package cc.wordview.app.extractor
 
 import android.content.Context
-import android.graphics.Bitmap
 import cc.wordview.app.misc.ImageCacheManager
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
@@ -30,6 +29,7 @@ import org.schabi.newpipe.extractor.StreamingService
 import org.schabi.newpipe.extractor.exceptions.ExtractionException
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamType
+import timber.log.Timber
 
 class VideoStream : VideoStreamInterface {
     override var info: StreamInfo =
@@ -78,11 +78,19 @@ class VideoStream : VideoStreamInterface {
         cleanTrackName = titleClean
     }
 
-    override fun getStreamURL(): String {
+    override fun getAudioStreamURL(): String {
         if (info.audioStreams.count() == 0)
             throw ExtractionException("Unable to find any audio streams")
 
         return info.audioStreams[0].content
+    }
+
+    override fun getVideoStreamURL(): String {
+        if (info.videoStreams.count() == 0)
+            throw ExtractionException("Unable to find any video streams")
+
+
+        return info.videoStreams[0].content
     }
 
     override fun getHQThumbnail(): Any? {

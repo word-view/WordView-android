@@ -37,6 +37,7 @@ import cc.wordview.app.ui.activities.player.composables.AudioPlayer
 import cc.wordview.app.ui.activities.player.viewmodel.Display
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerViewModel
 import cc.wordview.app.components.ui.OneTimeEffect
+import cc.wordview.app.ui.activities.player.composables.VideoPlayer
 import cc.wordview.app.ui.activities.player.viewmodel.PlayerErrorState
 import cc.wordview.app.ui.theme.WordViewTheme
 import cc.wordview.gengolex.Language
@@ -45,7 +46,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import org.schabi.newpipe.extractor.exceptions.ExtractionException
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -86,15 +86,21 @@ class PlayerActivity : WordViewActivity() {
                         try {
                             uiState.videoStream.init(videoId, context)
 
-                            viewModel.initAudio(uiState.videoStream.getStreamURL())
-
                             when (mode) {
-                                "audio" -> viewModel.getLyrics(videoId, lang, uiState.videoStream)
-                                "video" -> viewModel.getSubtitle(videoId, lang)
+                                "audio" -> {
+                                    viewModel.setDisplay(Display.AUDIO_PLAYER)
+                                    viewModel.initAudio(uiState.videoStream.getAudioStreamURL())
+                                    viewModel.getLyrics(videoId, lang, uiState.videoStream)
+                                }
+                                "video" -> {
+                                    viewModel.setDisplay(Display.VIDEO_PLAYER)
+                                    viewModel.initAudio(uiState.videoStream.getVideoStreamURL())
+                                    viewModel.getSubtitle(videoId, lang)
+                                }
                                 else -> throw IllegalArgumentException("Player mode should be either 'audio' or 'video'")
                             }
 
-                        } catch (e: ExtractionException) {
+                        } catch (e: Exception) {
                             Timber.e(e)
                             viewModel.declarePlayerError(PlayerErrorState(e.message.toString()))
                         }
@@ -106,6 +112,14 @@ class PlayerActivity : WordViewActivity() {
                 WordViewTheme(darkTheme = true) {
                     Scaffold { innerPadding ->
                         when (uiState.display) {
+                            Display.VIDEO_PLAYER -> VideoPlayer(
+                                videoId,
+                                viewModel,
+                                title,
+                                artist,
+                                innerPadding
+                            )
+
                             Display.AUDIO_PLAYER -> AudioPlayer(
                                 videoId,
                                 viewModel,
