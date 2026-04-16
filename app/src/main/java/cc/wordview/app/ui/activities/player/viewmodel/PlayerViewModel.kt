@@ -111,6 +111,28 @@ class PlayerViewModel @Inject constructor(
         playerRepository.getLyrics(id, lang.tag, video)
     }
 
+    fun getSubtitle(
+        id: String,
+        lang: Language
+    ) = viewModelScope.launch {
+        playerRepository.onFail = { message, status ->
+            declarePlayerError(PlayerErrorState(message, status))
+        }
+        playerRepository.onSucceed = { subtitle, dictionary ->
+            parser = Parser(lang)
+            parser.addDictionary(lang.dictionaryName, dictionary)
+
+            parseLyrics(subtitle)
+
+            lyricsReady = true
+            checkReady()
+
+            preloadImages()
+        }
+
+        playerRepository.getSubtitles(id, lang.tag)
+    }
+
     private fun preloadImages() {
         for (cue in _state.value.lyrics) {
             for (word in cue.words) {

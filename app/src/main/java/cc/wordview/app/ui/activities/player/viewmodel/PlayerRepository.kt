@@ -35,4 +35,6 @@ interface PlayerRepository : ApiRequestRepository {
 
         return lyrics to dictionary
     }
+
+    fun getSubtitles(id: String, lang: String)
 }

@@ -87,7 +87,13 @@ class PlayerActivity : WordViewActivity() {
                             uiState.videoStream.init(videoId, context)
 
                             viewModel.initAudio(uiState.videoStream.getStreamURL())
-                            viewModel.getLyrics(videoId, lang, uiState.videoStream)
+
+                            when (mode) {
+                                "audio" -> viewModel.getLyrics(videoId, lang, uiState.videoStream)
+                                "video" -> viewModel.getSubtitle(videoId, lang)
+                                else -> throw IllegalArgumentException("Player mode should be either 'audio' or 'video'")
+                            }
+
                         } catch (e: ExtractionException) {
                             Timber.e(e)
                             viewModel.declarePlayerError(PlayerErrorState(e.message.toString()))

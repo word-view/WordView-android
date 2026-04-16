@@ -55,7 +55,7 @@ class LyricsRequest(
         fun parseLyricsAndDictionary(res: String): Pair<String, String> {
             val jsonObject = JsonParser.parseString(res).asJsonObject
 
-            val lyrics = jsonObject.get("lyrics").asString
+            val lyrics = jsonObject.get("textTrack").asString
             val dictionary = jsonObject.getAsJsonArray("dictionary").toString()
 
             return lyrics to dictionary
