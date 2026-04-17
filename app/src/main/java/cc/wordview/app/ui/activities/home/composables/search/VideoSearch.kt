@@ -66,7 +66,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cc.wordview.app.R
 import cc.wordview.app.ui.activities.player.PlayerActivity
-import cc.wordview.app.ui.components.MusicResultItem
 import cc.wordview.app.ui.theme.Typography
 import cc.wordview.app.ui.theme.poppinsFamily
 import com.gigamole.composefadingedges.verticalFadingEdges
@@ -91,7 +90,7 @@ val VideoSearchScreen: NavDestination<Unit> by navDestination {
     val searching by viewModel.searching.collectAsStateWithLifecycle()
     val animateSearch by viewModel.animateSearch.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val providedLyricsIds by viewModel.providedLyrics.collectAsStateWithLifecycle()
+    val providedTextTracks by viewModel.providedTextTracks.collectAsStateWithLifecycle()
     val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
@@ -104,7 +103,7 @@ val VideoSearchScreen: NavDestination<Unit> by navDestination {
 
 
     OneTimeEffect {
-        viewModel.getProvidedLyrics()
+        viewModel.getProvidedTextTracks()
     }
 
     LaunchedEffect(Unit) {
@@ -260,7 +259,7 @@ val VideoSearchScreen: NavDestination<Unit> by navDestination {
                                     dampingRatio = Spring.DampingRatioMediumBouncy
                                 )
                             ),
-                            isLyricsProvided = providedLyricsIds.contains(it.id),
+                            isLyricsProvided = providedTextTracks.contains(it.id),
                             result = it
                         ) {
                             viewModel.saveVideoToHistory(it)

@@ -53,7 +53,7 @@ class SearchViewModel @Inject constructor(
     private val _query = MutableStateFlow("")
     private val _searchResults = MutableStateFlow(ArrayList<VideoSearchResult>())
     private val _state = MutableStateFlow(SearchState.NONE)
-    private val _providedLyrics = MutableStateFlow(listOf<String>())
+    private val _providedTextTracks = MutableStateFlow(listOf<String>())
     private val _searchHistory = MutableStateFlow(listOf<SearchQuery>())
 
     val searching = _searching.asStateFlow()
@@ -61,7 +61,7 @@ class SearchViewModel @Inject constructor(
     val query = _query.asStateFlow()
     val searchResults = _searchResults.asStateFlow()
     val state = _state.asStateFlow()
-    val providedLyrics = _providedLyrics.asStateFlow()
+    val providedTextTracks = _providedTextTracks.asStateFlow()
     val searchHistory = _searchHistory.asStateFlow()
 
     private val searchQueryDao = RoomAccess.getDatabase().searchQueryDao()
@@ -114,10 +114,10 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun getProvidedLyrics() {
+    fun getProvidedTextTracks() {
         val queue = Volley.newRequestQueue(appContext)
         val endpoint = BuildConfig.API_BASE_URL
-        val url = "$endpoint/api/v1/lyrics/list"
+        val url = "$endpoint/api/v1/text-tracks/list"
 
         val request = JsonArrayRequest(
             Request.Method.GET,
@@ -125,12 +125,12 @@ class SearchViewModel @Inject constructor(
             null,
             { jsonArray ->
                 val list = List(jsonArray.length()) { jsonArray.getString(it) }
-                _providedLyrics.update { list }
+                _providedTextTracks.update { list }
 
-                Timber.v("providedLyrics.size=${_providedLyrics.value.size}")
+                Timber.v("providedTextTracks.size=${_providedTextTracks.value.size}")
             },
             { error ->
-                Timber.e("Failed to download server lyrics: ${error.message}")
+                Timber.e("Failed to retrieve the provided text tracks: ${error.message}")
             }
         )
 

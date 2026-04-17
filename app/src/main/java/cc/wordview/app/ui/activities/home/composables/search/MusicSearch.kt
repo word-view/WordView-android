@@ -90,7 +90,7 @@ val MusicSearchScreen: NavDestination<Unit> by navDestination {
     val searching by viewModel.searching.collectAsStateWithLifecycle()
     val animateSearch by viewModel.animateSearch.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val providedLyricsIds by viewModel.providedLyrics.collectAsStateWithLifecycle()
+    val providedTextTracks by viewModel.providedTextTracks.collectAsStateWithLifecycle()
     val searchHistory by viewModel.searchHistory.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
@@ -103,7 +103,7 @@ val MusicSearchScreen: NavDestination<Unit> by navDestination {
 
 
     OneTimeEffect {
-        viewModel.getProvidedLyrics()
+        viewModel.getProvidedTextTracks()
     }
 
     LaunchedEffect(Unit) {
@@ -258,7 +258,7 @@ val MusicSearchScreen: NavDestination<Unit> by navDestination {
                                     dampingRatio = Spring.DampingRatioMediumBouncy
                                 )
                             ),
-                            isLyricsProvided = providedLyricsIds.contains(it.id),
+                            isLyricsProvided = providedTextTracks.contains(it.id),
                             result = it
                         ) {
                             viewModel.saveVideoToHistory(it)
