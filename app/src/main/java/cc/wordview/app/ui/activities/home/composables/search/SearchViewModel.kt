@@ -117,7 +117,7 @@ class SearchViewModel @Inject constructor(
     fun getProvidedTextTracks() {
         val queue = Volley.newRequestQueue(appContext)
         val endpoint = BuildConfig.API_BASE_URL
-        val url = "$endpoint/api/v1/text-tracks/list"
+        val url = "$endpoint/api/v1/text-track/list"
 
         val request = JsonArrayRequest(
             Request.Method.GET,

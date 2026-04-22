@@ -37,7 +37,7 @@ class PlayerRepositoryImpl @Inject constructor(
     override var queue = Volley.newRequestQueue(context)
 
     override fun getLyrics(id: String, lang: String, video: VideoStreamInterface) {
-        val url = APIUrl("$endpoint/api/v1/text-tracks/lyrics")
+        val url = APIUrl("$endpoint/api/v1/text-track/lyrics")
 
         url.addRequestParam("id", id)
         url.addRequestParam("lang", lang)
@@ -54,7 +54,7 @@ class PlayerRepositoryImpl @Inject constructor(
     }
 
     override fun getSubtitles(id: String, lang: String) {
-        val url = APIUrl("$endpoint/api/v1/text-tracks/subtitles")
+        val url = APIUrl("$endpoint/api/v1/text-track/subtitles")
 
         url.addRequestParam("id", id)
         url.addRequestParam("lang", lang)
